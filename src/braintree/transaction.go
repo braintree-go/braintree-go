@@ -1,21 +1,21 @@
 package braintree
 
 type Transaction struct {
-  Amount int
-  PaymentMethod CreditCard
+	Amount        int
+	PaymentMethod CreditCard
 }
 
 type TransactionRequest struct {
-  tx Transaction
+	tx Transaction
 }
 
 func NewTransactionRequest() TransactionRequest { return TransactionRequest{Transaction{}} }
 
 func (this TransactionRequest) Amount(amount int) TransactionRequest {
-  this.tx.Amount = amount
-  return this
+	this.tx.Amount = amount
+	return this
 }
 
 func (this TransactionRequest) CreditCard() TransactionCreditCardRequest {
-  return NewTransactionCreditCardRequest(this)
+	return NewTransactionCreditCardRequest(this)
 }

@@ -1,30 +1,19 @@
 package braintree
 
 type Configuration struct {
-  environment string
-  merchant_id string
-  public_key string
-  private_key string
+	environment Environment
+	merchantId  string
+	publicKey   string
+	privateKey  string
 }
 
-type Gateway struct {
-  config Configuration
+func (this Configuration) BaseURL() string {
+	return this.environment.baseURL + "/merchant/" + this.merchantId
 }
 
-func (this Gateway) Transaction() TransactionGateway {
-  return TransactionGateway{}
+type Environment struct {
+	name    string
+	baseURL string
 }
 
-func NewGateway(config Configuration) Gateway {
-  return Gateway{config}
-}
-
-type TransactionResponse struct {}
-
-func (this TransactionResponse) IsValid() bool { return false }
-
-type TransactionGateway struct {}
-
-func (this TransactionGateway) Sale(request TransactionRequest) TransactionResponse {
-  return TransactionResponse{}
-}
+var Sandbox = Environment{name: "sandbox", baseURL: "https://sandbox.braintreegateway.com"}
