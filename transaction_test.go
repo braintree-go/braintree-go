@@ -1,7 +1,6 @@
 package braintree
 
 import (
-  "braintree/test"
   "testing"
 )
 
@@ -9,12 +8,12 @@ func TestTransactionRequestXML(t *testing.T) {
 	tx := Transaction{
 		Amount: 100,
 		CreditCard: CreditCard{
-			Number:         test.CreditCards["visa"].Number,
+			Number:         TestCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
 	}
 	request := NewTransactionRequest(tx)
-	expectedXML := "<transaction><amount>100</amount><credit-card><number>" + TestCards["visa"].Number + "</number><expiration-date>05/14</expiration-date></credit-card></transaction>"
+	expectedXML := "<transaction><amount>100</amount><credit-card><number>" + TestCreditCards["visa"].Number + "</number><expiration-date>05/14</expiration-date></credit-card></transaction>"
 
 	xmlBytes, err := request.ToXML()
 	generatedXML := string(xmlBytes)
