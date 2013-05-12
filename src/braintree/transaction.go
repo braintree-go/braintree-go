@@ -1,21 +1,25 @@
 package braintree
 
+import "encoding/xml"
+
 type Transaction struct {
-	Amount        int
-	PaymentMethod CreditCard
+	XMLName    string     `xml:"transaction"`
+	Amount     int        `xml:"amount"`
+	CreditCard CreditCard `xml:"credit-card"`
+}
+
+func NewTransactionRequest(tx Transaction) TransactionRequest {
+	return TransactionRequest{tx}
 }
 
 type TransactionRequest struct {
 	tx Transaction
 }
 
-func NewTransactionRequest() TransactionRequest { return TransactionRequest{Transaction{}} }
-
-func (this TransactionRequest) Amount(amount int) TransactionRequest {
-	this.tx.Amount = amount
-	return this
-}
-
-func (this TransactionRequest) CreditCard() TransactionCreditCardRequest {
-	return NewTransactionCreditCardRequest(this)
+func (this TransactionRequest) ToXML() ([]byte, error) {
+	xml, err := xml.Marshal(this.tx)
+	if err != nil {
+		return []byte{}, err
+	}
+	return xml, nil
 }

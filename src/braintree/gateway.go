@@ -1,15 +1,15 @@
 package braintree
 
+func NewGateway(config Configuration) Gateway {
+	return Gateway{config}
+}
+
 type Gateway struct {
 	config Configuration
 }
 
 func (this Gateway) Transaction() TransactionGateway {
 	return TransactionGateway{this}
-}
-
-func NewGateway(config Configuration) Gateway {
-	return Gateway{config}
 }
 
 type TransactionGateway struct {

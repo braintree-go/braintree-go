@@ -8,12 +8,12 @@ type Configuration struct {
 }
 
 func (this Configuration) BaseURL() string {
-	return this.environment.baseURL + "/merchant/" + this.merchantId
+	return this.environment.BaseURL + "/merchant/" + this.merchantId
 }
 
 type Environment struct {
-	name    string
-	baseURL string
+	Name    string
+	BaseURL string
 }
 
-var Sandbox = Environment{name: "sandbox", baseURL: "https://sandbox.braintreegateway.com"}
+var Sandbox = Environment{Name: "sandbox", BaseURL: "https://sandbox.braintreegateway.com"}
