@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"testing"
+  "braintree/test"
 )
 
 var (
@@ -19,7 +20,7 @@ func Test_Transaction_Create(t *testing.T) {
 	tx := Transaction{
 		Amount: 100,
 		CreditCard: CreditCard{
-			Number:         TestCards["visa"].Number,
+			Number:         test.CreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
 	}
