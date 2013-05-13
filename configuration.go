@@ -8,7 +8,7 @@ type Configuration struct {
 }
 
 func (this Configuration) BaseURL() string {
-	return this.environment.BaseURL + "/merchant/" + this.merchantId
+	return this.environment.BaseURL + "/merchants/" + this.merchantId
 }
 
 type Environment struct {

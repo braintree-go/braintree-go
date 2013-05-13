@@ -12,11 +12,12 @@ var (
 		privateKey:  "66062a3876e2dc298f2195f0bf173f5a",
 	}
 
-	testGateway = NewGateway(testConfiguration)
+	gateway = NewGateway(testConfiguration)
 )
 
-func Test_Transaction_Create(t *testing.T) {
+func TestTransactionCreate(t *testing.T) {
 	tx := Transaction{
+    Type: "sale",
 		Amount: 100,
 		CreditCard: CreditCard{
 			Number:         TestCreditCards["visa"].Number,
@@ -25,7 +26,7 @@ func Test_Transaction_Create(t *testing.T) {
 	}
 	request := NewTransactionRequest(tx)
 
-	response := testGateway.Transaction().Sale(request)
+	response, _ := gateway.ExecuteTransactionRequest(request)
 
 	if !response.IsSuccess() {
 		t.Errorf("Transaction create response was unsuccessful")

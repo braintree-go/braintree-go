@@ -4,7 +4,8 @@ import "encoding/xml"
 
 type Transaction struct {
 	XMLName    string     `xml:"transaction"`
-	Amount     int        `xml:"amount"`
+  Type       string     `xml:"type"`
+  Amount     int        `xml:"amount"`
 	CreditCard CreditCard `xml:"credit-card"`
 }
 
