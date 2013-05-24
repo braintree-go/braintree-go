@@ -16,4 +16,7 @@ type Environment struct {
 	BaseURL string
 }
 
-var Sandbox = Environment{Name: "sandbox", BaseURL: "https://sandbox.braintreegateway.com"}
+var (
+	Development = Environment{Name: "development", BaseURL: "http://localhost:3000"}
+	Sandbox     = Environment{Name: "sandbox", BaseURL: "https://sandbox.braintreegateway.com"}
+)

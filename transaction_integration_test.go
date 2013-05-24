@@ -6,10 +6,10 @@ import (
 
 var (
 	testConfiguration = Configuration{
-		environment: Sandbox,
-		merchantId:  "4ngqq224rnk6gvxh",
-		publicKey:   "jkq28pcxj4r85dwr",
-		privateKey:  "66062a3876e2dc298f2195f0bf173f5a",
+		environment: Development,
+		merchantId:  "integration_merchant_id",
+		publicKey:   "b6fkbfmhnjdg7333",
+		privateKey:  "37912780851d0f68c267ea049cfa0114",
 	}
 
 	gateway = NewGateway(testConfiguration)
@@ -17,7 +17,7 @@ var (
 
 func TestTransactionCreate(t *testing.T) {
 	tx := Transaction{
-    Type: "sale",
+		Type:   "sale",
 		Amount: 100,
 		CreditCard: CreditCard{
 			Number:         TestCreditCards["visa"].Number,
@@ -26,9 +26,11 @@ func TestTransactionCreate(t *testing.T) {
 	}
 	request := NewTransactionRequest(tx)
 
-	response, _ := gateway.ExecuteTransactionRequest(request)
+	response, err := gateway.ExecuteTransactionRequest(request)
 
-	if !response.IsSuccess() {
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !response.Success {
 		t.Errorf("Transaction create response was unsuccessful")
 	}
 }

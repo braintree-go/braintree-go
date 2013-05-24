@@ -1,13 +1,13 @@
 package braintree
 
 import (
-  "testing"
+	"testing"
 )
 
 func TestTransactionRequestXML(t *testing.T) {
 	tx := Transaction{
-    Type: "sale",
-    Amount: 100,
+		Type:   "sale",
+		Amount: 100,
 		CreditCard: CreditCard{
 			Number:         TestCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
