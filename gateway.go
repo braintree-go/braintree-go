@@ -1,7 +1,6 @@
 package braintree
 
 import (
-	"bytes"
 	"compress/gzip"
 	"errors"
 	"io"
@@ -9,22 +8,26 @@ import (
 	"net/http"
 )
 
-func NewGateway(config Configuration) Gateway {
-	return Gateway{
+type Gateway interface {
+	Execute(method, urlExtension string, body io.Reader) ([]byte, int, error)
+}
+
+func NewGateway(config Configuration) BraintreeGateway {
+	return BraintreeGateway{
 		config: config,
 		client: &http.Client{},
 	}
 }
 
-type Gateway struct {
+type BraintreeGateway struct {
 	config Configuration
 	client *http.Client
 }
 
-func (this Gateway) newRequest(method, urlExtension string, body io.Reader) (*http.Request, error) {
+func (this BraintreeGateway) Execute(method, urlExtension string, body io.Reader) ([]byte, int, error) {
 	request, err := http.NewRequest(method, this.config.BaseURL()+urlExtension, body)
 	if err != nil {
-		return request, err
+		return []byte{}, 0, errors.New("Error creating HTTP request: " + err.Error())
 	}
 
 	request.Header.Set("Content-Type", "application/xml")
@@ -33,15 +36,6 @@ func (this Gateway) newRequest(method, urlExtension string, body io.Reader) (*ht
 	request.Header.Set("User-Agent", "Braintree-Go")
 	request.Header.Set("X-ApiVersion", "3")
 	request.SetBasicAuth(this.config.publicKey, this.config.privateKey)
-
-	return request, nil
-}
-
-func (this Gateway) executeRequest(method, urlExtension string, body io.Reader) ([]byte, int, error) {
-	request, err := this.newRequest(method, urlExtension, body)
-	if err != nil {
-		return []byte{}, 0, errors.New("Error creating HTTP request: " + err.Error())
-	}
 
 	response, err := this.client.Do(request)
 	defer response.Body.Close()
@@ -52,7 +46,7 @@ func (this Gateway) executeRequest(method, urlExtension string, body io.Reader) 
 	gzipBody, err := gzip.NewReader(response.Body)
 	defer gzipBody.Close()
 	if err != nil {
-		return []byte{}, 0, err
+		return []byte{}, 0, errors.New("Error reading gzipped response from Braintree: " + err.Error())
 	}
 	contents, err := ioutil.ReadAll(gzipBody)
 	if err != nil {
@@ -64,29 +58,4 @@ func (this Gateway) executeRequest(method, urlExtension string, body io.Reader) 
 	}
 
 	return []byte{}, response.StatusCode, errors.New("Got unexpected response from Braintree: " + response.Status)
-}
-
-func (this Gateway) ExecuteTransactionRequest(tx TransactionRequest) (TransactionResponse, error) {
-	requestBytes, err := tx.ToXML()
-	if err != nil {
-		return TransactionResponse{}, err
-	}
-	requestBody := bytes.NewBuffer(requestBytes)
-	responseBody, responseCode, err := this.executeRequest("POST", "/transactions", requestBody)
-	if err != nil {
-		return TransactionResponse{false, ""}, err
-	}
-
-	switch responseCode {
-	case 201:
-		return TransactionResponse{true, ""}, nil
-	case 422:
-		return TransactionResponse{false, string(responseBody)}, nil
-	}
-	return TransactionResponse{false, ""}, errors.New("Should never get here")
-}
-
-type TransactionResponse struct {
-	Success bool
-	Message string
 }

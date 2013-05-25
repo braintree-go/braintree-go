@@ -13,10 +13,9 @@ func TestTransactionRequestXML(t *testing.T) {
 			ExpirationDate: "05/14",
 		},
 	}
-	request := NewTransactionRequest(tx)
 	expectedXML := "<transaction><type>sale</type><amount>100</amount><credit-card><number>" + TestCreditCards["visa"].Number + "</number><expiration-date>05/14</expiration-date></credit-card></transaction>"
 
-	xmlBytes, err := request.ToXML()
+	xmlBytes, err := tx.ToXML()
 	generatedXML := string(xmlBytes)
 	if err != nil {
 		t.Errorf("Got error while generating XML: " + err.Error())
