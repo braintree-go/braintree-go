@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-var expectedStatuses = map[int]bool{201: true, 422: true}
+var expectedStatuses = map[int]bool{200: true, 201: true, 422: true}
 
 type Gateway interface {
 	Execute(method, urlExtension string, body io.Reader) ([]byte, int, error)
@@ -62,4 +62,24 @@ func (this BraintreeGateway) Execute(method, urlExtension string, body io.Reader
 	}
 
 	return []byte{}, response.StatusCode, errors.New("Got unexpected response from Braintree: " + response.Status)
+}
+
+// Stub gateways, included for testing
+type blowUpGateway struct{}
+
+func (this blowUpGateway) Execute(method, url string, body io.Reader) ([]byte, int, error) {
+	return []byte{}, 500, errors.New("The server blew up!")
+}
+
+type badInputGateway struct{}
+
+func (this badInputGateway) Execute(method, url string, body io.Reader) ([]byte, int, error) {
+	xml := "<?xml version=\"1.0\" encoding=\"UTF-8\"?><api-error-response><errors><errors type=\"array\"/></errors><message>Card Issuer Declined CVV</message></api-error-response>"
+	return []byte(xml), 422, nil
+}
+
+type notFoundGateway struct{}
+
+func (this notFoundGateway) Execute(method, url string, body io.Reader) ([]byte, int, error) {
+	return []byte{}, 404, errors.New("Got unexpected response from Braintree: 404 Not Found")
 }

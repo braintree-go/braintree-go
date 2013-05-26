@@ -21,17 +21,26 @@ func (this TransactionGateway) Sale(tx Transaction) (Response, error) {
 		return ErrorResponse{}, err
 	}
 
-	var response Response
 	if responseCode == 201 {
-		response, err = ParseTransactionResponse(responseBody)
-	} else if responseCode == 422 {
-		response, err = ParseErrorResponse(responseBody)
-	} else {
-		err = errors.New("Unknown response code: " + string(responseCode))
+		txResponse, err := ParseTransactionResponse(responseBody)
+		if err != nil {
+			return ErrorResponse{}, errors.New("Error decoding transaction response XML: " + err.Error())
+		}
+		return txResponse, nil
 	}
 
+	return ParseErrorResponse(responseBody)
+}
+
+func (this TransactionGateway) Find(txId string) (Response, error) {
+	responseBody, _, err := this.gateway.Execute("GET", "/transactions/"+txId, bytes.NewBuffer([]byte{}))
 	if err != nil {
-		return ErrorResponse{}, err
+		if err.Error() == "Got unexpected response from Braintree: 404 Not Found" {
+			return ErrorResponse{}, errors.New("A transaction with that ID could not be found")
+		} else {
+			return ErrorResponse{}, err
+		}
 	}
-	return response, nil
+
+	return ParseTransactionResponse(responseBody)
 }
