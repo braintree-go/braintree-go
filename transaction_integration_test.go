@@ -4,17 +4,6 @@ import (
 	"testing"
 )
 
-var (
-	testConfiguration = Configuration{
-		environment: Development,
-		merchantId:  "integration_merchant_id",
-		publicKey:   "b6fkbfmhnjdg7333",
-		privateKey:  "37912780851d0f68c267ea049cfa0114",
-	}
-
-	gateway = TransactionGateway{NewGateway(testConfiguration)}
-)
-
 func TestTransactionCreate(t *testing.T) {
 	tx := Transaction{
 		Type:   "sale",
@@ -28,7 +17,7 @@ func TestTransactionCreate(t *testing.T) {
 		},
 	}
 
-	response, err := gateway.Sale(tx)
+	response, err := txGateway.Sale(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -51,7 +40,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 		},
 	}
 
-	response, err := gateway.Sale(tx)
+	response, err := txGateway.Sale(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -72,7 +61,7 @@ func TestFindTransaction(t *testing.T) {
 		},
 	}
 
-	response, err := gateway.Sale(tx)
+	response, err := txGateway.Sale(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -82,7 +71,7 @@ func TestFindTransaction(t *testing.T) {
 
 	txId := response.Transaction().Id
 
-	response, err = gateway.Find(txId)
+	response, err = txGateway.Find(txId)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -94,7 +83,7 @@ func TestFindTransaction(t *testing.T) {
 }
 
 func TestFindNonExistantTransaction(t *testing.T) {
-	response, err := gateway.Find("bad transaction ID")
+	response, err := txGateway.Find("bad transaction ID")
 
 	if err == nil {
 		t.Errorf("Did not receive an error when trying to find a non-existant transaction")

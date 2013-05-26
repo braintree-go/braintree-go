@@ -36,7 +36,7 @@ func TestSaleErrorHandling(t *testing.T) {
 }
 
 func TestSaleBadInputHandling(t *testing.T) {
-	gateway = TransactionGateway{badInputGateway{}}
+	gateway := TransactionGateway{badInputGateway{}}
 	response, err := gateway.Sale(Transaction{})
 
 	if response.IsSuccess() {

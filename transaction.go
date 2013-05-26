@@ -6,9 +6,9 @@ type Transaction struct {
 	XMLName    string              `xml:"transaction"`
 	Id         string              `xml:"id,omitempty"`
 	Status     string              `xml:"status,omitempty"`
-	Type       string              `xml:"type"`
+	Type       string              `xml:"type,omitempty"`
 	Amount     float64             `xml:"amount"`
-	CreditCard *CreditCard         `xml:"credit-card"`
+	CreditCard *CreditCard         `xml:"credit-card,omitempty"`
 	Options    *TransactionOptions `xml:"options,omitempty"`
 }
 
