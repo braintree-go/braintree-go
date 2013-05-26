@@ -22,12 +22,14 @@ func (this TransactionGateway) Sale(tx Transaction) (Response, error) {
 	}
 
 	var response Response
-	switch responseCode {
-	case 201:
+	if responseCode == 201 {
 		response, err = ParseTransactionResponse(responseBody)
-	case 422:
+	} else if responseCode == 422 {
 		response, err = ParseErrorResponse(responseBody)
+	} else {
+		err = errors.New("Unknown response code: " + string(responseCode))
 	}
+
 	if err != nil {
 		return ErrorResponse{}, err
 	}

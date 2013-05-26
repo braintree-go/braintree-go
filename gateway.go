@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+var expectedStatuses = map[int]bool{201: true, 422: true}
+
 type Gateway interface {
 	Execute(method, urlExtension string, body io.Reader) ([]byte, int, error)
 }
@@ -48,12 +50,14 @@ func (this BraintreeGateway) Execute(method, urlExtension string, body io.Reader
 	if err != nil {
 		return []byte{}, 0, errors.New("Error reading gzipped response from Braintree: " + err.Error())
 	}
+
 	contents, err := ioutil.ReadAll(gzipBody)
 	if err != nil {
 		return []byte{}, 0, errors.New("Error reading response from Braintree: " + err.Error())
 	}
 
-	if response.StatusCode == 201 || response.StatusCode == 422 {
+	_, ok := expectedStatuses[response.StatusCode]
+	if ok {
 		return contents, response.StatusCode, nil
 	}
 

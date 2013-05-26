@@ -4,11 +4,11 @@ import (
 	"testing"
 )
 
-func TestTransactionRequestXML(t *testing.T) {
+func TestTransactionToXML(t *testing.T) {
 	tx := Transaction{
 		Type:   "sale",
 		Amount: 100,
-		CreditCard: CreditCard{
+		CreditCard: &CreditCard{
 			Number:         TestCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},

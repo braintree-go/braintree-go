@@ -19,9 +19,12 @@ func TestTransactionCreate(t *testing.T) {
 	tx := Transaction{
 		Type:   "sale",
 		Amount: 100.00,
-		CreditCard: CreditCard{
+		CreditCard: &CreditCard{
 			Number:         TestCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
+		},
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
 		},
 	}
 
@@ -33,6 +36,8 @@ func TestTransactionCreate(t *testing.T) {
 		t.Errorf("Transaction create response was unsuccessful")
 	} else if response.Transaction().Id == "" {
 		t.Errorf("Transaction did not receive an ID")
+	} else if response.Transaction().Status != "submitted_for_settlement" {
+		t.Errorf("Transaction was not submitted for settlement")
 	}
 }
 
@@ -40,7 +45,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	tx := Transaction{
 		Type:   "sale",
 		Amount: 2010.00,
-		CreditCard: CreditCard{
+		CreditCard: &CreditCard{
 			Number:         TestCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
