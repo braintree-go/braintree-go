@@ -1,15 +1,15 @@
 package braintree
 
 import (
+	"bytes"
 	"compress/gzip"
 	"errors"
-	"io"
 	"io/ioutil"
 	"net/http"
 )
 
 type Gateway interface {
-	Execute(method, urlExtension string, body io.Reader) (*Response, error)
+	Execute(method, urlExtension string, body []byte) (*Response, error)
 }
 
 func NewGateway(config Configuration) BraintreeGateway {
@@ -24,8 +24,10 @@ type BraintreeGateway struct {
 	client *http.Client
 }
 
-func (this BraintreeGateway) Execute(method, urlExtension string, body io.Reader) (*Response, error) {
-	request, err := http.NewRequest(method, this.config.BaseURL()+urlExtension, body)
+func (this BraintreeGateway) Execute(method, urlExtension string, body []byte) (*Response, error) {
+	bodyBuffer := bytes.NewBuffer(body)
+
+	request, err := http.NewRequest(method, this.config.BaseURL()+urlExtension, bodyBuffer)
 	if err != nil {
 		return nil, errors.New("Error creating HTTP request: " + err.Error())
 	}

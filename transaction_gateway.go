@@ -1,7 +1,6 @@
 package braintree
 
 import (
-	"bytes"
 	"errors"
 )
 
@@ -15,8 +14,7 @@ func (this TransactionGateway) Sale(tx Transaction) (TransactionResult, error) {
 		return ErrorResult{}, errors.New("Error encoding transaction as XML: " + err.Error())
 	}
 
-	requestBody := bytes.NewBuffer(transactionXML)
-	response, err := this.gateway.Execute("POST", "/transactions", requestBody)
+	response, err := this.gateway.Execute("POST", "/transactions", transactionXML)
 	if err != nil {
 		return ErrorResult{}, err
 	}
@@ -30,7 +28,7 @@ func (this TransactionGateway) Sale(tx Transaction) (TransactionResult, error) {
 }
 
 func (this TransactionGateway) Find(txId string) (TransactionResult, error) {
-	response, err := this.gateway.Execute("GET", "/transactions/"+txId, bytes.NewBuffer([]byte{}))
+	response, err := this.gateway.Execute("GET", "/transactions/"+txId, []byte{})
 	if err != nil {
 		return ErrorResult{}, err
 	} else if response.StatusCode == 200 {
