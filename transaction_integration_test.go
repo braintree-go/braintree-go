@@ -17,15 +17,15 @@ func TestTransactionCreate(t *testing.T) {
 		},
 	}
 
-	response, err := txGateway.Sale(tx)
+	result, err := txGateway.Sale(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
-	} else if !response.IsSuccess() {
+	} else if !result.Success() {
 		t.Errorf("Transaction create response was unsuccessful")
-	} else if response.Transaction().Id == "" {
+	} else if result.Transaction().Id == "" {
 		t.Errorf("Transaction did not receive an ID")
-	} else if response.Transaction().Status != "submitted_for_settlement" {
+	} else if result.Transaction().Status != "submitted_for_settlement" {
 		t.Errorf("Transaction was not submitted for settlement")
 	}
 }
@@ -40,14 +40,14 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 		},
 	}
 
-	response, err := txGateway.Sale(tx)
+	result, err := txGateway.Sale(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
-	} else if response.IsSuccess() {
+	} else if result.Success() {
 		t.Errorf("Transaction create response was successful, expected failure")
-	} else if response.GetMessage() != "Card Issuer Declined CVV" {
-		t.Errorf("Got wrong error message. Got: " + response.GetMessage())
+	} else if result.Message() != "Card Issuer Declined CVV" {
+		t.Errorf("Got wrong error message. Got: " + result.Message())
 	}
 }
 
@@ -61,35 +61,35 @@ func TestFindTransaction(t *testing.T) {
 		},
 	}
 
-	response, err := txGateway.Sale(tx)
+	saleResult, err := txGateway.Sale(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
-	} else if !response.IsSuccess() {
+	} else if !saleResult.Success() {
 		t.Errorf("Transaction create response was unsuccessful")
 	}
 
-	txId := response.Transaction().Id
+	txId := saleResult.Transaction().Id
 
-	response, err = txGateway.Find(txId)
+	findResult, err := txGateway.Find(txId)
 
 	if err != nil {
 		t.Errorf(err.Error())
-	} else if !response.IsSuccess() {
+	} else if !findResult.Success() {
 		t.Errorf("Transaction find response was unsuccessful")
-	} else if response.Transaction().Id != txId {
+	} else if findResult.Transaction().Id != txId {
 		t.Errorf("Transaction find came back with the wrong transaction!")
 	}
 }
 
 func TestFindNonExistantTransaction(t *testing.T) {
-	response, err := txGateway.Find("bad transaction ID")
+	result, err := txGateway.Find("bad transaction ID")
 
 	if err == nil {
 		t.Errorf("Did not receive an error when trying to find a non-existant transaction")
-	} else if response.IsSuccess() {
+	} else if result.Success() {
 		t.Errorf("Transaction find response was successful on bad data")
 	} else if err.Error() != "A transaction with that ID could not be found" {
-		t.Errorf("Got the wrong error message when finding a non-existant transaction")
+		t.Errorf("Got the wrong error message when finding a non-existant transaction. Got: " + err.Error())
 	}
 }

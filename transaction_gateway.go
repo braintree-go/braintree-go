@@ -9,38 +9,34 @@ type TransactionGateway struct {
 	gateway Gateway
 }
 
-func (this TransactionGateway) Sale(tx Transaction) (Response, error) {
+func (this TransactionGateway) Sale(tx Transaction) (TransactionResult, error) {
 	transactionXML, err := tx.ToXML()
 	if err != nil {
-		return ErrorResponse{}, errors.New("Error encoding transaction as XML: " + err.Error())
+		return ErrorResult{}, errors.New("Error encoding transaction as XML: " + err.Error())
 	}
 
 	requestBody := bytes.NewBuffer(transactionXML)
-	responseBody, responseCode, err := this.gateway.Execute("POST", "/transactions", requestBody)
+	response, err := this.gateway.Execute("POST", "/transactions", requestBody)
 	if err != nil {
-		return ErrorResponse{}, err
+		return ErrorResult{}, err
 	}
 
-	if responseCode == 201 {
-		txResponse, err := ParseTransactionResponse(responseBody)
-		if err != nil {
-			return ErrorResponse{}, errors.New("Error decoding transaction response XML: " + err.Error())
-		}
-		return txResponse, nil
+	if response.StatusCode == 201 {
+		return response.TransactionResult()
+	} else if response.StatusCode == 422 {
+		return response.ErrorResult()
 	}
-
-	return ParseErrorResponse(responseBody)
+	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
 }
 
-func (this TransactionGateway) Find(txId string) (Response, error) {
-	responseBody, _, err := this.gateway.Execute("GET", "/transactions/"+txId, bytes.NewBuffer([]byte{}))
+func (this TransactionGateway) Find(txId string) (TransactionResult, error) {
+	response, err := this.gateway.Execute("GET", "/transactions/"+txId, bytes.NewBuffer([]byte{}))
 	if err != nil {
-		if err.Error() == "Got unexpected response from Braintree: 404 Not Found" {
-			return ErrorResponse{}, errors.New("A transaction with that ID could not be found")
-		} else {
-			return ErrorResponse{}, err
-		}
+		return ErrorResult{}, err
+	} else if response.StatusCode == 200 {
+		return response.TransactionResult()
+	} else if response.StatusCode == 404 {
+		return ErrorResult{}, errors.New("A transaction with that ID could not be found")
 	}
-
-	return ParseTransactionResponse(responseBody)
+	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
 }

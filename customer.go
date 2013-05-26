@@ -4,6 +4,7 @@ import "encoding/xml"
 
 type Customer struct {
 	XMLName    string      `xml:"customer"`
+	Id         string      `xml:"id,omitempty"`
 	FirstName  string      `xml:"first-name,omitempty"`
 	LastName   string      `xml:"last-name,omitempty"`
 	Company    string      `xml:"company,omitempty"`

@@ -19,13 +19,13 @@ func TestCustomerCreate(t *testing.T) {
 		},
 	}
 
-	response, err := customerGateway.Create(customer)
+	result, err := customerGateway.Create(customer)
 
 	if err != nil {
 		t.Errorf(err.Error())
-	} else if !response.IsSuccess() {
+	} else if !result.Success() {
 		t.Errorf("Customer create response was unsuccessful")
-	} else if response.Transaction().Id == "" {
+	} else if result.Customer().Id == "" {
 		t.Errorf("Customer did not receive an ID")
 	}
 }
