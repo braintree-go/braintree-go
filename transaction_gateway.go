@@ -25,6 +25,7 @@ func (this TransactionGateway) Create(tx Transaction) (TransactionResult, error)
 	} else if response.StatusCode == 422 {
 		return response.ErrorResult()
 	}
+
 	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
 }
 

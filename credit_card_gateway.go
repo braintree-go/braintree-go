@@ -31,7 +31,6 @@ func (this CreditCardGateway) Create(card CreditCard) (CreditCardResult, error) 
 
 func (this CreditCardGateway) Find(token string) (CreditCardResult, error) {
 	response, err := this.gateway.Execute("GET", "/payment_methods/"+token, []byte{})
-
 	if err != nil {
 		return ErrorResult{}, err
 	} else if response.StatusCode == 200 {

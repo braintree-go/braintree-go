@@ -99,3 +99,61 @@ func TestFindCreditCardBadData(t *testing.T) {
 		t.Errorf("Finding an invalid credit card returned a successful result")
 	}
 }
+
+func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
+	customer := Customer{}
+
+	customerResult, err := gateway.Customer().Create(customer)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !customerResult.Success() {
+		t.Errorf("Customer create response was unsuccessful")
+	}
+
+	creditCard := CreditCard{
+		CustomerId:                customerResult.Customer().Id,
+		VenmoSDKPaymentMethodCode: "stub-" + TestCreditCards["visa"].Number,
+	}
+
+	createResult, err := gateway.CreditCard().Create(creditCard)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !createResult.Success() {
+		t.Errorf("Credit card create response was unsuccessful")
+	} else if !createResult.CreditCard().VenmoSDK {
+		t.Errorf("Venmo SDK credit card was not marked as such")
+	}
+}
+
+func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
+	customer := Customer{}
+
+	customerResult, err := gateway.Customer().Create(customer)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !customerResult.Success() {
+		t.Errorf("Customer create response was unsuccessful")
+	}
+
+	creditCard := CreditCard{
+		CustomerId:     customerResult.Customer().Id,
+		Number:         TestCreditCards["visa"].Number,
+		ExpirationDate: "05/14",
+		Options: &CreditCardOptions{
+			VenmoSDKSession: "stub-session",
+		},
+	}
+
+	createResult, err := gateway.CreditCard().Create(creditCard)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !createResult.Success() {
+		t.Errorf("Credit card create response was unsuccessful")
+	} else if !createResult.CreditCard().VenmoSDK {
+		t.Errorf("Venmo SDK credit card was not marked as such")
+	}
+}
