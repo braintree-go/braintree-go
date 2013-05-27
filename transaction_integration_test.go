@@ -1,8 +1,6 @@
 package braintree
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestTransactionCreate(t *testing.T) {
 	tx := Transaction{

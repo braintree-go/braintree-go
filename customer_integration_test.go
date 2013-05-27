@@ -1,8 +1,6 @@
 package braintree
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestCustomerCreate(t *testing.T) {
 	customer := Customer{

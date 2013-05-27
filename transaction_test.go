@@ -1,8 +1,6 @@
 package braintree
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestToXML(t *testing.T) {
 	tx := Transaction{
