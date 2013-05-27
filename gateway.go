@@ -60,9 +60,13 @@ func (this BraintreeGateway) Execute(method, urlExtension string, body []byte) (
 }
 
 func (this BraintreeGateway) Transaction() TransactionGateway {
-  return TransactionGateway{this}
+	return TransactionGateway{this}
+}
+
+func (this BraintreeGateway) CreditCard() CreditCardGateway {
+	return CreditCardGateway{this}
 }
 
 func (this BraintreeGateway) Customer() CustomerGateway {
-  return CustomerGateway{this}
+	return CustomerGateway{this}
 }

@@ -17,17 +17,17 @@ type Transaction struct {
 	Options           *TransactionOptions `xml:"options,omitempty"`
 }
 
-type TransactionOptions struct {
-	SubmitForSettlement              bool `xml:"submit-for-settlement,omitempty"`
-	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
-	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
-	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
-}
-
 func (this Transaction) ToXML() ([]byte, error) {
 	xml, err := xml.Marshal(this)
 	if err != nil {
 		return []byte{}, err
 	}
 	return xml, nil
+}
+
+type TransactionOptions struct {
+	SubmitForSettlement              bool `xml:"submit-for-settlement,omitempty"`
+	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
+	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
+	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
 }

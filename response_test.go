@@ -40,6 +40,19 @@ func TestErrorResultPanicsForTransactions(t *testing.T) {
 	result.Transaction()
 }
 
+func TestErrorResultPanicsForCreditCard(t *testing.T) {
+	result := ErrorResult{}
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("Did not panic on ErrorResult.CreditCard()")
+		}
+	}()
+
+	result.CreditCard()
+}
+
 func TestErrorResultPanicsForCustomer(t *testing.T) {
 	result := ErrorResult{}
 

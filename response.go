@@ -20,6 +20,15 @@ func (this Response) TransactionResult() (TransactionResult, error) {
 	return SuccessfulTransactionResult{tx}, nil
 }
 
+func (this Response) CreditCardResult() (CreditCardResult, error) {
+	var card CreditCard
+	err := xml.Unmarshal(this.Body, &card)
+	if err != nil {
+		return ErrorResult{}, errors.New("Error unmarshalling credit card XML: " + err.Error())
+	}
+	return SuccessfulCreditCardResult{card}, nil
+}
+
 func (this Response) CustomerResult() (CustomerResult, error) {
 	var customer Customer
 	err := xml.Unmarshal(this.Body, &customer)
@@ -60,6 +69,28 @@ func (this SuccessfulTransactionResult) Message() string {
 	return ""
 }
 
+type CreditCardResult interface {
+	CreditCard() CreditCard
+	Success() bool
+	Message() string
+}
+
+type SuccessfulCreditCardResult struct {
+	card CreditCard
+}
+
+func (this SuccessfulCreditCardResult) CreditCard() CreditCard {
+	return this.card
+}
+
+func (this SuccessfulCreditCardResult) Success() bool {
+	return true
+}
+
+func (this SuccessfulCreditCardResult) Message() string {
+	return ""
+}
+
 type CustomerResult interface {
 	Customer() Customer
 	Success() bool
@@ -97,6 +128,10 @@ func (this ErrorResult) Message() string {
 
 func (this ErrorResult) Transaction() Transaction {
 	panic("Transaction() called on ErrorResult")
+}
+
+func (this ErrorResult) CreditCard() CreditCard {
+	panic("CreditCard() called on ErrorResult")
 }
 
 func (this ErrorResult) Customer() Customer {

@@ -10,7 +10,7 @@ var (
 		privateKey:  "37912780851d0f68c267ea049cfa0114",
 	}
 
-	gateway     = NewGateway(testConfiguration)
+	gateway = NewGateway(testConfiguration)
 )
 
 type blowUpGateway struct{}
