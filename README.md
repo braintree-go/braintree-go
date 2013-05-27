@@ -2,7 +2,7 @@
 
 A Go client library for [Braintree](https://www.braintreepayments.com), a payment processing company used by a number of awesome companies like GitHub, Heroku, and 37Signals.
 
-This is *not* an official client library. Braintree maintains server-side libraries for Ruby, Python, PHP, Perl, C# and Java, but not Go. This package implements the core functionality of the other client libraries, but it's missing a few advanced features.
+This is *not* an official client library. Braintree maintains server-side libraries for Ruby, Python, PHP, Perl, Node, C# and Java, but not Go. This package implements the core functionality of the other client libraries, but it's missing a few advanced features.
 
 With that said, this package contains more than enough to get you started accepting payments using Braintree. If there's a feature the other client libraries implement that you really need, open an issue (or better yet, a pull request).
 
@@ -21,7 +21,6 @@ config := braintree.Configuration{
 }
 
 gateway := braintree.NewGateway(config)
-transactionGateway := braintree.TransactionGateway{gateway}
 ```
 
 So is creating your first transaction.
@@ -36,7 +35,7 @@ transaction := braintree.Transaction{
   },
 }
 
-result, err := transactionGateway.Create(transaction)
+result, err := gateway.Transaction().Create(transaction)
 ```
 
 The create call returns an error when something mechanical goes wrong, such as receiving malformed XML or being unable to connect to the Braintree gateway. For semantic failures, such as your customer's credit card being expired, the result type has `Success()` and `Message()` methods.
