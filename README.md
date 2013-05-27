@@ -39,7 +39,7 @@ transaction := braintree.Transaction{
 result, err := transactionGateway.Create(transaction)
 ```
 
-The create call returns an error when something mechanical goes wrong, such as receiving malformed XML or being unable to connect to the Braintree gateway. For semantic failures, such as receiving an invalid credit card number, the result type has `Success()` and `Message()` methods.
+The create call returns an error when something mechanical goes wrong, such as receiving malformed XML or being unable to connect to the Braintree gateway. For semantic failures, such as your customer's credit card being expired, the result type has `Success()` and `Message()` methods.
 
 ```go
 if err != nil {
