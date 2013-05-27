@@ -6,7 +6,7 @@ Note that this is *not* an official client library. Braintree officially only ma
 
 With that said, this package contains more than enough to get you started accepting payments using Braintree. If there's a feature the other client libraries implement that you really need, open an issue (or better yet, a pull request).
 
-# Usage:
+### Usage
 
     import braintree "github.com/lionelbarrow/braintree-go"
   
@@ -17,6 +17,7 @@ With that said, this package contains more than enough to get you started accept
       privateKey:  "my_private_key",
     }
     gateway := braintree.NewGateway(config)
+    transactionGateway := braintree.TransactionGateway{gateway}
 
     transaction := braintree.Transaction{
       Type: "sale",
@@ -27,7 +28,7 @@ With that said, this package contains more than enough to get you started accept
       },
     }
 
-    result, err := gateway.Create(transaction)
+    result, err := transactionGateway.Create(transaction)
 
     if err != nil {
       fmt.Println(err.Error()) 
@@ -37,7 +38,7 @@ With that said, this package contains more than enough to get you started accept
       fmt.Println("Transaction created! ID: " + result.Transaction().Id)
     }
 
-# Liscense
+### Liscense
 
 The MIT License (MIT)
 
