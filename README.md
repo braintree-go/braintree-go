@@ -14,7 +14,7 @@ Setting up your credentials is easy.
 import braintree "github.com/lionelbarrow/braintree-go"
   
 config := braintree.Configuration{
-  environment: Sandbox,
+  environment: braintree.Sandbox,
   merchantId:  "my_merchant_id",
   publicKey:   "my_public_key",
   privateKey:  "my_private_key",
