@@ -1,13 +1,16 @@
 package braintree
 
-import "errors"
+import (
+	"encoding/xml"
+	"errors"
+)
 
 type CustomerGateway struct {
 	gateway Gateway
 }
 
 func (this CustomerGateway) Create(customer Customer) (CustomerResult, error) {
-	customerXML, err := customer.ToXML()
+	customerXML, err := xml.Marshal(customer)
 	if err != nil {
 		return ErrorResult{}, errors.New("Error encoding customer as XML: " + err.Error())
 	}

@@ -1,13 +1,16 @@
 package braintree
 
-import "errors"
+import (
+	"encoding/xml"
+	"errors"
+)
 
 type CreditCardGateway struct {
 	gateway Gateway
 }
 
 func (this CreditCardGateway) Create(card CreditCard) (CreditCardResult, error) {
-	cardXML, err := card.ToXML()
+	cardXML, err := xml.Marshal(card)
 	if err != nil {
 		return ErrorResult{}, errors.New("Error encoding credit card as XML: " + err.Error())
 	}

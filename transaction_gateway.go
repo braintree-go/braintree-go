@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"encoding/xml"
 	"errors"
 )
 
@@ -9,7 +10,7 @@ type TransactionGateway struct {
 }
 
 func (this TransactionGateway) Create(tx Transaction) (TransactionResult, error) {
-	transactionXML, err := tx.ToXML()
+	transactionXML, err := xml.Marshal(tx)
 	if err != nil {
 		return ErrorResult{}, errors.New("Error encoding transaction as XML: " + err.Error())
 	}

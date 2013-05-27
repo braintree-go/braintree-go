@@ -1,7 +1,5 @@
 package braintree
 
-import "encoding/xml"
-
 type Transaction struct {
 	XMLName           string              `xml:"transaction"`
 	Id                string              `xml:"id,omitempty"`
@@ -15,14 +13,6 @@ type Transaction struct {
 	BillingAddress    *Address            `xml:"billing,omitempty"`
 	ShippingAddress   *Address            `xml:"shipping,omitempty"`
 	Options           *TransactionOptions `xml:"options,omitempty"`
-}
-
-func (this Transaction) ToXML() ([]byte, error) {
-	xml, err := xml.Marshal(this)
-	if err != nil {
-		return []byte{}, err
-	}
-	return xml, nil
 }
 
 type TransactionOptions struct {
