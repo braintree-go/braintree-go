@@ -8,7 +8,7 @@ type TransactionGateway struct {
 	gateway Gateway
 }
 
-func (this TransactionGateway) Sale(tx Transaction) (TransactionResult, error) {
+func (this TransactionGateway) Create(tx Transaction) (TransactionResult, error) {
 	transactionXML, err := tx.ToXML()
 	if err != nil {
 		return ErrorResult{}, errors.New("Error encoding transaction as XML: " + err.Error())

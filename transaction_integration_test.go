@@ -15,7 +15,7 @@ func TestTransactionCreate(t *testing.T) {
 		},
 	}
 
-	result, err := txGateway.Sale(tx)
+	result, err := txGateway.Create(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -38,7 +38,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 		},
 	}
 
-	result, err := txGateway.Sale(tx)
+	result, err := txGateway.Create(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -59,7 +59,7 @@ func TestFindTransaction(t *testing.T) {
 		},
 	}
 
-	saleResult, err := txGateway.Sale(tx)
+	saleResult, err := txGateway.Create(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -127,7 +127,7 @@ func TestAllTransactionFields(t *testing.T) {
 		},
 	}
 
-	result, err := txGateway.Sale(sentTx)
+	result, err := txGateway.Create(sentTx)
 
 	if err != nil {
 		t.Errorf(err.Error())

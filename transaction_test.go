@@ -22,9 +22,9 @@ func TestToXML(t *testing.T) {
 	}
 }
 
-func TestSaleErrorHandling(t *testing.T) {
+func TestCreateErrorHandling(t *testing.T) {
 	gateway := TransactionGateway{blowUpGateway{}}
-	response, err := gateway.Sale(Transaction{})
+	response, err := gateway.Create(Transaction{})
 
 	if response.Success() {
 		t.Errorf("Sale response was successful when the server 500'd")
@@ -33,9 +33,9 @@ func TestSaleErrorHandling(t *testing.T) {
 	}
 }
 
-func TestSaleBadInputHandling(t *testing.T) {
+func TestCreateBadInputHandling(t *testing.T) {
 	gateway := TransactionGateway{badInputGateway{}}
-	response, err := gateway.Sale(Transaction{})
+	response, err := gateway.Create(Transaction{})
 
 	if response.Success() {
 		t.Errorf("Sale response was successful when the server 422'd")
