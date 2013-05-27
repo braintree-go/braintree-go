@@ -3,9 +3,7 @@ package braintree
 import "testing"
 
 func TestCreateCreditCard(t *testing.T) {
-	customer := Customer{
-		Id: "foo",
-	}
+	customer := Customer{}
 
 	customerResult, err := gateway.Customer().Create(customer)
 
@@ -16,7 +14,7 @@ func TestCreateCreditCard(t *testing.T) {
 	}
 
 	creditCard := CreditCard{
-		CustomerId:     "foo",
+		CustomerId:     customerResult.Customer().Id,
 		Number:         TestCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
 		CVV:            "100",
@@ -34,5 +32,21 @@ func TestCreateCreditCard(t *testing.T) {
 		t.Errorf("Message: " + result.Message())
 	} else if result.CreditCard().Token == "" {
 		t.Errorf("Credit card did not receive an token")
+	}
+}
+
+/* This will fail because a customer ID is required. */
+func TestCreateCreditCardInvalidInput(t *testing.T) {
+	creditCard := CreditCard{
+		Number:         TestCreditCards["visa"].Number,
+		ExpirationDate: "05/14",
+	}
+
+	result, err := gateway.CreditCard().Create(creditCard)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if result.Success() {
+		t.Errorf("Invaid credit card create returned a successful response")
 	}
 }
