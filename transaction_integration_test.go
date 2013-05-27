@@ -81,14 +81,14 @@ func TestFindTransaction(t *testing.T) {
 }
 
 func TestFindNonExistantTransaction(t *testing.T) {
-	result, err := txGateway.Find("bad transaction ID")
+	result, err := txGateway.Find("bad_transaction_id")
 
 	if err == nil {
 		t.Errorf("Did not receive an error when trying to find a non-existant transaction")
 	} else if result.Success() {
 		t.Errorf("Transaction find response was successful on bad data")
 	} else if err.Error() != "A transaction with that ID could not be found" {
-		t.Errorf("Got the wrong error message when finding a non-existant transaction. Got: " + err.Error())
+		t.Errorf("Got the wrong error message when finding a non-existant transaction.")
 	}
 }
 

@@ -58,3 +58,42 @@ func TestCustomerCreateWithErrors(t *testing.T) {
 		t.Errorf("Customer created succeeded with bad CVV and verify card true")
 	}
 }
+
+func TestCustomerFind(t *testing.T) {
+	sentCustomer := Customer{
+		FirstName: "Lionel",
+		LastName:  "Barrow",
+	}
+
+	createResult, err := customerGateway.Create(sentCustomer)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !createResult.Success() {
+		t.Errorf("Customer create response was unsuccessful")
+	} else if createResult.Customer().Id == "" {
+		t.Errorf("Customer did not receive an ID")
+	}
+
+	findResult, err := customerGateway.Find(createResult.Customer().Id)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !findResult.Success() {
+		t.Errorf("Could not find the customer we just created")
+	} else if findResult.Customer().Id == "" {
+		t.Errorf("The old customer's ID and the new one did not match")
+	}
+}
+
+func TestFindNonExistantCustomer(t *testing.T) {
+	result, err := customerGateway.Find("bad_customer_id")
+
+	if err == nil {
+		t.Errorf("Did not receive an error when trying to find a non-existant customer")
+	} else if result.Success() {
+		t.Errorf("Customer find response was successful on bad data")
+	} else if err.Error() != "A customer with that ID could not be found" {
+		t.Errorf("Got the wrong error message when finding a non-existant customer.")
+	}
+}

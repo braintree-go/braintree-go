@@ -27,3 +27,15 @@ func (this CustomerGateway) Create(customer Customer) (CustomerResult, error) {
 
 	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
 }
+
+func (this CustomerGateway) Find(id string) (CustomerResult, error) {
+	response, err := this.gateway.Execute("GET", "/customers/"+id, []byte{})
+	if err != nil {
+		return ErrorResult{}, err
+	} else if response.StatusCode == 200 {
+		return response.CustomerResult()
+	} else if response.StatusCode == 404 {
+		return ErrorResult{}, errors.New("A customer with that ID could not be found")
+	}
+	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
+}
