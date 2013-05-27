@@ -1,6 +1,6 @@
 # Braintree-Go
 
-A Go client library for [Braintree](https://www.braintreepayments.com), a payment processing company used by a number of awesome companies like GitHub, Heroku, and 37Signals.
+A Go client library for [Braintree](https://www.braintreepayments.com), the payment processing company used by a number of awesome companies like GitHub, Heroku, and 37Signals.
 
 This is *not* an official client library. Braintree maintains server-side libraries for Ruby, Python, PHP, Perl, Node, C# and Java, but not Go. This package implements the core functionality of the other client libraries, but it's missing a few advanced features.
 
