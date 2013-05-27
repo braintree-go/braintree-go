@@ -166,3 +166,35 @@ func TestAllTransactionFields(t *testing.T) {
 		t.Errorf("Transaction was not submitted for settlement")
 	}
 }
+
+func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
+	customer := Customer{
+		CreditCard: &CreditCard{
+			Number:         TestCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+	}
+
+	customerResult, err := gateway.Customer().Create(customer)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !customerResult.Success() {
+		t.Errorf("Customer create response was unsuccessful")
+	}
+
+	transaction := Transaction{
+		Type:               "sale",
+		CustomerID:         customerResult.Customer().Id,
+		Amount:             100,
+		PaymentMethodToken: customerResult.Customer().CreditCards[0].Token,
+	}
+
+	transactionResult, err := gateway.Transaction().Create(transaction)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	} else if !transactionResult.Success() {
+		t.Errorf("Transaction create response was unsuccessful")
+	}
+}

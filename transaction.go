@@ -1,18 +1,20 @@
 package braintree
 
 type Transaction struct {
-	XMLName           string              `xml:"transaction"`
-	Id                string              `xml:"id,omitempty"`
-	Status            string              `xml:"status,omitempty"`
-	Type              string              `xml:"type,omitempty"`
-	Amount            float64             `xml:"amount"`
-	OrderId           string              `xml:"order-id,omitempty"`
-	MerchantAccountId string              `xml:"merchant-account-id,omitempty"`
-	CreditCard        *CreditCard         `xml:"credit-card,omitempty"`
-	Customer          *Customer           `xml:"customer,omitempty"`
-	BillingAddress    *Address            `xml:"billing,omitempty"`
-	ShippingAddress   *Address            `xml:"shipping,omitempty"`
-	Options           *TransactionOptions `xml:"options,omitempty"`
+	XMLName            string              `xml:"transaction"`
+	Id                 string              `xml:"id,omitempty"`
+	CustomerID         string              `xml:"customer-id,omitempty"`
+	Status             string              `xml:"status,omitempty"`
+	Type               string              `xml:"type,omitempty"`
+	Amount             float64             `xml:"amount"`
+	OrderId            string              `xml:"order-id,omitempty"`
+	PaymentMethodToken string              `xml:"payment-method-token,omitempty"`
+	MerchantAccountId  string              `xml:"merchant-account-id,omitempty"`
+	CreditCard         *CreditCard         `xml:"credit-card,omitempty"`
+	Customer           *Customer           `xml:"customer,omitempty"`
+	BillingAddress     *Address            `xml:"billing,omitempty"`
+	ShippingAddress    *Address            `xml:"shipping,omitempty"`
+	Options            *TransactionOptions `xml:"options,omitempty"`
 }
 
 type TransactionOptions struct {
