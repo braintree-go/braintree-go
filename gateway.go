@@ -58,3 +58,11 @@ func (this BraintreeGateway) Execute(method, urlExtension string, body []byte) (
 
 	return &Response{StatusCode: response.StatusCode, Status: response.Status, Body: contents}, nil
 }
+
+func (this BraintreeGateway) Transaction() TransactionGateway {
+  return TransactionGateway{this}
+}
+
+func (this BraintreeGateway) Customer() CustomerGateway {
+  return CustomerGateway{this}
+}

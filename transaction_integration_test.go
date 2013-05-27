@@ -15,7 +15,7 @@ func TestTransactionCreate(t *testing.T) {
 		},
 	}
 
-	result, err := txGateway.Create(tx)
+	result, err := gateway.Transaction().Create(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -38,7 +38,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 		},
 	}
 
-	result, err := txGateway.Create(tx)
+	result, err := gateway.Transaction().Create(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -59,7 +59,7 @@ func TestFindTransaction(t *testing.T) {
 		},
 	}
 
-	saleResult, err := txGateway.Create(tx)
+	saleResult, err := gateway.Transaction().Create(tx)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -69,7 +69,7 @@ func TestFindTransaction(t *testing.T) {
 
 	txId := saleResult.Transaction().Id
 
-	findResult, err := txGateway.Find(txId)
+	findResult, err := gateway.Transaction().Find(txId)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -81,7 +81,7 @@ func TestFindTransaction(t *testing.T) {
 }
 
 func TestFindNonExistantTransaction(t *testing.T) {
-	result, err := txGateway.Find("bad_transaction_id")
+	result, err := gateway.Transaction().Find("bad_transaction_id")
 
 	if err == nil {
 		t.Errorf("Did not receive an error when trying to find a non-existant transaction")
@@ -127,7 +127,7 @@ func TestAllTransactionFields(t *testing.T) {
 		},
 	}
 
-	result, err := txGateway.Create(sentTx)
+	result, err := gateway.Transaction().Create(sentTx)
 
 	if err != nil {
 		t.Errorf(err.Error())

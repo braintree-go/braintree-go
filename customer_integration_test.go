@@ -17,7 +17,7 @@ func TestCustomerCreate(t *testing.T) {
 		},
 	}
 
-	result, err := customerGateway.Create(customer)
+	result, err := gateway.Customer().Create(customer)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -50,7 +50,7 @@ func TestCustomerCreateWithErrors(t *testing.T) {
 		},
 	}
 
-	result, err := customerGateway.Create(customer)
+	result, err := gateway.Customer().Create(customer)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -65,7 +65,7 @@ func TestCustomerFind(t *testing.T) {
 		LastName:  "Barrow",
 	}
 
-	createResult, err := customerGateway.Create(sentCustomer)
+	createResult, err := gateway.Customer().Create(sentCustomer)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -75,7 +75,7 @@ func TestCustomerFind(t *testing.T) {
 		t.Errorf("Customer did not receive an ID")
 	}
 
-	findResult, err := customerGateway.Find(createResult.Customer().Id)
+	findResult, err := gateway.Customer().Find(createResult.Customer().Id)
 
 	if err != nil {
 		t.Errorf(err.Error())
@@ -87,7 +87,7 @@ func TestCustomerFind(t *testing.T) {
 }
 
 func TestFindNonExistantCustomer(t *testing.T) {
-	result, err := customerGateway.Find("bad_customer_id")
+	result, err := gateway.Customer().Find("bad_customer_id")
 
 	if err == nil {
 		t.Errorf("Did not receive an error when trying to find a non-existant customer")
