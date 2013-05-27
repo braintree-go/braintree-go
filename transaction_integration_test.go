@@ -93,3 +93,78 @@ func TestFindNonExistantTransaction(t *testing.T) {
 		t.Errorf("Got the wrong error message when finding a non-existant transaction. Got: " + err.Error())
 	}
 }
+
+/* This test will fail unless the account under test is set up with a merchant account with
+the ID "my_euro_ma", which presents and settles in Euros. */
+func TestAllTransactionFields(t *testing.T) {
+	sentTx := Transaction{
+		Type:    "sale",
+		Amount:  100.00,
+		OrderId: "my_custom_order",
+		CreditCard: &CreditCard{
+			Number:         TestCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "100",
+		},
+		Customer: &Customer{
+			FirstName: "Lionel",
+		},
+		BillingAddress: &Address{
+			StreetAddress: "1 E Main St",
+			Locality:      "Chicago",
+			Region:        "IL",
+			PostalCode:    "60637",
+		},
+		ShippingAddress: &Address{
+			StreetAddress: "1 E Main St",
+			Locality:      "Chicago",
+			Region:        "IL",
+			PostalCode:    "60637",
+		},
+		Options: &TransactionOptions{
+			SubmitForSettlement:              true,
+			StoreInVault:                     true,
+			AddBillingAddressToPaymentMethod: true,
+			StoreShippingAddressInVault:      true,
+		},
+	}
+
+	result, err := txGateway.Sale(sentTx)
+
+	if err != nil {
+		t.Errorf(err.Error())
+		t.FailNow()
+	} else if !result.Success() {
+		t.Errorf("Transaction create response was unsuccessful. Message: " + result.Message())
+		t.FailNow()
+	}
+
+	receivedTx := result.Transaction()
+
+	if receivedTx.Type != sentTx.Type {
+		t.Errorf("Type was wrong")
+	} else if receivedTx.Amount != sentTx.Amount {
+		t.Errorf("Amount was wrong")
+	} else if receivedTx.OrderId != sentTx.OrderId {
+		t.Errorf("OrderID was wrong")
+	} else if receivedTx.Customer.FirstName != sentTx.Customer.FirstName {
+		t.Errorf("Customer name was wrong")
+	} else if receivedTx.BillingAddress.StreetAddress != sentTx.BillingAddress.StreetAddress {
+		t.Errorf("Billing street address was wrong")
+	} else if receivedTx.BillingAddress.Locality != sentTx.BillingAddress.Locality {
+		t.Errorf("Billing locality was wrong")
+	} else if receivedTx.BillingAddress.Region != sentTx.BillingAddress.Region {
+		t.Errorf("Billing region was wrong")
+	} else if receivedTx.BillingAddress.PostalCode != sentTx.BillingAddress.PostalCode {
+		t.Errorf("Billing postal code was wrong")
+	} else if receivedTx.ShippingAddress.StreetAddress != sentTx.ShippingAddress.StreetAddress {
+		t.Errorf("Shipping street address was wrong")
+	} else if receivedTx.ShippingAddress.Locality != sentTx.ShippingAddress.Locality {
+		t.Errorf("Shipping locality was wrong")
+	} else if receivedTx.ShippingAddress.Region != sentTx.ShippingAddress.Region {
+		t.Errorf("Shipping region was wrong")
+	} else if receivedTx.ShippingAddress.PostalCode != sentTx.ShippingAddress.PostalCode {
+		t.Errorf("Shipping postal code was wrong")
+	}
+
+}
