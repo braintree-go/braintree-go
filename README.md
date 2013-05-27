@@ -1,42 +1,57 @@
 # Braintree-Go
 
-A Go client library for [Braintree](https://www.braintreepayments.com).
+A Go client library for [Braintree](https://www.braintreepayments.com), a payment processing company used by a number of awesome companies like GitHub, Heroku, and 37Signals.
 
-Note that this is *not* an official client library. Braintree officially only maintains server-side libraries for Ruby, Python, PHP, Perl, C# and Java. This package is not feature-complete compared to those libraries and will not receive updates from Braintree.
+This is *not* an official client library. Braintree maintains server-side libraries for Ruby, Python, PHP, Perl, C# and Java, but not Go. This package implements the core functionality of the other client libraries, but it's missing a few advanced features.
 
 With that said, this package contains more than enough to get you started accepting payments using Braintree. If there's a feature the other client libraries implement that you really need, open an issue (or better yet, a pull request).
 
 ### Usage
 
-    import braintree "github.com/lionelbarrow/braintree-go"
+Setting up your credentials is easy.
+
+```go
+import braintree "github.com/lionelbarrow/braintree-go"
   
-    config := braintree.Configuration{
-      environment: Sandbox,
-      merchantId:  "my_merchant_id",
-      publicKey:   "my_public_key",
-      privateKey:  "my_private_key",
-    }
-    gateway := braintree.NewGateway(config)
-    transactionGateway := braintree.TransactionGateway{gateway}
+config := braintree.Configuration{
+  environment: Sandbox,
+  merchantId:  "my_merchant_id",
+  publicKey:   "my_public_key",
+  privateKey:  "my_private_key",
+}
 
-    transaction := braintree.Transaction{
-      Type: "sale",
-      Amount: 100,
-      CreditCard: &braintree.CreditCard{
-        Number:         41111111111111111,
-        ExpirationDate: "05/14",
-      },
-    }
+gateway := braintree.NewGateway(config)
+transactionGateway := braintree.TransactionGateway{gateway}
+```
 
-    result, err := transactionGateway.Create(transaction)
+So is creating your first transaction.
 
-    if err != nil {
-      fmt.Println(err.Error()) 
-    } else if !result.Success() {
-      fmt.Println(result.Message())
-    } else {
-      fmt.Println("Transaction created! ID: " + result.Transaction().Id)
-    }
+```go
+transaction := braintree.Transaction{
+  Type: "sale",
+  Amount: 100,
+  CreditCard: &braintree.CreditCard{
+    Number:         41111111111111111,
+    ExpirationDate: "05/14",
+  },
+}
+
+result, err := transactionGateway.Create(transaction)
+```
+
+The create call returns an error when something mechanical goes wrong, such as receiving malformed XML or being unable to connect to the Braintree gateway. For semantic failures, such as receiving an invalid credit card number, the result type has `Success()` and `Message()` methods.
+
+```go
+if err != nil {
+  fmt.Println(err.Error()) 
+} else if !result.Success() {
+  fmt.Println(result.Message())
+} else {
+  fmt.Println("Transaction created! ID: " + result.Transaction().Id)
+}
+```
+
+In addition to creating transactions, you can also tokenize credit card information for repeat or subscription billing using the `CreditCard` and `Customer` types. This package is completely compatible with [Braintree.js](https://www.braintreepayments.com/braintrust/braintree-js), so if you encrypt your customers' credit cards in the browser, you can pass them on to Braintree without ever seeing them yourself. This massively decreases your PCI scope.
 
 ### Liscense
 
