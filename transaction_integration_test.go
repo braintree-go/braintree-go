@@ -167,4 +167,9 @@ func TestAllTransactionFields(t *testing.T) {
 		t.Errorf("Shipping postal code was wrong")
 	}
 
+	if receivedTx.CreditCard.Token == "" {
+		t.Errorf("Should have received a token when credit card is stored in vault")
+	} else if receivedTx.Customer.Id == "" {
+		t.Errorf("Should have received a customer ID when providing customer details on a transaction")
+	}
 }
