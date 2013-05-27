@@ -10,9 +10,6 @@ func TestTransactionCreate(t *testing.T) {
 			Number:         TestCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
-		Options: &TransactionOptions{
-			SubmitForSettlement: true,
-		},
 	}
 
 	result, err := gateway.Transaction().Create(tx)
@@ -21,10 +18,6 @@ func TestTransactionCreate(t *testing.T) {
 		t.Errorf(err.Error())
 	} else if !result.Success() {
 		t.Errorf("Transaction create response was unsuccessful")
-	} else if result.Transaction().Id == "" {
-		t.Errorf("Transaction did not receive an ID")
-	} else if result.Transaction().Status != "submitted_for_settlement" {
-		t.Errorf("Transaction was not submitted for settlement")
 	}
 }
 
@@ -169,5 +162,7 @@ func TestAllTransactionFields(t *testing.T) {
 		t.Errorf("Should have received a token when credit card is stored in vault")
 	} else if receivedTx.Customer.Id == "" {
 		t.Errorf("Should have received a customer ID when providing customer details on a transaction")
+	} else if result.Transaction().Status != "submitted_for_settlement" {
+		t.Errorf("Transaction was not submitted for settlement")
 	}
 }

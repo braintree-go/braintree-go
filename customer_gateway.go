@@ -1,8 +1,6 @@
 package braintree
 
-import (
-	"errors"
-)
+import "errors"
 
 type CustomerGateway struct {
 	gateway Gateway
@@ -37,5 +35,5 @@ func (this CustomerGateway) Find(id string) (CustomerResult, error) {
 	} else if response.StatusCode == 404 {
 		return ErrorResult{}, errors.New("A customer with that ID could not be found")
 	}
-	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
+	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
 }
