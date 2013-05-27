@@ -4,10 +4,10 @@ var (
 	TestCreditCards = map[string]CreditCard{"visa": CreditCard{Number: "4111111111111111"}}
 
 	testConfiguration = Configuration{
-		environment: Development,
-		merchantId:  "integration_merchant_id",
-		publicKey:   "b6fkbfmhnjdg7333",
-		privateKey:  "37912780851d0f68c267ea049cfa0114",
+		environment: Sandbox,
+		merchantId:  "4ngqq224rnk6gvxh",
+		publicKey:   "jkq28pcxj4r85dwr",
+		privateKey:  "66062a3876e2dc298f2195f0bf173f5a",
 	}
 
 	gateway = NewGateway(testConfiguration)

@@ -57,7 +57,8 @@ func TestFindTransaction(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	} else if !saleResult.Success() {
-		t.Errorf("Transaction create response was unsuccessful")
+		t.Errorf("Transaction create response was unsuccessfu. Message:" + saleResult.Message())
+		t.FailNow()
 	}
 
 	txId := saleResult.Transaction().Id
@@ -195,6 +196,6 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	} else if !transactionResult.Success() {
-		t.Errorf("Transaction create response was unsuccessful")
+		t.Errorf("Transaction create response was unsuccessful. Message:" + transactionResult.Message())
 	}
 }
