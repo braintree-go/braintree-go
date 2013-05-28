@@ -1,8 +1,8 @@
-# Braintree-Go
+# Braintree Go
 
-A Go client library for [Braintree](https://www.braintreepayments.com), a payment processing company used by a number of awesome companies like GitHub, Heroku, and 37Signals.
+A Go client library for [Braintree](https://www.braintreepayments.com), the payments company behind awesome companies like GitHub, Heroku, and 37signals.
 
-This is *not* an official client library. Braintree maintains server-side libraries for Ruby, Python, PHP, Perl, Node, C# and Java, but not Go. This package implements the core functionality of the other client libraries, but it's missing a few advanced features.
+This is *not* an official client library. Braintree maintains server-side libraries for [Ruby](https://www.github.com/braintree/braintree_ruby), [Python](https://www.github.com/braintree/braintree_python), [PHP](https://www.github.com/braintree/braintree_php), [Perl](https://www.github.com/braintree/braintree_perl), [Node](https://www.github.com/braintree/braintree_node), [C#](https://www.github.com/braintree/braintree_dotnet) and [Java](https://www.github.com/braintree/braintree_java), but not Go. This package implements the core functionality of the other client libraries, but it's missing a few advanced features.
 
 With that said, this package contains more than enough to get you started accepting payments using Braintree. If there's a feature the other client libraries implement that you really need, open an issue (or better yet, a pull request).
 
@@ -51,6 +51,18 @@ if err != nil {
 ```
 
 In addition to creating transactions, you can also tokenize credit card information for repeat or subscription billing using the `CreditCard` and `Customer` types. This package is completely compatible with [Braintree.js](https://www.braintreepayments.com/braintrust/braintree-js), so if you encrypt your customers' credit cards in the browser, you can pass them on to Braintree without ever seeing them yourself. This massively decreases your PCI scope.
+
+### Installation
+
+The usual. `go get github.com/lionelbarrow/braintree-go`
+
+### Documentation
+
+Braintree provides a [ton of documentation](https://www.braintreepayments.com/docs/ruby/guide/overview) on how to use their API. I recommend you use the Ruby documentation when following along, as the Ruby client library is broadly similar to this one.
+
+### Testing
+
+The integration tests run against an account I created in the [Braintree Sandbox](https://sandbox.braintreegateway.com/) for this package. This account has some non-default settings, so if you just plug your own sandbox account in, a few tests will break. I've noted what settings you need to change and why in comments above these tests.
 
 ### Liscense
 
