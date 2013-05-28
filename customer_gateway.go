@@ -26,7 +26,7 @@ func (this CustomerGateway) Create(customer Customer) (CustomerResult, error) {
 		return response.ErrorResult()
 	}
 
-	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
+	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
 }
 
 func (this CustomerGateway) Find(id string) (CustomerResult, error) {

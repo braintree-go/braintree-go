@@ -26,7 +26,7 @@ func (this TransactionGateway) Create(tx Transaction) (TransactionResult, error)
 		return response.ErrorResult()
 	}
 
-	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
+	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
 }
 
 func (this TransactionGateway) Find(txId string) (TransactionResult, error) {
@@ -38,5 +38,5 @@ func (this TransactionGateway) Find(txId string) (TransactionResult, error) {
 	} else if response.StatusCode == 404 {
 		return ErrorResult{}, errors.New("A transaction with that ID could not be found")
 	}
-	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
+	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
 }

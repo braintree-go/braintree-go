@@ -26,7 +26,7 @@ func (this CreditCardGateway) Create(card CreditCard) (CreditCardResult, error) 
 		return response.ErrorResult()
 	}
 
-	return ErrorResult{}, errors.New("Unexpected response from server: " + string(response.Status))
+	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
 }
 
 func (this CreditCardGateway) Find(token string) (CreditCardResult, error) {
