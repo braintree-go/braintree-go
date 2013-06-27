@@ -47,7 +47,7 @@ func TestFindTransaction(t *testing.T) {
 		Type:   "sale",
 		Amount: 100.00,
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["visa"].Number,
+			Number:         TestCreditCards["mastercard"].Number,
 			ExpirationDate: "05/14",
 		},
 	}
@@ -171,7 +171,7 @@ func TestAllTransactionFields(t *testing.T) {
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	customer := Customer{
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["visa"].Number,
+			Number:         TestCreditCards["discover"].Number,
 			ExpirationDate: "05/14",
 		},
 	}
