@@ -3,98 +3,86 @@ package braintree
 import "testing"
 
 func TestTransactionCreate(t *testing.T) {
-	tx := Transaction{
+	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: 100.00,
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["visa"].Number,
+			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
-	}
-
-	result, err := gateway.Transaction().Create(tx)
+	})
 
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !result.Success() {
-		t.Errorf("Transaction create response was unsuccessful")
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("invalid id")
 	}
 }
 
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
-	tx := Transaction{
+	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: 2010.00,
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["visa"].Number,
+			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
+	})
+
+	t.Log(tx)
+
+	if err == nil {
+		t.Fail()
 	}
-
-	result, err := gateway.Transaction().Create(tx)
-
-	if err != nil {
-		t.Errorf(err.Error())
-	} else if result.Success() {
-		t.Errorf("Transaction create response was successful, expected failure")
-	} else if result.Message() != "Card Issuer Declined CVV" {
-		t.Errorf("Got wrong error message. Got: " + result.Message())
+	if err.Error() != "Card Issuer Declined CVV" {
+		t.Fatal(err)
 	}
 }
 
 func TestFindTransaction(t *testing.T) {
-	tx := Transaction{
+	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: 100.00,
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["mastercard"].Number,
+			Number:         testCreditCards["mastercard"].Number,
 			ExpirationDate: "05/14",
 		},
+	})
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	saleResult, err := gateway.Transaction().Create(tx)
-
+	tx2, err := testGateway.Transaction().Find(tx.Id)
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !saleResult.Success() {
-		t.Errorf("Transaction create response was unsuccessfu. Message:" + saleResult.Message())
-		t.FailNow()
+		t.Fatal(err)
 	}
 
-	txId := saleResult.Transaction().Id
+	t.Log(tx)
+	t.Log(tx2)
 
-	findResult, err := gateway.Transaction().Find(txId)
-
-	if err != nil {
-		t.Errorf(err.Error())
-	} else if !findResult.Success() {
-		t.Errorf("Transaction find response was unsuccessful")
-	} else if findResult.Transaction().Id != txId {
-		t.Errorf("Transaction find came back with the wrong transaction!")
+	if tx.Id != tx2.Id {
+		t.Fatal("transaction ids do not match")
 	}
 }
 
 func TestFindNonExistantTransaction(t *testing.T) {
-	result, err := gateway.Transaction().Find("bad_transaction_id")
-
+	_, err := testGateway.Transaction().Find("bad_transaction_id")
 	if err == nil {
-		t.Errorf("Did not receive an error when trying to find a non-existant transaction")
-	} else if result.Success() {
-		t.Errorf("Transaction find response was successful on bad data")
-	} else if err.Error() != "A transaction with that ID could not be found" {
-		t.Errorf("Got the wrong error message when finding a non-existant transaction.")
+		t.Fatal("expected error, invalid tx id")
+	}
+	if err.Error() != "Not Found (404)" {
+		t.Fatal(err)
 	}
 }
 
-/* This test will fail unless the account under test is set up with a merchant account with
-the ID "my_euro_ma", which presents and settles in Euros. */
 func TestAllTransactionFields(t *testing.T) {
-	sentTx := Transaction{
+	tx := &Transaction{
 		Type:    "sale",
 		Amount:  100.00,
 		OrderId: "my_custom_order",
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["visa"].Number,
+			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
@@ -121,81 +109,84 @@ func TestAllTransactionFields(t *testing.T) {
 		},
 	}
 
-	result, err := gateway.Transaction().Create(sentTx)
-
+	tx2, err := testGateway.Transaction().Create(tx)
 	if err != nil {
-		t.Errorf(err.Error())
-		t.FailNow()
-	} else if !result.Success() {
-		t.Errorf("Transaction create response was unsuccessful. Message: " + result.Message())
-		t.FailNow()
+		t.Fatal(err)
 	}
 
-	receivedTx := result.Transaction()
+	t.Log(tx)
+	t.Log(tx2)
 
-	if receivedTx.Type != sentTx.Type {
-		t.Errorf("Type was wrong")
-	} else if receivedTx.Amount != sentTx.Amount {
-		t.Errorf("Amount was wrong")
-	} else if receivedTx.OrderId != sentTx.OrderId {
-		t.Errorf("OrderID was wrong")
-	} else if receivedTx.Customer.FirstName != sentTx.Customer.FirstName {
-		t.Errorf("Customer name was wrong")
-	} else if receivedTx.BillingAddress.StreetAddress != sentTx.BillingAddress.StreetAddress {
-		t.Errorf("Billing street address was wrong")
-	} else if receivedTx.BillingAddress.Locality != sentTx.BillingAddress.Locality {
-		t.Errorf("Billing locality was wrong")
-	} else if receivedTx.BillingAddress.Region != sentTx.BillingAddress.Region {
-		t.Errorf("Billing region was wrong")
-	} else if receivedTx.BillingAddress.PostalCode != sentTx.BillingAddress.PostalCode {
-		t.Errorf("Billing postal code was wrong")
-	} else if receivedTx.ShippingAddress.StreetAddress != sentTx.ShippingAddress.StreetAddress {
-		t.Errorf("Shipping street address was wrong")
-	} else if receivedTx.ShippingAddress.Locality != sentTx.ShippingAddress.Locality {
-		t.Errorf("Shipping locality was wrong")
-	} else if receivedTx.ShippingAddress.Region != sentTx.ShippingAddress.Region {
-		t.Errorf("Shipping region was wrong")
-	} else if receivedTx.ShippingAddress.PostalCode != sentTx.ShippingAddress.PostalCode {
-		t.Errorf("Shipping postal code was wrong")
+	if tx2.Type != tx.Type {
+		t.Fail()
 	}
-
-	if receivedTx.CreditCard.Token == "" {
-		t.Errorf("Should have received a token when credit card is stored in vault")
-	} else if receivedTx.Customer.Id == "" {
-		t.Errorf("Should have received a customer ID when providing customer details on a transaction")
-	} else if result.Transaction().Status != "submitted_for_settlement" {
-		t.Errorf("Transaction was not submitted for settlement")
+	if tx2.Amount != tx.Amount {
+		t.Fail()
+	}
+	if tx2.OrderId != tx.OrderId {
+		t.Fail()
+	}
+	if tx2.Customer.FirstName != tx.Customer.FirstName {
+		t.Fail()
+	}
+	if tx2.BillingAddress.StreetAddress != tx.BillingAddress.StreetAddress {
+		t.Fail()
+	}
+	if tx2.BillingAddress.Locality != tx.BillingAddress.Locality {
+		t.Fail()
+	}
+	if tx2.BillingAddress.Region != tx.BillingAddress.Region {
+		t.Fail()
+	}
+	if tx2.BillingAddress.PostalCode != tx.BillingAddress.PostalCode {
+		t.Fail()
+	}
+	if tx2.ShippingAddress.StreetAddress != tx.ShippingAddress.StreetAddress {
+		t.Fail()
+	}
+	if tx2.ShippingAddress.Locality != tx.ShippingAddress.Locality {
+		t.Fail()
+	}
+	if tx2.ShippingAddress.Region != tx.ShippingAddress.Region {
+		t.Fail()
+	}
+	if tx2.ShippingAddress.PostalCode != tx.ShippingAddress.PostalCode {
+		t.Fail()
+	}
+	if tx2.CreditCard.Token == "" {
+		t.Fail()
+	}
+	if tx2.Customer.Id == "" {
+		t.Fail()
+	}
+	if tx2.Status != "submitted_for_settlement" {
+		t.Fail()
 	}
 }
 
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
-	customer := Customer{
+	customer, err := testGateway.Customer().Create(&Customer{
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["discover"].Number,
+			Number:         testCreditCards["discover"].Number,
 			ExpirationDate: "05/14",
 		},
-	}
-
-	customerResult, err := gateway.Customer().Create(customer)
+	})
 
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !customerResult.Success() {
-		t.Errorf("Customer create response was unsuccessful")
+		t.Fatal(err)
 	}
 
-	transaction := Transaction{
+	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:               "sale",
-		CustomerID:         customerResult.Customer().Id,
+		CustomerID:         customer.Id,
 		Amount:             100,
-		PaymentMethodToken: customerResult.Customer().CreditCards[0].Token,
-	}
-
-	transactionResult, err := gateway.Transaction().Create(transaction)
+		PaymentMethodToken: customer.CreditCards[0].Token,
+	})
 
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !transactionResult.Success() {
-		t.Errorf("Transaction create response was unsuccessful. Message:" + transactionResult.Message())
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("invalid tx id")
 	}
 }

@@ -1,139 +1,86 @@
 package braintree
 
 import (
+	"compress/gzip"
 	"encoding/xml"
-	"errors"
+	"fmt"
+	"io/ioutil"
+	"net/http"
 )
 
 type Response struct {
-	StatusCode int
-	Status     string
-	Body       []byte
+	*http.Response
+	Body []byte
 }
 
-func (this Response) TransactionResult() (TransactionResult, error) {
-	var tx Transaction
-	err := xml.Unmarshal(this.Body, &tx)
-	if err != nil {
-		return ErrorResult{}, errors.New("Error unmarshalling transaction XML: " + err.Error())
+func (r *Response) unpackBody() error {
+	if len(r.Body) == 0 {
+		b, err := gzip.NewReader(r.Response.Body)
+		if err != nil {
+			return err
+		}
+		defer r.Response.Body.Close()
+
+		buf, err := ioutil.ReadAll(b)
+		if err != nil {
+			return err
+		}
+		r.Body = buf
+
+		// Enable for debug logging
+		// fmt.Println("RESP:", string(r.Body))
 	}
-	return SuccessfulTransactionResult{tx}, nil
+	return nil
 }
 
-func (this Response) CreditCardResult() (CreditCardResult, error) {
-	var card CreditCard
-	err := xml.Unmarshal(this.Body, &card)
-	if err != nil {
-		return ErrorResult{}, errors.New("Error unmarshalling credit card XML: " + err.Error())
+func (r *Response) Transaction() (*Transaction, error) {
+	var b Transaction
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
 	}
-	return SuccessfulCreditCardResult{card}, nil
+	return &b, nil
 }
 
-func (this Response) CustomerResult() (CustomerResult, error) {
-	var customer Customer
-	err := xml.Unmarshal(this.Body, &customer)
-	if err != nil {
-		return ErrorResult{}, errors.New("Error unmarshalling customer XML: " + err.Error())
+func (r *Response) CreditCard() (*CreditCard, error) {
+	var b CreditCard
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
 	}
-	return SuccessfulCustomerResult{customer}, nil
+	return &b, nil
 }
 
-func (this Response) ErrorResult() (ErrorResult, error) {
-	var result ErrorResult
-	err := xml.Unmarshal(this.Body, &result)
-	if err != nil {
-		return ErrorResult{}, errors.New("Error unmarshalling error XML: " + err.Error())
+func (r *Response) Customer() (*Customer, error) {
+	var b Customer
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
 	}
-	return result, nil
+	return &b, nil
 }
 
-type TransactionResult interface {
-	Transaction() Transaction
-	Success() bool
-	Message() string
+func (r *Response) apiError() error {
+	var b BraintreeError
+	xml.Unmarshal(r.Body, &b)
+	if b.ErrorMessage != "" {
+		return &b
+	}
+	if r.StatusCode > 299 {
+		return fmt.Errorf("%s (%d)", http.StatusText(r.StatusCode), r.StatusCode)
+	}
+	return nil
 }
 
-type SuccessfulTransactionResult struct {
-	tx Transaction
-}
-
-func (this SuccessfulTransactionResult) Transaction() Transaction {
-	return this.tx
-}
-
-func (this SuccessfulTransactionResult) Success() bool {
-	return true
-}
-
-func (this SuccessfulTransactionResult) Message() string {
-	return ""
-}
-
-type CreditCardResult interface {
-	CreditCard() CreditCard
-	Success() bool
-	Message() string
-}
-
-type SuccessfulCreditCardResult struct {
-	card CreditCard
-}
-
-func (this SuccessfulCreditCardResult) CreditCard() CreditCard {
-	return this.card
-}
-
-func (this SuccessfulCreditCardResult) Success() bool {
-	return true
-}
-
-func (this SuccessfulCreditCardResult) Message() string {
-	return ""
-}
-
-type CustomerResult interface {
-	Customer() Customer
-	Success() bool
-	Message() string
-}
-
-type SuccessfulCustomerResult struct {
-	customer Customer
-}
-
-func (this SuccessfulCustomerResult) Customer() Customer {
-	return this.customer
-}
-
-func (this SuccessfulCustomerResult) Success() bool {
-	return true
-}
-
-func (this SuccessfulCustomerResult) Message() string {
-	return ""
-}
-
-type ErrorResult struct {
-	XMLName      string `xml:"api-error-response"`
+type BraintreeError struct {
 	ErrorMessage string `xml:"message"`
 }
 
-func (this ErrorResult) Success() bool {
-	return false
+func (e *BraintreeError) Error() string {
+	return e.ErrorMessage
 }
 
-func (this ErrorResult) Message() string {
-	return this.ErrorMessage
+type InvalidResponseError struct {
+	*Response
 }
 
-func (this ErrorResult) Transaction() Transaction {
-	panic("Transaction() called on ErrorResult")
-}
-
-func (this ErrorResult) CreditCard() CreditCard {
-	panic("CreditCard() called on ErrorResult")
-}
-
-func (this ErrorResult) Customer() Customer {
-	panic("Customer() called on ErrorResult")
+func (e *InvalidResponseError) Error() string {
+	return fmt.Sprintf("braintree returned invalid response (%d)", e.StatusCode)
 }

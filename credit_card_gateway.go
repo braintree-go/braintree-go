@@ -2,41 +2,38 @@ package braintree
 
 import (
 	"encoding/xml"
-	"errors"
 )
 
 type CreditCardGateway struct {
-	gateway Gateway
+	*Braintree
 }
 
-func (this CreditCardGateway) Create(card CreditCard) (CreditCardResult, error) {
-	cardXML, err := xml.Marshal(card)
+func (g *CreditCardGateway) Create(card *CreditCard) (*CreditCard, error) {
+	xmlBody, err := xml.Marshal(card)
 	if err != nil {
-		return ErrorResult{}, errors.New("Error encoding credit card as XML: " + err.Error())
+		return nil, err
 	}
-
-	response, err := this.gateway.Execute("POST", "/payment_methods", cardXML)
+	resp, err := g.Execute("POST", "payment_methods", xmlBody)
 	if err != nil {
-		return ErrorResult{}, err
+		return nil, err
 	}
-
-	if response.StatusCode == 201 {
-		return response.CreditCardResult()
-	} else if response.StatusCode == 422 {
-		return response.ErrorResult()
+	switch resp.StatusCode {
+	case 201:
+		card, err := resp.CreditCard()
+		return card, err
 	}
-
-	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
+	return nil, &InvalidResponseError{resp}
 }
 
-func (this CreditCardGateway) Find(token string) (CreditCardResult, error) {
-	response, err := this.gateway.Execute("GET", "/payment_methods/"+token, []byte{})
+func (g *CreditCardGateway) Find(token string) (*CreditCard, error) {
+	resp, err := g.Execute("GET", "payment_methods/"+token, []byte{})
 	if err != nil {
-		return ErrorResult{}, err
-	} else if response.StatusCode == 200 {
-		return response.CreditCardResult()
-	} else if response.StatusCode == 404 {
-		return ErrorResult{}, errors.New("A credit card with that token could not be found")
+		return nil, err
 	}
-	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
+	switch resp.StatusCode {
+	case 200:
+		card, err := resp.CreditCard()
+		return card, err
+	}
+	return nil, &InvalidResponseError{resp}
 }
