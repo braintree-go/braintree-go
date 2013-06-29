@@ -171,16 +171,18 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 			ExpirationDate: "05/14",
 		},
 	})
-
 	if err != nil {
 		t.Fatal(err)
+	}
+	if customer.CreditCards.CreditCard[0].Token == "" {
+		t.Fatal("invalid token")
 	}
 
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:               "sale",
 		CustomerID:         customer.Id,
 		Amount:             100,
-		PaymentMethodToken: customer.CreditCards[0].Token,
+		PaymentMethodToken: customer.CreditCards.CreditCard[0].Token,
 	})
 
 	if err != nil {

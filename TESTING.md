@@ -19,3 +19,5 @@ In your sandbox account go to `Settings > Processing > CVV` and enable the follo
   1. `CVV does not match (when provided) (N)` to `For Any Transaction`
   2. `CVV is not verified (when provided) (U)` to `For Any Transaction`
 
+We also need to create a plan for recurring payments, with id `test_plan`
+

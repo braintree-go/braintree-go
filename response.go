@@ -37,6 +37,14 @@ func (r *Response) Customer() (*Customer, error) {
 	return &b, nil
 }
 
+func (r *Response) Subscription() (*Subscription, error) {
+	var b Subscription
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
 func (r *Response) unpackBody() error {
 	if len(r.Body) == 0 {
 		b, err := gzip.NewReader(r.Response.Body)

@@ -18,6 +18,10 @@ type CreditCard struct {
 	Options                   *CreditCardOptions `xml:"options,omitempty"`
 }
 
+type CreditCards struct {
+	CreditCard []*CreditCard `xml:"credit-card"`
+}
+
 type CreditCardOptions struct {
 	VerifyCard      bool   `xml:"verify-card,omitempty"`
 	VenmoSDKSession string `xml:"venmo-sdk-session,omitempty"`
@@ -34,16 +38,14 @@ type Customer struct {
 	Fax         string       `xml:"fax,omitempty"`
 	Website     string       `xml:"website,omitempty"`
 	CreditCard  *CreditCard  `xml:"credit-card,omitempty"`
-	CreditCards []CreditCard `xml:"credit-cards,omitempty"`
+	CreditCards *CreditCards `xml:"credit-cards,omitempty"`
 }
 
 type Subscription struct {
 	XMLName            string `xml:"subscription"`
+	Id                 string `xml:"id,omitempty"`
 	PaymentMethodToken string `xml:"payment-method-token"`
 	PlanId             string `xml:"plan-id"`
-	TrialPeriod        bool   `xml:"trial-period,omitempty"`
-	TrialDuration      int    `xml:"trial-duration,omitempty"`
-	TrialDurationUnit  string `xml:"trial-duration-unit,omitempty"`
 }
 
 type Transaction struct {

@@ -70,3 +70,7 @@ func (g *Braintree) CreditCard() *CreditCardGateway {
 func (g *Braintree) Customer() *CustomerGateway {
 	return &CustomerGateway{g}
 }
+
+func (g *Braintree) Subscription() *SubscriptionGateway {
+	return &SubscriptionGateway{g}
+}
