@@ -10,7 +10,7 @@ var testCreditCards = map[string]CreditCard{
 	"discover":   CreditCard{Number: "6011111111111117"},
 }
 
-var testGateway = NewBraintree(Config{
+var testGateway = New(Config{
 	Environment: Sandbox,
 	MerchantId:  os.Getenv("BRAINTREE_MERCH_ID"),
 	PublicKey:   os.Getenv("BRAINTREE_PUB_KEY"),

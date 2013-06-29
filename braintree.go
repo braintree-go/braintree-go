@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func NewBraintree(c Config) *Braintree {
+func New(c Config) *Braintree {
 	return &Braintree{c}
 }
 
