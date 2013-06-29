@@ -1,19 +1,11 @@
 package braintree
 
-import (
-	"encoding/xml"
-)
-
 type CreditCardGateway struct {
 	*Braintree
 }
 
 func (g *CreditCardGateway) Create(card *CreditCard) (*CreditCard, error) {
-	xmlBody, err := xml.Marshal(card)
-	if err != nil {
-		return nil, err
-	}
-	resp, err := g.Execute("POST", "payment_methods", xmlBody)
+	resp, err := g.Execute("POST", "payment_methods", card)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +18,7 @@ func (g *CreditCardGateway) Create(card *CreditCard) (*CreditCard, error) {
 }
 
 func (g *CreditCardGateway) Find(token string) (*CreditCard, error) {
-	resp, err := g.Execute("GET", "payment_methods/"+token, []byte{})
+	resp, err := g.Execute("GET", "payment_methods/"+token, nil)
 	if err != nil {
 		return nil, err
 	}

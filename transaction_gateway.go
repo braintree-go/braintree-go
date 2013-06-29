@@ -1,19 +1,11 @@
 package braintree
 
-import (
-	"encoding/xml"
-)
-
 type TransactionGateway struct {
 	*Braintree
 }
 
 func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
-	xmlBody, err := xml.Marshal(tx)
-	if err != nil {
-		return nil, err
-	}
-	resp, err := g.Execute("POST", "transactions", xmlBody)
+	resp, err := g.Execute("POST", "transactions", tx)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +17,7 @@ func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
 }
 
 func (g *TransactionGateway) Find(txId string) (*Transaction, error) {
-	resp, err := g.Execute("GET", "transactions/"+txId, []byte{})
+	resp, err := g.Execute("GET", "transactions/"+txId, nil)
 	if err != nil {
 		return nil, err
 	}

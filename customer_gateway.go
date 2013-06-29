@@ -1,19 +1,11 @@
 package braintree
 
-import (
-	"encoding/xml"
-)
-
 type CustomerGateway struct {
 	*Braintree
 }
 
 func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
-	xmlBody, err := xml.Marshal(c)
-	if err != nil {
-		return nil, err
-	}
-	resp, err := g.Execute("POST", "customers", xmlBody)
+	resp, err := g.Execute("POST", "customers", c)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +18,7 @@ func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
 }
 
 func (g *CustomerGateway) Find(id string) (*Customer, error) {
-	resp, err := g.Execute("GET", "customers/"+id, []byte{})
+	resp, err := g.Execute("GET", "customers/"+id, nil)
 	if err != nil {
 		return nil, err
 	}

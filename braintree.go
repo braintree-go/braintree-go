@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"bytes"
+	"encoding/xml"
 	"net/http"
 )
 
@@ -13,8 +14,20 @@ type Braintree struct {
 	Config
 }
 
-func (g *Braintree) Execute(method, path string, body []byte) (*Response, error) {
-	req, err := http.NewRequest(method, g.BaseURL()+"/"+path, bytes.NewBuffer(body))
+func (g *Braintree) Execute(method, path string, xmlObj interface{}) (*Response, error) {
+	var buf bytes.Buffer
+	if xmlObj != nil {
+		xmlBody, err := xml.Marshal(xmlObj)
+		if err != nil {
+			return nil, err
+		}
+		_, err = buf.Write(xmlBody)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	req, err := http.NewRequest(method, g.BaseURL()+"/"+path, &buf)
 	if err != nil {
 		return nil, err
 	}
