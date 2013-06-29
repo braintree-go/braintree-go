@@ -13,26 +13,6 @@ type Response struct {
 	Body []byte
 }
 
-func (r *Response) unpackBody() error {
-	if len(r.Body) == 0 {
-		b, err := gzip.NewReader(r.Response.Body)
-		if err != nil {
-			return err
-		}
-		defer r.Response.Body.Close()
-
-		buf, err := ioutil.ReadAll(b)
-		if err != nil {
-			return err
-		}
-		r.Body = buf
-
-		// Enable for debug logging
-		// fmt.Println("RESP:", string(r.Body))
-	}
-	return nil
-}
-
 func (r *Response) Transaction() (*Transaction, error) {
 	var b Transaction
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
@@ -55,6 +35,26 @@ func (r *Response) Customer() (*Customer, error) {
 		return nil, err
 	}
 	return &b, nil
+}
+
+func (r *Response) unpackBody() error {
+	if len(r.Body) == 0 {
+		b, err := gzip.NewReader(r.Response.Body)
+		if err != nil {
+			return err
+		}
+		defer r.Response.Body.Close()
+
+		buf, err := ioutil.ReadAll(b)
+		if err != nil {
+			return err
+		}
+		r.Body = buf
+
+		// Enable for debug logging
+		// fmt.Println("RESP:", string(r.Body))
+	}
+	return nil
 }
 
 func (r *Response) apiError() error {
