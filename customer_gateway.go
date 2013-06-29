@@ -11,8 +11,7 @@ func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
 	}
 	switch resp.StatusCode {
 	case 201:
-		cust, err := resp.Customer()
-		return cust, err
+		return resp.Customer()
 	}
 	return nil, &InvalidResponseError{resp}
 }
@@ -24,8 +23,7 @@ func (g *CustomerGateway) Find(id string) (*Customer, error) {
 	}
 	switch resp.StatusCode {
 	case 200:
-		cust, err := resp.Customer()
-		return cust, err
+		return resp.Customer()
 	}
 	return nil, &InvalidResponseError{resp}
 }
