@@ -1,5 +1,9 @@
 package braintree
 
+import (
+	"os"
+)
+
 var (
 	TestCreditCards = map[string]CreditCard{
 		"visa":       CreditCard{Number: "4111111111111111"},
@@ -9,9 +13,9 @@ var (
 
 	testConfiguration = Configuration{
 		environment: Sandbox,
-		merchantId:  "4ngqq224rnk6gvxh",
-		publicKey:   "jkq28pcxj4r85dwr",
-		privateKey:  "66062a3876e2dc298f2195f0bf173f5a",
+		merchantId:  os.Getenv("BRAINTREE_MERCH_ID"),
+		publicKey:   os.Getenv("BRAINTREE_PUB_KEY"),
+		privateKey:  os.Getenv("BRAINTREE_PRIV_KEY"),
 	}
 
 	gateway = NewGateway(testConfiguration)
