@@ -1,159 +1,128 @@
 package braintree
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCreateCreditCard(t *testing.T) {
-	customer := Customer{}
-
-	customerResult, err := gateway.Customer().Create(customer)
-
+	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !customerResult.Success() {
-		t.Errorf("Customer create response was unsuccessful")
+		t.Fatal(err)
 	}
-
-	creditCard := CreditCard{
-		CustomerId:     customerResult.Customer().Id,
-		Number:         TestCreditCards["visa"].Number,
+	card, err := testGateway.CreditCard().Create(&CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
 			VerifyCard: true,
 		},
-	}
-
-	createResult, err := gateway.CreditCard().Create(creditCard)
+	})
 
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !createResult.Success() {
-		t.Errorf("Credit card create response was unsuccessful")
+		t.Fatal(err)
+	}
+	if card.Token == "" {
+		t.Fatal("invalid token")
 	}
 }
 
-/* This will fail because a customer ID is required. */
 func TestCreateCreditCardInvalidInput(t *testing.T) {
-	creditCard := CreditCard{
-		Number:         TestCreditCards["visa"].Number,
+	card, err := testGateway.CreditCard().Create(&CreditCard{
+		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
+	})
+
+	t.Log(card)
+
+	// This test should fail because customer id is required
+	if err == nil {
+		t.Fail()
 	}
 
-	result, err := gateway.CreditCard().Create(creditCard)
-
-	if err != nil {
-		t.Errorf(err.Error())
-	} else if result.Success() {
-		t.Errorf("Invaid credit card create returned a successful response")
-	}
+	// TODO: validate fields
 }
 
 func TestFindCreditCard(t *testing.T) {
-	customer := Customer{}
-
-	customerResult, err := gateway.Customer().Create(customer)
-
+	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !customerResult.Success() {
-		t.Errorf("Customer create response was unsuccessful")
+		t.Fatal(err)
 	}
-
-	creditCard := CreditCard{
-		CustomerId:     customerResult.Customer().Id,
-		Number:         TestCreditCards["visa"].Number,
+	card, err := testGateway.CreditCard().Create(&CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
 			VerifyCard: true,
 		},
-	}
+	})
 
-	createResult, err := gateway.CreditCard().Create(creditCard)
-
-	if err != nil {
-		t.Errorf(err.Error())
-	} else if !createResult.Success() {
-		t.Errorf("Credit card create response was unsuccessful")
-	} else if createResult.CreditCard().Token == "" {
-		t.Errorf("Credit card did not receive an token")
-	}
-
-	findResult, err := gateway.CreditCard().Find(createResult.CreditCard().Token)
+	t.Log(card)
 
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !findResult.Success() {
-		t.Errorf("Credit card find response was unsuccessful")
-	} else if findResult.CreditCard().Token != createResult.CreditCard().Token {
-		t.Errorf("Credit card find returned the wrong card!")
+		t.Fatal(err)
+	}
+	if card.Token == "" {
+		t.Fatal("invalid token")
+	}
+
+	card2, err := testGateway.CreditCard().Find(card.Token)
+
+	t.Log(card2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if card2.Token != card.Token {
+		t.Fatal("tokens do not match")
 	}
 }
 
 func TestFindCreditCardBadData(t *testing.T) {
-	result, err := gateway.CreditCard().Find("invalid_token")
+	card, err := testGateway.CreditCard().Find("invalid_token")
+
+	t.Log(card)
 
 	if err == nil {
-		t.Errorf("No error was returned when finding an invalid credit card")
-	} else if result.Success() {
-		t.Errorf("Finding an invalid credit card returned a successful result")
+		t.Fail()
 	}
 }
 
 func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
-	customer := Customer{}
-
-	customerResult, err := gateway.Customer().Create(customer)
-
+	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !customerResult.Success() {
-		t.Errorf("Customer create response was unsuccessful")
+		t.Fatal(err)
 	}
-
-	creditCard := CreditCard{
-		CustomerId:                customerResult.Customer().Id,
-		VenmoSDKPaymentMethodCode: "stub-" + TestCreditCards["visa"].Number,
-	}
-
-	createResult, err := gateway.CreditCard().Create(creditCard)
-
+	card, err := testGateway.CreditCard().Create(&CreditCard{
+		CustomerId:                customer.Id,
+		VenmoSDKPaymentMethodCode: "stub-" + testCreditCards["visa"].Number,
+	})
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !createResult.Success() {
-		t.Errorf("Credit card create response was unsuccessful")
-	} else if !createResult.CreditCard().VenmoSDK {
-		t.Errorf("Venmo SDK credit card was not marked as such")
+		t.Fatal(err)
+	}
+	if !card.VenmoSDK {
+		t.Fatal("venmo card not marked")
 	}
 }
 
 func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
-	customer := Customer{}
-
-	customerResult, err := gateway.Customer().Create(customer)
-
+	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !customerResult.Success() {
-		t.Errorf("Customer create response was unsuccessful")
+		t.Fatal(err)
 	}
-
-	creditCard := CreditCard{
-		CustomerId:     customerResult.Customer().Id,
-		Number:         TestCreditCards["visa"].Number,
+	card, err := testGateway.CreditCard().Create(&CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
 		Options: &CreditCardOptions{
 			VenmoSDKSession: "stub-session",
 		},
-	}
-
-	createResult, err := gateway.CreditCard().Create(creditCard)
-
+	})
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !createResult.Success() {
-		t.Errorf("Credit card create response was unsuccessful")
-	} else if !createResult.CreditCard().VenmoSDK {
-		t.Errorf("Venmo SDK credit card was not marked as such")
+		t.Fatal(err)
+	}
+	if !card.VenmoSDK {
+		t.Fatal("venmo card not marked")
 	}
 }

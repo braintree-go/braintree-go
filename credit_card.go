@@ -11,6 +11,10 @@ type CreditCard struct {
 	Options                   *CreditCardOptions `xml:"options,omitempty"`
 }
 
+type CreditCards struct {
+	CreditCard []*CreditCard `xml:"credit-card"`
+}
+
 type CreditCardOptions struct {
 	VerifyCard      bool   `xml:"verify-card,omitempty"`
 	VenmoSDKSession string `xml:"venmo-sdk-session,omitempty"`

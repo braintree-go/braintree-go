@@ -1,42 +1,29 @@
 package braintree
 
-import (
-	"encoding/xml"
-	"errors"
-)
-
 type CustomerGateway struct {
-	gateway Gateway
+	*Braintree
 }
 
-func (this CustomerGateway) Create(customer Customer) (CustomerResult, error) {
-	customerXML, err := xml.Marshal(customer)
+func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
+	resp, err := g.execute("POST", "customers", c)
 	if err != nil {
-		return ErrorResult{}, errors.New("Error encoding customer as XML: " + err.Error())
+		return nil, err
 	}
-
-	response, err := this.gateway.Execute("POST", "/customers", customerXML)
-	if err != nil {
-		return ErrorResult{}, err
+	switch resp.StatusCode {
+	case 201:
+		return resp.customer()
 	}
-
-	if response.StatusCode == 201 {
-		return response.CustomerResult()
-	} else if response.StatusCode == 422 {
-		return response.ErrorResult()
-	}
-
-	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
+	return nil, &InvalidResponseError{resp}
 }
 
-func (this CustomerGateway) Find(id string) (CustomerResult, error) {
-	response, err := this.gateway.Execute("GET", "/customers/"+id, []byte{})
+func (g *CustomerGateway) Find(id string) (*Customer, error) {
+	resp, err := g.execute("GET", "customers/"+id, nil)
 	if err != nil {
-		return ErrorResult{}, err
-	} else if response.StatusCode == 200 {
-		return response.CustomerResult()
-	} else if response.StatusCode == 404 {
-		return ErrorResult{}, errors.New("A customer with that ID could not be found")
+		return nil, err
 	}
-	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
+	switch resp.StatusCode {
+	case 200:
+		return resp.customer()
+	}
+	return nil, &InvalidResponseError{resp}
 }

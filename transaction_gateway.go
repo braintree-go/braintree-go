@@ -1,42 +1,29 @@
 package braintree
 
-import (
-	"encoding/xml"
-	"errors"
-)
-
 type TransactionGateway struct {
-	gateway Gateway
+	*Braintree
 }
 
-func (this TransactionGateway) Create(tx Transaction) (TransactionResult, error) {
-	transactionXML, err := xml.Marshal(tx)
+func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
+	resp, err := g.execute("POST", "transactions", tx)
 	if err != nil {
-		return ErrorResult{}, errors.New("Error encoding transaction as XML: " + err.Error())
+		return nil, err
 	}
-
-	response, err := this.gateway.Execute("POST", "/transactions", transactionXML)
-	if err != nil {
-		return ErrorResult{}, err
+	switch resp.StatusCode {
+	case 201:
+		return resp.transaction()
 	}
-
-	if response.StatusCode == 201 {
-		return response.TransactionResult()
-	} else if response.StatusCode == 422 {
-		return response.ErrorResult()
-	}
-
-	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
+	return nil, &InvalidResponseError{resp}
 }
 
-func (this TransactionGateway) Find(txId string) (TransactionResult, error) {
-	response, err := this.gateway.Execute("GET", "/transactions/"+txId, []byte{})
+func (g *TransactionGateway) Find(txId string) (*Transaction, error) {
+	resp, err := g.execute("GET", "transactions/"+txId, nil)
 	if err != nil {
-		return ErrorResult{}, err
-	} else if response.StatusCode == 200 {
-		return response.TransactionResult()
-	} else if response.StatusCode == 404 {
-		return ErrorResult{}, errors.New("A transaction with that ID could not be found")
+		return nil, err
 	}
-	return ErrorResult{}, errors.New("Unexpected response from server: " + response.Status)
+	switch resp.StatusCode {
+	case 200:
+		return resp.transaction()
+	}
+	return nil, &InvalidResponseError{resp}
 }
