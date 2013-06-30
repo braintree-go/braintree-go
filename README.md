@@ -6,6 +6,10 @@ This is *not* an official client library. Braintree maintains server-side librar
 
 With that said, this package contains more than enough to get you started accepting payments using Braintree. If there's a feature the other client libraries implement that you really need, open an issue (or better yet, a pull request).
 
+### Documentation
+
+On [GoDoc](http://godoc.org/github.com/lionelbarrow/braintree-go)
+
 ### Usage
 
 Setting up your credentials is easy.
