@@ -16,12 +16,13 @@ func TestTransactionCreate(t *testing.T) {
 		t.Fatal(err)
 	}
 	if tx.Id == "" {
-		t.Fatal("invalid id")
+		t.Fatal("Received invalid ID on new transaction")
 	}
 }
 
+// This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	_, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: 2010.00,
 		CreditCard: &CreditCard{
@@ -30,10 +31,8 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 		},
 	})
 
-	t.Log(tx)
-
 	if err == nil {
-		t.Fail()
+		t.Fatal("Did not receive error when creating invalid transaction")
 	}
 	if err.Error() != "Card Issuer Declined CVV" {
 		t.Fatal(err)
@@ -41,7 +40,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 }
 
 func TestFindTransaction(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	createdTransaction, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: 100.00,
 		CreditCard: &CreditCard{
@@ -53,15 +52,12 @@ func TestFindTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	tx2, err := testGateway.Transaction().Find(tx.Id)
+	foundTransaction, err := testGateway.Transaction().Find(createdTransaction.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Log(tx)
-	t.Log(tx2)
-
-	if tx.Id != tx2.Id {
+	if createdTransaction.Id != foundTransaction.Id {
 		t.Fatal("transaction ids do not match")
 	}
 }
@@ -69,7 +65,7 @@ func TestFindTransaction(t *testing.T) {
 func TestFindNonExistantTransaction(t *testing.T) {
 	_, err := testGateway.Transaction().Find("bad_transaction_id")
 	if err == nil {
-		t.Fatal("expected error, invalid tx id")
+		t.Fatal("Did not receive error when finding an invalid tx ID")
 	}
 	if err.Error() != "Not Found (404)" {
 		t.Fatal(err)
@@ -113,9 +109,6 @@ func TestAllTransactionFields(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	t.Log(tx)
-	t.Log(tx2)
 
 	if tx2.Type != tx.Type {
 		t.Fail()

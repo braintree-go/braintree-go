@@ -29,8 +29,7 @@ func TestCustomerCreate(t *testing.T) {
 	}
 }
 
-// You need to set up CVV rules in your sandbox environment for this test to work.
-// See TESTING.md for how to do this.
+// This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestCustomerCreateWithErrors(t *testing.T) {
 	_, err := testGateway.Customer().Create(&Customer{
 		FirstName: "Lionel",
@@ -51,7 +50,7 @@ func TestCustomerCreateWithErrors(t *testing.T) {
 	})
 
 	if err == nil {
-		t.Fatal(err)
+		t.Fatal("Did not receive error when creating invalid customer")
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"testing"
 )
 
+// This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestSubscription(t *testing.T) {
 	customer, err := testGateway.Customer().Create(&Customer{
 		FirstName: "Lionel",

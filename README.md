@@ -6,10 +6,6 @@ This is *not* an official client library. Braintree maintains server-side librar
 
 With that said, this package contains more than enough to get you started accepting payments using Braintree. If there's a feature the other client libraries implement that you really need, open an issue (or better yet, a pull request).
 
-### Documentation
-
-On [GoDoc](http://godoc.org/github.com/lionelbarrow/braintree-go)
-
 ### Usage
 
 Setting up your credentials is easy.
@@ -38,9 +34,16 @@ tx, err := bt.Transaction().Create(&braintree.Transaction{
 })
 ```
 
-The create call returns an error when something mechanical goes wrong, such as receiving malformed XML or being unable to connect to the Braintree gateway.
+The error returned by these calls is typed. When something mechanical goes wrong, such as receiving malformed XML or being unable to connect to the Braintree gateway, a generic error or `InvalidResponse` type is returned. If Braintree was able to process the request correctly, but was unable to fulfill it due to a semantic failure, such as the credit card being declined, then a `BraintreeError` type is returned.
 
-In addition to creating transactions, you can also tokenize credit card information for repeat or subscription billing using the `CreditCard` and `Customer` types. This package is completely compatible with [Braintree.js](https://www.braintreepayments.com/braintrust/braintree-js), so if you encrypt your customers' credit cards in the browser, you can pass them on to Braintree without ever seeing them yourself. This massively decreases your PCI scope.
+```go
+switch err {
+  case BraintreeError: // redirect the user back to your payment form
+  default: // handle this separately
+}
+```
+
+In addition to creating transactions, you can also tokenize credit card information for repeat or subscription billing using the `CreditCard`, `Customer`, and `Subscription` types. This package is completely compatible with [Braintree.js](https://www.braintreepayments.com/braintrust/braintree-js), so if you encrypt your customers' credit cards in the browser, you can pass them on to Braintree without ever seeing them yourself. This decreases your PCI regulatory exposure and helps to secure your users' data. See the examples folder for a working implementation.
 
 ### Installation
 
@@ -49,6 +52,8 @@ The usual. `go get github.com/lionelbarrow/braintree-go`
 ### Documentation
 
 Braintree provides a [ton of documentation](https://www.braintreepayments.com/docs/ruby/guide/overview) on how to use their API. I recommend you use the Ruby documentation when following along, as the Ruby client library is broadly similar to this one.
+
+For details on this package, see [GoDoc](http://godoc.org/github.com/lionelbarrow/braintree-go).
 
 ### Testing
 
