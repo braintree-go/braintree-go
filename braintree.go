@@ -14,7 +14,7 @@ type Braintree struct {
 	Config
 }
 
-func (g *Braintree) Execute(method, path string, xmlObj interface{}) (*Response, error) {
+func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
 	var buf bytes.Buffer
 	if xmlObj != nil {
 		xmlBody, err := xml.Marshal(xmlObj)

@@ -9,7 +9,7 @@ type PlanGateway struct {
 }
 
 func (g *PlanGateway) All() ([]*Plan, error) {
-	resp, err := g.Execute("GET", "plans", nil)
+	resp, err := g.execute("GET", "plans", nil)
 	if err != nil {
 		return nil, err
 	}

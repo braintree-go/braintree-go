@@ -5,25 +5,25 @@ type CustomerGateway struct {
 }
 
 func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
-	resp, err := g.Execute("POST", "customers", c)
+	resp, err := g.execute("POST", "customers", c)
 	if err != nil {
 		return nil, err
 	}
 	switch resp.StatusCode {
 	case 201:
-		return resp.Customer()
+		return resp.customer()
 	}
 	return nil, &InvalidResponseError{resp}
 }
 
 func (g *CustomerGateway) Find(id string) (*Customer, error) {
-	resp, err := g.Execute("GET", "customers/"+id, nil)
+	resp, err := g.execute("GET", "customers/"+id, nil)
 	if err != nil {
 		return nil, err
 	}
 	switch resp.StatusCode {
 	case 200:
-		return resp.Customer()
+		return resp.customer()
 	}
 	return nil, &InvalidResponseError{resp}
 }

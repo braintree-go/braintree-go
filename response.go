@@ -13,7 +13,7 @@ type Response struct {
 	Body []byte
 }
 
-func (r *Response) Transaction() (*Transaction, error) {
+func (r *Response) transaction() (*Transaction, error) {
 	var b Transaction
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
@@ -21,7 +21,7 @@ func (r *Response) Transaction() (*Transaction, error) {
 	return &b, nil
 }
 
-func (r *Response) CreditCard() (*CreditCard, error) {
+func (r *Response) creditCard() (*CreditCard, error) {
 	var b CreditCard
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (r *Response) CreditCard() (*CreditCard, error) {
 	return &b, nil
 }
 
-func (r *Response) Customer() (*Customer, error) {
+func (r *Response) customer() (*Customer, error) {
 	var b Customer
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (r *Response) Customer() (*Customer, error) {
 	return &b, nil
 }
 
-func (r *Response) Subscription() (*Subscription, error) {
+func (r *Response) subscription() (*Subscription, error) {
 	var b Subscription
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
