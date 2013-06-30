@@ -7,12 +7,41 @@ import (
 	"net/http"
 )
 
-func New(c Config) *Braintree {
-	return &Braintree{c}
+type Environment string
+
+const (
+	Sandbox    Environment = "sandbox"
+	Production Environment = "production"
+)
+
+func (e Environment) BaseURL() string {
+	switch e {
+	case Sandbox:
+		return "https://sandbox.braintreegateway.com"
+	case Production:
+		return "https://www.braintreegateway.com"
+	}
+	panic(`invalid environment "` + e + `"`)
+}
+
+func New(env Environment, merchId, pubKey, privKey string) *Braintree {
+	return &Braintree{
+		Environment: env,
+		MerchantId:  merchId,
+		PublicKey:   pubKey,
+		PrivateKey:  privKey,
+	}
 }
 
 type Braintree struct {
-	Config
+	Environment Environment
+	MerchantId  string
+	PublicKey   string
+	PrivateKey  string
+}
+
+func (g *Braintree) MerchantURL() string {
+	return g.Environment.BaseURL() + "/merchants/" + g.MerchantId
 }
 
 func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
@@ -30,7 +59,7 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 
 	// fmt.Println("REQ:", method, g.BaseURL()+"/"+path, "=>", buf.String())
 
-	req, err := http.NewRequest(method, g.BaseURL()+"/"+path, &buf)
+	req, err := http.NewRequest(method, g.MerchantURL()+"/"+path, &buf)
 	if err != nil {
 		return nil, err
 	}
