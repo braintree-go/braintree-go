@@ -17,12 +17,12 @@ Setting up your credentials is easy.
 ```go
 import "github.com/lionelbarrow/braintree-go"
 
-bt := braintree.New(braintree.Config{
-  Environment: braintree.Sandbox,
-  MerchantId:  "YOUR_BRAINTREE_MERCH_ID",
-  PublicKey:   "YOUR_BRAINTREE_PUB_KEY",
-  PrivateKey:  "YOUR_BRAINTREE_PRIV_KEY",
-})
+bt := braintree.New(
+  braintree.Sandbox,
+  "YOUR_BRAINTREE_MERCH_ID",
+  "YOUR_BRAINTREE_PUB_KEY",
+  "YOUR_BRAINTREE_PRIV_KEY",
+)
 ```
 
 So is creating your first transaction.
