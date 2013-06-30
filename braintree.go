@@ -3,6 +3,7 @@ package braintree
 import (
 	"bytes"
 	"encoding/xml"
+	// "fmt"
 	"net/http"
 )
 
@@ -26,6 +27,8 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 			return nil, err
 		}
 	}
+
+	// fmt.Println("REQ:", method, g.BaseURL()+"/"+path, "=>", buf.String())
 
 	req, err := http.NewRequest(method, g.BaseURL()+"/"+path, &buf)
 	if err != nil {
@@ -77,4 +80,8 @@ func (g *Braintree) Subscription() *SubscriptionGateway {
 
 func (g *Braintree) Plan() *PlanGateway {
 	return &PlanGateway{g}
+}
+
+func (g *Braintree) Address() *AddressGateway {
+	return &AddressGateway{g}
 }
