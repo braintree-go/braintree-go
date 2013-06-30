@@ -74,3 +74,7 @@ func (g *Braintree) Customer() *CustomerGateway {
 func (g *Braintree) Subscription() *SubscriptionGateway {
 	return &SubscriptionGateway{g}
 }
+
+func (g *Braintree) Plan() *PlanGateway {
+	return &PlanGateway{g}
+}
