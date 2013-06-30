@@ -8,7 +8,9 @@
    export BRAINTREE_PRIV_KEY={your-private-key}
    export BRAINTREE_CSE_KEY={your-cse-key}
 
-  For a list of testing values and expected behaviors, see https://www.braintreepayments.com/docs/ruby/reference/sandbox
+  For a list of testing values and expected behaviors, see
+  https://www.braintreepayments.com/docs/ruby/reference/sandbox
+
 */
 
 package main
