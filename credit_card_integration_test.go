@@ -27,6 +27,27 @@ func TestCreateCreditCard(t *testing.T) {
 	}
 }
 
+func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
+	customer, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	card, err := testGateway.CreditCard().Create(&CreditCard{
+		CustomerId:      customer.Id,
+		Number:          testCreditCards["visa"].Number,
+		ExpirationMonth: "05",
+		ExpirationYear:  "2014",
+		CVV:             "100",
+	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if card.Token == "" {
+		t.Fatal("invalid token")
+	}
+}
+
 func TestCreateCreditCardInvalidInput(t *testing.T) {
 	card, err := testGateway.CreditCard().Create(&CreditCard{
 		Number:         testCreditCards["visa"].Number,

@@ -5,6 +5,8 @@ type CreditCard struct {
 	Token                     string             `xml:"token,omitempty"`
 	Number                    string             `xml:"number,omitempty"`
 	ExpirationDate            string             `xml:"expiration-date,omitempty"`
+	ExpirationMonth           string             `xml:"expiration-month,omitempty"`
+	ExpirationYear            string             `xml:"expiration-year,omitempty"`
 	CVV                       string             `xml:"cvv,omitempty"`
 	VenmoSDKPaymentMethodCode string             `xml:"venmo-sdk-payment-method-code,omitempty"`
 	VenmoSDK                  bool               `xml:"venmo-sdk,omitempty"`
