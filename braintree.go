@@ -3,7 +3,7 @@ package braintree
 import (
 	"bytes"
 	"encoding/xml"
-	// "fmt"
+	"log"
 	"net/http"
 )
 
@@ -38,6 +38,7 @@ type Braintree struct {
 	MerchantId  string
 	PublicKey   string
 	PrivateKey  string
+	Logger      *log.Logger
 }
 
 func (g *Braintree) MerchantURL() string {
@@ -57,9 +58,13 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 		}
 	}
 
-	// fmt.Println("REQ:", method, g.BaseURL()+"/"+path, "=>", buf.String())
+	url := g.MerchantURL() + "/" + path
 
-	req, err := http.NewRequest(method, g.MerchantURL()+"/"+path, &buf)
+	if g.Logger != nil {
+		g.Logger.Printf("> %s %s\n%s", method, url, buf.String())
+	}
+
+	req, err := http.NewRequest(method, url, &buf)
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +89,11 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	if err != nil {
 		return nil, err
 	}
+
+	if g.Logger != nil {
+		g.Logger.Printf("<\n%s", string(btr.Body))
+	}
+
 	err = btr.apiError()
 	if err != nil {
 		return nil, err

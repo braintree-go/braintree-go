@@ -66,9 +66,6 @@ func (r *Response) unpackBody() error {
 			return err
 		}
 		r.Body = buf
-
-		// Enable for debug logging
-		// fmt.Println("RESP:", string(r.Body))
 	}
 	return nil
 }
