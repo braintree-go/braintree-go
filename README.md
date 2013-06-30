@@ -6,49 +6,39 @@ This is *not* an official client library. Braintree maintains server-side librar
 
 With that said, this package contains more than enough to get you started accepting payments using Braintree. If there's a feature the other client libraries implement that you really need, open an issue (or better yet, a pull request).
 
+### Documentation
+
+On [GoDoc](http://godoc.org/github.com/lionelbarrow/braintree-go)
+
 ### Usage
 
 Setting up your credentials is easy.
 
 ```go
-import braintree "github.com/lionelbarrow/braintree-go"
-  
-config := braintree.Configuration{
-  environment: braintree.Sandbox,
-  merchantId:  "my_merchant_id",
-  publicKey:   "my_public_key",
-  privateKey:  "my_private_key",
-}
+import "github.com/lionelbarrow/braintree-go"
 
-gateway := braintree.NewGateway(config)
+bt := braintree.New(braintree.Config{
+  Environment: braintree.Sandbox,
+  MerchantId:  "YOUR_BRAINTREE_MERCH_ID",
+  PublicKey:   "YOUR_BRAINTREE_PUB_KEY",
+  PrivateKey:  "YOUR_BRAINTREE_PRIV_KEY",
+})
 ```
 
 So is creating your first transaction.
 
 ```go
-transaction := braintree.Transaction{
+tx, err := bt.Transaction().Create(&braintree.Transaction{
   Type: "sale",
   Amount: 100,
   CreditCard: &braintree.CreditCard{
     Number:         41111111111111111,
     ExpirationDate: "05/14",
   },
-}
-
-result, err := gateway.Transaction().Create(transaction)
+})
 ```
 
-The create call returns an error when something mechanical goes wrong, such as receiving malformed XML or being unable to connect to the Braintree gateway. For semantic failures, such as your customer's credit card being expired, the result type has `Success()` and `Message()` methods.
-
-```go
-if err != nil {
-  fmt.Println(err.Error()) 
-} else if !result.Success() {
-  fmt.Println(result.Message())
-} else {
-  fmt.Println("Transaction created! ID: " + result.Transaction().Id)
-}
-```
+The create call returns an error when something mechanical goes wrong, such as receiving malformed XML or being unable to connect to the Braintree gateway.
 
 In addition to creating transactions, you can also tokenize credit card information for repeat or subscription billing using the `CreditCard` and `Customer` types. This package is completely compatible with [Braintree.js](https://www.braintreepayments.com/braintrust/braintree-js), so if you encrypt your customers' credit cards in the browser, you can pass them on to Braintree without ever seeing them yourself. This massively decreases your PCI scope.
 
@@ -62,9 +52,10 @@ Braintree provides a [ton of documentation](https://www.braintreepayments.com/do
 
 ### Testing
 
-The integration tests run against an account I created in the [Braintree Sandbox](https://sandbox.braintreegateway.com/) for this package. This account has some non-default settings, so if you just plug your own sandbox account in, a few tests will break. I've noted what settings you need to change and why in comments above these tests.
+The integration tests run against a sandbox account created in the [Braintree Sandbox](https://sandbox.braintreegateway.com/).
+See [TESTING.md](TESTING.md) for further instructions on how to set up your sandbox for integration testing.
 
-### Liscense
+### License
 
 The MIT License (MIT)
 
@@ -87,3 +78,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+### Contributors
+
+- [Erik Aigner](http://github.com/eaigner)
+

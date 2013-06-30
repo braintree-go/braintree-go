@@ -11,5 +11,5 @@ type Customer struct {
 	Fax         string       `xml:"fax,omitempty"`
 	Website     string       `xml:"website,omitempty"`
 	CreditCard  *CreditCard  `xml:"credit-card,omitempty"`
-	CreditCards []CreditCard `xml:"credit-cards,omitempty"`
+	CreditCards *CreditCards `xml:"credit-cards,omitempty"`
 }

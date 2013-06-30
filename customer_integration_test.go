@@ -1,9 +1,11 @@
 package braintree
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCustomerCreate(t *testing.T) {
-	customer := Customer{
+	customer, err := testGateway.Customer().Create(&Customer{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
 		Company:   "Braintree",
@@ -12,27 +14,25 @@ func TestCustomerCreate(t *testing.T) {
 		Fax:       "614.555.5678",
 		Website:   "http://www.example.com",
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["visa"].Number,
+			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
-	}
+	})
 
-	result, err := gateway.Customer().Create(customer)
+	t.Log(customer)
 
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !result.Success() {
-		t.Errorf("Customer create response was unsuccessful")
-	} else if result.Customer().Id == "" {
-		t.Errorf("Customer did not receive an ID")
+		t.Fatal(err)
+	}
+	if customer.Id == "" {
+		t.Fatal("invalid customer id")
 	}
 }
 
-/* This test will fail unless the account under test has CVV rules set up in the
-Braintree gateway. See https://www.braintreepayments.com/docs/ruby/card_verifications/overview 
-for more details. */
+// You need to set up CVV rules in your sandbox environment for this test to work.
+// See TESTING.md for how to do this.
 func TestCustomerCreateWithErrors(t *testing.T) {
-	customer := Customer{
+	_, err := testGateway.Customer().Create(&Customer{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
 		Company:   "Braintree",
@@ -41,59 +41,53 @@ func TestCustomerCreateWithErrors(t *testing.T) {
 		Fax:       "614.555.5678",
 		Website:   "http://www.example.com",
 		CreditCard: &CreditCard{
-			Number:         TestCreditCards["visa"].Number,
+			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 			CVV:            "200",
 			Options: &CreditCardOptions{
 				VerifyCard: true,
 			},
 		},
-	}
+	})
 
-	result, err := gateway.Customer().Create(customer)
-
-	if err != nil {
-		t.Errorf(err.Error())
-	} else if result.Success() {
-		t.Errorf("Customer created succeeded with bad CVV and verify card true")
+	if err == nil {
+		t.Fatal(err)
 	}
 }
 
 func TestCustomerFind(t *testing.T) {
-	sentCustomer := Customer{
+	customer, err := testGateway.Customer().Create(&Customer{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
-	}
+	})
 
-	createResult, err := gateway.Customer().Create(sentCustomer)
-
-	if err != nil {
-		t.Errorf(err.Error())
-	} else if !createResult.Success() {
-		t.Errorf("Customer create response was unsuccessful")
-	} else if createResult.Customer().Id == "" {
-		t.Errorf("Customer did not receive an ID")
-	}
-
-	findResult, err := gateway.Customer().Find(createResult.Customer().Id)
+	t.Log(customer)
 
 	if err != nil {
-		t.Errorf(err.Error())
-	} else if !findResult.Success() {
-		t.Errorf("Could not find the customer we just created")
-	} else if findResult.Customer().Id == "" {
-		t.Errorf("The old customer's ID and the new one did not match")
+		t.Fatal(err)
+	}
+
+	customer2, err := testGateway.Customer().Find(customer.Id)
+
+	t.Log(customer2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if customer2.Id != customer.Id {
+		t.Fatal("ids do not match")
 	}
 }
 
 func TestFindNonExistantCustomer(t *testing.T) {
-	result, err := gateway.Customer().Find("bad_customer_id")
+	customer, err := testGateway.Customer().Find("bad_customer_id")
+
+	t.Log(customer)
 
 	if err == nil {
-		t.Errorf("Did not receive an error when trying to find a non-existant customer")
-	} else if result.Success() {
-		t.Errorf("Customer find response was successful on bad data")
-	} else if err.Error() != "A customer with that ID could not be found" {
-		t.Errorf("Got the wrong error message when finding a non-existant customer.")
+		t.Fatal("should report error, invalid customer id")
+	}
+	if err.Error() != "Not Found (404)" {
+		t.Fatal(err)
 	}
 }
