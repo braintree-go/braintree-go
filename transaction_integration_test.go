@@ -2,7 +2,7 @@ package braintree
 
 import "testing"
 
-func TestTransactionCreate(t *testing.T) {
+func TestTransactionCreateAndSettle(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: 100.00,
@@ -12,11 +12,31 @@ func TestTransactionCreate(t *testing.T) {
 		},
 	})
 
+	t.Log(tx)
+
 	if err != nil {
 		t.Fatal(err)
 	}
 	if tx.Id == "" {
 		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx.Status != "authorized" {
+		t.Fatal(tx.Status)
+	}
+
+	// Settle
+	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, 10)
+
+	t.Log(tx2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx2.Status; x != "submitted_for_settlement" {
+		t.Fatal(x)
+	}
+	if x := tx2.Amount; x != 10 {
+		t.Fatal(x)
 	}
 }
 
