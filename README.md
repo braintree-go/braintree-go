@@ -28,7 +28,7 @@ tx, err := bt.Transaction().Create(&braintree.Transaction{
   Type: "sale",
   Amount: 100,
   CreditCard: &braintree.CreditCard{
-    Number:         41111111111111111,
+    Number:         "41111111111111111",
     ExpirationDate: "05/14",
   },
 })
