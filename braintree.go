@@ -77,10 +77,10 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
 	resp, err := http.DefaultClient.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	btr := &Response{
 		Response: resp,
