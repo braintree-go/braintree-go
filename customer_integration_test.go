@@ -43,6 +43,9 @@ func TestCustomer(t *testing.T) {
 	if customer.Id == "" {
 		t.Fatal("invalid customer id")
 	}
+	if x := customer.DefaultPaymentToken(); x == "" {
+		t.Fatal("invalid token")
+	}
 
 	// Update
 	c2, err := testGateway.Customer().Update(&Customer{
