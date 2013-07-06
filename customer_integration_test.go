@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestCustomerCreate(t *testing.T) {
+func TestCustomerCreateAndUpdate(t *testing.T) {
 	customer, err := testGateway.Customer().Create(&Customer{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
@@ -26,6 +26,20 @@ func TestCustomerCreate(t *testing.T) {
 	}
 	if customer.Id == "" {
 		t.Fatal("invalid customer id")
+	}
+
+	c2, err := testGateway.Customer().Update(&Customer{
+		Id:        customer.Id,
+		FirstName: "John",
+	})
+
+	t.Log(c2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if c2.FirstName != "John" {
+		t.Fatal("first name not changed")
 	}
 }
 
