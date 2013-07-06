@@ -2,7 +2,7 @@ package braintree
 
 import "testing"
 
-func TestTransactionCreateAndSettle(t *testing.T) {
+func TestTransactionCreateSettleAndVoid(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: 100.00,
@@ -36,6 +36,18 @@ func TestTransactionCreateAndSettle(t *testing.T) {
 		t.Fatal(x)
 	}
 	if x := tx2.Amount; x != 10 {
+		t.Fatal(x)
+	}
+
+	// Void
+	tx3, err := testGateway.Transaction().Void(tx2.Id)
+
+	t.Log(tx3)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx3.Status; x != "voided" {
 		t.Fatal(x)
 	}
 }

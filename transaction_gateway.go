@@ -37,6 +37,21 @@ func (g *TransactionGateway) SubmitForSettlement(id string, amount ...float64) (
 	return nil, &invalidResponseError{resp}
 }
 
+// Void voids the transaction with the specified id if it has a status of authorized or
+// submitted_for_settlement. When the transaction is voided Braintree will do an authorization
+// reversal if possible so that the customer won’t have a pending charge on their card
+func (g *TransactionGateway) Void(id string) (*Transaction, error) {
+	resp, err := g.execute("PUT", "transactions/"+id+"/void", nil)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.transaction()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
 // Find finds the transaction with the specified id.
 func (g *TransactionGateway) Find(id string) (*Transaction, error) {
 	resp, err := g.execute("GET", "transactions/"+id, nil)
