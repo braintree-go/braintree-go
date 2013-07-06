@@ -31,21 +31,9 @@ func TestCustomer(t *testing.T) {
 	}
 
 	// Create
-	customer, err := testGateway.Customer().Create(&Customer{
-		FirstName: "Lionel",
-		LastName:  "Barrow",
-		Company:   "Braintree",
-		Email:     "lionel.barrow@example.com",
-		Phone:     "312.555.1234",
-		Fax:       "614.555.5678",
-		Website:   "http://www.example.com",
-		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
-			ExpirationDate: "05/14",
-			CVV:            "",
-			Options:        nil,
-		},
-	})
+	oc.CreditCard.CVV = ""
+	oc.CreditCard.Options = nil
+	customer, err := testGateway.Customer().Create(oc)
 
 	t.Log(customer)
 
