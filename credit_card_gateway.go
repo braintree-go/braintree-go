@@ -13,7 +13,7 @@ func (g *CreditCardGateway) Create(card *CreditCard) (*CreditCard, error) {
 	case 201:
 		return resp.creditCard()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
 
 func (g *CreditCardGateway) Find(token string) (*CreditCard, error) {
@@ -25,5 +25,5 @@ func (g *CreditCardGateway) Find(token string) (*CreditCard, error) {
 	case 200:
 		return resp.creditCard()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }

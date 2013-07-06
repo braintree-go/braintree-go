@@ -21,5 +21,5 @@ func (g *PlanGateway) All() ([]*Plan, error) {
 		}
 		return b.Plan, nil
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }

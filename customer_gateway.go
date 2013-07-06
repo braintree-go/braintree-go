@@ -15,7 +15,7 @@ func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
 	case 201:
 		return resp.customer()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
 
 // Update updates any field that is set in the passed customer object.
@@ -29,7 +29,7 @@ func (g *CustomerGateway) Update(c *Customer) (*Customer, error) {
 	case 200:
 		return resp.customer()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
 
 // Find finds the customer with the given id.
@@ -42,7 +42,7 @@ func (g *CustomerGateway) Find(id string) (*Customer, error) {
 	case 200:
 		return resp.customer()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
 
 // Delete deletes the customer with the given id.
@@ -55,5 +55,5 @@ func (g *CustomerGateway) Delete(id string) error {
 	case 200:
 		return nil
 	}
-	return &InvalidResponseError{resp}
+	return &invalidResponseError{resp}
 }

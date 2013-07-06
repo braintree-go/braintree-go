@@ -71,9 +71,10 @@ func (r *Response) unpackBody() error {
 }
 
 func (r *Response) apiError() error {
-	var b BraintreeError
+	var b braintreeError
 	xml.Unmarshal(r.Body, &b)
 	if b.ErrorMessage != "" {
+		b.statusCode = r.StatusCode
 		return &b
 	}
 	if r.StatusCode > 299 {
@@ -82,18 +83,38 @@ func (r *Response) apiError() error {
 	return nil
 }
 
-type BraintreeError struct {
+type braintreeError struct {
+	statusCode   int
 	ErrorMessage string `xml:"message"`
 }
 
-func (e *BraintreeError) Error() string {
+// BraintreeError represents an api error
+type BraintreeError interface {
+	error
+	StatusCode() int
+}
+
+func (e *braintreeError) Error() string {
 	return e.ErrorMessage
 }
 
-type InvalidResponseError struct {
-	*Response
+func (e *braintreeError) StatusCode() int {
+	return e.statusCode
 }
 
-func (e *InvalidResponseError) Error() string {
-	return fmt.Sprintf("braintree returned invalid response (%d)", e.StatusCode)
+type invalidResponseError struct {
+	resp *Response
+}
+
+type InvalidResponseError interface {
+	error
+	Response() *Response
+}
+
+func (e *invalidResponseError) Error() string {
+	return fmt.Sprintf("braintree returned invalid response (%d)", e.resp.StatusCode)
+}
+
+func (e *invalidResponseError) Response() *Response {
+	return e.resp
 }

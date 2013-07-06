@@ -13,7 +13,7 @@ func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
 	case 201:
 		return resp.transaction()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
 
 func (g *TransactionGateway) Find(txId string) (*Transaction, error) {
@@ -25,5 +25,5 @@ func (g *TransactionGateway) Find(txId string) (*Transaction, error) {
 	case 200:
 		return resp.transaction()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }

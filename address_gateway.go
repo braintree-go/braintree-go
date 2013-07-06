@@ -23,7 +23,7 @@ func (g *AddressGateway) Create(a *Address) (*Address, error) {
 	case 201:
 		return resp.address()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
 
 // Delete deletes the address for the specified id and customer id.
@@ -36,5 +36,5 @@ func (g *AddressGateway) Delete(customerId, addrId string) error {
 	case 200:
 		return nil
 	}
-	return &InvalidResponseError{resp}
+	return &invalidResponseError{resp}
 }

@@ -13,7 +13,7 @@ func (g *SubscriptionGateway) Create(sub *Subscription) (*Subscription, error) {
 	case 201:
 		return resp.subscription()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
 
 func (g *SubscriptionGateway) Find(subId string) (*Subscription, error) {
@@ -25,7 +25,7 @@ func (g *SubscriptionGateway) Find(subId string) (*Subscription, error) {
 	case 200:
 		return resp.subscription()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
 
 func (g *SubscriptionGateway) Cancel(subId string) (*Subscription, error) {
@@ -37,5 +37,5 @@ func (g *SubscriptionGateway) Cancel(subId string) (*Subscription, error) {
 	case 200:
 		return resp.subscription()
 	}
-	return nil, &InvalidResponseError{resp}
+	return nil, &invalidResponseError{resp}
 }
