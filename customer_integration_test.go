@@ -4,48 +4,9 @@ import (
 	"testing"
 )
 
-func TestCustomerCreateAndUpdate(t *testing.T) {
-	customer, err := testGateway.Customer().Create(&Customer{
-		FirstName: "Lionel",
-		LastName:  "Barrow",
-		Company:   "Braintree",
-		Email:     "lionel.barrow@example.com",
-		Phone:     "312.555.1234",
-		Fax:       "614.555.5678",
-		Website:   "http://www.example.com",
-		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
-			ExpirationDate: "05/14",
-		},
-	})
-
-	t.Log(customer)
-
-	if err != nil {
-		t.Fatal(err)
-	}
-	if customer.Id == "" {
-		t.Fatal("invalid customer id")
-	}
-
-	c2, err := testGateway.Customer().Update(&Customer{
-		Id:        customer.Id,
-		FirstName: "John",
-	})
-
-	t.Log(c2)
-
-	if err != nil {
-		t.Fatal(err)
-	}
-	if c2.FirstName != "John" {
-		t.Fatal("first name not changed")
-	}
-}
-
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
-func TestCustomerCreateWithErrors(t *testing.T) {
-	_, err := testGateway.Customer().Create(&Customer{
+func TestCustomer(t *testing.T) {
+	oc := &Customer{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
 		Company:   "Braintree",
@@ -61,17 +22,29 @@ func TestCustomerCreateWithErrors(t *testing.T) {
 				VerifyCard: true,
 			},
 		},
-	})
+	}
 
+	// Create with errors
+	_, err := testGateway.Customer().Create(oc)
 	if err == nil {
 		t.Fatal("Did not receive error when creating invalid customer")
 	}
-}
 
-func TestCustomerFind(t *testing.T) {
+	// Create
 	customer, err := testGateway.Customer().Create(&Customer{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
+		Company:   "Braintree",
+		Email:     "lionel.barrow@example.com",
+		Phone:     "312.555.1234",
+		Fax:       "614.555.5678",
+		Website:   "http://www.example.com",
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "",
+			Options:        nil,
+		},
 	})
 
 	t.Log(customer)
@@ -79,28 +52,52 @@ func TestCustomerFind(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if customer.Id == "" {
+		t.Fatal("invalid customer id")
+	}
 
-	customer2, err := testGateway.Customer().Find(customer.Id)
+	// Update
+	c2, err := testGateway.Customer().Update(&Customer{
+		Id:        customer.Id,
+		FirstName: "John",
+	})
 
-	t.Log(customer2)
+	t.Log(c2)
 
 	if err != nil {
 		t.Fatal(err)
 	}
-	if customer2.Id != customer.Id {
+	if c2.FirstName != "John" {
+		t.Fatal("first name not changed")
+	}
+
+	// Find
+	c3, err := testGateway.Customer().Find(customer.Id)
+
+	t.Log(c3)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if c3.Id != customer.Id {
 		t.Fatal("ids do not match")
 	}
-}
 
-func TestFindNonExistantCustomer(t *testing.T) {
-	customer, err := testGateway.Customer().Find("bad_customer_id")
+	// Delete
+	err = testGateway.Customer().Delete(customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	t.Log(customer)
-
+	// Test customer 404
+	c4, err := testGateway.Customer().Find(customer.Id)
 	if err == nil {
-		t.Fatal("should report error, invalid customer id")
+		t.Fatal("should return 404")
 	}
 	if err.Error() != "Not Found (404)" {
 		t.Fatal(err)
+	}
+	if c4 != nil {
+		t.Fatal(c4)
 	}
 }

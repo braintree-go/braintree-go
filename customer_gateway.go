@@ -44,3 +44,16 @@ func (g *CustomerGateway) Find(id string) (*Customer, error) {
 	}
 	return nil, &InvalidResponseError{resp}
 }
+
+// Delete deletes the customer with the given id.
+func (g *CustomerGateway) Delete(id string) error {
+	resp, err := g.execute("DELETE", "customers/"+id, nil)
+	if err != nil {
+		return err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return nil
+	}
+	return &InvalidResponseError{resp}
+}
