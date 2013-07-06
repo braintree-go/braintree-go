@@ -8,11 +8,14 @@ type AddressGateway struct {
 	*Braintree
 }
 
+// Create creates a new address for the specified customer id.
 func (g *AddressGateway) Create(a *Address) (*Address, error) {
-	cid := a.CustomerId
-	a.CustomerId = ""
-	a.XMLName = xml.Name{Local: "address"}
-	resp, err := g.execute("POST", "customers/"+cid+"/addresses", a)
+	// Copy address so that field sanitation won't affect original
+	var cp Address = *a
+	cp.CustomerId = ""
+	cp.XMLName = xml.Name{Local: "address"}
+
+	resp, err := g.execute("POST", "customers/"+a.CustomerId+"/addresses", cp)
 	if err != nil {
 		return nil, err
 	}
@@ -23,6 +26,7 @@ func (g *AddressGateway) Create(a *Address) (*Address, error) {
 	return nil, &InvalidResponseError{resp}
 }
 
+// Delete deletes the address for the specified id and customer id.
 func (g *AddressGateway) Delete(customerId, addrId string) error {
 	resp, err := g.execute("DELETE", "customers/"+customerId+"/addresses/"+addrId, nil)
 	if err != nil {
