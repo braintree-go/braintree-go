@@ -15,7 +15,7 @@ func (g *AddressGateway) Create(a *Address) (*Address, error) {
 	cp.CustomerId = ""
 	cp.XMLName = xml.Name{Local: "address"}
 
-	resp, err := g.execute("POST", "customers/"+a.CustomerId+"/addresses", cp)
+	resp, err := g.execute("POST", "customers/"+a.CustomerId+"/addresses", &cp)
 	if err != nil {
 		return nil, err
 	}
