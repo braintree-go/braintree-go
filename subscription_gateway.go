@@ -16,6 +16,18 @@ func (g *SubscriptionGateway) Create(sub *Subscription) (*Subscription, error) {
 	return nil, &invalidResponseError{resp}
 }
 
+func (g *SubscriptionGateway) Update(sub *Subscription) (*Subscription, error) {
+	resp, err := g.execute("PUT", "subscriptions/"+sub.Id, sub)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.subscription()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
 func (g *SubscriptionGateway) Find(subId string) (*Subscription, error) {
 	resp, err := g.execute("GET", "subscriptions/"+subId, nil)
 	if err != nil {

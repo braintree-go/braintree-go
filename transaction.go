@@ -17,6 +17,10 @@ type Transaction struct {
 	Options            *TransactionOptions `xml:"options,omitempty"`
 }
 
+type Transactions struct {
+	Transaction []*Transaction `xml:"transaction"`
+}
+
 type TransactionOptions struct {
 	SubmitForSettlement              bool `xml:"submit-for-settlement,omitempty"`
 	StoreInVault                     bool `xml:"store-in-vault,omitempty"`

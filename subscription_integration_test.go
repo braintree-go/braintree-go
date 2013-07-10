@@ -25,6 +25,8 @@ func TestSubscription(t *testing.T) {
 
 	t.Log(customer)
 
+	g := testGateway.Subscription()
+
 	token := customer.CreditCards.CreditCard[0].Token
 	if token == "" {
 		t.Fatal("invalid payment method token")
@@ -32,10 +34,19 @@ func TestSubscription(t *testing.T) {
 		t.Log(token)
 	}
 
-	sub, err := testGateway.Subscription().Create(&Subscription{
+	// Create
+	sub, err := g.Create(&Subscription{
 		PaymentMethodToken: token,
 		PlanId:             "test_plan",
+		Options: &SubscriptionOptions{
+			ProrateCharges:                       true,
+			RevertSubscriptionOnProrationFailure: true,
+			StartImmediately:                     true,
+		},
 	})
+
+	t.Log("sub1", sub)
+
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -43,15 +54,40 @@ func TestSubscription(t *testing.T) {
 		t.Fatal("invalid subscription id")
 	}
 
-	sub2, err := testGateway.Subscription().Find(sub.Id)
+	// Update
+	sub2, err := g.Update(&Subscription{
+		Id:     sub.Id,
+		PlanId: "test_plan_2",
+		Options: &SubscriptionOptions{
+			ProrateCharges:                       true,
+			RevertSubscriptionOnProrationFailure: true,
+			StartImmediately:                     true,
+		},
+	})
+
+	t.Log("sub2", sub2)
+
 	if err != nil {
 		t.Fatal(err)
 	}
 	if sub2.Id != sub.Id {
 		t.Fatal(sub2.Id)
 	}
+	if x := sub2.PlanId; x != "test_plan_2" {
+		t.Fatal(x)
+	}
 
-	_, err = testGateway.Subscription().Cancel(sub.Id)
+	// Find
+	sub3, err := g.Find(sub.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sub3.Id != sub2.Id {
+		t.Fatal(sub3.Id)
+	}
+
+	// Cancel
+	_, err = g.Cancel(sub2.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -23,7 +23,7 @@ In your sandbox account go to `Settings > Processing > CVV` and enable the follo
 
 Finally you also need to create a plan for recurring payments with id `test_plan`. Once you do all of these things, the integration tests should all pass.
 
-**Test Plan Setup**
+**Test Plan 1 Setup**
 
 ```
 Plan ID:                test_plan
@@ -38,4 +38,17 @@ Duration:               14 days
 Billing Cycle:          Every 1 Month
 First Bill Date:        Specific Day - Last Day of the Month
 End Date:               After 2 billing cycles
+```
+
+**Test Plan 2 Setup**
+
+```
+Plan ID:                test_plan_2
+Plan Name:              test_plan_2_name
+Price:                  20
+Currency:               USD
+
+Billing Cycle:          Every 1 Month
+First Bill Date:        Immediately
+End Date:               Never
 ```
