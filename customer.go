@@ -14,12 +14,12 @@ type Customer struct {
 	CreditCards *CreditCards `xml:"credit-cards,omitempty"`
 }
 
-// DefaultPaymentToken returns the payment token of the first creditcard, if any.
-func (c *Customer) DefaultPaymentToken() string {
+// DefaultCreditCard returns the default credit card, or nil
+func (c *Customer) DefaultCreditCard() *CreditCard {
 	for _, card := range c.CreditCards.CreditCard {
 		if card.Default {
-			return card.Token
+			return card
 		}
 	}
-	return ""
+	return nil
 }

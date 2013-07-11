@@ -43,7 +43,10 @@ func TestCustomer(t *testing.T) {
 	if customer.Id == "" {
 		t.Fatal("invalid customer id")
 	}
-	if x := customer.DefaultPaymentToken(); x == "" {
+	if card := customer.DefaultCreditCard(); card == nil {
+		t.Fatal("invalid credit card")
+	}
+	if card := customer.DefaultCreditCard(); card.Token == "" {
 		t.Fatal("invalid token")
 	}
 
