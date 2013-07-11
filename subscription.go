@@ -32,6 +32,10 @@ type Subscription struct {
 	// Descriptor              interface{}   `xml:"descriptor,omitempty"`   // struct with name, phone
 }
 
+type Subscriptions struct {
+	Subscription []*Subscription `xml:"subscription"`
+}
+
 // TODO(eaigner): same considerations apply as with plan type marshalling
 
 type SubscriptionOptions struct {
