@@ -16,8 +16,10 @@ type Customer struct {
 
 // DefaultPaymentToken returns the payment token of the first creditcard, if any.
 func (c *Customer) DefaultPaymentToken() string {
-	if cards := c.CreditCards.CreditCard; len(cards) > 0 {
-		return cards[0].Token
+	for _, card := range c.CreditCards.CreditCard {
+		if card.Default {
+			return card.Token
+		}
 	}
 	return ""
 }
