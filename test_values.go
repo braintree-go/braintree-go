@@ -19,5 +19,5 @@ var testGateway = New(
 )
 
 // func init() {
-// 	testGateway.Logger = log.New(os.Stdout, "BT: ", log.LstdFlags)
+// 	testGateway.Logger = log.New(os.Stdout, "\nBT: ", log.LstdFlags)
 // }

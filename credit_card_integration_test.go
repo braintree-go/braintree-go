@@ -4,13 +4,15 @@ import (
 	"testing"
 )
 
-func TestCreateCreditCard(t *testing.T) {
-	customer, err := testGateway.Customer().Create(&Customer{})
+func TestCreditCard(t *testing.T) {
+	cust, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(&CreditCard{
-		CustomerId:     customer.Id,
+
+	g := testGateway.CreditCard()
+	card, err := g.Create(&CreditCard{
+		CustomerId:     cust.Id,
 		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
 		CVV:            "100",
@@ -18,12 +20,43 @@ func TestCreateCreditCard(t *testing.T) {
 			VerifyCard: true,
 		},
 	})
-
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	t.Log(card)
+
 	if card.Token == "" {
 		t.Fatal("invalid token")
+	}
+
+	// Update
+	card2, err := g.Update(&CreditCard{
+		Token:          card.Token,
+		Number:         testCreditCards["mastercard"].Number,
+		ExpirationDate: "05/14",
+		CVV:            "100",
+		Options: &CreditCardOptions{
+			VerifyCard: true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(card2)
+
+	if card2.Token != card.Token {
+		t.Fatal()
+	}
+	if card2.CardType != "MasterCard" {
+		t.Fatal()
+	}
+
+	// Delete
+	err = g.Delete(card2)
+	if err != nil {
+		t.Fatal(err)
 	}
 }
 
