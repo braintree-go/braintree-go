@@ -1,5 +1,14 @@
 package braintree
 
+const (
+	SubscriptionStatusActive       = "Active"
+	SubscriptionStatusCanceled     = "Canceled"
+	SubscriptionStatusExpired      = "Expired"
+	SubscriptionStatusPastDue      = "Past Due"
+	SubscriptionStatusPending      = "Pending"
+	SubscriptionStatusUnrecognized = "Unrecognized"
+)
+
 type Subscription struct {
 	XMLName                 string               `xml:"subscription"`
 	Id                      string               `xml:"id,omitempty"`
