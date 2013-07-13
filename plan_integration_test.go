@@ -6,7 +6,8 @@ import (
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestPlan(t *testing.T) {
-	plans, err := testGateway.Plan().All()
+	g := testGateway.Plan()
+	plans, err := g.All()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -68,5 +69,14 @@ func TestPlan(t *testing.T) {
 	}
 	if x := plan.UpdatedAt; x == "" {
 		t.Fatal(x)
+	}
+
+	// Find
+	plan2, err := g.Find("test_plan_2")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if plan2.Id != "test_plan_2" {
+		t.Fatal(plan2)
 	}
 }
