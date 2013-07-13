@@ -46,3 +46,18 @@ type CreditCardOptions struct {
 	VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
 	UpdateExistingToken           string `xml:"update-existing-token,omitempty"`
 }
+
+// AllSubscriptions returns all subscriptions for this card, or nil if none present.
+func (card *CreditCard) AllSubscriptions() []*Subscription {
+	if card.Subscriptions != nil {
+		subs := card.Subscriptions.Subscription
+		if len(subs) > 0 {
+			a := make([]*Subscription, 0, len(subs))
+			for _, s := range subs {
+				a = append(a, s)
+			}
+			return a
+		}
+	}
+	return nil
+}
