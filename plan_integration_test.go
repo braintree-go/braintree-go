@@ -34,9 +34,6 @@ func TestPlan(t *testing.T) {
 	if x := plan.MerchantId; x == "" {
 		t.Fatal(x)
 	}
-	if x := plan.BillingDayOfMonth; x != "31" {
-		t.Fatal(x)
-	}
 	if x := plan.BillingFrequency; x != "1" {
 		t.Fatal(x)
 	}
@@ -78,5 +75,8 @@ func TestPlan(t *testing.T) {
 	}
 	if plan2.Id != "test_plan_2" {
 		t.Fatal(plan2)
+	}
+	if x := plan2.BillingDayOfMonth; x != "31" {
+		t.Fatal(x)
 	}
 }

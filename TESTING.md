@@ -36,7 +36,6 @@ Include Trial Period:   YES
 Duration:               14 days
 
 Billing Cycle:          Every 1 Month
-First Bill Date:        Specific Day - Last Day of the Month
 End Date:               After 2 billing cycles
 ```
 
@@ -49,6 +48,6 @@ Price:                  20
 Currency:               USD
 
 Billing Cycle:          Every 1 Month
-First Bill Date:        Immediately
+First Bill Date:        Specific Day - Last Day of the Month
 End Date:               Never
 ```
