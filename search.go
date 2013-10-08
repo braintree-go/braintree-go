@@ -9,6 +9,14 @@ type Search struct {
 	Fields  []interface{}
 }
 
+type SearchResults struct {
+	XMLName  string `xml:"search-results"`
+	PageSize string `xml:"page-size"`
+	Ids      struct {
+		Item []string `xml:"item"`
+	} `xml:"ids"`
+}
+
 type TextField struct {
 	XMLName    xml.Name
 	Is         string `xml:"is,omitempty"`

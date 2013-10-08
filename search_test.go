@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"encoding/xml"
 	"testing"
 )
 
@@ -23,7 +24,7 @@ func TestSearchXMLEncode(t *testing.T) {
 	f3.AddItem("authorized")
 	f3.AddItem("submitted_for_settlement")
 
-	xml := s.ToXML()
+	xmls := s.ToXML()
 	expect := `<search>
   <customer-first-name>
     <is>A</is>
@@ -43,7 +44,33 @@ func TestSearchXMLEncode(t *testing.T) {
   </status>
 </search>`
 
-	if xml != expect {
-		t.Fatal(xml)
+	if xmls != expect {
+		t.Fatal(xmls)
+	}
+}
+
+func TestSearchResultUnmarshal(t *testing.T) {
+	xmls := `<search-results>
+  <page-size type="integer">50</page-size>
+  <ids type="array">
+      <item>k658ww</item>
+      <item>fd2h96</item>
+  </ids>
+</search-results>`
+
+	var v SearchResults
+	err := xml.Unmarshal([]byte(xmls), &v)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(v.Ids.Item) != 2 {
+		t.Fatal(v.Ids)
+	}
+	if x := v.Ids.Item[0]; x != "k658ww" {
+		t.Fatal(x)
+	}
+	if x := v.Ids.Item[1]; x != "fd2h96" {
+		t.Fatal(x)
 	}
 }
