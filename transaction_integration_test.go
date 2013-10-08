@@ -1,6 +1,8 @@
 package braintree
 
 import (
+	"math"
+	"math/rand"
 	"strconv"
 	"testing"
 	"time"
@@ -76,10 +78,13 @@ func TestTransactionSearch(t *testing.T) {
 	ts := strconv.FormatInt(time.Now().Unix(), 10)
 	name := "Erik-" + ts
 
-	if err := createTx(100.0, name); err != nil {
+	rand.Seed(time.Now().UnixNano())
+	offset := math.Ceil(rand.Float64() * 100.0)
+
+	if err := createTx(100.0+offset, name); err != nil {
 		t.Fatal(err)
 	}
-	if err := createTx(150.0, "Lionel-"+ts); err != nil {
+	if err := createTx(150.0+offset, "Lionel-"+ts); err != nil {
 		t.Fatal(err)
 	}
 
@@ -97,7 +102,7 @@ func TestTransactionSearch(t *testing.T) {
 	}
 
 	tx := result.Transactions[0]
-	if tx.Amount != 100 {
+	if tx.Amount != 100.0+offset {
 		t.Fatal(tx.Amount)
 	}
 	if x := tx.Customer.FirstName; x != name {
