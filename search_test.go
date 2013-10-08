@@ -21,7 +21,7 @@ func TestSearchXMLEncode(t *testing.T) {
 	f2.Max = 20.01
 
 	f3 := s.AddMultiField("status")
-	f3.Item = []string{
+	f3.Items = []string{
 		"authorized",
 		"submitted_for_settlement",
 	}

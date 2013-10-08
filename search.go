@@ -36,7 +36,7 @@ type RangeField struct {
 type MultiField struct {
 	XMLName xml.Name
 	Type    string   `xml:"type,attr"` // type=array
-	Item    []string `xml:"item"`
+	Items   []string `xml:"item"`
 }
 
 func (s *Search) AddTextField(field string) *TextField {
