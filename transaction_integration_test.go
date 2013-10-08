@@ -1,6 +1,10 @@
 package braintree
 
-import "testing"
+import (
+	"strconv"
+	"testing"
+	"time"
+)
 
 func TestTransactionCreateSettleAndVoid(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
@@ -52,6 +56,56 @@ func TestTransactionCreateSettleAndVoid(t *testing.T) {
 	}
 }
 
+func TestTransactionSearch(t *testing.T) {
+	txg := testGateway.Transaction()
+	createTx := func(amount float64, customerName string) error {
+		_, err := txg.Create(&Transaction{
+			Type:   "sale",
+			Amount: amount,
+			Customer: &Customer{
+				FirstName: customerName,
+			},
+			CreditCard: &CreditCard{
+				Number:         testCreditCards["visa"].Number,
+				ExpirationDate: "05/14",
+			},
+		})
+		return err
+	}
+
+	ts := strconv.FormatInt(time.Now().Unix(), 10)
+	name := "Erik-" + ts
+
+	if err := createTx(100.0, name); err != nil {
+		t.Fatal(err)
+	}
+	if err := createTx(150.0, "Lionel-"+ts); err != nil {
+		t.Fatal(err)
+	}
+
+	query := new(SearchQuery)
+	f := query.AddTextField("customer-first-name")
+	f.Is = name
+
+	result, err := txg.Search(query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(result.TotalItems) != 1 {
+		t.Fatal(result.Transactions)
+	}
+
+	tx := result.Transactions[0]
+	if tx.Amount != 100 {
+		t.Fatal(tx.Amount)
+	}
+	if x := tx.Customer.FirstName; x != name {
+		t.Log(name)
+		t.Fatal(x)
+	}
+}
+
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	_, err := testGateway.Transaction().Create(&Transaction{
@@ -62,7 +116,6 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 			ExpirationDate: "05/14",
 		},
 	})
-
 	if err == nil {
 		t.Fatal("Did not receive error when creating invalid transaction")
 	}

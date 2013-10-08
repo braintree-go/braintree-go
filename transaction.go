@@ -27,3 +27,11 @@ type TransactionOptions struct {
 	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
 	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
 }
+
+type TransactionSearchResult struct {
+	XMLName           string         `xml:"credit-card-transactions"`
+	CurrentPageNumber string         `xml:"current-page-number"` // int
+	PageSize          string         `xml:"page-size"`           // int
+	TotalItems        string         `xml:"total-items"`         // int
+	Transactions      []*Transaction `xml:"transaction"`
+}

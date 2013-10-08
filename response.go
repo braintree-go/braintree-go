@@ -13,6 +13,8 @@ type Response struct {
 	Body []byte
 }
 
+// TODO: remove dedicated unmarshal methods (redundant)
+
 func (r *Response) transaction() (*Transaction, error) {
 	var b Transaction
 	if err := xml.Unmarshal(r.Body, &b); err != nil {

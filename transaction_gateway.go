@@ -1,5 +1,9 @@
 package braintree
 
+import (
+	"encoding/xml"
+)
+
 type TransactionGateway struct {
 	*Braintree
 }
@@ -63,4 +67,18 @@ func (g *TransactionGateway) Find(id string) (*Transaction, error) {
 		return resp.transaction()
 	}
 	return nil, &invalidResponseError{resp}
+}
+
+// Search finds all transactions matching the search query.
+func (g *TransactionGateway) Search(query *SearchQuery) (*TransactionSearchResult, error) {
+	resp, err := g.execute("POST", "transactions/advanced_search", query)
+	if err != nil {
+		return nil, err
+	}
+	var v TransactionSearchResult
+	err = xml.Unmarshal(resp.Body, &v)
+	if err != nil {
+		return nil, err
+	}
+	return &v, err
 }

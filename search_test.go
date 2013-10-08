@@ -6,7 +6,7 @@ import (
 )
 
 func TestSearchXMLEncode(t *testing.T) {
-	s := new(Search)
+	s := new(SearchQuery)
 
 	f := s.AddTextField("customer-first-name")
 	f.Is = "A"

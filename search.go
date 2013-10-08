@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 )
 
-type Search struct {
+type SearchQuery struct {
 	XMLName string `xml:"search"`
 	Fields  []interface{}
 }
@@ -39,19 +39,19 @@ type MultiField struct {
 	Items   []string `xml:"item"`
 }
 
-func (s *Search) AddTextField(field string) *TextField {
+func (s *SearchQuery) AddTextField(field string) *TextField {
 	f := &TextField{XMLName: xml.Name{Local: field}}
 	s.Fields = append(s.Fields, f)
 	return f
 }
 
-func (s *Search) AddRangeField(field string) *RangeField {
+func (s *SearchQuery) AddRangeField(field string) *RangeField {
 	f := &RangeField{XMLName: xml.Name{Local: field}}
 	s.Fields = append(s.Fields, f)
 	return f
 }
 
-func (s *Search) AddMultiField(field string) *MultiField {
+func (s *SearchQuery) AddMultiField(field string) *MultiField {
 	f := &MultiField{
 		XMLName: xml.Name{Local: field},
 		Type:    "array",
