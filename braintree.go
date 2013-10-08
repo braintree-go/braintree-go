@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"log"
 	"net/http"
+	"time"
 )
 
 type Environment string
@@ -123,4 +124,9 @@ func (g *Braintree) Plan() *PlanGateway {
 
 func (g *Braintree) Address() *AddressGateway {
 	return &AddressGateway{g}
+}
+
+func ParseDate(s string) (time.Time, error) {
+	const fmt = "2006-01-02T15:04:05Z"
+	return time.Parse(fmt, s)
 }
