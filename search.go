@@ -60,14 +60,6 @@ func (s *Search) AddMultiField(field string) *MultiField {
 	return f
 }
 
-func (s *Search) ToXML() string {
-	b, err := xml.MarshalIndent(s, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	return string(b)
-}
-
 func (f *MultiField) AddItem(s string) {
 	f.Item = append(f.Item, s)
 }

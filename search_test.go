@@ -24,7 +24,12 @@ func TestSearchXMLEncode(t *testing.T) {
 	f3.AddItem("authorized")
 	f3.AddItem("submitted_for_settlement")
 
-	xmls := s.ToXML()
+	b, err := xml.MarshalIndent(s, "", "  ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	xmls := string(b)
+
 	expect := `<search>
   <customer-first-name>
     <is>A</is>
