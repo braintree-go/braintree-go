@@ -10,6 +10,7 @@ type Transaction struct {
 	OrderId            string              `xml:"order-id,omitempty"`
 	PaymentMethodToken string              `xml:"payment-method-token,omitempty"`
 	MerchantAccountId  string              `xml:"merchant-account-id,omitempty"`
+	PlanId             string              `xml:"plan-id,omitempty"`
 	CreditCard         *CreditCard         `xml:"credit-card,omitempty"`
 	Customer           *Customer           `xml:"customer,omitempty"`
 	BillingAddress     *Address            `xml:"billing,omitempty"`
