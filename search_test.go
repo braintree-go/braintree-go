@@ -21,8 +21,10 @@ func TestSearchXMLEncode(t *testing.T) {
 	f2.Max = 20.01
 
 	f3 := s.AddMultiField("status")
-	f3.AddItem("authorized")
-	f3.AddItem("submitted_for_settlement")
+	f3.Item = []string{
+		"authorized",
+		"submitted_for_settlement",
+	}
 
 	b, err := xml.MarshalIndent(s, "", "  ")
 	if err != nil {

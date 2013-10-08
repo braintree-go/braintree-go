@@ -59,7 +59,3 @@ func (s *Search) AddMultiField(field string) *MultiField {
 	s.Fields = append(s.Fields, f)
 	return f
 }
-
-func (f *MultiField) AddItem(s string) {
-	f.Item = append(f.Item, s)
-}
