@@ -29,7 +29,6 @@ func TestCustomer(t *testing.T) {
 	if err == nil {
 		t.Fatal("Did not receive error when creating invalid customer")
 	}
-	t.Fatal(err.Error())
 
 	// Create
 	oc.CreditCard.CVV = ""

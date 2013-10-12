@@ -79,5 +79,3 @@ func TestErrorsUnmarshalEverything(t *testing.T) {
     t.Fatal("Did not get all errors")
   }
 }
-
-
