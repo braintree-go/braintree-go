@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api-error-response>
+  <errors>
+    <errors type="array"/>
+  </errors>
+  <params>
+    <credit-card>
+      <customer-id>169514</customer-id>
+      <expiration-date>12/2012</expiration-date>
+      <options>
+        <verify-card>true</verify-card>
+      </options>
+    </credit-card>
+    <action>create</action>
+    <controller>payment_methods</controller>
+    <merchant-id>yx4jpf9hbn47ywj8</merchant-id>
+  </params>
+  <message>Do Not Honor</message>
+  <verification>
+    <status>processor_declined</status>
+    <cvv-response-code>I</cvv-response-code>
+    <avs-error-response-code nil="true"></avs-error-response-code>
+    <avs-postal-code-response-code>I</avs-postal-code-response-code>
+    <avs-street-address-response-code>I</avs-street-address-response-code>
+    <gateway-rejection-reason nil="true"></gateway-rejection-reason>
+    <merchant-account-id>mchqunhitntfrlmjrviwivpsk</merchant-account-id>
+    <processor-response-code>2000</processor-response-code>
+    <processor-response-text>Do Not Honor</processor-response-text>
+  </verification>
+</api-error-response>
