@@ -1,3 +1,12 @@
+/* API errors are intended to be consumed in two ways. One, they can be dealt with as a single unit:
+
+result, err := gateway.Create(transaction)
+err.Error() => "A top level error message"
+
+Second, you can drill down to see specific error messages on a field-by-field basis:
+
+err.For("Transaction").On("Base")[0].Message => "A more specific error message"
+*/
 package braintree
 
 type errorGroup interface {
@@ -60,6 +69,10 @@ func (r responseError) On(item string) []fieldError {
 	switch item {
 	default:
 		return []fieldError{}
+	case "Base":
+		return r.ErrorList.Errors
+	case "Customer":
+		return r.CustomerErrors.ErrorList.Errors
 	case "CreditCard":
 		return r.CreditCardErrors.ErrorList.Errors
 	}

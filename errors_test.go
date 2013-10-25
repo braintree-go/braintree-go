@@ -87,8 +87,17 @@ func TestAccessors(t *testing.T) {
 	}
 
 	ccErrors := apiErrors.For("Transaction").On("CreditCard")
-
 	if len(ccErrors) != 4 {
-		t.Fatal("Did not get all the credit card errors")
+		t.Fatal("Did not get the right credit card errors")
+	}
+
+	customerErrors := apiErrors.For("Transaction").On("Customer")
+	if len(customerErrors) != 1 {
+		t.Fatal("Did not get the right customer errors")
+	}
+
+	baseErrors := apiErrors.For("Transaction").On("Base")
+	if len(baseErrors) != 3 {
+		t.Fatal("Did not get the right base errors")
 	}
 }
