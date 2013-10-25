@@ -9,9 +9,11 @@ err.For("Transaction").On("Base")[0].Message => "A more specific error message"
 */
 package braintree
 
+import "strings"
+
 type errorGroup interface {
 	For(string) errorGroup
-	On(string) []fieldError
+	On(string) []FieldError
 }
 
 type braintreeError struct {
@@ -29,7 +31,7 @@ func (e *braintreeError) StatusCode() int {
 	return e.statusCode
 }
 
-func (e *braintreeError) All() []fieldError {
+func (e *braintreeError) All() []FieldError {
 	baseErrors := e.Errors.TransactionErrors.ErrorList.Errors
 	creditCardErrors := e.Errors.TransactionErrors.CreditCardErrors.ErrorList.Errors
 	customerErrors := e.Errors.TransactionErrors.CustomerErrors.ErrorList.Errors
@@ -47,8 +49,8 @@ func (e *braintreeError) For(item string) errorGroup {
 	}
 }
 
-func (e *braintreeError) On(item string) []fieldError {
-	return []fieldError{}
+func (e *braintreeError) On(item string) []FieldError {
+	return []FieldError{}
 }
 
 type responseErrors struct {
@@ -62,13 +64,22 @@ type responseError struct {
 }
 
 func (r responseError) For(item string) errorGroup {
-	return nil
-}
-
-func (r responseError) On(item string) []fieldError {
 	switch item {
 	default:
-		return []fieldError{}
+		return nil
+	case "Base":
+		return r.ErrorList.Errors
+	case "Customer":
+		return r.CustomerErrors.ErrorList.Errors
+	case "CreditCard":
+		return r.CreditCardErrors.ErrorList.Errors
+	}
+}
+
+func (r responseError) On(item string) []FieldError {
+	switch item {
+	default:
+		return []FieldError{}
 	case "Base":
 		return r.ErrorList.Errors
 	case "Customer":
@@ -83,10 +94,26 @@ type errorBlock struct {
 }
 
 type errorList struct {
-	Errors []fieldError `xml:"error"`
+	Errors FieldErrorList `xml:"error"`
 }
 
-type fieldError struct {
+type FieldErrorList []FieldError
+
+func (f FieldErrorList) For(item string) errorGroup {
+	return nil
+}
+
+func (f FieldErrorList) On(item string) []FieldError {
+	errors := make([]FieldError, 0)
+	for _, e := range f {
+		if strings.ToLower(item) == e.Attribute {
+			errors = append(errors, e)
+		}
+	}
+	return errors
+}
+
+type FieldError struct {
 	Code      string `xml:"code"`
 	Attribute string `xml:"attribute"`
 	Message   string `xml:"message"`
