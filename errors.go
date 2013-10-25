@@ -1,5 +1,10 @@
 package braintree
 
+type errorGroup interface {
+	For(string) errorGroup
+	On(string) []fieldError
+}
+
 type braintreeError struct {
 	statusCode   int
 	XMLName      string         `xml:"api-error-response"`
@@ -16,12 +21,25 @@ func (e *braintreeError) StatusCode() int {
 }
 
 func (e *braintreeError) All() []fieldError {
-  baseErrors := e.Errors.TransactionErrors.ErrorList.Errors
-  creditCardErrors := e.Errors.TransactionErrors.CreditCardErrors.ErrorList.Errors
-  customerErrors := e.Errors.TransactionErrors.CustomerErrors.ErrorList.Errors
-  allErrors := append(baseErrors, creditCardErrors...)
-  allErrors = append(allErrors, customerErrors...)
-  return allErrors
+	baseErrors := e.Errors.TransactionErrors.ErrorList.Errors
+	creditCardErrors := e.Errors.TransactionErrors.CreditCardErrors.ErrorList.Errors
+	customerErrors := e.Errors.TransactionErrors.CustomerErrors.ErrorList.Errors
+	allErrors := append(baseErrors, creditCardErrors...)
+	allErrors = append(allErrors, customerErrors...)
+	return allErrors
+}
+
+func (e *braintreeError) For(item string) errorGroup {
+	switch item {
+	default:
+		return nil
+	case "Transaction":
+		return e.Errors.TransactionErrors
+	}
+}
+
+func (e *braintreeError) On(item string) []fieldError {
+	return []fieldError{}
 }
 
 type responseErrors struct {
@@ -29,17 +47,30 @@ type responseErrors struct {
 }
 
 type responseError struct {
-	ErrorList errorList `xml:"errors"`
-  CreditCardErrors errorBlock `xml:"credit-card"`
-  CustomerErrors errorBlock `xml:"customer"`
+	ErrorList        errorList  `xml:"errors"`
+	CreditCardErrors errorBlock `xml:"credit-card"`
+	CustomerErrors   errorBlock `xml:"customer"`
+}
+
+func (r responseError) For(item string) errorGroup {
+	return nil
+}
+
+func (r responseError) On(item string) []fieldError {
+	switch item {
+	default:
+		return []fieldError{}
+	case "CreditCard":
+		return r.CreditCardErrors.ErrorList.Errors
+	}
 }
 
 type errorBlock struct {
-  ErrorList errorList `xml:"errors"`
+	ErrorList errorList `xml:"errors"`
 }
 
 type errorList struct {
-  Errors []fieldError `xml:"error"`
+	Errors []fieldError `xml:"error"`
 }
 
 type fieldError struct {

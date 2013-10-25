@@ -5,9 +5,7 @@ import (
 	"testing"
 )
 
-func TestErrorsUnmarshalEverything(t *testing.T) {
-
-	errorXML := []byte(`<?xml version="1.0" encoding="UTF-8"?>
+var errorXML = []byte(`<?xml version="1.0" encoding="UTF-8"?>
 <api-error-response>
   <errors>
     <errors type="array"/>
@@ -67,15 +65,30 @@ func TestErrorsUnmarshalEverything(t *testing.T) {
   <message>Everything is broken!</message>
 </api-error-response>`)
 
+func TestErrorsUnmarshalEverything(t *testing.T) {
 	apiErrors := &braintreeError{}
 	err := xml.Unmarshal(errorXML, apiErrors)
 	if err != nil {
 		t.Fatal("Error unmarshalling: " + err.Error())
 	}
 
-  allErrors := apiErrors.All()
+	allErrors := apiErrors.All()
 
-  if len(allErrors) != 8 {
-    t.Fatal("Did not get all errors")
-  }
+	if len(allErrors) != 8 {
+		t.Fatal("Did not get all errors")
+	}
+}
+
+func TestAccessors(t *testing.T) {
+	apiErrors := &braintreeError{}
+	err := xml.Unmarshal(errorXML, apiErrors)
+	if err != nil {
+		t.Fatal("Error unmarshalling: " + err.Error())
+	}
+
+	ccErrors := apiErrors.For("Transaction").On("CreditCard")
+
+	if len(ccErrors) != 4 {
+		t.Fatal("Did not get all the credit card errors")
+	}
 }
