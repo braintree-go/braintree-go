@@ -18,6 +18,8 @@ type Transaction struct {
 	Options            *TransactionOptions `xml:"options,omitempty"`
 	CreatedAt          string              `xml:"created-at,omitempty"`
 	UpdatedAt          string              `xml:"updated-at,omitempty"`
+	CurrencyISOCode    string              `xml:"currency-iso-code,omitempty"`
+	Authorization      string              `xml:"processor-authorization-code,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
