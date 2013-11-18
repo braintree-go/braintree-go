@@ -85,23 +85,9 @@ func (r *Response) apiError() error {
 	return nil
 }
 
-type braintreeError struct {
-	statusCode   int
-	ErrorMessage string `xml:"message"`
-}
-
-// BraintreeError represents an api error
-type BraintreeError interface {
+type APIError interface {
 	error
 	StatusCode() int
-}
-
-func (e *braintreeError) Error() string {
-	return e.ErrorMessage
-}
-
-func (e *braintreeError) StatusCode() int {
-	return e.statusCode
 }
 
 type invalidResponseError struct {
