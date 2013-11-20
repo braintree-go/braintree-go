@@ -55,6 +55,14 @@ func (r *Response) address() (*Address, error) {
 	return &b, nil
 }
 
+func (r *Response) addOns() ([]AddOn, error) {
+	var b AddOnList
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return b.AddOns, nil
+}
+
 func (r *Response) unpackBody() error {
 	if len(r.Body) == 0 {
 		b, err := gzip.NewReader(r.Response.Body)
