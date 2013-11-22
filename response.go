@@ -63,6 +63,14 @@ func (r *Response) addOns() ([]AddOn, error) {
 	return b.AddOns, nil
 }
 
+func (r *Response) discounts() ([]Discount, error) {
+	var b DiscountList
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return b.Discounts, nil
+}
+
 func (r *Response) unpackBody() error {
 	if len(r.Body) == 0 {
 		b, err := gzip.NewReader(r.Response.Body)
