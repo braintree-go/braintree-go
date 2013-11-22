@@ -17,7 +17,7 @@ func TestAddOn(t *testing.T) {
 
 	t.Log(addOn)
 
-	if addOn.Id != "test_add_on_id" {
+	if addOn.Id != "test_add_on" {
 		t.Fail()
 	} else if addOn.Amount != 10 {
 		t.Fail()
@@ -27,7 +27,7 @@ func TestAddOn(t *testing.T) {
 		t.Fail()
 	} else if addOn.NeverExpires != true {
 		t.Fail()
-	} else if addOn.Description != "A test add on" {
+	} else if addOn.Description != "A test add-on" {
 		t.Fail()
 	}
 }

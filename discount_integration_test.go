@@ -17,7 +17,7 @@ func TestDiscounts(t *testing.T) {
 
 	t.Log(discount)
 
-	if discount.Id != "test_discount_id" {
+	if discount.Id != "test_discount" {
 		t.Fail()
 	} else if discount.Amount != 10 {
 		t.Fail()
