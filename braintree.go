@@ -102,6 +102,10 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	return btr, nil
 }
 
+func (g *Braintree) MerchantAccount() *MerchantAccountGateway {
+	return &MerchantAccountGateway{g}
+}
+
 func (g *Braintree) Transaction() *TransactionGateway {
 	return &TransactionGateway{g}
 }
