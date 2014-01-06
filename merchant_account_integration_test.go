@@ -22,10 +22,11 @@ func TestMerchantAccountCreate(t *testing.T) {
 			Phone:       "5556789012",
 			DateOfBirth: "1-1-1989",
 			Address: &Address{
-				StreetAddress: "1 E Main St",
-				Locality:      "Chicago",
-				Region:        "IL",
-				PostalCode:    "60622",
+				StreetAddress:   "1 E Main St",
+				ExtendedAddress: "Suite 404",
+				Locality:        "Chicago",
+				Region:          "IL",
+				PostalCode:      "60622",
 			},
 		},
 		FundingOptions: &MerchantAccountFundingOptions{
