@@ -9,12 +9,15 @@ import (
 	"time"
 )
 
+var acctId int
+
 func TestMerchantAccountCreate(t *testing.T) {
 	rand.Seed(time.Now().UTC().UnixNano())
+	acctId = rand.Int() + 1
 	acct := MerchantAccount{
 		MasterMerchantAccountId: os.Getenv("BRAINTREE_MERCH_ACCT_ID"),
 		TOSAccepted:             true,
-		Id:                      strconv.Itoa(rand.Int()),
+		Id:                      strconv.Itoa(acctId),
 		Individual: &MerchantAccountPerson{
 			FirstName:   "Kayle",
 			LastName:    "Gishen",
@@ -62,4 +65,33 @@ func TestMerchantAccountCreate(t *testing.T) {
 		t.Fatal("ids do not match")
 	}
 
+}
+
+func TestMerchantAccountTransaction(t *testing.T) {
+	if acctId == 0 {
+		TestMerchantAccountCreate(t)
+	}
+
+	tx, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: 100.00,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		ServiceFeeAmount:  5.00,
+		MerchantAccountId: strconv.Itoa(acctId),
+	})
+
+	t.Log(tx)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx.Status != "authorized" {
+		t.Fatal(tx.Status)
+	}
 }
