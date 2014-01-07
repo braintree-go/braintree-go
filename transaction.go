@@ -16,7 +16,7 @@ type Transaction struct {
 	BillingAddress     *Address            `xml:"billing,omitempty"`
 	ShippingAddress    *Address            `xml:"shipping,omitempty"`
 	Options            *TransactionOptions `xml:"options,omitempty"`
-	ServiceFeeAmount   float64             `xml:service-fee-amount,omitempty`
+	ServiceFeeAmount   float64             `xml:"service-fee-amount,attr,omitempty"`
 	CreatedAt          string              `xml:"created-at,omitempty"`
 	UpdatedAt          string              `xml:"updated-at,omitempty"`
 }
