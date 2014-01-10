@@ -16,6 +16,7 @@ type Transaction struct {
 	BillingAddress     *Address            `xml:"billing,omitempty"`
 	ShippingAddress    *Address            `xml:"shipping,omitempty"`
 	Options            *TransactionOptions `xml:"options,omitempty"`
+	ServiceFeeAmount   float64             `xml:"service-fee-amount,attr,omitempty"`
 	CreatedAt          string              `xml:"created-at,omitempty"`
 	UpdatedAt          string              `xml:"updated-at,omitempty"`
 }
@@ -79,7 +80,6 @@ type Transaction struct {
 //   </descriptor>
 //   <recurring type="boolean">true</recurring>
 //   <channel nil="true"></channel>
-//   <service-fee-amount nil="true"></service-fee-amount>
 //   <escrow-status nil="true"></escrow-status>
 //   <disbursement-details>
 //     <disbursement-date type="date">2013-10-08</disbursement-date>
