@@ -11,12 +11,15 @@ import (
 type Environment string
 
 const (
-	Sandbox    Environment = "sandbox"
-	Production Environment = "production"
+	Development Environment = "development"
+	Sandbox     Environment = "sandbox"
+	Production  Environment = "production"
 )
 
 func (e Environment) BaseURL() string {
 	switch e {
+	case Development:
+		return "http://localhost:3000"
 	case Sandbox:
 		return "https://sandbox.braintreegateway.com"
 	case Production:
