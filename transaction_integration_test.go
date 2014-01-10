@@ -11,7 +11,7 @@ import (
 func TestTransactionCreateSettleAndVoid(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 100.00,
+		Amount: 130.00,
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
@@ -132,7 +132,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 func TestFindTransaction(t *testing.T) {
 	createdTransaction, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 100.00,
+		Amount: 110.00,
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["mastercard"].Number,
 			ExpirationDate: "05/14",
@@ -264,7 +264,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:               "sale",
 		CustomerID:         customer.Id,
-		Amount:             100,
+		Amount:             120,
 		PaymentMethodToken: customer.CreditCards.CreditCard[0].Token,
 	})
 
