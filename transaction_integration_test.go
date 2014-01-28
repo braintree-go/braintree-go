@@ -243,6 +243,9 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Status != "submitted_for_settlement" {
 		t.Fail()
 	}
+	if tx2.AuthCode == "" {
+		t.Fail()
+	}
 }
 
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {

@@ -19,6 +19,7 @@ type Transaction struct {
 	ServiceFeeAmount   float64             `xml:"service-fee-amount,attr,omitempty"`
 	CreatedAt          string              `xml:"created-at,omitempty"`
 	UpdatedAt          string              `xml:"updated-at,omitempty"`
+	AuthCode           string              `xml:"processor-authorization-code,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
