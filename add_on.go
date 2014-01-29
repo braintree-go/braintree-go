@@ -1,11 +1,12 @@
 package braintree
 
 type AddOnList struct {
-	XMLName string  `xml:"add-ons"`
-	AddOns  []AddOn `xml:"add-on"`
+	XMLName string  `json:"add-ons" xml:"add-ons"`
+	AddOns  []AddOn `json:"add-on" xml:"add-on"`
 }
 
 type AddOn struct {
-	XMLName string `xml:"add-on"`
+	XMLName string `json:"add-on" xml:"add-on"`
 	Modification
 }
+

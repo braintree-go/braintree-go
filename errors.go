@@ -18,9 +18,9 @@ type errorGroup interface {
 
 type braintreeError struct {
 	statusCode   int
-	XMLName      string         `xml:"api-error-response"`
-	Errors       responseErrors `xml:"errors"`
-	ErrorMessage string         `xml:"message"`
+	XMLName      string         `json:"api-error-response" xml:"api-error-response"`
+	Errors       responseErrors `json:"errors" xml:"errors"`
+	ErrorMessage string         `json:"message" xml:"message"`
 }
 
 func (e *braintreeError) Error() string {
@@ -54,13 +54,13 @@ func (e *braintreeError) On(item string) []FieldError {
 }
 
 type responseErrors struct {
-	TransactionErrors responseError `xml:"transaction"`
+	TransactionErrors responseError `json:"transaction" xml:"transaction"`
 }
 
 type responseError struct {
-	ErrorList        errorList  `xml:"errors"`
-	CreditCardErrors errorBlock `xml:"credit-card"`
-	CustomerErrors   errorBlock `xml:"customer"`
+	ErrorList        errorList  `json:"errors" xml:"errors"`
+	CreditCardErrors errorBlock `json:"credit-card" xml:"credit-card"`
+	CustomerErrors   errorBlock `json:"customer" xml:"customer"`
 }
 
 func (r responseError) For(item string) errorGroup {
@@ -90,11 +90,11 @@ func (r responseError) On(item string) []FieldError {
 }
 
 type errorBlock struct {
-	ErrorList errorList `xml:"errors"`
+	ErrorList errorList `json:"errors" xml:"errors"`
 }
 
 type errorList struct {
-	Errors FieldErrorList `xml:"error"`
+	Errors FieldErrorList `json:"error" xml:"error"`
 }
 
 type FieldErrorList []FieldError
@@ -114,7 +114,8 @@ func (f FieldErrorList) On(item string) []FieldError {
 }
 
 type FieldError struct {
-	Code      string `xml:"code"`
-	Attribute string `xml:"attribute"`
-	Message   string `xml:"message"`
+	Code      string `json:"code" xml:"code"`
+	Attribute string `json:"attribute" xml:"attribute"`
+	Message   string `json:"message" xml:"message"`
 }
+

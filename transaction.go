@@ -1,25 +1,25 @@
 package braintree
 
 type Transaction struct {
-	XMLName            string              `xml:"transaction"`
-	Id                 string              `xml:"id,omitempty"`
-	CustomerID         string              `xml:"customer-id,omitempty"`
-	Status             string              `xml:"status,omitempty"`
-	Type               string              `xml:"type,omitempty"`
-	Amount             float64             `xml:"amount"`
-	OrderId            string              `xml:"order-id,omitempty"`
-	PaymentMethodToken string              `xml:"payment-method-token,omitempty"`
-	MerchantAccountId  string              `xml:"merchant-account-id,omitempty"`
-	PlanId             string              `xml:"plan-id,omitempty"`
-	CreditCard         *CreditCard         `xml:"credit-card,omitempty"`
-	Customer           *Customer           `xml:"customer,omitempty"`
-	BillingAddress     *Address            `xml:"billing,omitempty"`
-	ShippingAddress    *Address            `xml:"shipping,omitempty"`
-	Options            *TransactionOptions `xml:"options,omitempty"`
-	ServiceFeeAmount   float64             `xml:"service-fee-amount,attr,omitempty"`
-	CreatedAt          string              `xml:"created-at,omitempty"`
-	UpdatedAt          string              `xml:"updated-at,omitempty"`
-	AuthCode           string              `xml:"processor-authorization-code,omitempty"`
+	XMLName            string              `json:"transaction" xml:"transaction"`
+	Id                 string              `json:"id,omitempty" xml:"id,omitempty"`
+	CustomerID         string              `json:"customer-id,omitempty" xml:"customer-id,omitempty"`
+	Status             string              `json:"status,omitempty" xml:"status,omitempty"`
+	Type               string              `json:"type,omitempty" xml:"type,omitempty"`
+	Amount             float64             `json:"amount" xml:"amount"`
+	OrderId            string              `json:"order-id,omitempty" xml:"order-id,omitempty"`
+	PaymentMethodToken string              `json:"payment-method-token,omitempty" xml:"payment-method-token,omitempty"`
+	MerchantAccountId  string              `json:"merchant-account-id,omitempty" xml:"merchant-account-id,omitempty"`
+	PlanId             string              `json:"plan-id,omitempty" xml:"plan-id,omitempty"`
+	CreditCard         *CreditCard         `json:"credit-card,omitempty" xml:"credit-card,omitempty"`
+	Customer           *Customer           `json:"customer,omitempty" xml:"customer,omitempty"`
+	BillingAddress     *Address            `json:"billing,omitempty" xml:"billing,omitempty"`
+	ShippingAddress    *Address            `json:"shipping,omitempty" xml:"shipping,omitempty"`
+	Options            *TransactionOptions `json:"options,omitempty" xml:"options,omitempty"`
+	ServiceFeeAmount   float64             `json:"service-fee-amount,attr,omitempty" xml:"service-fee-amount,attr,omitempty"`
+	CreatedAt          string              `json:"created-at,omitempty" xml:"created-at,omitempty"`
+	UpdatedAt          string              `json:"updated-at,omitempty" xml:"updated-at,omitempty"`
+	AuthCode           string              `json:"processor-authorization-code,omitempty" xml:"processor-authorization-code,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
@@ -92,20 +92,21 @@ type Transaction struct {
 // </transaction>
 
 type Transactions struct {
-	Transaction []*Transaction `xml:"transaction"`
+	Transaction []*Transaction `json:"transaction" xml:"transaction"`
 }
 
 type TransactionOptions struct {
-	SubmitForSettlement              bool `xml:"submit-for-settlement,omitempty"`
-	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
-	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
-	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
+	SubmitForSettlement              bool `json:"submit-for-settlement,omitempty" xml:"submit-for-settlement,omitempty"`
+	StoreInVault                     bool `json:"store-in-vault,omitempty" xml:"store-in-vault,omitempty"`
+	AddBillingAddressToPaymentMethod bool `json:"add-billing-address-to-payment-method,omitempty" xml:"add-billing-address-to-payment-method,omitempty"`
+	StoreShippingAddressInVault      bool `json:"store-shipping-address-in-vault,omitempty" xml:"store-shipping-address-in-vault,omitempty"`
 }
 
 type TransactionSearchResult struct {
-	XMLName           string         `xml:"credit-card-transactions"`
-	CurrentPageNumber string         `xml:"current-page-number"` // int
-	PageSize          string         `xml:"page-size"`           // int
-	TotalItems        string         `xml:"total-items"`         // int
-	Transactions      []*Transaction `xml:"transaction"`
+	XMLName           string         `json:"credit-card-transactions" xml:"credit-card-transactions"`
+	CurrentPageNumber string         `json:"current-page-number" xml:"current-page-number"` // int
+	PageSize          string         `json:"page-size" xml:"page-size"`           // int
+	TotalItems        string         `json:"total-items" xml:"total-items"`         // int
+	Transactions      []*Transaction `json:"transaction" xml:"transaction"`
 }
+
