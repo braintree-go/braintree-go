@@ -17,10 +17,11 @@ type errorGroup interface {
 }
 
 type braintreeError struct {
-	statusCode   int
-	XMLName      string         `xml:"api-error-response"`
-	Errors       responseErrors `xml:"errors"`
-	ErrorMessage string         `xml:"message"`
+	statusCode      int
+	XMLName         string           `xml:"api-error-response"`
+	Errors          responseErrors   `xml:"errors"`
+	ErrorMessage    string           `xml:"message"`
+	MerchantAccount *MerchantAccount `xml:",omitempty"`
 }
 
 func (e *braintreeError) Error() string {

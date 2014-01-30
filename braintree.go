@@ -73,7 +73,7 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("Accept", "application/xml")
 	req.Header.Set("Accept-Encoding", "gzip")
-	req.Header.Set("User-Agent", "Braintree Go 0.2.1")
+	req.Header.Set("User-Agent", "Braintree Go 0.3.0")
 	req.Header.Set("X-ApiVersion", "3")
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
@@ -136,6 +136,10 @@ func (g *Braintree) AddOn() *AddOnGateway {
 
 func (g *Braintree) Discount() *DiscountGateway {
 	return &DiscountGateway{g}
+}
+
+func (g *Braintree) WebhookNotification() *WebhookNotificationGateway {
+	return &WebhookNotificationGateway{g}
 }
 
 func ParseDate(s string) (time.Time, error) {
