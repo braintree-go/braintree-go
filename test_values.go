@@ -1,7 +1,6 @@
 package braintree
 
 import (
-	// "log"
 	"os"
 )
 
@@ -17,7 +16,3 @@ var testGateway = New(
 	os.Getenv("BRAINTREE_PUB_KEY"),
 	os.Getenv("BRAINTREE_PRIV_KEY"),
 )
-
-// func init() {
-// 	testGateway.Logger = log.New(os.Stdout, "\nBT: ", log.LstdFlags)
-// }
