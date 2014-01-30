@@ -11,12 +11,15 @@ import (
 type Environment string
 
 const (
-	Sandbox    Environment = "sandbox"
-	Production Environment = "production"
+	Development Environment = "development"
+	Sandbox     Environment = "sandbox"
+	Production  Environment = "production"
 )
 
 func (e Environment) BaseURL() string {
 	switch e {
+	case Development:
+		return "http://localhost:3000"
 	case Sandbox:
 		return "https://sandbox.braintreegateway.com"
 	case Production:
@@ -73,7 +76,7 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("Accept", "application/xml")
 	req.Header.Set("Accept-Encoding", "gzip")
-	req.Header.Set("User-Agent", "Braintree Go 0.3.0")
+	req.Header.Set("User-Agent", "Braintree Go 0.3.1")
 	req.Header.Set("X-ApiVersion", "3")
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 

@@ -74,7 +74,7 @@ func TestMerchantAccountTransaction(t *testing.T) {
 
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 100.00,
+		Amount: 100.00 + offset(),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
