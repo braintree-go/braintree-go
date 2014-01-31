@@ -8,6 +8,7 @@ type MerchantAccount struct {
 	Individual              *MerchantAccountPerson         `xml:"individual,omitempty"`
 	Business                *MerchantAccountBusiness       `xml:"business,omitempty"`
 	FundingOptions          *MerchantAccountFundingOptions `xml:"funding,omitempty"`
+	Status                  string                         `xml:"status,omitempty"`
 }
 
 type MerchantAccountPerson struct {
