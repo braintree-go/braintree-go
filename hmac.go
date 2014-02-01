@@ -63,5 +63,8 @@ func (h hmacer) hmac(payload string) (string, error) {
 	}
 	mac := hmac.New(sha1.New, s.Sum(nil))
 	_, err = mac.Write([]byte(payload))
+	if err != nil {
+		return "", err
+	}
 	return fmt.Sprintf("%x", mac.Sum(nil)), nil
 }

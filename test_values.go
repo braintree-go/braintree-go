@@ -16,3 +16,5 @@ var testGateway = New(
 	os.Getenv("BRAINTREE_PUB_KEY"),
 	os.Getenv("BRAINTREE_PRIV_KEY"),
 )
+
+var testMerchantAccountId = os.Getenv("BRAINTREE_MERCH_ACCT_ID")

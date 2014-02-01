@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"log"
 	"net/http"
-	"time"
 )
 
 type Environment string
@@ -143,9 +142,4 @@ func (g *Braintree) Discount() *DiscountGateway {
 
 func (g *Braintree) WebhookNotification() *WebhookNotificationGateway {
 	return &WebhookNotificationGateway{g}
-}
-
-func ParseDate(s string) (time.Time, error) {
-	const fmt = "2006-01-02T15:04:05Z"
-	return time.Parse(fmt, s)
 }
