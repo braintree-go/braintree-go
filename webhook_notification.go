@@ -22,19 +22,6 @@ const (
 	PartnerMerchantDeclined     = "partner_merchant_declined"
 )
 
-type webhookSubject struct {
-	XMLName          xml.Name        `xml:"subject"`
-	APIErrorResponse *braintreeError `xml:,omitempty"`
-	Subscription     *Subscription   `xml:",omitempty"`
-
-	// Merchant account will be extracted from api error response on error
-	MerchantAccount *MerchantAccount `xml:",omitempty"`
-	Transaction     *Transaction     `xml:",omitempty"`
-
-	// Remaining Fields:
-	// partner_merchant
-}
-
 type WebhookNotification struct {
 	XMLName   xml.Name        `xml:"notification"`
 	Timestamp time.Time       `xml:"timestamp"`
@@ -42,15 +29,22 @@ type WebhookNotification struct {
 	Subject   *webhookSubject `xml:"subject"`
 }
 
-func NewWebhookNotification(xmlData []byte) (*WebhookNotification, error) {
-	var n WebhookNotification
-	if err := xml.Unmarshal(xmlData, &n); err != nil {
-		return nil, err
-	}
-
+func (n *WebhookNotification) MerchantAccount() *MerchantAccount {
 	if n.Subject.APIErrorResponse != nil && n.Subject.APIErrorResponse.MerchantAccount != nil {
-		n.Subject.MerchantAccount = n.Subject.APIErrorResponse.MerchantAccount
+		return n.Subject.APIErrorResponse.MerchantAccount
+	} else if n.Subject.MerchantAccount != nil {
+		return n.Subject.MerchantAccount
 	}
+	return nil
+}
 
-	return &n, nil
+type webhookSubject struct {
+	XMLName          xml.Name         `xml:"subject"`
+	APIErrorResponse *braintreeError  `xml:,omitempty"`
+	Subscription     *Subscription    `xml:",omitempty"`
+	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty"`
+	Transaction      *Transaction     `xml:",omitempty"`
+
+	// Remaining Fields:
+	// partner_merchant
 }
