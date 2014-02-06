@@ -19,8 +19,9 @@ type errorGroup interface {
 type braintreeError struct {
 	statusCode   int
 	XMLName      string         `json:"api-error-response" xml:"api-error-response"`
-	Errors       responseErrors `json:"errors" xml:"errors"`
-	ErrorMessage string         `json:"message" xml:"message"`
+	Errors       responseErrors `json:"errors,omitempty" xml:"errors,omitempty"`
+	Transaction  transaction    `json:"transaction,omitempty" xml:"transaction,omitempty"`
+	ErrorMessage string         `json:"message,omitempty" xml:"message,omitempty"`
 }
 
 func (e *braintreeError) Error() string {
@@ -29,6 +30,10 @@ func (e *braintreeError) Error() string {
 
 func (e *braintreeError) StatusCode() int {
 	return e.statusCode
+}
+
+func (e *braintreeError) ResponseCode() int {
+	return e.Transaction.ResponseCode
 }
 
 func (e *braintreeError) All() []FieldError {
@@ -54,13 +59,17 @@ func (e *braintreeError) On(item string) []FieldError {
 }
 
 type responseErrors struct {
-	TransactionErrors responseError `json:"transaction" xml:"transaction"`
+	TransactionErrors responseError `json:"transaction,omitempty" xml:"transaction,omitempty"`
 }
 
 type responseError struct {
-	ErrorList        errorList  `json:"errors" xml:"errors"`
-	CreditCardErrors errorBlock `json:"credit-card" xml:"credit-card"`
-	CustomerErrors   errorBlock `json:"customer" xml:"customer"`
+	ErrorList        errorList  `json:"errors,omitempty" xml:"errors,omitempty"`
+	CreditCardErrors errorBlock `json:"credit-card,omitempty" xml:"credit-card,omitempty"`
+	CustomerErrors   errorBlock `json:"customer,omitempty" xml:"customer,omitempty"`	
+}
+
+type transaction struct {
+	ResponseCode     int 	`json:"processor-response-code" xml:"processor-response-code"`
 }
 
 func (r responseError) For(item string) errorGroup {
@@ -90,11 +99,11 @@ func (r responseError) On(item string) []FieldError {
 }
 
 type errorBlock struct {
-	ErrorList errorList `json:"errors" xml:"errors"`
+	ErrorList errorList `json:"errors,omitempty" xml:"errors,omitempty"`
 }
 
 type errorList struct {
-	Errors FieldErrorList `json:"error" xml:"error"`
+	Errors FieldErrorList `json:"error,omitempty" xml:"error,omitempty"`
 }
 
 type FieldErrorList []FieldError
@@ -114,8 +123,8 @@ func (f FieldErrorList) On(item string) []FieldError {
 }
 
 type FieldError struct {
-	Code      string `json:"code" xml:"code"`
-	Attribute string `json:"attribute" xml:"attribute"`
-	Message   string `json:"message" xml:"message"`
+	Code      string `json:"code,omitempty" xml:"code"`
+	Attribute string `json:"attribute,omitempty" xml:"attribute"`
+	Message   string `json:"message,omitempty" xml:"message"`
 }
 
