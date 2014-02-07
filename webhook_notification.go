@@ -40,7 +40,7 @@ func (n *WebhookNotification) MerchantAccount() *MerchantAccount {
 
 type webhookSubject struct {
 	XMLName          xml.Name         `xml:"subject"`
-	APIErrorResponse *braintreeError  `xml:,omitempty"`
+	APIErrorResponse *braintreeError  `xml:",omitempty"`
 	Subscription     *Subscription    `xml:",omitempty"`
 	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty"`
 	Transaction      *Transaction     `xml:",omitempty"`
