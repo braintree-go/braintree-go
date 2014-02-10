@@ -82,3 +82,21 @@ func (g *TransactionGateway) Search(query *SearchQuery) (*TransactionSearchResul
 	}
 	return &v, err
 }
+
+func (g *TransactionGateway) Refund(id string, amount ...float64) (*Transaction, error) {
+	var tx *Transaction
+	if len(amount) > 0 {
+		tx = &Transaction{
+			Amount: amount[0],
+		}
+	}
+	resp, err := g.execute("PUT", "transactions/"+id+"/refund", tx)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.transaction()
+	}
+	return nil, &invalidResponseError{resp}
+}
