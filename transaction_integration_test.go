@@ -1,6 +1,8 @@
 package braintree
 
 import (
+	"fmt"
+	spew "github.com/davecgh/go-spew/spew"
 	"math"
 	"math/rand"
 	"strconv"
@@ -275,4 +277,55 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	if tx.Id == "" {
 		t.Fatal("invalid tx id")
 	}
+}
+
+func TestRefund(t *testing.T) {
+	tx, err := testGateway.Transaction().Create(&Transaction{
+		Type:    "sale",
+		Amount:  1000.00,
+		OrderId: fmt.Sprintf("%d", time.Now().UnixNano()),
+		CreditCard: &CreditCard{
+			Number:         "4111111111111111",
+			ExpirationDate: "05/14",
+		},
+	})
+
+	t.Log(tx)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx.Status != "authorized" {
+		t.Fatal(tx.Status)
+	}
+
+	// Submit
+	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id)
+
+	t.Log(tx2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx2.Status; x != "submitted_for_settlement" {
+		t.Fatal(x)
+	}
+
+	// Settle
+	err = testGateway.Transaction().settle(tx.Id)
+	spew.Dump(err)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	tx, err = testGateway.Transaction().Find(tx.Id)
+
+	spew.Dump(err)
+	//spew.Dump(tx)
+
+	t.Log(err)
+	//t.Log(tx)
 }
