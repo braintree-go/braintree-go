@@ -83,6 +83,7 @@ func (g *TransactionGateway) Search(query *SearchQuery) (*TransactionSearchResul
 	return &v, err
 }
 
+// TODO(kiro): figure out how to test it
 func (g *TransactionGateway) Refund(id string, amount ...float64) (*Transaction, error) {
 	var tx *Transaction
 	if len(amount) > 0 {
@@ -90,13 +91,25 @@ func (g *TransactionGateway) Refund(id string, amount ...float64) (*Transaction,
 			Amount: amount[0],
 		}
 	}
-	resp, err := g.execute("PUT", "transactions/"+id+"/refund", tx)
+	resp, err := g.execute("POST", "transactions/"+id+"/refund", tx)
 	if err != nil {
 		return nil, err
 	}
 	switch resp.StatusCode {
-	case 200:
+	case 201:
 		return resp.transaction()
 	}
 	return nil, &invalidResponseError{resp}
+}
+
+func (g *TransactionGateway) settle(id string) error {
+	resp, err := g.execute("PUT", "transactions/"+id+"/settle", nil)
+	if err != nil {
+		return err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return nil
+	}
+	return &invalidResponseError{resp}
 }
