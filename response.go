@@ -15,6 +15,14 @@ type Response struct {
 
 // TODO: remove dedicated unmarshal methods (redundant)
 
+func (r *Response) merchantAccount() (*MerchantAccount, error) {
+	var b MerchantAccount
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
 func (r *Response) transaction() (*Transaction, error) {
 	var b Transaction
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
@@ -55,6 +63,22 @@ func (r *Response) address() (*Address, error) {
 	return &b, nil
 }
 
+func (r *Response) addOns() ([]AddOn, error) {
+	var b AddOnList
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return b.AddOns, nil
+}
+
+func (r *Response) discounts() ([]Discount, error) {
+	var b DiscountList
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return b.Discounts, nil
+}
+
 func (r *Response) unpackBody() error {
 	if len(r.Body) == 0 {
 		b, err := gzip.NewReader(r.Response.Body)
@@ -85,23 +109,9 @@ func (r *Response) apiError() error {
 	return nil
 }
 
-type braintreeError struct {
-	statusCode   int
-	ErrorMessage string `xml:"message"`
-}
-
-// BraintreeError represents an api error
-type BraintreeError interface {
+type APIError interface {
 	error
 	StatusCode() int
-}
-
-func (e *braintreeError) Error() string {
-	return e.ErrorMessage
-}
-
-func (e *braintreeError) StatusCode() int {
-	return e.statusCode
 }
 
 type invalidResponseError struct {
