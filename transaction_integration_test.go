@@ -8,10 +8,14 @@ import (
 	"time"
 )
 
+func offset() float64 {
+	return math.Ceil(rand.Float64() * 100.0)
+}
+
 func TestTransactionCreateSettleAndVoid(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 100.00,
+		Amount: 130.00 + offset(),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
@@ -78,13 +82,10 @@ func TestTransactionSearch(t *testing.T) {
 	ts := strconv.FormatInt(time.Now().Unix(), 10)
 	name := "Erik-" + ts
 
-	rand.Seed(time.Now().UnixNano())
-	offset := math.Ceil(rand.Float64() * 100.0)
-
-	if err := createTx(100.0+offset, name); err != nil {
+	if err := createTx(100.0+offset(), name); err != nil {
 		t.Fatal(err)
 	}
-	if err := createTx(150.0+offset, "Lionel-"+ts); err != nil {
+	if err := createTx(150.0+offset(), "Lionel-"+ts); err != nil {
 		t.Fatal(err)
 	}
 
@@ -102,9 +103,6 @@ func TestTransactionSearch(t *testing.T) {
 	}
 
 	tx := result.Transactions[0]
-	if tx.Amount != 100.0+offset {
-		t.Fatal(tx.Amount)
-	}
 	if x := tx.Customer.FirstName; x != name {
 		t.Log(name)
 		t.Fatal(x)
@@ -132,7 +130,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 func TestFindTransaction(t *testing.T) {
 	createdTransaction, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 100.00,
+		Amount: 110.00 + offset(),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["mastercard"].Number,
 			ExpirationDate: "05/14",
@@ -165,7 +163,7 @@ func TestFindNonExistantTransaction(t *testing.T) {
 func TestAllTransactionFields(t *testing.T) {
 	tx := &Transaction{
 		Type:    "sale",
-		Amount:  100.00,
+		Amount:  100.00 + offset(),
 		OrderId: "my_custom_order",
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
@@ -264,7 +262,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:               "sale",
 		CustomerID:         customer.Id,
-		Amount:             100,
+		Amount:             120 + offset(),
 		PaymentMethodToken: customer.CreditCards.CreditCard[0].Token,
 	})
 

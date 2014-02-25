@@ -82,4 +82,4 @@ THE SOFTWARE.
 ### Contributors
 
 - [Erik Aigner](http://github.com/eaigner)
-
+- [Kayle Gishen](https://github.com/kayleg)

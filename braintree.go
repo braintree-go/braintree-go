@@ -5,18 +5,20 @@ import (
 	"encoding/xml"
 	"log"
 	"net/http"
-	"time"
 )
 
 type Environment string
 
 const (
-	Sandbox    Environment = "sandbox"
-	Production Environment = "production"
+	Development Environment = "development"
+	Sandbox     Environment = "sandbox"
+	Production  Environment = "production"
 )
 
 func (e Environment) BaseURL() string {
 	switch e {
+	case Development:
+		return "http://localhost:3000"
 	case Sandbox:
 		return "https://sandbox.braintreegateway.com"
 	case Production:
@@ -73,7 +75,7 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("Accept", "application/xml")
 	req.Header.Set("Accept-Encoding", "gzip")
-	req.Header.Set("User-Agent", "Braintree Go 0.1.0")
+	req.Header.Set("User-Agent", "Braintree Go 0.3.1")
 	req.Header.Set("X-ApiVersion", "3")
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
@@ -102,6 +104,10 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	return btr, nil
 }
 
+func (g *Braintree) MerchantAccount() *MerchantAccountGateway {
+	return &MerchantAccountGateway{g}
+}
+
 func (g *Braintree) Transaction() *TransactionGateway {
 	return &TransactionGateway{g}
 }
@@ -126,7 +132,14 @@ func (g *Braintree) Address() *AddressGateway {
 	return &AddressGateway{g}
 }
 
-func ParseDate(s string) (time.Time, error) {
-	const fmt = "2006-01-02T15:04:05Z"
-	return time.Parse(fmt, s)
+func (g *Braintree) AddOn() *AddOnGateway {
+	return &AddOnGateway{g}
+}
+
+func (g *Braintree) Discount() *DiscountGateway {
+	return &DiscountGateway{g}
+}
+
+func (g *Braintree) WebhookNotification() *WebhookNotificationGateway {
+	return &WebhookNotificationGateway{g}
 }
