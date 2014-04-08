@@ -59,4 +59,3 @@ func (s *SearchQuery) AddMultiField(field string) *MultiField {
 	s.Fields = append(s.Fields, f)
 	return f
 }
-

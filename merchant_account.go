@@ -1,6 +1,7 @@
 package braintree
 
 type MerchantAccount struct {
+<<<<<<< HEAD
 	XMLName                 string                         `json:"merchant-account,omitempty" xml:"merchant-account,omitempty"`
 	Id                      string                         `json:"id,omitempty" xml:"id,omitempty"`
 	MasterMerchantAccountId string                         `json:"master-merchant-account-id,omitempty" xml:"master-merchant-account-id,omitempty"`
@@ -8,6 +9,7 @@ type MerchantAccount struct {
 	Individual              *MerchantAccountPerson         `json:"individual,omitempty" xml:"individual,omitempty"`
 	Business                *MerchantAccountBusiness       `json:"business,omitempty" xml:"business,omitempty"`
 	FundingOptions          *MerchantAccountFundingOptions `json:"funding,omitempty" xml:"funding,omitempty"`
+	Status                  string                         `json:"status,omitempty" xml:"status,omitempty"`
 }
 
 type MerchantAccountPerson struct {

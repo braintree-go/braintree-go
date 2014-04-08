@@ -3,7 +3,6 @@ package braintree
 import (
 	"encoding/xml"
 	"math/rand"
-	"os"
 	"strconv"
 	"testing"
 	"time"
@@ -15,7 +14,7 @@ func TestMerchantAccountCreate(t *testing.T) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	acctId = rand.Int() + 1
 	acct := MerchantAccount{
-		MasterMerchantAccountId: os.Getenv("BRAINTREE_MERCH_ACCT_ID"),
+		MasterMerchantAccountId: testMerchantAccountId,
 		TOSAccepted:             true,
 		Id:                      strconv.Itoa(acctId),
 		Individual: &MerchantAccountPerson{

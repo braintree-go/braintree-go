@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"log"
 	"net/http"
-	"time"
 )
 
 type Environment string
@@ -76,7 +75,7 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("Accept", "application/xml")
 	req.Header.Set("Accept-Encoding", "gzip")
-	req.Header.Set("User-Agent", "Braintree Go 0.2.1")
+	req.Header.Set("User-Agent", "Braintree Go 0.3.1")
 	req.Header.Set("X-ApiVersion", "3")
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
@@ -141,7 +140,6 @@ func (g *Braintree) Discount() *DiscountGateway {
 	return &DiscountGateway{g}
 }
 
-func ParseDate(s string) (time.Time, error) {
-	const fmt = "2006-01-02T15:04:05Z"
-	return time.Parse(fmt, s)
+func (g *Braintree) WebhookNotification() *WebhookNotificationGateway {
+	return &WebhookNotificationGateway{g}
 }

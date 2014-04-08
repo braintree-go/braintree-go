@@ -17,11 +17,11 @@ type errorGroup interface {
 }
 
 type braintreeError struct {
-	statusCode   int
-	XMLName      string         `json:"api-error-response" xml:"api-error-response"`
-	Errors       responseErrors `json:"errors,omitempty" xml:"errors,omitempty"`
-	Transaction  transaction    `json:"transaction,omitempty" xml:"transaction,omitempty"`
-	ErrorMessage string         `json:"message,omitempty" xml:"message,omitempty"`
+	statusCode      int
+	XMLName         string           `json:"api-error-response" xml:"api-error-response"`
+	Errors          responseErrors   `json:"errors,omitempty" xml:"errors"`
+	ErrorMessage    string           `json:"message,omitempty" xml:"message"`
+	MerchantAccount *MerchantAccount `xml:",omitempty"`
 }
 
 func (e *braintreeError) Error() string {
@@ -65,11 +65,11 @@ type responseErrors struct {
 type responseError struct {
 	ErrorList        errorList  `json:"errors,omitempty" xml:"errors,omitempty"`
 	CreditCardErrors errorBlock `json:"credit-card,omitempty" xml:"credit-card,omitempty"`
-	CustomerErrors   errorBlock `json:"customer,omitempty" xml:"customer,omitempty"`	
+	CustomerErrors   errorBlock `json:"customer,omitempty" xml:"customer,omitempty"`
 }
 
 type transaction struct {
-	ResponseCode     int 	`json:"processor-response-code" xml:"processor-response-code"`
+	ResponseCode int `json:"processor-response-code" xml:"processor-response-code"`
 }
 
 func (r responseError) For(item string) errorGroup {
@@ -127,4 +127,3 @@ type FieldError struct {
 	Attribute string `json:"attribute,omitempty" xml:"attribute"`
 	Message   string `json:"message,omitempty" xml:"message"`
 }
-
