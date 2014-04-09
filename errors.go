@@ -21,6 +21,7 @@ type braintreeError struct {
 	XMLName         string           `json:"api-error-response" xml:"api-error-response"`
 	Errors          responseErrors   `json:"errors,omitempty" xml:"errors"`
 	ErrorMessage    string           `json:"message,omitempty" xml:"message"`
+	Transaction     transaction      `json:"transaction,omitempty" xml:"transaction,omitempty"`
 	MerchantAccount *MerchantAccount `xml:",omitempty"`
 }
 

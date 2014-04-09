@@ -1,7 +1,6 @@
 package braintree
 
 type MerchantAccount struct {
-<<<<<<< HEAD
 	XMLName                 string                         `json:"merchant-account,omitempty" xml:"merchant-account,omitempty"`
 	Id                      string                         `json:"id,omitempty" xml:"id,omitempty"`
 	MasterMerchantAccountId string                         `json:"master-merchant-account-id,omitempty" xml:"master-merchant-account-id,omitempty"`
@@ -42,4 +41,3 @@ const (
 	FUNDING_DEST_MOBILE_PHONE = "mobile_phone"
 	FUNDING_DEST_EMAIL        = "email"
 )
-
