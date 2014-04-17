@@ -6,22 +6,22 @@ import (
 )
 
 const (
-	SubscriptionCanceled              = "subscription_canceled"
-	SubscriptionChargedSuccessfully   = "subscription_charged_successfully"
-	SubscriptionChargedUnsuccessfully = "subscription_charged_unsuccessfully"
-	SubscriptionExpired               = "subscription_expired"
-	SubscriptionTrialEnded            = "subscription_trial_ended"
-	SubscriptionWentActive            = "subscription_went_active"
-	SubscriptionWentPastDue           = "subscription_went_past_due"
-
-	SubMerchantAccountApproved  = "sub_merchant_account_approved"
-	SubMerchantAccountDeclined  = "sub_merchant_account_declined"
-	TransactionDisbursed        = "transaction_disbursed"
-	PartnerMerchantConnected    = "partner_merchant_connected"
-	PartnerMerchantDisconnected = "partner_merchant_disconnected"
-	PartnerMerchantDeclined     = "partner_merchant_declined"
 	DisbursementWebhook                      = "disbursement"
 	DisbursementExceptionWebhook             = "disbursement_exception"
+	SubscriptionCanceledWebhook              = "subscription_canceled"
+	SubscriptionChargedSuccessfullyWebhook   = "subscription_charged_successfully"
+	SubscriptionChargedUnsuccessfullyWebhook = "subscription_charged_unsuccessfully"
+	SubscriptionExpiredWebhook               = "subscription_expired"
+	SubscriptionTrialEndedWebhook            = "subscription_trial_ended"
+	SubscriptionWentActiveWebhook            = "subscription_went_active"
+	SubscriptionWentPastDueWebhook           = "subscription_went_past_due"
+
+	SubMerchantAccountApprovedWebhook  = "sub_merchant_account_approved"
+	SubMerchantAccountDeclinedWebhook  = "sub_merchant_account_declined"
+	TransactionDisbursedWebhook        = "transaction_disbursed"
+	PartnerMerchantConnectedWebhook    = "partner_merchant_connected"
+	PartnerMerchantDisconnectedWebhook = "partner_merchant_disconnected"
+	PartnerMerchantDeclinedWebhook     = "partner_merchant_declined"
 )
 
 type WebhookNotification struct {

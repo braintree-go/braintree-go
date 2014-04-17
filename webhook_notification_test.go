@@ -34,7 +34,7 @@ func TestWebhookParseMerchantAccountAccepted(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
-	} else if notification.Kind != SubMerchantAccountApproved {
+	} else if notification.Kind != SubMerchantAccountApprovedWebhook {
 		t.Fatal("Incorrect Notification kind, expected sub_merchant_account_approved got", notification.Kind)
 	} else if notification.MerchantAccount() == nil {
 		t.Log(notification.Subject)
@@ -90,7 +90,7 @@ func TestWebhookParseMerchantAccountDeclined(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
-	} else if notification.Kind != SubMerchantAccountDeclined {
+	} else if notification.Kind != SubMerchantAccountDeclinedWebhook {
 		t.Fatal("Incorrect Notification kind, expected sub_merchant_account_declined got", notification.Kind)
 	} else if notification.Subject.APIErrorResponse == nil {
 		t.Fatal("Notification should have an error response")
