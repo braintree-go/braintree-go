@@ -245,6 +245,33 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 }
 
+// This test will only pass on Travis. See TESTING.md for more details.
+func TestTransactionDisbursementDetails(t *testing.T) {
+	txn, err := testGateway.Transaction().Find("dskdmb")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.DisbursementDetails.DisbursementDate != "2013-06-27" {
+		t.Fail()
+	}
+	if txn.DisbursementDetails.SettlementAmount != "100.00" {
+		t.Fail()
+	}
+	if txn.DisbursementDetails.SettlementCurrencyIsoCode != "USD" {
+		t.Fail()
+	}
+	if txn.DisbursementDetails.SettlementCurrencyExchangeRate != "1" {
+		t.Fail()
+	}
+	if txn.DisbursementDetails.FundsHeld == "true" {
+		t.Fail()
+	}
+	if txn.DisbursementDetails.Success != "true" {
+		t.Fail()
+	}
+}
+
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	customer, err := testGateway.Customer().Create(&Customer{
 		CreditCard: &CreditCard{

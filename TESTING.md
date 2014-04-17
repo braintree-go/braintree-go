@@ -22,7 +22,11 @@ In your sandbox account go to `Settings > Processing > CVV` and enable the follo
   1. `CVV does not match (when provided) (N)` to `For Any Transaction`
   2. `CVV is not verified (when provided) (U)` to `For Any Transaction`
 
-Finally you also need to create a plan as well as add-ons and discounts for recurring payments with id `test_plan`. Once you do all of these things, the integration tests should all pass.
+Finally you will also need to create a transaction with a specific id, two plans, an add-on, and a discount. Once you do all of these things, the integration tests should all pass, with the one exception listed below.
+
+**Transactions**
+
+The details don't matter, as long as its id is `dskdmb`.
 
 **Test Plan 1 Setup**
 
@@ -72,3 +76,7 @@ Description             "A test discount"
 Amount:                 10
 Number of cycles:       For the duration of the subscription.
 ```
+
+#### Testing disbursement details
+
+In Braintree's sandbox environment, transactions do not disburse immediately. The implementation of disbursement details is tested in `disbursement_integration_test.go` using an already-disbursed transaction on the sandbox account associated with the Travis CI build. This test does not pass in other environments, and serves as a proof-of-concept. To make all of the tests pass, you will either need to comment out this test, or replace the values inside of it with the values from a disbursed transaction on your account. 
