@@ -20,6 +20,8 @@ const (
 	PartnerMerchantConnected    = "partner_merchant_connected"
 	PartnerMerchantDisconnected = "partner_merchant_disconnected"
 	PartnerMerchantDeclined     = "partner_merchant_declined"
+	DisbursementWebhook                      = "disbursement"
+	DisbursementExceptionWebhook             = "disbursement_exception"
 )
 
 type WebhookNotification struct {
@@ -38,9 +40,18 @@ func (n *WebhookNotification) MerchantAccount() *MerchantAccount {
 	return nil
 }
 
+func (n *WebhookNotification) Disbursement() *Disbursement {
+	if n.Subject.Disbursement != nil {
+		return n.Subject.Disbursement
+	} else {
+		return nil
+	}
+}
+
 type webhookSubject struct {
 	XMLName          xml.Name         `xml:"subject"`
 	APIErrorResponse *braintreeError  `xml:",omitempty"`
+	Disbursement     *Disbursement    `xml:"disbursement,omitempty"`
 	Subscription     *Subscription    `xml:",omitempty"`
 	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty"`
 	Transaction      *Transaction     `xml:",omitempty"`
