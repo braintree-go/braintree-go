@@ -2,7 +2,7 @@ package braintree
 
 type MerchantAccount struct {
 	XMLName                 string                         `xml:"merchant-account,omitempty" json:"-"`
-	Id                      string                         `xml:"id,omitempty" json:"id"`
+	Id                      string                         `xml:"id,omitempty" json:"-"`
 	MasterMerchantAccountId string                         `xml:"master-merchant-account-id,omitempty" json:"-"`
 	TOSAccepted             bool                           `xml:"tos_accepted,omitempty" json: "-"`
 	Individual              *MerchantAccountPerson         `xml:"individual,omitempty" json:"individual"`
