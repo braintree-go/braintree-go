@@ -42,6 +42,7 @@ type Braintree struct {
 	PublicKey   string
 	PrivateKey  string
 	Logger      *log.Logger
+	HttpClient  *http.Client
 }
 
 func (g *Braintree) MerchantURL() string {
@@ -79,7 +80,12 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("X-ApiVersion", "3")
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
-	resp, err := http.DefaultClient.Do(req)
+	httpClient := g.HttpClient
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
+
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
