@@ -244,9 +244,6 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Status != "submitted_for_settlement" {
 		t.Fail()
 	}
-	if tx2.EscrowStatus != "hold_pending" {
-		t.Fail()
-	}
 }
 
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
