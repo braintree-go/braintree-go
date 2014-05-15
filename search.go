@@ -22,7 +22,7 @@ type TextField struct {
 	Is         string `xml:"is,omitempty"`
 	IsNot      string `xml:"is-not,omitempty"`
 	StartsWith string `xml:"starts-with,omitempty"`
-	EndsWidth  string `xml:"ends-with,omitempty"`
+	EndsWith   string `xml:"ends-with,omitempty"`
 	Contains   string `xml:"contains,omitempty"`
 }
 
