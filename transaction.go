@@ -5,6 +5,7 @@ type Transaction struct {
 	Id                 string              `xml:"id,omitempty"`
 	CustomerID         string              `xml:"customer-id,omitempty"`
 	Status             string              `xml:"status,omitempty"`
+	EscrowStatus       string              `xml:"escrow-status,omitempty"`
 	Type               string              `xml:"type,omitempty"`
 	Amount             float64             `xml:"amount"`
 	OrderId            string              `xml:"order-id,omitempty"`
@@ -82,7 +83,6 @@ type Transaction struct {
 //   </descriptor>
 //   <recurring type="boolean">true</recurring>
 //   <channel nil="true"></channel>
-//   <escrow-status nil="true"></escrow-status>
 //   <disbursement-details>
 //     <disbursement-date type="date">2013-10-08</disbursement-date>
 //     <settlement-amount>7.00</settlement-amount>
@@ -101,6 +101,7 @@ type TransactionOptions struct {
 	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
 	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
 	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
+	HoldInEscrow                     bool `xml:"hold-in-escrow,omitempty"`
 }
 
 type TransactionSearchResult struct {

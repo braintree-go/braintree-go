@@ -190,6 +190,7 @@ func TestAllTransactionFields(t *testing.T) {
 			StoreInVault:                     true,
 			AddBillingAddressToPaymentMethod: true,
 			StoreShippingAddressInVault:      true,
+			HoldInEscrow:                     true,
 		},
 	}
 
@@ -241,6 +242,9 @@ func TestAllTransactionFields(t *testing.T) {
 		t.Fail()
 	}
 	if tx2.Status != "submitted_for_settlement" {
+		t.Fail()
+	}
+	if tx2.EscrowStatus != "hold_pending" {
 		t.Fail()
 	}
 }
