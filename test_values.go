@@ -18,5 +18,3 @@ var testGateway = New(
 )
 
 var testMerchantAccountId = os.Getenv("BRAINTREE_MERCH_ACCT_ID")
-
-var testMerchantAccountApprove = "approve_me"

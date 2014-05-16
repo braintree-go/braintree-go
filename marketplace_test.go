@@ -20,7 +20,7 @@ func TestMarketplaceMerchantCreate(t *testing.T) {
 		TOSAccepted:             true,
 		Id:                      mmId,
 		Individual: &MerchantAccountPerson{
-			FirstName:   testMerchantAccountApprove,
+			FirstName:   braintree.MerchantAccountApprove,
 			LastName:    "Lastname",
 			Email:       "merchant@example.com",
 			Phone:       "5558675309",
@@ -50,7 +50,7 @@ func TestMarketplaceMerchantCreate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if merchantAccount.Status != "pending" {
+	if merchantAccount.Status != braintree.MerchantAccountStatusPending {
 		t.Fatal(merchantAccount.Status)
 	}
 }
@@ -62,14 +62,14 @@ func TestMarketplaceMerchantActive(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if ma2.Status != "active" {
+	if ma2.Status != braintree.MerchantAccountStatusActive {
 		t.Fatal("not active yet")
 	}
 }
 
 func TestMarketplaceMerchantTx(t *testing.T) {
 	tx := &Transaction{
-		Type:              "sale",
+		Type:              braintree.TxSale,
 		MerchantAccountId: mmId,
 		Amount:            100.00 + math.Ceil(rand.Float64()*100.0),
 		ServiceFeeAmount:  10.00,
@@ -99,7 +99,7 @@ func TestMarketplaceMerchantTx(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if tx2.EscrowStatus != "hold_pending" {
+	if tx2.EscrowStatus != braintree.TxEscrowHoldPending {
 		t.Fatal(tx2.EscrowStatus)
 	}
 

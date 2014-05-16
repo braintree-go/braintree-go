@@ -37,7 +37,11 @@ type MerchantAccountFundingOptions struct {
 }
 
 const (
-	FUNDING_DEST_BANK         = "bank"
-	FUNDING_DEST_MOBILE_PHONE = "mobile_phone"
-	FUNDING_DEST_EMAIL        = "email"
+	FUNDING_DEST_BANK              = "bank"
+	FUNDING_DEST_MOBILE_PHONE      = "mobile_phone"
+	FUNDING_DEST_EMAIL             = "email"
+	MerchantAccountStatusActive    = "active"
+	MerchantAccountStatusPending   = "pending"
+	MerchantAccountStatusSuspended = "suspended"
+	MerchantAccountApprove         = "approve_me"
 )
