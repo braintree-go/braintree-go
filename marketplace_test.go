@@ -106,15 +106,3 @@ func TestMarketplaceMerchantTx(t *testing.T) {
 	txId = tx2.Id
 	t.Log(txId)
 }
-
-func TestMarketplaceMerchantRelease(t *testing.T) {
-	tx, err := testGateway.Transaction().Find(txId)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Log(txId)
-	t.Log(tx.Status)
-	t.Log(tx.EscrowStatus)
-
-}
