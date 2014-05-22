@@ -12,7 +12,7 @@ func TestSearchXMLEncode(t *testing.T) {
 	f.Is = "A"
 	f.IsNot = "B"
 	f.StartsWith = "C"
-	f.EndsWidth = "D"
+	f.EndsWith = "D"
 	f.Contains = "E"
 
 	f2 := s.AddRangeField("amount")

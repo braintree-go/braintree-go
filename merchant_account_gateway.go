@@ -34,7 +34,7 @@ func (g *MerchantAccountGateway) Find(id string) (*MerchantAccount, error) {
 // Update a sub merchant account.
 func (g *MerchantAccountGateway) Update(ma *MerchantAccount) (*MerchantAccount, error) {
 	pruneAddress(ma)
-	resp, err := g.execute("PUT", "merchant_acocunts/"+ma.Id+"/update_via_api", ma)
+	resp, err := g.execute("PUT", "merchant_accounts/"+ma.Id+"/update_via_api", ma)
 	if err != nil {
 		return nil, err
 	}
