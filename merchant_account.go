@@ -37,11 +37,15 @@ type MerchantAccountFundingOptions struct {
 }
 
 const (
-	FUNDING_DEST_BANK              = "bank"
-	FUNDING_DEST_MOBILE_PHONE      = "mobile_phone"
-	FUNDING_DEST_EMAIL             = "email"
+	MerchantAccountFundingDestBank = "bank"
+	MerchantFundingDestMobilePhone = "mobile_phone"
+	MerchantFundingDestEmail       = "email"
 	MerchantAccountStatusActive    = "active"
 	MerchantAccountStatusPending   = "pending"
 	MerchantAccountStatusSuspended = "suspended"
-	MerchantAccountApprove         = "approve_me"
+	MerchantAccountApproveName     = "approve_me"
+	MerchantAccountApproved        = "approved"
+	MerchantAccountSubmitted       = "submitted to braintree"
+	MerchantAccountDeclined        = "declined"
+	MerchantAccountError           = "error sending to braintree"
 )
