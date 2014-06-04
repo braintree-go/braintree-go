@@ -6,20 +6,22 @@ import (
 )
 
 const (
-	SubscriptionCanceled              = "subscription_canceled"
-	SubscriptionChargedSuccessfully   = "subscription_charged_successfully"
-	SubscriptionChargedUnsuccessfully = "subscription_charged_unsuccessfully"
-	SubscriptionExpired               = "subscription_expired"
-	SubscriptionTrialEnded            = "subscription_trial_ended"
-	SubscriptionWentActive            = "subscription_went_active"
-	SubscriptionWentPastDue           = "subscription_went_past_due"
+	DisbursementWebhook                      = "disbursement"
+	DisbursementExceptionWebhook             = "disbursement_exception"
+	SubscriptionCanceledWebhook              = "subscription_canceled"
+	SubscriptionChargedSuccessfullyWebhook   = "subscription_charged_successfully"
+	SubscriptionChargedUnsuccessfullyWebhook = "subscription_charged_unsuccessfully"
+	SubscriptionExpiredWebhook               = "subscription_expired"
+	SubscriptionTrialEndedWebhook            = "subscription_trial_ended"
+	SubscriptionWentActiveWebhook            = "subscription_went_active"
+	SubscriptionWentPastDueWebhook           = "subscription_went_past_due"
 
-	SubMerchantAccountApproved  = "sub_merchant_account_approved"
-	SubMerchantAccountDeclined  = "sub_merchant_account_declined"
-	TransactionDisbursed        = "transaction_disbursed"
-	PartnerMerchantConnected    = "partner_merchant_connected"
-	PartnerMerchantDisconnected = "partner_merchant_disconnected"
-	PartnerMerchantDeclined     = "partner_merchant_declined"
+	SubMerchantAccountApprovedWebhook  = "sub_merchant_account_approved"
+	SubMerchantAccountDeclinedWebhook  = "sub_merchant_account_declined"
+	TransactionDisbursedWebhook        = "transaction_disbursed"
+	PartnerMerchantConnectedWebhook    = "partner_merchant_connected"
+	PartnerMerchantDisconnectedWebhook = "partner_merchant_disconnected"
+	PartnerMerchantDeclinedWebhook     = "partner_merchant_declined"
 )
 
 type WebhookNotification struct {
@@ -38,9 +40,18 @@ func (n *WebhookNotification) MerchantAccount() *MerchantAccount {
 	return nil
 }
 
+func (n *WebhookNotification) Disbursement() *Disbursement {
+	if n.Subject.Disbursement != nil {
+		return n.Subject.Disbursement
+	} else {
+		return nil
+	}
+}
+
 type webhookSubject struct {
 	XMLName          xml.Name         `xml:"subject"`
 	APIErrorResponse *braintreeError  `xml:",omitempty"`
+	Disbursement     *Disbursement    `xml:"disbursement,omitempty"`
 	Subscription     *Subscription    `xml:",omitempty"`
 	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty"`
 	Transaction      *Transaction     `xml:",omitempty"`

@@ -64,6 +64,7 @@ type Transaction struct {
 	UpdatedAt          string              `xml:"updated-at,omitempty"`
 	CurrencyISOCode    string              `xml:"currency-iso-code,omitempty"`
 	Authorization      string              `xml:"processor-authorization-code,omitempty"`
+	DisbursementDetails *DisbursementDetails `xml:"disbursement-details,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
@@ -125,13 +126,6 @@ type Transaction struct {
 //   </descriptor>
 //   <recurring type="boolean">true</recurring>
 //   <channel nil="true"></channel>
-//   <disbursement-details>
-//     <disbursement-date type="date">2013-10-08</disbursement-date>
-//     <settlement-amount>7.00</settlement-amount>
-//     <settlement-currency-iso-code>USD</settlement-currency-iso-code>
-//     <settlement-currency-exchange-rate>1</settlement-currency-exchange-rate>
-//     <funds-held type="boolean">false</funds-held>
-//   </disbursement-details>
 // </transaction>
 
 type Transactions struct {
