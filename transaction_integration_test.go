@@ -190,6 +190,7 @@ func TestAllTransactionFields(t *testing.T) {
 			StoreInVault:                     true,
 			AddBillingAddressToPaymentMethod: true,
 			StoreShippingAddressInVault:      true,
+			HoldInEscrow:                     false,
 		},
 	}
 

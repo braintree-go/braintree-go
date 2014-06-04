@@ -1,24 +1,69 @@
 package braintree
 
+const (
+	// Transaction Status Codes
+	TxAuthorizationExpired   string = "authorization_expired"
+	TxAuthorizing            string = "authorizing"
+	TxAuthorized             string = "authorized"
+	TxGatewayRejected        string = "gateway_rejected"
+	TxFailed                 string = "failed"
+	TxProcessorDeclined      string = "processor_declined"
+	TxSettled                string = "settled"
+	TxSettling               string = "settling"
+	TxSubmittedForSettlement string = "submitted_for_settlement"
+	TxVoided                 string = "voided"
+	TxUnrecognized           string = "unrecognized"
+
+	// Transaction Escrow Status
+	TxEscrowHoldPending    string = "hold_pending"
+	TxEscrowHeld           string = "held"
+	TxEscrowReleasePending string = "release_pending"
+	TxEscrowReleased       string = "released"
+	TxEscrowRefunded       string = "refunded"
+
+	// Transaction Types
+	TxSale   string = "sale"
+	TxCredit string = "credit"
+
+	// Transaction Created Using
+	TxFullInformation string = "full_information"
+	TxToken           string = "token"
+
+	// Transaction Sources
+	TxAPI          string = "api"
+	TxControlPanel string = "control_panel"
+	TxRecurring    string = "recurring"
+
+	// Gateway Rejection Reason
+	TxAVS       string = "avs"
+	TxAVSAndCVV string = "avs_and_cvv"
+	TxCVV       string = "cvv"
+	TxDuplicate string = "duplicate"
+	TxFraud     string = "fraud"
+)
+
 type Transaction struct {
-	XMLName             string               `xml:"transaction"`
-	Id                  string               `xml:"id,omitempty"`
-	CustomerID          string               `xml:"customer-id,omitempty"`
-	Status              string               `xml:"status,omitempty"`
-	Type                string               `xml:"type,omitempty"`
-	Amount              float64              `xml:"amount"`
-	OrderId             string               `xml:"order-id,omitempty"`
-	PaymentMethodToken  string               `xml:"payment-method-token,omitempty"`
-	MerchantAccountId   string               `xml:"merchant-account-id,omitempty"`
-	PlanId              string               `xml:"plan-id,omitempty"`
-	CreditCard          *CreditCard          `xml:"credit-card,omitempty"`
-	Customer            *Customer            `xml:"customer,omitempty"`
-	BillingAddress      *Address             `xml:"billing,omitempty"`
-	ShippingAddress     *Address             `xml:"shipping,omitempty"`
-	Options             *TransactionOptions  `xml:"options,omitempty"`
-	ServiceFeeAmount    float64              `xml:"service-fee-amount,attr,omitempty"`
-	CreatedAt           string               `xml:"created-at,omitempty"`
-	UpdatedAt           string               `xml:"updated-at,omitempty"`
+	XMLName            string              `xml:"transaction"`
+	Id                 string              `xml:"id,omitempty"`
+	CustomerID         string              `xml:"customer-id,omitempty"`
+	Status             string              `xml:"status,omitempty"`
+	EscrowStatus       string              `xml:"escrow-status,omitempty"`
+	Type               string              `xml:"type,omitempty"`
+	Amount             float64             `xml:"amount"`
+	OrderId            string              `xml:"order-id,omitempty"`
+	PaymentMethodToken string              `xml:"payment-method-token,omitempty"`
+	MerchantAccountId  string              `xml:"merchant-account-id,omitempty"`
+	PlanId             string              `xml:"plan-id,omitempty"`
+	CreditCard         *CreditCard         `xml:"credit-card,omitempty"`
+	Customer           *Customer           `xml:"customer,omitempty"`
+	BillingAddress     *Address            `xml:"billing,omitempty"`
+	ShippingAddress    *Address            `xml:"shipping,omitempty"`
+	Options            *TransactionOptions `xml:"options,omitempty"`
+	ServiceFeeAmount   float64             `xml:"service-fee-amount,attr,omitempty"`
+	CreatedAt          string              `xml:"created-at,omitempty"`
+	UpdatedAt          string              `xml:"updated-at,omitempty"`
+	CurrencyISOCode    string              `xml:"currency-iso-code,omitempty"`
+	Authorization      string              `xml:"processor-authorization-code,omitempty"`
 	DisbursementDetails *DisbursementDetails `xml:"disbursement-details,omitempty"`
 }
 
@@ -81,7 +126,6 @@ type Transaction struct {
 //   </descriptor>
 //   <recurring type="boolean">true</recurring>
 //   <channel nil="true"></channel>
-//   <escrow-status nil="true"></escrow-status>
 // </transaction>
 
 type Transactions struct {
@@ -93,6 +137,7 @@ type TransactionOptions struct {
 	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
 	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
 	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
+	HoldInEscrow                     bool `xml:"hold-in-escrow,omitempty"`
 }
 
 type TransactionSearchResult struct {
