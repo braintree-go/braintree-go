@@ -7,15 +7,19 @@ import (
 	"net/http"
 )
 
-type Environment string
+type Environment interface {
+	BaseURL() string
+}
+
+type builtinEnvironment string
 
 const (
-	Development Environment = "development"
-	Sandbox     Environment = "sandbox"
-	Production  Environment = "production"
+	Development builtinEnvironment = "development"
+	Sandbox     builtinEnvironment = "sandbox"
+	Production  builtinEnvironment = "production"
 )
 
-func (e Environment) BaseURL() string {
+func (e builtinEnvironment) BaseURL() string {
 	switch e {
 	case Development:
 		return "http://localhost:3000"

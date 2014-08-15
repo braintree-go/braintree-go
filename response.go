@@ -25,6 +25,7 @@ func (r *Response) merchantAccount() (*MerchantAccount, error) {
 
 func (r *Response) transaction() (*Transaction, error) {
 	var b Transaction
+
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}
@@ -91,7 +92,9 @@ func (r *Response) unpackBody() error {
 		if err != nil {
 			return err
 		}
+
 		r.Body = buf
+
 	}
 	return nil
 }
