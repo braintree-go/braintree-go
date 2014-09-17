@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 type Response struct {
@@ -29,6 +30,18 @@ func (r *Response) transaction() (*Transaction, error) {
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}
+
+	var err error
+
+	// Fix up amount fields
+	if b.Amount, err = strconv.ParseFloat(b.AmountStr, 64); err != nil {
+		return nil, fmt.Errorf("failed to parsed transaction amount '%s' as float: %v", b.AmountStr, err)
+	}
+
+	if b.ServiceFeeAmount, err = strconv.ParseFloat(b.ServiceFeeAmountStr, 64); err != nil {
+		return nil, fmt.Errorf("failed to parsed transaction service fee amount '%s' as float: %v", b.ServiceFeeAmountStr, err)
+	}
+
 	return &b, nil
 }
 
