@@ -39,7 +39,7 @@ func (r *Response) transaction() (*Transaction, error) {
 	}
 
 	if b.ServiceFeeAmount, err = strconv.ParseFloat(b.ServiceFeeAmountStr, 64); err != nil {
-		return nil, fmt.Errorf("failed to parsed transaction amount '%s' as float: %v", b.AmountStr, err)
+		return nil, fmt.Errorf("failed to parsed transaction service fee amount '%s' as float: %v", b.ServiceFeeAmountStr, err)
 	}
 
 	return &b, nil
