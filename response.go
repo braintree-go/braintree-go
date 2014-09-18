@@ -34,12 +34,16 @@ func (r *Response) transaction() (*Transaction, error) {
 	var err error
 
 	// Fix up amount fields
-	if b.Amount, err = strconv.ParseFloat(b.AmountStr, 64); err != nil {
-		return nil, fmt.Errorf("failed to parsed transaction amount '%s' as float: %v", b.AmountStr, err)
+	if len(b.AmountStr) > 0 {
+		if b.Amount, err = strconv.ParseFloat(b.AmountStr, 64); err != nil {
+			return nil, fmt.Errorf("failed to parse transaction amount '%s' as float: %v", b.AmountStr, err)
+		}
 	}
 
-	if b.ServiceFeeAmount, err = strconv.ParseFloat(b.ServiceFeeAmountStr, 64); err != nil {
-		return nil, fmt.Errorf("failed to parsed transaction service fee amount '%s' as float: %v", b.ServiceFeeAmountStr, err)
+	if len(b.ServiceFeeAmountStr) > 0 {
+		if b.ServiceFeeAmount, err = strconv.ParseFloat(b.ServiceFeeAmountStr, 64); err != nil {
+			return nil, fmt.Errorf("failed to parse transaction service fee amount '%s' as float: %v", b.ServiceFeeAmountStr, err)
+		}
 	}
 
 	return &b, nil
