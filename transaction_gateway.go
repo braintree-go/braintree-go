@@ -13,12 +13,12 @@ type TransactionGateway struct {
 func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
 
 	// Ensure AmountStr is populated because Amount is not serialised to the XML request
-	if len(tx.AmountStr) == 0 {
+	if tx.Amount != 0 && len(tx.AmountStr) == 0 {
 		tx.AmountStr = strconv.FormatFloat(tx.Amount, 'f', 2, 64)
 	}
 
 	// Ensure ServiceFeeAmountStr is populated because ServiceFeeAmount is not serialised to the XML request
-	if len(tx.ServiceFeeAmountStr) == 0 {
+	if tx.ServiceFeeAmount != 0 && len(tx.ServiceFeeAmountStr) == 0 {
 		tx.ServiceFeeAmountStr = strconv.FormatFloat(tx.ServiceFeeAmount, 'f', 2, 64)
 	}
 
