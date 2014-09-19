@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"encoding/xml"
+	"strconv"
 )
 
 type TransactionGateway struct {
@@ -10,6 +11,17 @@ type TransactionGateway struct {
 
 // Create initiates a transaction.
 func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
+
+	// Ensure AmountStr is populated because Amount is not serialised to the XML request
+	if tx.Amount != 0 && len(tx.AmountStr) == 0 {
+		tx.AmountStr = strconv.FormatFloat(tx.Amount, 'f', 2, 64)
+	}
+
+	// Ensure ServiceFeeAmountStr is populated because ServiceFeeAmount is not serialised to the XML request
+	if tx.ServiceFeeAmount != 0 && len(tx.ServiceFeeAmountStr) == 0 {
+		tx.ServiceFeeAmountStr = strconv.FormatFloat(tx.ServiceFeeAmount, 'f', 2, 64)
+	}
+
 	resp, err := g.execute("POST", "transactions", tx)
 	if err != nil {
 		return nil, err
@@ -23,11 +35,11 @@ func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
 
 // SubmitForSettlement submits the transaction with the specified id for settlement.
 // If the amount is omitted, the full amount is settled.
-func (g *TransactionGateway) SubmitForSettlement(id string, amount ...float64) (*Transaction, error) {
+func (g *TransactionGateway) SubmitForSettlement(id string, amount ...string) (*Transaction, error) {
 	var tx *Transaction
 	if len(amount) > 0 {
 		tx = &Transaction{
-			Amount: amount[0],
+			AmountStr: amount[0],
 		}
 	}
 	resp, err := g.execute("PUT", "transactions/"+id+"/submit_for_settlement", tx)
@@ -84,11 +96,11 @@ func (g *TransactionGateway) Search(query *SearchQuery) (*TransactionSearchResul
 }
 
 // TODO(kiro): figure out how to test it
-func (g *TransactionGateway) Refund(id string, amount ...float64) (*Transaction, error) {
+func (g *TransactionGateway) Refund(id string, amount ...string) (*Transaction, error) {
 	var tx *Transaction
 	if len(amount) > 0 {
 		tx = &Transaction{
-			Amount: amount[0],
+			AmountStr: amount[0],
 		}
 	}
 	resp, err := g.execute("POST", "transactions/"+id+"/refund", tx)
