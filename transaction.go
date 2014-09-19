@@ -105,8 +105,7 @@ type TransactionOptions struct {
 type TransactionSearchResult struct {
 	XMLName           string         `json:"credit-card-transactions" xml:"credit-card-transactions"`
 	CurrentPageNumber string         `json:"current-page-number" xml:"current-page-number"` // int
-	PageSize          string         `json:"page-size" xml:"page-size"`           // int
-	TotalItems        string         `json:"total-items" xml:"total-items"`         // int
+	PageSize          string         `json:"page-size" xml:"page-size"`                     // int
+	TotalItems        string         `json:"total-items" xml:"total-items"`                 // int
 	Transactions      []*Transaction `json:"transaction" xml:"transaction"`
 }
-
