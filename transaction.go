@@ -8,6 +8,7 @@ type Transaction struct {
 	Type                string              `json:"type,omitempty" xml:"type,omitempty"`
 	Amount              float64             `json:"-" xml:"-"`
 	AmountStr           string              `json:"amount" xml:"amount"`
+	Currency            string              `json:"currency-iso-code,omitempty" xml:"currency-iso-code,omitempty"`
 	OrderId             string              `json:"order-id,omitempty" xml:"order-id,omitempty"`
 	PaymentMethodToken  string              `json:"payment-method-token,omitempty" xml:"payment-method-token,omitempty"`
 	MerchantAccountId   string              `json:"merchant-account-id,omitempty" xml:"merchant-account-id,omitempty"`
