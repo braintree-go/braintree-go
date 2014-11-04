@@ -12,7 +12,7 @@ func offset() float64 {
 	return math.Ceil(rand.Float64() * 100.0)
 }
 
-func TestTransactionCreateSettleAndVoid(t *testing.T) {
+func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: 130.00 + offset(),
@@ -34,7 +34,7 @@ func TestTransactionCreateSettleAndVoid(t *testing.T) {
 		t.Fatal(tx.Status)
 	}
 
-	// Settle
+	// Submit for settlement
 	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, 10)
 
 	t.Log(tx2)
@@ -298,5 +298,45 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	}
 	if tx.Id == "" {
 		t.Fatal("invalid tx id")
+	}
+}
+
+func TestSettleTransaction(t *testing.T) {
+	old_environment := testGateway.Environment
+
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: 130.00 + offset(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	testGateway.Environment = Production
+
+	_, err = testGateway.Transaction().Settle(txn.Id)
+	if err.Error() != "Operation not allowed in production environment" {
+		t.Log(testGateway.Environment)
+		t.Fatal(err)
+	}
+
+	testGateway.Environment = old_environment
+
+	txn, err = testGateway.Transaction().Settle(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "settled" {
+		t.Fatal(txn.Status)
 	}
 }

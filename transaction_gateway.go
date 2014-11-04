@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"encoding/xml"
+	"fmt"
 )
 
 type TransactionGateway struct {
@@ -39,6 +40,24 @@ func (g *TransactionGateway) SubmitForSettlement(id string, amount ...float64) (
 		return resp.transaction()
 	}
 	return nil, &invalidResponseError{resp}
+}
+
+// Settle settles a transaction.
+// This action is only available in the sandbox environment.
+func (g *TransactionGateway) Settle(id string) (*Transaction, error) {
+	if g.Environment != Production {
+		resp, err := g.execute("PUT", "transactions/"+id+"/settle", nil)
+		if err != nil {
+			return nil, err
+		}
+		switch resp.StatusCode {
+		case 200:
+			return resp.transaction()
+		}
+		return nil, &invalidResponseError{resp}
+	} else {
+		return nil, &testOperationPerformedInProductionError{}
+	}
 }
 
 // Void voids the transaction with the specified id if it has a status of authorized or
@@ -81,4 +100,12 @@ func (g *TransactionGateway) Search(query *SearchQuery) (*TransactionSearchResul
 		return nil, err
 	}
 	return &v, err
+}
+
+type testOperationPerformedInProductionError struct {
+	error
+}
+
+func (e *testOperationPerformedInProductionError) Error() string {
+	return fmt.Sprint("Operation not allowed in production environment")
 }
