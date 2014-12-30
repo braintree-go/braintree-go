@@ -3,6 +3,7 @@ package braintree
 type CreditCard struct {
 	CustomerId                string             `xml:"customer-id,omitempty"`
 	Token                     string             `xml:"token,omitempty"`
+	PaymentMethodNonce        string             `xml:"payment-method-nonce,omitempty"`
 	Number                    string             `xml:"number,omitempty"`
 	ExpirationDate            string             `xml:"expiration-date,omitempty"`
 	ExpirationMonth           string             `xml:"expiration-month,omitempty"`
