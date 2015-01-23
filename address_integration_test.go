@@ -1,8 +1,6 @@
 package braintree
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestAddress(t *testing.T) {
 	customer, err := testGateway.Customer().Create(&Customer{
@@ -37,56 +35,56 @@ func TestAddress(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	t.Log(addr)
-	t.Log(addr2)
+	t.Logf("%+v\n", addr)
+	t.Logf("%+v\n", addr2)
 
 	if addr2.Id == "" {
-		t.Fatal()
+		t.Fatal("generated id is empty")
 	}
 	if addr2.CustomerId != customer.Id {
-		t.Fatal()
+		t.Fatal("customer ids do not match")
 	}
 	if addr2.FirstName != addr.FirstName {
-		t.Fatal()
+		t.Fatal("first names do not match")
 	}
 	if addr2.LastName != addr.LastName {
-		t.Fatal()
+		t.Fatal("last names do not match")
 	}
 	if addr2.Company != addr.Company {
-		t.Fatal()
+		t.Fatal("companies do not match")
 	}
 	if addr2.StreetAddress != addr.StreetAddress {
-		t.Fatal()
+		t.Fatal("street addresses do not match")
 	}
 	if addr2.ExtendedAddress != addr.ExtendedAddress {
-		t.Fatal()
+		t.Fatal("extended addresses do not match")
 	}
 	if addr2.Locality != addr.Locality {
-		t.Fatal()
+		t.Fatal("localities do not match")
 	}
 	if addr2.Region != addr.Region {
-		t.Fatal()
+		t.Fatal("regions do not match")
 	}
 	if addr2.PostalCode != addr.PostalCode {
-		t.Fatal()
+		t.Fatal("postal codes do not match")
 	}
 	if addr2.CountryCodeAlpha2 != addr.CountryCodeAlpha2 {
-		t.Fatal()
+		t.Fatal("country alpha2 codes do not match")
 	}
 	if addr2.CountryCodeAlpha3 != addr.CountryCodeAlpha3 {
-		t.Fatal()
+		t.Fatal("country alpha3 codes do not match")
 	}
 	if addr2.CountryCodeNumeric != addr.CountryCodeNumeric {
-		t.Fatal()
+		t.Fatal("country numeric codes do not match")
 	}
 	if addr2.CountryName != addr.CountryName {
-		t.Fatal()
+		t.Fatal("country names do not match")
 	}
 	if addr2.CreatedAt == nil {
-		t.Fatal()
+		t.Fatal("generated created at is empty")
 	}
 	if addr2.UpdatedAt == nil {
-		t.Fatal()
+		t.Fatal("generated updated at is empty")
 	}
 
 	err = testGateway.Address().Delete(customer.Id, addr2.Id)

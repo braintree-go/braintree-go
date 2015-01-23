@@ -1,6 +1,6 @@
 # Braintree Go
 
-[![Build Status](https://travis-ci.org/lionelbarrow/braintree-go.png?branch=master)](https://travis-ci.org/lionelbarrow/braintree-go)
+[![GoDoc](https://godoc.org/github.com/lionelbarrow/braintree-go?status.svg)](http://godoc.org/github.com/lionelbarrow/braintree-go) [![Build Status](https://travis-ci.org/lionelbarrow/braintree-go.png?branch=master)](https://travis-ci.org/lionelbarrow/braintree-go)
 
 A Go client library for [Braintree](https://www.braintreepayments.com), the payments company behind awesome companies like GitHub, Heroku, and 37signals.
 
