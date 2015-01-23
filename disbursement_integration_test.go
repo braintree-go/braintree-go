@@ -13,7 +13,7 @@ func TestDisbursementTransactions(t *testing.T) {
 	result, err := d.Transactions(testGateway.Transaction())
 
 	if err != nil {
-		t.Fatal()
+		t.Fatal(err)
 	}
 
 	if result.TotalItems != "1" {
