@@ -61,10 +61,10 @@ func TestPlan(t *testing.T) {
 	if x := plan.TrialPeriod; x != "true" {
 		t.Fatal(x)
 	}
-	if x := plan.CreatedAt; x == "" {
+	if x := plan.CreatedAt; x == nil {
 		t.Fatal(x)
 	}
-	if x := plan.UpdatedAt; x == "" {
+	if x := plan.UpdatedAt; x == nil {
 		t.Fatal(x)
 	}
 

@@ -1,5 +1,7 @@
 package braintree
 
+import "time"
+
 type CreditCard struct {
 	CustomerId                string             `xml:"customer-id,omitempty"`
 	Token                     string             `xml:"token,omitempty"`
@@ -12,8 +14,8 @@ type CreditCard struct {
 	VenmoSDKPaymentMethodCode string             `xml:"venmo-sdk-payment-method-code,omitempty"`
 	VenmoSDK                  bool               `xml:"venmo-sdk,omitempty"`
 	Options                   *CreditCardOptions `xml:"options,omitempty"`
-	CreatedAt                 string             `xml:"created-at,omitempty"`
-	UpdatedAt                 string             `xml:"updated-at,omitempty"`
+	CreatedAt                 *time.Time         `xml:"created-at,omitempty"`
+	UpdatedAt                 *time.Time         `xml:"updated-at,omitempty"`
 	Bin                       string             `xml:"bin,omitempty"`
 	CardType                  string             `xml:"card-type,omitempty"`
 	CardholderName            string             `xml:"cardholder-name,omitempty"`

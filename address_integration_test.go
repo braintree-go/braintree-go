@@ -82,10 +82,10 @@ func TestAddress(t *testing.T) {
 	if addr2.CountryName != addr.CountryName {
 		t.Fatal()
 	}
-	if addr2.CreatedAt == "" {
+	if addr2.CreatedAt == nil {
 		t.Fatal()
 	}
-	if addr2.UpdatedAt == "" {
+	if addr2.UpdatedAt == nil {
 		t.Fatal()
 	}
 
