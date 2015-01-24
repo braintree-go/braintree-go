@@ -16,7 +16,7 @@ func TestDisbursementTransactions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if result.TotalItems != "1" {
+	if !result.TotalItems.Valid || result.TotalItems.Int64 != 1 {
 		t.Fatal(result)
 	}
 

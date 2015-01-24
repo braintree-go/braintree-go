@@ -98,7 +98,7 @@ func TestTransactionSearch(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(result.TotalItems) != 1 {
+	if !result.TotalItems.Valid || result.TotalItems.Int64 != 1 {
 		t.Fatal(result.Transactions)
 	}
 
@@ -253,22 +253,22 @@ func TestTransactionDisbursementDetails(t *testing.T) {
 	}
 
 	if txn.DisbursementDetails.DisbursementDate != "2013-06-27" {
-		t.Fail()
+		t.Error("disbursement doesn't match")
 	}
-	if txn.DisbursementDetails.SettlementAmount != "100.00" {
-		t.Fail()
+	if !txn.DisbursementDetails.SettlementAmount.Valid || math.Abs(txn.DisbursementDetails.SettlementAmount.Float64-100.00) > 0.00001 {
+		t.Error("settlement amount doesn't match")
 	}
 	if txn.DisbursementDetails.SettlementCurrencyIsoCode != "USD" {
-		t.Fail()
+		t.Error("currency iso code doesn't match")
 	}
-	if txn.DisbursementDetails.SettlementCurrencyExchangeRate != "1" {
-		t.Fail()
+	if !txn.DisbursementDetails.SettlementCurrencyExchangeRate.Valid || math.Abs(txn.DisbursementDetails.SettlementCurrencyExchangeRate.Float64-1) > 0.00001 {
+		t.Error("currency exchange rate doesn't match")
 	}
-	if txn.DisbursementDetails.FundsHeld == "true" {
-		t.Fail()
+	if !txn.DisbursementDetails.FundsHeld.Valid || txn.DisbursementDetails.FundsHeld.Bool {
+		t.Error("funds held doesn't match")
 	}
-	if txn.DisbursementDetails.Success != "true" {
-		t.Fail()
+	if !txn.DisbursementDetails.Success.Valid || !txn.DisbursementDetails.Success.Bool {
+		t.Error("success doesn't match")
 	}
 }
 

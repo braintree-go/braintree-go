@@ -97,8 +97,8 @@ type TransactionOptions struct {
 
 type TransactionSearchResult struct {
 	XMLName           string         `xml:"credit-card-transactions"`
-	CurrentPageNumber string         `xml:"current-page-number"` // int
-	PageSize          string         `xml:"page-size"`           // int
-	TotalItems        string         `xml:"total-items"`         // int
+	CurrentPageNumber *NullInt64     `xml:"current-page-number"`
+	PageSize          *NullInt64     `xml:"page-size"`
+	TotalItems        *NullInt64     `xml:"total-items"`
 	Transactions      []*Transaction `xml:"transaction"`
 }

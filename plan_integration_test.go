@@ -34,7 +34,7 @@ func TestPlan(t *testing.T) {
 	if x := plan.MerchantId; x == "" {
 		t.Fatal(x)
 	}
-	if x := plan.BillingFrequency; x != "1" {
+	if x := plan.BillingFrequency; !x.Valid || x.Int64 != 1 {
 		t.Fatal(x)
 	}
 	if x := plan.CurrencyISOCode; x != "USD" {
@@ -46,19 +46,19 @@ func TestPlan(t *testing.T) {
 	if x := plan.Name; x != "test_plan_name" {
 		t.Fatal(x)
 	}
-	if x := plan.NumberOfBillingCycles; x != "2" {
+	if x := plan.NumberOfBillingCycles; !x.Valid || x.Int64 != 2 {
 		t.Fatal(x)
 	}
 	if x := plan.Price; x != 10.0 {
 		t.Fatal(x)
 	}
-	if x := plan.TrialDuration; x != "14" {
+	if x := plan.TrialDuration; !x.Valid || x.Int64 != 14 {
 		t.Fatal(x)
 	}
 	if x := plan.TrialDurationUnit; x != "day" {
 		t.Fatal(x)
 	}
-	if x := plan.TrialPeriod; x != "true" {
+	if x := plan.TrialPeriod; !x.Valid || !x.Bool {
 		t.Fatal(x)
 	}
 	if x := plan.CreatedAt; x == "" {
@@ -75,8 +75,5 @@ func TestPlan(t *testing.T) {
 	}
 	if plan2.Id != "test_plan_2" {
 		t.Fatal(plan2)
-	}
-	if x := plan2.BillingDayOfMonth; x != "31" {
-		t.Fatal(x)
 	}
 }
