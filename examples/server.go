@@ -17,10 +17,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/lionelbarrow/braintree-go"
 	"html/template"
 	"net/http"
 	"os"
+
+	"github.com/lionelbarrow/braintree-go"
 )
 
 type BraintreeJS struct {
@@ -43,7 +44,7 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 
 	tx := &braintree.Transaction{
 		Type:   "sale",
-		Amount: 100,
+		Amount: braintree.NewDecimal(10000, 2),
 		CreditCard: &braintree.CreditCard{
 			Number:          r.FormValue("number"),
 			CVV:             r.FormValue("cvv"),
