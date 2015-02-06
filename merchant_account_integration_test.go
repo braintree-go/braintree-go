@@ -73,12 +73,12 @@ func TestMerchantAccountTransaction(t *testing.T) {
 
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 100.00 + offset(),
+		Amount: randomAmount(),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
-		ServiceFeeAmount:  5.00,
+		ServiceFeeAmount:  NewDecimal(500, 2),
 		MerchantAccountId: strconv.Itoa(acctId),
 	})
 

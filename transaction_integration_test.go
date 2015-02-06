@@ -1,21 +1,21 @@
 package braintree
 
 import (
-	"math"
 	"math/rand"
+	"reflect"
 	"strconv"
 	"testing"
 	"time"
 )
 
-func offset() float64 {
-	return math.Ceil(rand.Float64() * 100.0)
+func randomAmount() *Decimal {
+	return NewDecimal(rand.Int63n(10000), 2)
 }
 
 func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 130.00 + offset(),
+		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
@@ -35,7 +35,8 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	}
 
 	// Submit for settlement
-	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, 10)
+	ten := NewDecimal(1000, 2)
+	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, ten)
 
 	t.Log(tx2)
 
@@ -45,8 +46,8 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	if x := tx2.Status; x != "submitted_for_settlement" {
 		t.Fatal(x)
 	}
-	if x := tx2.Amount; x != 10 {
-		t.Fatal(x)
+	if amount := tx2.Amount; !reflect.DeepEqual(amount, ten) {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
 	}
 
 	// Void
@@ -64,7 +65,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 
 func TestTransactionSearch(t *testing.T) {
 	txg := testGateway.Transaction()
-	createTx := func(amount float64, customerName string) error {
+	createTx := func(amount *Decimal, customerName string) error {
 		_, err := txg.Create(&Transaction{
 			Type:   "sale",
 			Amount: amount,
@@ -82,10 +83,11 @@ func TestTransactionSearch(t *testing.T) {
 	ts := strconv.FormatInt(time.Now().Unix(), 10)
 	name := "Erik-" + ts
 
-	if err := createTx(100.0+offset(), name); err != nil {
+	if err := createTx(randomAmount(), name); err != nil {
 		t.Fatal(err)
 	}
-	if err := createTx(150.0+offset(), "Lionel-"+ts); err != nil {
+
+	if err := createTx(randomAmount(), "Lionel-"+ts); err != nil {
 		t.Fatal(err)
 	}
 
@@ -113,7 +115,7 @@ func TestTransactionSearch(t *testing.T) {
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	_, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 2010.00,
+		Amount: NewDecimal(201000, 2),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
@@ -130,7 +132,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 func TestFindTransaction(t *testing.T) {
 	createdTransaction, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 110.00 + offset(),
+		Amount: randomAmount(),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["mastercard"].Number,
 			ExpirationDate: "05/14",
@@ -163,7 +165,7 @@ func TestFindNonExistantTransaction(t *testing.T) {
 func TestAllTransactionFields(t *testing.T) {
 	tx := &Transaction{
 		Type:    "sale",
-		Amount:  100.00 + offset(),
+		Amount:  randomAmount(),
 		OrderId: "my_custom_order",
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
@@ -201,7 +203,7 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Type != tx.Type {
 		t.Fail()
 	}
-	if tx2.Amount != tx.Amount {
+	if !reflect.DeepEqual(tx2.Amount, tx.Amount) {
 		t.Fail()
 	}
 	if tx2.OrderId != tx.OrderId {
@@ -289,7 +291,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:               "sale",
 		CustomerID:         customer.Id,
-		Amount:             120 + offset(),
+		Amount:             randomAmount(),
 		PaymentMethodToken: customer.CreditCards.CreditCard[0].Token,
 	})
 
@@ -306,7 +308,7 @@ func TestSettleTransaction(t *testing.T) {
 
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: 130.00 + offset(),
+		Amount: randomAmount(),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
