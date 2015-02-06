@@ -8,7 +8,7 @@ type Transaction struct {
 	CustomerID          string               `xml:"customer-id,omitempty"`
 	Status              string               `xml:"status,omitempty"`
 	Type                string               `xml:"type,omitempty"`
-	Amount              float64              `xml:"amount"`
+	Amount              *Decimal             `xml:"amount"`
 	OrderId             string               `xml:"order-id,omitempty"`
 	PaymentMethodToken  string               `xml:"payment-method-token,omitempty"`
 	MerchantAccountId   string               `xml:"merchant-account-id,omitempty"`
@@ -18,7 +18,7 @@ type Transaction struct {
 	BillingAddress      *Address             `xml:"billing,omitempty"`
 	ShippingAddress     *Address             `xml:"shipping,omitempty"`
 	Options             *TransactionOptions  `xml:"options,omitempty"`
-	ServiceFeeAmount    float64              `xml:"service-fee-amount,attr,omitempty"`
+	ServiceFeeAmount    *Decimal             `xml:"service-fee-amount,attr,omitempty"`
 	CreatedAt           *time.Time           `xml:"created-at,omitempty"`
 	UpdatedAt           *time.Time           `xml:"updated-at,omitempty"`
 	DisbursementDetails *DisbursementDetails `xml:"disbursement-details,omitempty"`
