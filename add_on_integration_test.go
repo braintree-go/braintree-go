@@ -1,7 +1,6 @@
 package braintree
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -20,7 +19,7 @@ func TestAddOn(t *testing.T) {
 
 	if addOn.Id != "test_add_on" {
 		t.Fail()
-	} else if !reflect.DeepEqual(addOn.Amount, NewDecimal(1000, 2)) {
+	} else if addOn.Amount.Cmp(NewDecimal(1000, 2)) != 0 {
 		t.Fail()
 	} else if addOn.Kind != ModificationKindAddOn {
 		t.Fail()

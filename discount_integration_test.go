@@ -1,7 +1,6 @@
 package braintree
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -20,7 +19,7 @@ func TestDiscounts(t *testing.T) {
 
 	if discount.Id != "test_discount" {
 		t.Fail()
-	} else if !reflect.DeepEqual(discount.Amount, NewDecimal(1000, 2)) {
+	} else if discount.Amount.Cmp(NewDecimal(1000, 2)) != 0 {
 		t.Fail()
 	} else if discount.Kind != ModificationKindDiscount {
 		t.Fail()
