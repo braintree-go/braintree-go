@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -49,7 +50,7 @@ func TestPlan(t *testing.T) {
 	if x := plan.NumberOfBillingCycles; x != "2" {
 		t.Fatal(x)
 	}
-	if x := plan.Price; x != 10.0 {
+	if x := plan.Price; !reflect.DeepEqual(x, NewDecimal(1000, 2)) {
 		t.Fatal(x)
 	}
 	if x := plan.TrialDuration; x != "14" {

@@ -12,7 +12,7 @@ type Disbursement struct {
 	FollowUpAction     string           `xml:"follow-up-action"`
 	Success            bool             `xml:"success"`
 	Retry              bool             `xml:"retry"`
-	Amount             float64          `xml:"amount"`
+	Amount             *Decimal         `xml:"amount"`
 	MerchantAccount    *MerchantAccount `xml:"merchant-account"`
 	CurrencyIsoCode    string           `xml:"currency-iso-code"`
 	SubmerchantAccount bool             `xml:"sub-merchant-account"`

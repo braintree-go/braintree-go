@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -8,7 +9,7 @@ func TestAddOn(t *testing.T) {
 	addOns, err := testGateway.AddOn().All()
 
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	} else if len(addOns) != 1 {
 		t.Fail()
 	}
@@ -19,7 +20,7 @@ func TestAddOn(t *testing.T) {
 
 	if addOn.Id != "test_add_on" {
 		t.Fail()
-	} else if addOn.Amount != 10 {
+	} else if !reflect.DeepEqual(addOn.Amount, NewDecimal(1000, 2)) {
 		t.Fail()
 	} else if addOn.Kind != ModificationKindAddOn {
 		t.Fail()
