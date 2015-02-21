@@ -10,7 +10,7 @@ func TestDiscounts(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	} else if len(discounts) != 1 {
-		t.Fail()
+		t.Fatalf("expected to retrieve 1 discount, retrieved %d", len(discounts))
 	}
 
 	discount := discounts[0]
@@ -18,16 +18,16 @@ func TestDiscounts(t *testing.T) {
 	t.Log(discount)
 
 	if discount.Id != "test_discount" {
-		t.Fail()
+		t.Fatalf("expected Id to be %s, was %s", "test_discount", discount.Id)
 	} else if discount.Amount.Cmp(NewDecimal(1000, 2)) != 0 {
-		t.Fail()
+		t.Fatalf("expected Amount to be %s, was %s", NewDecimal(1000, 2), discount.Amount)
 	} else if discount.Kind != ModificationKindDiscount {
-		t.Fail()
+		t.Fatalf("expected Kind to be %s, was %s", ModificationKindDiscount, discount.Kind)
 	} else if discount.Name != "test_discount_name" {
-		t.Fail()
+		t.Fatalf("expected Name to be %s, was %s", "test_discount_name", discount.Name)
 	} else if discount.NeverExpires != true {
-		t.Fail()
+		t.Fatalf("expected NeverExpires to be %s, was %s", true, discount.NeverExpires)
 	} else if discount.Description != "A test discount" {
-		t.Fail()
+		t.Fatalf("expected Description to be %s, was %s", "A test discount", discount.Description)
 	}
 }

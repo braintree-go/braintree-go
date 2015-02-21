@@ -200,49 +200,49 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 
 	if tx2.Type != tx.Type {
-		t.Fail()
+		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
 	}
 	if tx2.Amount.Cmp(tx.Amount) != 0 {
-		t.Fail()
+		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
 	}
 	if tx2.OrderId != tx.OrderId {
-		t.Fail()
+		t.Fatalf("expected OrderId to be equal, but %s was not %s", tx2.OrderId, tx.OrderId)
 	}
 	if tx2.Customer.FirstName != tx.Customer.FirstName {
-		t.Fail()
+		t.Fatalf("expected Customer.FirstName to be equal, but %s was not %s", tx2.Customer.FirstName, tx.Customer.FirstName)
 	}
 	if tx2.BillingAddress.StreetAddress != tx.BillingAddress.StreetAddress {
-		t.Fail()
+		t.Fatalf("expected BillingAddress.StreetAddress to be equal, but %s was not %s", tx2.BillingAddress.StreetAddress, tx.BillingAddress.StreetAddress)
 	}
 	if tx2.BillingAddress.Locality != tx.BillingAddress.Locality {
-		t.Fail()
+		t.Fatalf("expected BillingAddress.Locality to be equal, but %s was not %s", tx2.BillingAddress.Locality, tx.BillingAddress.Locality)
 	}
 	if tx2.BillingAddress.Region != tx.BillingAddress.Region {
-		t.Fail()
+		t.Fatalf("expected BillingAddress.Region to be equal, but %s was not %s", tx2.BillingAddress.Region, tx.BillingAddress.Region)
 	}
 	if tx2.BillingAddress.PostalCode != tx.BillingAddress.PostalCode {
-		t.Fail()
+		t.Fatalf("expected BillingAddress.PostalCode to be equal, but %s was not %s", tx2.BillingAddress.PostalCode, tx.BillingAddress.PostalCode)
 	}
 	if tx2.ShippingAddress.StreetAddress != tx.ShippingAddress.StreetAddress {
-		t.Fail()
+		t.Fatalf("expected ShippingAddress.StreetAddress to be equal, but %s was not %s", tx2.ShippingAddress.StreetAddress, tx.ShippingAddress.StreetAddress)
 	}
 	if tx2.ShippingAddress.Locality != tx.ShippingAddress.Locality {
-		t.Fail()
+		t.Fatalf("expected ShippingAddress.Locality to be equal, but %s was not %s", tx2.ShippingAddress.Locality, tx.ShippingAddress.Locality)
 	}
 	if tx2.ShippingAddress.Region != tx.ShippingAddress.Region {
-		t.Fail()
+		t.Fatalf("expected ShippingAddress.Region to be equal, but %s was not %s", tx2.ShippingAddress.Region, tx.ShippingAddress.Region)
 	}
 	if tx2.ShippingAddress.PostalCode != tx.ShippingAddress.PostalCode {
-		t.Fail()
+		t.Fatalf("expected ShippingAddress.PostalCode to be equal, but %s was not %s", tx2.ShippingAddress.PostalCode, tx.ShippingAddress.PostalCode)
 	}
 	if tx2.CreditCard.Token == "" {
-		t.Fail()
+		t.Fatalf("expected CreditCard.Token to be equal, but %s was not %s", tx2.CreditCard.Token, tx.CreditCard.Token)
 	}
 	if tx2.Customer.Id == "" {
-		t.Fail()
+		t.Fatalf("expected Customer.Id to be equal, but %s was not %s", tx2.Customer.Id, tx.Customer.Id)
 	}
 	if tx2.Status != "submitted_for_settlement" {
-		t.Fail()
+		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
 	}
 }
 
