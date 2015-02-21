@@ -91,7 +91,7 @@ func TestCreateCreditCardInvalidInput(t *testing.T) {
 
 	// This test should fail because customer id is required
 	if err == nil {
-		t.Fail()
+		t.Fatal("expected to get error creating card because of required fields, but did not")
 	}
 
 	// TODO: validate fields
@@ -139,7 +139,7 @@ func TestFindCreditCardBadData(t *testing.T) {
 	t.Log(card)
 
 	if err == nil {
-		t.Fail()
+		t.Fatal("expected to get error because the token is invalid")
 	}
 }
 
