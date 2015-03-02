@@ -10,7 +10,7 @@ func TestAddOn(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	} else if len(addOns) != 1 {
-		t.Fatal("expected to retrieve one add-on, but retrieved %d", len(addOns))
+		t.Fatalf("expected to retrieve one add-on, but retrieved %d", len(addOns))
 	}
 
 	addOn := addOns[0]
@@ -20,13 +20,13 @@ func TestAddOn(t *testing.T) {
 	if addOn.Id != "test_add_on" {
 		t.Fatalf("expected Id to be %s, was %s", "test_add_on", addOn.Id)
 	} else if addOn.Amount != 10 {
-		t.Fatalf("expected Amount to be %s, was %s", NewDecimal(1000, 2), addOn.Amount)
+		t.Fatalf("expected Amount to be %v, was %v", NewDecimal(1000, 2), addOn.Amount)
 	} else if addOn.Kind != ModificationKindAddOn {
 		t.Fatalf("expected Kind to be %s, was %s", ModificationKindAddOn, addOn.Kind)
 	} else if addOn.Name != "test_add_on_name" {
 		t.Fatalf("expected Name to be %s, was %s", "test_add_on_name", addOn.Name)
 	} else if addOn.NeverExpires != true {
-		t.Fatalf("expected NeverExpires to be %s, was %s", true, addOn.NeverExpires)
+		t.Fatalf("expected NeverExpires to be %v, was %v", true, addOn.NeverExpires)
 	} else if addOn.Description != "A test add-on" {
 		t.Fatalf("expected Description to be %s, was %s", "A test add-on", addOn.Description)
 	}

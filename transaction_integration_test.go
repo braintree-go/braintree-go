@@ -47,7 +47,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 		t.Fatal(x)
 	}
 	if amount := tx2.Amount; !reflect.DeepEqual(amount, ten) {
-		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
+		t.Fatalf("transaction settlement amount (%v) did not equal amount requested (%v)", amount, ten)
 	}
 
 	// Void
@@ -204,7 +204,7 @@ func TestAllTransactionFields(t *testing.T) {
 		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
 	}
 	if !reflect.DeepEqual(tx2.Amount, tx.Amount) {
-		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
+		t.Fatalf("expected Amount to be equal, but %v was not %v", tx2.Amount, tx.Amount)
 	}
 	if tx2.OrderId != tx.OrderId {
 		t.Fatalf("expected OrderId to be equal, but %s was not %s", tx2.OrderId, tx.OrderId)
