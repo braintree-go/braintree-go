@@ -9,6 +9,7 @@ type Transaction struct {
 	Amount              *Decimal             `xml:"amount"`
 	OrderId             string               `xml:"order-id,omitempty"`
 	PaymentMethodToken  string               `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce  string               `xml:"payment-method-nonce,omitempty"`
 	MerchantAccountId   string               `xml:"merchant-account-id,omitempty"`
 	PlanId              string               `xml:"plan-id,omitempty"`
 	CreditCard          *CreditCard          `xml:"credit-card,omitempty"`
