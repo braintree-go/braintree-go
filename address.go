@@ -28,4 +28,3 @@ type Addresses struct {
 	XMLName string     `json:"addresses" xml:"addresses"`
 	Address []*Address `json:"address" xml:"address"`
 }
-

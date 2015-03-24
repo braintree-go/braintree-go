@@ -9,4 +9,3 @@ type Discount struct {
 	XMLName string `json:"discount" xml:"discount"`
 	Modification
 }
-

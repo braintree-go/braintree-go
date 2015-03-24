@@ -5,7 +5,7 @@ type Plan struct {
 	Id                    string  `json:"id" xml:"id"`
 	MerchantId            string  `json:"merchant-id" xml:"merchant-id"`
 	BillingDayOfMonth     string  `json:"billing-day-of-month" xml:"billing-day-of-month"` // int
-	BillingFrequency      string  `json:"billing-frequency" xml:"billing-frequency"`    // int
+	BillingFrequency      string  `json:"billing-frequency" xml:"billing-frequency"`       // int
 	CurrencyISOCode       string  `json:"currency-iso-code" xml:"currency-iso-code"`
 	Description           string  `json:"description" xml:"description"`
 	Name                  string  `json:"name" xml:"name"`
@@ -30,4 +30,3 @@ type Plans struct {
 	XMLName string  `json:"plans" xml:"plans"`
 	Plan    []*Plan `json:"plan" xml:"plan"`
 }
-

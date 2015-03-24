@@ -54,4 +54,3 @@ type SubscriptionOptions struct {
 	RevertSubscriptionOnProrationFailure bool `json:"revert-subscription-on-proration-failure,omitempty" xml:"revert-subscription-on-proration-failure,omitempty"`
 	StartImmediately                     bool `json:"start-immediately,omitempty" xml:"start-immediately,omitempty"`
 }
-

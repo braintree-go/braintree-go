@@ -23,4 +23,3 @@ func (c *Customer) DefaultCreditCard() *CreditCard {
 	}
 	return nil
 }
-

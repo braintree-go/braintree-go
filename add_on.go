@@ -9,4 +9,3 @@ type AddOn struct {
 	XMLName string `json:"add-on" xml:"add-on"`
 	Modification
 }
-

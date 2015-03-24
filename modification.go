@@ -15,4 +15,3 @@ type Modification struct {
 	Quantity     int     `json:"quantity,omitempty" xml:"quantity,omitempty"`
 	UpdatedAt    string  `json:"updated_at,omitempty" xml:"updated_at,omitempty"`
 }
-

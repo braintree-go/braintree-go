@@ -61,4 +61,3 @@ func (card *CreditCard) AllSubscriptions() []*Subscription {
 	}
 	return nil
 }
-
