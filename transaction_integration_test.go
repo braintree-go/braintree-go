@@ -37,7 +37,7 @@ func TestTransactionCreateSettleAndVoid(t *testing.T) {
 	}
 
 	// Settle
-	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, 10)
+	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, "10")
 
 	t.Log(tx2)
 
