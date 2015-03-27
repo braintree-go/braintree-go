@@ -20,13 +20,13 @@ func TestDiscounts(t *testing.T) {
 	if discount.Id != "test_discount" {
 		t.Fatalf("expected Id to be %s, was %s", "test_discount", discount.Id)
 	} else if discount.Amount != 10 {
-		t.Fatalf("expected Amount to be %s, was %s", NewDecimal(1000, 2), discount.Amount)
+		t.Fatalf("expected Amount to be %v, was %v", NewDecimal(1000, 2), discount.Amount)
 	} else if discount.Kind != ModificationKindDiscount {
 		t.Fatalf("expected Kind to be %s, was %s", ModificationKindDiscount, discount.Kind)
 	} else if discount.Name != "test_discount_name" {
 		t.Fatalf("expected Name to be %s, was %s", "test_discount_name", discount.Name)
 	} else if discount.NeverExpires != true {
-		t.Fatalf("expected NeverExpires to be %s, was %s", true, discount.NeverExpires)
+		t.Fatalf("expected NeverExpires to be %v, was %v", true, discount.NeverExpires)
 	} else if discount.Description != "A test discount" {
 		t.Fatalf("expected Description to be %s, was %s", "A test discount", discount.Description)
 	}
