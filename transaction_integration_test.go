@@ -342,3 +342,19 @@ func TestSettleTransaction(t *testing.T) {
 		t.Fatal(txn.Status)
 	}
 }
+
+func TestTrxPaymentMethodNonce(t *testing.T) {
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:               "sale",
+		Amount:             randomAmount(),
+		PaymentMethodNonce: "fake-apple-pay-mastercard-nonce",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
