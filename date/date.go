@@ -1,4 +1,4 @@
-package braintree
+package date
 
 import (
 	"encoding/xml"

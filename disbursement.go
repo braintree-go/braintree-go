@@ -1,12 +1,15 @@
 package braintree
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"github.com/lionelbarrow/braintree-go/date"
+)
 
 type Disbursement struct {
 	XMLName            xml.Name         `xml:"disbursement"`
 	Id                 string           `xml:"id"`
 	ExceptionMessage   string           `xml:"exception-message"`
-	DisbursementDate   *Date            `xml:"disbursement-date"`
+	DisbursementDate   *date.Date       `xml:"disbursement-date"`
 	FollowUpAction     string           `xml:"follow-up-action"`
 	Success            bool             `xml:"success"`
 	Retry              bool             `xml:"retry"`
