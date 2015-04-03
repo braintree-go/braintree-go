@@ -48,49 +48,6 @@ func (n NullInt64) MarshalText() ([]byte, error) {
 	return []byte(strconv.FormatInt(n.Int64, 10)), nil
 }
 
-// NullFloat64 wraps sql.NullFloat64 to allow it to be serializable to/from XML
-// via TextMarshaler and TextUnmarshaler
-type NullFloat64 struct {
-	sql.NullFloat64
-}
-
-// NewNullFloat64 creats a new NullFloat64
-func NewNullFloat64(n float64, valid bool) NullFloat64 {
-	return NullFloat64{
-		sql.NullFloat64{
-			Valid:   valid,
-			Float64: n,
-		},
-	}
-}
-
-// UnmarshalText initializes an invalid NullFloat64 if text is empty
-// otherwise it tries to parse it as an integer in base 10
-func (n *NullFloat64) UnmarshalText(text []byte) (err error) {
-	if len(text) == 0 {
-		n.Valid = false
-		return nil
-	}
-
-	n.Float64, err = strconv.ParseFloat(string(text), 64)
-	if err != nil {
-		return err
-	}
-
-	n.Valid = true
-	return nil
-}
-
-// UnmarshalText initializes an invalid NullFloat64 if text is empty
-// otherwise it tries to parse it as an integer in base 10
-// MarshalText returns "" for invalid NullFloat64s, otherwise the float string
-func (n NullFloat64) MarshalText() ([]byte, error) {
-	if !n.Valid {
-		return []byte{}, nil
-	}
-	return []byte(strconv.FormatFloat(n.Float64, 'f', -1, 64)), nil
-}
-
 // NullBool wraps sql.NullBool to allow it to be serializable to/from XML
 // via TextMarshaler and TextUnmarshaler
 type NullBool struct {
