@@ -3,6 +3,7 @@ package braintree
 import (
 	"bytes"
 	"encoding/xml"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -13,6 +14,8 @@ const (
 	Development Environment = "development"
 	Sandbox     Environment = "sandbox"
 	Production  Environment = "production"
+
+	LibraryVersion = "0.8.0"
 )
 
 func (e Environment) BaseURL() string {
@@ -76,7 +79,7 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("Accept", "application/xml")
 	req.Header.Set("Accept-Encoding", "gzip")
-	req.Header.Set("User-Agent", "Braintree Go 0.3.1")
+	req.Header.Set("User-Agent", fmt.Sprintf("Braintree Go %s", LibraryVersion))
 	req.Header.Set("X-ApiVersion", "3")
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
