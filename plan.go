@@ -6,25 +6,19 @@ type Plan struct {
 	XMLName               string     `xml:"plan"`
 	Id                    string     `xml:"id"`
 	MerchantId            string     `xml:"merchant-id"`
-	BillingDayOfMonth     string     `xml:"billing-day-of-month"` // int
-	BillingFrequency      string     `xml:"billing-frequency"`    // int
+	BillingDayOfMonth     *NullInt64 `xml:"billing-day-of-month"`
+	BillingFrequency      *NullInt64 `xml:"billing-frequency"`
 	CurrencyISOCode       string     `xml:"currency-iso-code"`
 	Description           string     `xml:"description"`
 	Name                  string     `xml:"name"`
-	NumberOfBillingCycles string     `xml:"number-of-billing-cycles"` // int
+	NumberOfBillingCycles *NullInt64 `xml:"number-of-billing-cycles"`
 	Price                 *Decimal   `xml:"price"`
-	TrialDuration         string     `xml:"trial-duration"` // int
+	TrialDuration         *NullInt64 `xml:"trial-duration"`
 	TrialDurationUnit     string     `xml:"trial-duration-unit"`
-	TrialPeriod           string     `xml:"trial-period"` // bool
+	TrialPeriod           *NullBool  `xml:"trial-period"`
 	CreatedAt             *time.Time `xml:"created-at"`
 	UpdatedAt             *time.Time `xml:"updated-at"`
 }
-
-// TODO(eaigner): it is suboptimal that we use string instead of int/bool types here,
-// but I see no way around this atm to avoid integer parse errors if the field is empty.
-//
-// If there is a better method, and it can be unmarshalled directly to the correct type
-// without errors, this needs to be changed.
 
 type Plans struct {
 	XMLName string  `xml:"plans"`

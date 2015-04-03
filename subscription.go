@@ -22,11 +22,11 @@ type Subscription struct {
 	FailureCount            string               `xml:"failure-count,omitempty"`
 	FirstBillingDate        string               `xml:"first-billing-date,omitempty"`
 	MerchantAccountId       string               `xml:"merchant-account-id,omitempty"`
-	NeverExpires            string               `xml:"never-expires,omitempty"` // bool
+	NeverExpires            *NullBool            `xml:"never-expires,omitempty"`
 	NextBillAmount          *Decimal             `xml:"next-bill-amount,omitempty"`
 	NextBillingPeriodAmount *Decimal             `xml:"next-billing-period-amount,omitempty"`
 	NextBillingDate         string               `xml:"next-billing-date,omitempty"`
-	NumberOfBillingCycles   string               `xml:"number-of-billing-cycles,omitempty"` // int
+	NumberOfBillingCycles   *NullInt64           `xml:"number-of-billing-cycles,omitempty"`
 	PaidThroughDate         string               `xml:"paid-through-date,omitempty"`
 	PaymentMethodToken      string               `xml:"payment-method-token,omitempty"`
 	PlanId                  string               `xml:"plan-id,omitempty"`
@@ -34,7 +34,7 @@ type Subscription struct {
 	Status                  string               `xml:"status,omitempty"`
 	TrialDuration           string               `xml:"trial-duration,omitempty"`
 	TrialDurationUnit       string               `xml:"trial-duration-unit,omitempty"`
-	TrialPeriod             string               `xml:"trial-period,omitempty"` // bool
+	TrialPeriod             *NullBool            `xml:"trial-period,omitempty"`
 	Transactions            *Transactions        `xml:"transactions,omitempty"`
 	Options                 *SubscriptionOptions `xml:"options,omitempty"`
 	// AddOns                  []interface{} `xml:"add-ons,omitempty"`
@@ -44,8 +44,6 @@ type Subscription struct {
 type Subscriptions struct {
 	Subscription []*Subscription `xml:"subscription"`
 }
-
-// TODO(eaigner): same considerations apply as with plan type marshalling
 
 type SubscriptionOptions struct {
 	DoNotInheritAddOnsOrDiscounts        bool `xml:"do-not-inherit-add-ons-or-discounts,omitempty"`

@@ -99,7 +99,7 @@ func TestTransactionSearch(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(result.TotalItems) != 1 {
+	if !result.TotalItems.Valid || result.TotalItems.Int64 != 1 {
 		t.Fatal(result.Transactions)
 	}
 
@@ -265,11 +265,11 @@ func TestTransactionDisbursementDetails(t *testing.T) {
 	if txn.DisbursementDetails.SettlementCurrencyExchangeRate.Cmp(NewDecimal(100, 2)) != 0 {
 		t.Fatalf("expected settlement currency exchange rate to be %s, was %s", NewDecimal(100, 2), txn.DisbursementDetails.SettlementCurrencyExchangeRate)
 	}
-	if txn.DisbursementDetails.FundsHeld == "true" {
-		t.Fatalf("expected funds held to be %s, was %s", "true", txn.DisbursementDetails.FundsHeld)
+	if !txn.DisbursementDetails.FundsHeld.Valid || txn.DisbursementDetails.FundsHeld.Bool {
+		t.Error("funds held doesn't match")
 	}
-	if txn.DisbursementDetails.Success != "true" {
-		t.Fatalf("expected success to be %s, was %s", "true", txn.DisbursementDetails.Success)
+	if !txn.DisbursementDetails.Success.Valid || !txn.DisbursementDetails.Success.Bool {
+		t.Error("success doesn't match")
 	}
 }
 
