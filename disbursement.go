@@ -1,14 +1,12 @@
 package braintree
 
-import (
-	"encoding/xml"
-)
+import "encoding/xml"
 
 type Disbursement struct {
 	XMLName            xml.Name         `xml:"disbursement"`
 	Id                 string           `xml:"id"`
 	ExceptionMessage   string           `xml:"exception-message"`
-	DisbursementDate   string           `xml:"disbursement-date"`
+	DisbursementDate   *Date            `xml:"disbursement-date"`
 	FollowUpAction     string           `xml:"follow-up-action"`
 	Success            bool             `xml:"success"`
 	Retry              bool             `xml:"retry"`

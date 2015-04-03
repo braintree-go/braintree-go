@@ -80,10 +80,10 @@ func TestAddress(t *testing.T) {
 	if addr2.CountryName != addr.CountryName {
 		t.Fatal("country names do not match")
 	}
-	if addr2.CreatedAt == "" {
+	if addr2.CreatedAt == nil {
 		t.Fatal("generated created at is empty")
 	}
-	if addr2.UpdatedAt == "" {
+	if addr2.UpdatedAt == nil {
 		t.Fatal("generated updated at is empty")
 	}
 

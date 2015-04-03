@@ -1,5 +1,7 @@
 package braintree
 
+import "time"
+
 type Transaction struct {
 	XMLName             string               `xml:"transaction"`
 	Id                  string               `xml:"id,omitempty"`
@@ -18,8 +20,8 @@ type Transaction struct {
 	ShippingAddress     *Address             `xml:"shipping,omitempty"`
 	Options             *TransactionOptions  `xml:"options,omitempty"`
 	ServiceFeeAmount    *Decimal             `xml:"service-fee-amount,attr,omitempty"`
-	CreatedAt           string               `xml:"created-at,omitempty"`
-	UpdatedAt           string               `xml:"updated-at,omitempty"`
+	CreatedAt           *time.Time           `xml:"created-at,omitempty"`
+	UpdatedAt           *time.Time           `xml:"updated-at,omitempty"`
 	DisbursementDetails *DisbursementDetails `xml:"disbursement-details,omitempty"`
 }
 
