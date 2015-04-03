@@ -49,7 +49,7 @@ func TestPlan(t *testing.T) {
 	if x := plan.NumberOfBillingCycles; x != "2" {
 		t.Fatal(x)
 	}
-	if x := plan.Price; x != 10.0 {
+	if x := plan.Price; x.Cmp(NewDecimal(1000, 2)) != 0 {
 		t.Fatal(x)
 	}
 	if x := plan.TrialDuration; x != "14" {

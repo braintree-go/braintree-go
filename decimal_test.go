@@ -63,3 +63,22 @@ func TestDecimalMarshalText(t *testing.T) {
 		}
 	}
 }
+
+func TestDecimalCmp(t *testing.T) {
+	tests := []struct {
+		x, y *Decimal
+		out  int
+	}{
+		{NewDecimal(250, -2), NewDecimal(250, -2), 0},
+		{NewDecimal(2, 0), NewDecimal(250, -2), -1},
+		{NewDecimal(500, 2), NewDecimal(50, 1), 0},
+		{NewDecimal(2500, -2), NewDecimal(250, -2), 1},
+		{NewDecimal(100, 2), NewDecimal(1, 0), 0},
+	}
+
+	for i, tt := range tests {
+		if out := tt.x.Cmp(tt.y); out != tt.out {
+			t.Errorf("%d: %+v.Cmp(%+v) => %d, want %d", i, tt.x, tt.y, out, tt.out)
+		}
+	}
+}

@@ -9,7 +9,7 @@ const (
 
 type Modification struct {
 	Id           string     `xml:"id,omitempty"`
-	Amount       float64    `xml:"amount,omitempty"`
+	Amount       *Decimal   `xml:"amount,omitempty"`
 	Description  string     `xml:"description,omitempty"`
 	Kind         string     `xml:"kind,omitempty"`
 	Name         string     `xml:"name,omitempty"`

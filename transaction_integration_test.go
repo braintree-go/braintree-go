@@ -2,7 +2,6 @@ package braintree
 
 import (
 	"math/rand"
-	"reflect"
 	"strconv"
 	"testing"
 	"time"
@@ -46,8 +45,8 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	if x := tx2.Status; x != "submitted_for_settlement" {
 		t.Fatal(x)
 	}
-	if amount := tx2.Amount; !reflect.DeepEqual(amount, ten) {
-		t.Fatalf("transaction settlement amount (%v) did not equal amount requested (%v)", amount, ten)
+	if amount := tx2.Amount; amount.Cmp(ten) != 0 {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
 	}
 
 	// Void
@@ -203,8 +202,8 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Type != tx.Type {
 		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
 	}
-	if !reflect.DeepEqual(tx2.Amount, tx.Amount) {
-		t.Fatalf("expected Amount to be equal, but %v was not %v", tx2.Amount, tx.Amount)
+	if tx2.Amount.Cmp(tx.Amount) != 0 {
+		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
 	}
 	if tx2.OrderId != tx.OrderId {
 		t.Fatalf("expected OrderId to be equal, but %s was not %s", tx2.OrderId, tx.OrderId)
@@ -255,22 +254,22 @@ func TestTransactionDisbursementDetails(t *testing.T) {
 	}
 
 	if txn.DisbursementDetails.DisbursementDate != "2013-06-27" {
-		t.Fail()
+		t.Fatalf("expected disbursement date to be %s, was %s", "2013-06-27", txn.DisbursementDetails.DisbursementDate)
 	}
-	if txn.DisbursementDetails.SettlementAmount != "100.00" {
-		t.Fail()
+	if txn.DisbursementDetails.SettlementAmount.Cmp(NewDecimal(10000, 2)) != 0 {
+		t.Fatalf("expected settlement amount to be %s, was %s", NewDecimal(10000, 2), txn.DisbursementDetails.SettlementAmount)
 	}
 	if txn.DisbursementDetails.SettlementCurrencyIsoCode != "USD" {
-		t.Fail()
+		t.Fatalf("expected settlement currency code to be %s, was %s", "USD", txn.DisbursementDetails.SettlementCurrencyIsoCode)
 	}
-	if txn.DisbursementDetails.SettlementCurrencyExchangeRate != "1" {
-		t.Fail()
+	if txn.DisbursementDetails.SettlementCurrencyExchangeRate.Cmp(NewDecimal(100, 2)) != 0 {
+		t.Fatalf("expected settlement currency exchange rate to be %s, was %s", NewDecimal(100, 2), txn.DisbursementDetails.SettlementCurrencyExchangeRate)
 	}
 	if txn.DisbursementDetails.FundsHeld == "true" {
-		t.Fail()
+		t.Fatalf("expected funds held to be %s, was %s", "true", txn.DisbursementDetails.FundsHeld)
 	}
 	if txn.DisbursementDetails.Success != "true" {
-		t.Fail()
+		t.Fatalf("expected success to be %s, was %s", "true", txn.DisbursementDetails.Success)
 	}
 }
 

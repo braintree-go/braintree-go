@@ -19,8 +19,8 @@ func TestDiscounts(t *testing.T) {
 
 	if discount.Id != "test_discount" {
 		t.Fatalf("expected Id to be %s, was %s", "test_discount", discount.Id)
-	} else if discount.Amount != 10 {
-		t.Fatalf("expected Amount to be %v, was %v", NewDecimal(1000, 2), discount.Amount)
+	} else if discount.Amount.Cmp(NewDecimal(1000, 2)) != 0 {
+		t.Fatalf("expected Amount to be %s, was %s", NewDecimal(1000, 2), discount.Amount)
 	} else if discount.Kind != ModificationKindDiscount {
 		t.Fatalf("expected Kind to be %s, was %s", ModificationKindDiscount, discount.Kind)
 	} else if discount.Name != "test_discount_name" {
