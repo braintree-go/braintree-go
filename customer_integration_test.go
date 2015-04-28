@@ -77,6 +77,21 @@ func TestCustomer(t *testing.T) {
 		t.Fatal("ids do not match")
 	}
 
+	// Search
+	query := new(SearchQuery)
+	f := query.AddTextField("first-name")
+	f.Is = "John"
+	searchResult, err := testGateway.Customer().Search(query)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(searchResult.Customers) == 0 {
+		t.Fatal("could not search for a customer")
+	}
+	if id := searchResult.Customers[0].Id; id != customer.Id {
+		t.Fatalf("id from search does not match: got %s, wanted %s", id, customer.Id)
+	}
+
 	// Delete
 	err = testGateway.Customer().Delete(customer.Id)
 	if err != nil {

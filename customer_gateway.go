@@ -1,5 +1,7 @@
 package braintree
 
+import "encoding/xml"
+
 type CustomerGateway struct {
 	*Braintree
 }
@@ -43,6 +45,19 @@ func (g *CustomerGateway) Find(id string) (*Customer, error) {
 		return resp.customer()
 	}
 	return nil, &invalidResponseError{resp}
+}
+
+func (g *CustomerGateway) Search(query *SearchQuery) (*CustomerSearchResult, error) {
+	resp, err := g.execute("POST", "customers/advanced_search", query)
+	if err != nil {
+		return nil, err
+	}
+	var v CustomerSearchResult
+	err = xml.Unmarshal(resp.Body, &v)
+	if err != nil {
+		return nil, err
+	}
+	return &v, err
 }
 
 // Delete deletes the customer with the given id.

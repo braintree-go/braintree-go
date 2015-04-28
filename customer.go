@@ -1,5 +1,7 @@
 package braintree
 
+import "github.com/lionelbarrow/braintree-go/nullable"
+
 type Customer struct {
 	XMLName     string       `xml:"customer"`
 	Id          string       `xml:"id,omitempty"`
@@ -22,4 +24,12 @@ func (c *Customer) DefaultCreditCard() *CreditCard {
 		}
 	}
 	return nil
+}
+
+type CustomerSearchResult struct {
+	XMLName           string              `xml:"customers"`
+	CurrentPageNumber *nullable.NullInt64 `xml:"current-page-number"`
+	PageSize          *nullable.NullInt64 `xml:"page-size"`
+	TotalItems        *nullable.NullInt64 `xml:"total-items"`
+	Customers         []*Customer         `xml:"customer"`
 }
