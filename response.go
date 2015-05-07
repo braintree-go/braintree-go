@@ -97,7 +97,7 @@ func (r *Response) unpackBody() error {
 }
 
 func (r *Response) apiError() error {
-	var b braintreeError
+	var b BraintreeError
 	xml.Unmarshal(r.Body, &b)
 	if b.ErrorMessage != "" {
 		b.statusCode = r.StatusCode

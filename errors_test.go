@@ -66,7 +66,7 @@ var errorXML = []byte(`<?xml version="1.0" encoding="UTF-8"?>
 </api-error-response>`)
 
 func TestErrorsUnmarshalEverything(t *testing.T) {
-	apiErrors := &braintreeError{}
+	apiErrors := &BraintreeError{}
 	err := xml.Unmarshal(errorXML, apiErrors)
 	if err != nil {
 		t.Fatal("Error unmarshalling: " + err.Error())
@@ -80,7 +80,7 @@ func TestErrorsUnmarshalEverything(t *testing.T) {
 }
 
 func TestAccessors(t *testing.T) {
-	apiErrors := &braintreeError{}
+	apiErrors := &BraintreeError{}
 	err := xml.Unmarshal(errorXML, apiErrors)
 	if err != nil {
 		t.Fatal("Error unmarshalling: " + err.Error())
