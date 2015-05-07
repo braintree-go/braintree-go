@@ -71,9 +71,11 @@ func TestMerchantAccountTransaction(t *testing.T) {
 		TestMerchantAccountCreate(t)
 	}
 
+	amount := NewDecimal(int64(randomAmount().Scale+500), 2)
+
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
-		Amount: randomAmount(),
+		Amount: amount,
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
