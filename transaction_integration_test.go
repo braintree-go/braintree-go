@@ -357,3 +357,122 @@ func TestTrxPaymentMethodNonce(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
+	amount := NewDecimal(20000, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().Settle(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "settled" {
+		t.Fatal(txn.Status)
+	}
+
+	// Refund
+	refundTxn, err := testGateway.Transaction().Refund(txn.Id)
+
+	t.Log(refundTxn)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := refundTxn.Status; x != "submitted_for_settlement" {
+		t.Fatal(x)
+	}
+
+	refundTxn, err = testGateway.Transaction().Settle(refundTxn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if refundTxn.Status != "settled" {
+		t.Fatal(txn.Status)
+	}
+
+	// Second refund should fail
+	refundTxn, err = testGateway.Transaction().Refund(txn.Id)
+	t.Log(refundTxn)
+
+	if err.Error() != "Transaction has already been completely refunded." {
+		t.Fatal(err)
+	}
+}
+
+func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
+	amount := NewDecimal(10000, 2)
+	refundAmt1 := NewDecimal(5000, 2)
+	refundAmt2 := NewDecimal(5001, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().Settle(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "settled" {
+		t.Fatal(txn.Status)
+	}
+
+	// Refund
+	refundTxn, err := testGateway.Transaction().Refund(txn.Id, refundAmt1)
+
+	t.Log(refundTxn)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := refundTxn.Status; x != "submitted_for_settlement" {
+		t.Fatal(x)
+	}
+
+	refundTxn, err = testGateway.Transaction().Settle(refundTxn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if refundTxn.Status != "settled" {
+		t.Fatal(txn.Status)
+	}
+
+	// Refund amount too large
+	refundTxn, err = testGateway.Transaction().Refund(txn.Id, refundAmt2)
+
+	t.Log(refundTxn)
+
+	if err.Error() != "Refund amount is too large." {
+		t.Fatal(err)
+	}
+}
