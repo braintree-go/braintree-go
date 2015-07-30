@@ -26,8 +26,8 @@ type Transaction struct {
 	CreatedAt             *time.Time           `xml:"created-at,omitempty"`
 	UpdatedAt             *time.Time           `xml:"updated-at,omitempty"`
 	DisbursementDetails   *DisbursementDetails `xml:"disbursement-details,omitempty"`
-	RefundIds             []string             `xml:"refund-ids>item,omitempty"`
-	RefundedTransactionId string               `xml:"refundied-transaction-id,omitempty"`
+	RefundIds             *[]string            `xml:"refund-ids>item,omitempty"`
+	RefundedTransactionId *string              `xml:"refundied-transaction-id,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
