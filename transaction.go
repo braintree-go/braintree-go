@@ -6,26 +6,28 @@ import (
 )
 
 type Transaction struct {
-	XMLName             string               `xml:"transaction"`
-	Id                  string               `xml:"id,omitempty"`
-	CustomerID          string               `xml:"customer-id,omitempty"`
-	Status              string               `xml:"status,omitempty"`
-	Type                string               `xml:"type,omitempty"`
-	Amount              *Decimal             `xml:"amount"`
-	OrderId             string               `xml:"order-id,omitempty"`
-	PaymentMethodToken  string               `xml:"payment-method-token,omitempty"`
-	PaymentMethodNonce  string               `xml:"payment-method-nonce,omitempty"`
-	MerchantAccountId   string               `xml:"merchant-account-id,omitempty"`
-	PlanId              string               `xml:"plan-id,omitempty"`
-	CreditCard          *CreditCard          `xml:"credit-card,omitempty"`
-	Customer            *Customer            `xml:"customer,omitempty"`
-	BillingAddress      *Address             `xml:"billing,omitempty"`
-	ShippingAddress     *Address             `xml:"shipping,omitempty"`
-	Options             *TransactionOptions  `xml:"options,omitempty"`
-	ServiceFeeAmount    *Decimal             `xml:"service-fee-amount,attr,omitempty"`
-	CreatedAt           *time.Time           `xml:"created-at,omitempty"`
-	UpdatedAt           *time.Time           `xml:"updated-at,omitempty"`
-	DisbursementDetails *DisbursementDetails `xml:"disbursement-details,omitempty"`
+	XMLName               string               `xml:"transaction"`
+	Id                    string               `xml:"id,omitempty"`
+	CustomerID            string               `xml:"customer-id,omitempty"`
+	Status                string               `xml:"status,omitempty"`
+	Type                  string               `xml:"type,omitempty"`
+	Amount                *Decimal             `xml:"amount"`
+	OrderId               string               `xml:"order-id,omitempty"`
+	PaymentMethodToken    string               `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce    string               `xml:"payment-method-nonce,omitempty"`
+	MerchantAccountId     string               `xml:"merchant-account-id,omitempty"`
+	PlanId                string               `xml:"plan-id,omitempty"`
+	CreditCard            *CreditCard          `xml:"credit-card,omitempty"`
+	Customer              *Customer            `xml:"customer,omitempty"`
+	BillingAddress        *Address             `xml:"billing,omitempty"`
+	ShippingAddress       *Address             `xml:"shipping,omitempty"`
+	Options               *TransactionOptions  `xml:"options,omitempty"`
+	ServiceFeeAmount      *Decimal             `xml:"service-fee-amount,attr,omitempty"`
+	CreatedAt             *time.Time           `xml:"created-at,omitempty"`
+	UpdatedAt             *time.Time           `xml:"updated-at,omitempty"`
+	DisbursementDetails   *DisbursementDetails `xml:"disbursement-details,omitempty"`
+	RefundIds             []string             `xml:"refund-ids>item,omitempty"`
+	RefundedTransactionId string               `xml:"refundied-transaction-id,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
