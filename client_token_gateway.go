@@ -8,8 +8,17 @@ type ClientTokenGateway struct {
 	*Braintree
 }
 
+func NewClientTokenRequest() ClientToken {
+	return ClientToken{Version: clientTokenVersion}
+}
+
 func (g *ClientTokenGateway) Generate() (string, error) {
-	resp, err := g.execute("POST", "client_token", ClientToken{Version: clientTokenVersion})
+	return g.GenerateWith(NewClientTokenRequest())
+}
+
+func (g *ClientTokenGateway) GenerateWith(tokenRequest ClientToken) (string, error) {
+	tokenRequest.Version = clientTokenVersion
+	resp, err := g.execute("POST", "client_token", tokenRequest)
 	if err != nil {
 		return "", err
 	}
