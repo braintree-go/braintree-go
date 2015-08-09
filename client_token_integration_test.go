@@ -13,3 +13,21 @@ func TestClientToken(t *testing.T) {
 		t.Fatalf("empty client token!")
 	}
 }
+
+func TestClientTokenWithCustomer(t *testing.T) {
+	customerRequest := &Customer{FirstName: "Lionel"}
+
+	customer, err := testGateway.Customer().Create(customerRequest)
+	if err != nil {
+		t.Error(err)
+	}
+
+	customerId := customer.Id
+
+	token, err := testGateway.ClientToken().GenerateWithCustomer(customerId)
+	if err != nil {
+		t.Error(err)
+	} else if len(token) == 0 {
+		t.Fatalf("Received empty client token")
+	}
+}
