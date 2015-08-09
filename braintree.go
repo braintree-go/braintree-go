@@ -15,7 +15,7 @@ const (
 	Sandbox     Environment = "sandbox"
 	Production  Environment = "production"
 
-	LibraryVersion = "0.8.0"
+	LibraryVersion = "0.9.0"
 )
 
 func (e Environment) BaseURL() string {
