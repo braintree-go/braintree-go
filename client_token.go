@@ -5,3 +5,7 @@ type ClientTokenRequest struct {
 	CustomerID string `xml:"customerId,omitempty"`
 	Version    int    `xml:"version"`
 }
+
+type clientToken struct {
+	ClientToken string `xml:"value"`
+}
