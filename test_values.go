@@ -10,6 +10,11 @@ var testCreditCards = map[string]CreditCard{
 	"discover":   CreditCard{Number: "6011111111111117"},
 }
 
+var testPaypalAccounts = map[string]PaypalAccount{
+	"example": PaypalAccount{Email: "test@example.com"},
+	"test":    PaypalAccount{Email: "jane.doe@example.com", Token: os.Getenv("BRAINTREE_PAYPAL_ACCOUNT_TOKEN")},
+}
+
 var testGateway = New(
 	Sandbox,
 	os.Getenv("BRAINTREE_MERCH_ID"),
