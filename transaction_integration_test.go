@@ -407,6 +407,20 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		t.Fatal(txn.Status)
 	}
 
+	if *refundTxn.RefundedTransactionId != txn.Id {
+		t.Fatal(*refundTxn.RefundedTransactionId)
+	}
+
+	// Check that the refund shows up in the original transaction
+	txn, err = testGateway.Transaction().Find(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.RefundIds != nil && (*txn.RefundIds)[0] != refundTxn.Id {
+		t.Fatal(*txn.RefundIds)
+	}
+
 	// Second refund should fail
 	refundTxn, err = testGateway.Transaction().Refund(txn.Id)
 	t.Log(refundTxn)
