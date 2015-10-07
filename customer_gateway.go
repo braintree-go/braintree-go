@@ -36,7 +36,7 @@ func (g *CustomerGateway) Update(c *Customer) (*Customer, error) {
 
 // Changes a customer Id
 func (g *CustomerGateway) ReassignId(oldid, newid string) (*Customer, error) {
-	resp, err := g.execute("PUT", "customers/"+oldid, &braintree.Customer{Id: newid})
+	resp, err := g.execute("PUT", "customers/"+oldid, &Customer{Id: newid})
 	if err != nil {
 		return nil, err
 	}
