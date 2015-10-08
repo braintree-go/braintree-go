@@ -20,12 +20,6 @@ func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
 	return nil, &invalidResponseError{resp}
 }
 
-// Create creates a new customer from the passed in customer object and returns the raw response.
-// If no Id is set, Braintree will assign one.
-func (g *CustomerGateway) CreateRaw(c *Customer) (*Response, error) {
-	return g.execute("POST", "customers", c)
-}
-
 // Update updates any field that is set in the passed customer object.
 // The Id field is mandatory.
 func (g *CustomerGateway) Update(c *Customer) (*Customer, error) {
