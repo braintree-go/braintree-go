@@ -36,5 +36,5 @@ func (w *WebhookNotificationGateway) Verify(challenge string) (string, error) {
 	if err != nil {
 		return ``, err	
 	}
-	return `{` + hmacer.PublicKey + `}|{` + digest + `}`, nil
+	return hmacer.PublicKey + `|` + digest, nil
 }
