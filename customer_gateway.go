@@ -34,6 +34,19 @@ func (g *CustomerGateway) Update(c *Customer) (*Customer, error) {
 	return nil, &invalidResponseError{resp}
 }
 
+// Changes a customer Id
+func (g *CustomerGateway) ReassignId(oldid, newid string) (*Customer, error) {
+	resp, err := g.execute("PUT", "customers/"+oldid, &Customer{Id: newid})
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.customer()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
 // Find finds the customer with the given id.
 func (g *CustomerGateway) Find(id string) (*Customer, error) {
 	resp, err := g.execute("GET", "customers/"+id, nil)
