@@ -34,7 +34,7 @@ func (w *WebhookNotificationGateway) Verify(challenge string) (string, error) {
 	hmacer := newHmacer(w.Braintree)
 	digest, err := hmacer.hmac(challenge)
 	if err != nil {
-		return ``, err	
+		return ``, err
 	}
 	return hmacer.PublicKey + `|` + digest, nil
 }
