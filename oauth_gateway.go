@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strings"
 
+	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
 )
 
@@ -33,12 +34,12 @@ type ConnectURLInput struct {
 	PaymentMethods []string
 }
 
-func (g *OauthGateway) CreateTokenFromCode(input *CreateTokenFromCodeInput) (*oauth2.Token, error) {
-	return g.Config().Exchange(oauth2.NoContext, input.Code)
+func (g *OauthGateway) CreateTokenFromCode(ctx context.Context, input *CreateTokenFromCodeInput) (*oauth2.Token, error) {
+	return g.Config().Exchange(ctx, input.Code)
 }
 
-func (g *OauthGateway) CreateTokenFromRefreshToken(input *CreateTokenFromRefreshTokenInput) (*oauth2.Token, error) {
-	ts := g.Config().TokenSource(oauth2.NoContext, &oauth2.Token{RefreshToken: input.RefreshToken})
+func (g *OauthGateway) CreateTokenFromRefreshToken(ctx context.Context, input *CreateTokenFromRefreshTokenInput) (*oauth2.Token, error) {
+	ts := g.Config().TokenSource(ctx, &oauth2.Token{RefreshToken: input.RefreshToken})
 	return ts.Token()
 }
 
