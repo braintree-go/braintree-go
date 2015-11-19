@@ -40,12 +40,65 @@ func New(env Environment, merchId, pubKey, privKey string) *Braintree {
 }
 
 type Braintree struct {
-	Environment Environment
-	MerchantId  string
-	PublicKey   string
-	PrivateKey  string
-	Logger      *log.Logger
-	HttpClient  *http.Client
+	Environment  Environment
+	MerchantId   string
+	PublicKey    string
+	PrivateKey   string
+	ClientId     string
+	ClientSecret string
+	Logger       *log.Logger
+	HttpClient   *http.Client
+}
+
+type Config struct {
+	Environment  Environment
+	MerchantId   string
+	PublicKey    string
+	PrivateKey   string
+	ClientId     string
+	ClientSecret string
+	Logger       *log.Logger
+	HttpClient   *http.Client
+}
+
+func (g *Braintree) Configure(conf *Config) *Braintree {
+	if conf == nil || g == nil {
+		return g
+	}
+
+	if conf.Environment != "" {
+		g.Environment = conf.Environment
+	}
+
+	if conf.MerchantId != "" {
+		g.MerchantId = conf.MerchantId
+	}
+
+	if conf.PublicKey != "" {
+		g.PublicKey = conf.PublicKey
+	}
+
+	if conf.PrivateKey != "" {
+		g.PrivateKey = conf.PrivateKey
+	}
+
+	if conf.ClientId != "" {
+		g.ClientId = conf.ClientId
+	}
+
+	if conf.ClientSecret != "" {
+		g.ClientSecret = conf.ClientSecret
+	}
+
+	if conf.Logger != nil {
+		g.Logger = conf.Logger
+	}
+
+	if conf.HttpClient != nil {
+		g.HttpClient = conf.HttpClient
+	}
+
+	return g
 }
 
 func (g *Braintree) MerchantURL() string {
@@ -155,4 +208,8 @@ func (g *Braintree) Discount() *DiscountGateway {
 
 func (g *Braintree) WebhookNotification() *WebhookNotificationGateway {
 	return &WebhookNotificationGateway{g}
+}
+
+func (g *Braintree) Oauth() *OauthGateway {
+	return &OauthGateway{g}
 }
