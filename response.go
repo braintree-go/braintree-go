@@ -55,6 +55,14 @@ func (r *Response) subscription() (*Subscription, error) {
 	return &b, nil
 }
 
+func (r *Response) settlement() (*SettlementBatchSummary, error) {
+	var b SettlementBatchSummary
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
 func (r *Response) address() (*Address, error) {
 	var b Address
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
