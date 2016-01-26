@@ -156,3 +156,7 @@ func (g *Braintree) Discount() *DiscountGateway {
 func (g *Braintree) WebhookNotification() *WebhookNotificationGateway {
 	return &WebhookNotificationGateway{g}
 }
+
+func (g *Braintree) Settlement() *SettlementGateway {
+	return &SettlementGateway{g}
+}

@@ -21,5 +21,4 @@ type SettlementBatchSummary struct {
 type Settlement struct {
 	XMLName string `xml:"settlement_batch_summary"`
 	Date    string `xml:"settlement_date"`
-	//CustomField string `xml:group_by_custom_field"`
 }
