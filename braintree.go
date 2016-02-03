@@ -18,10 +18,12 @@ const (
 	LibraryVersion = "0.9.0"
 )
 
+var developmentURL = "http://localhost:3000"
+
 func (e Environment) BaseURL() string {
 	switch e {
 	case Development:
-		return "http://localhost:3000"
+		return developmentURL
 	case Sandbox:
 		return "https://sandbox.braintreegateway.com"
 	case Production:
@@ -46,6 +48,13 @@ type Braintree struct {
 	PrivateKey  string
 	Logger      *log.Logger
 	HttpClient  *http.Client
+}
+
+// SetDevelopmentURL sets the URL used in lieu of a Braintree url
+// when using the Development Environment, i.e. all http requests
+// will go to this URL instead of a Braintree URL.
+func SetDevelopmentURL(url string) {
+	developmentURL = url
 }
 
 func (g *Braintree) MerchantURL() string {
