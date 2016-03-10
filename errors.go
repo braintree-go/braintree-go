@@ -22,6 +22,7 @@ type BraintreeError struct {
 	Errors          responseErrors   `xml:"errors"`
 	ErrorMessage    string           `xml:"message"`
 	MerchantAccount *MerchantAccount `xml:",omitempty"`
+	Transaction     Transaction      `xml:"transaction"`
 }
 
 func (e *BraintreeError) Error() string {
