@@ -71,6 +71,14 @@ func (r *Response) settlement() (*SettlementBatchSummary, error) {
 	return &b, nil
 }
 
+func (r *Response) paymentMethod() (*PaymentMethod, error) {
+	var b PaymentMethod
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
 func (r *Response) address() (*Address, error) {
 	var b Address
 	if err := xml.Unmarshal(r.Body, &b); err != nil {

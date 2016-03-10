@@ -4,6 +4,14 @@ import (
 	"os"
 )
 
+const (
+	testFakeValidNonce           = "fake-valid-nonce"
+	testFakeValidVisaNonce       = "fake-valid-visa-nonce"
+	testFakeValidMastercardNonce = "fake-valid-mastercard-nonce"
+	testFakePayPalOneTimeNonce   = "fake-paypal-one-time-nonce"
+	testFakePayPalFutureNonce    = "fake-paypal-future-nonce"
+)
+
 var testCreditCards = map[string]CreditCard{
 	"visa":       CreditCard{Number: "4111111111111111"},
 	"mastercard": CreditCard{Number: "5555555555554444"},

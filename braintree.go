@@ -151,6 +151,10 @@ func (g *Braintree) Subscription() *SubscriptionGateway {
 	return &SubscriptionGateway{g}
 }
 
+func (g *Braintree) PaymentMethod() PaymentMethodGateway {
+	return &PaymentMethodGatewayImpl{g}
+}
+
 func (g *Braintree) Plan() *PlanGateway {
 	return &PlanGateway{g}
 }
