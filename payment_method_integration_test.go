@@ -25,26 +25,28 @@ func TestPaymentMethod(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	creditCard := paymentMethod.(*CreditCard)
 
 	t.Log(paymentMethod)
 
-	if paymentMethod.Token == "" {
+	if creditCard.Token == "" {
 		t.Fatal("invalid token")
 	}
 
 	// Update
 	token := fmt.Sprintf("new_test_token_%d", rand.Int()+1)
-	paymentMethod, err = g.Update(paymentMethod.Token, &PaymentMethod{
+	paymentMethod, err = g.Update(creditCard.Token, &PaymentMethod{
 		PaymentMethodNonce: testFakeValidMastercardNonce,
 		Token:              token,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
+	creditCard = paymentMethod.(*CreditCard)
 
 	t.Log(paymentMethod)
 
-	if paymentMethod.Token == "" {
+	if creditCard.Token == "" {
 		t.Fatal("invalid token")
 	}
 
@@ -58,8 +60,9 @@ func TestPaymentMethod(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	creditCard = paymentMethod.(*CreditCard)
 
-	if paymentMethod.Token != token || paymentMethod.CustomerId != customer.Id {
+	if creditCard.Token != token || creditCard.CustomerId != customer.Id {
 		t.Fatal("Unexpected payment method attributes")
 	}
 

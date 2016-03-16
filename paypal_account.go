@@ -1,8 +1,12 @@
 package braintree
 
-import "time"
+import (
+	"encoding/xml"
+	"time"
+)
 
 type PaypalAccount struct {
+	XMLName       xml.Name       `xml:"paypal-account"`
 	CustomerId    string         `xml:"customer-id,omitempty"`
 	Token         string         `xml:"token,omitempty"`
 	Email         string         `xml:"email,omitempty"`

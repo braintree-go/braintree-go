@@ -1,49 +1,76 @@
 package braintree
 
 type PaymentMethodGateway interface {
-	Create(*PaymentMethod) (*PaymentMethod, error)
+	Create(*PaymentMethod) (interface{}, error)
 	Delete(string) error
-	Find(string) (*PaymentMethod, error)
-	Update(string, *PaymentMethod) (*PaymentMethod, error)
+	Find(string) (interface{}, error)
+	Update(string, *PaymentMethod) (interface{}, error)
 }
 
 type PaymentMethodGatewayImpl struct {
 	*Braintree
 }
 
-func (g *PaymentMethodGatewayImpl) Create(paymentMethod *PaymentMethod) (*PaymentMethod, error) {
+func (g *PaymentMethodGatewayImpl) Create(paymentMethod *PaymentMethod) (interface{}, error) {
 	resp, err := g.execute("POST", "payment_methods", paymentMethod)
 	if err != nil {
 		return nil, err
 	}
-	switch resp.StatusCode {
-	case 201:
-		return resp.paymentMethod()
+
+	if resp.StatusCode != 201 {
+		return nil, &invalidResponseError{resp}
 	}
+
+	if paypalAccount, err := resp.paypalAccount(); err == nil {
+		return paypalAccount, nil
+	}
+
+	if creditCard, err := resp.creditCard(); err == nil {
+		return creditCard, nil
+	}
+
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *PaymentMethodGatewayImpl) Update(token string, paymentMethod *PaymentMethod) (*PaymentMethod, error) {
+func (g *PaymentMethodGatewayImpl) Update(token string, paymentMethod *PaymentMethod) (interface{}, error) {
 	resp, err := g.execute("PUT", "payment_methods/any/"+token, paymentMethod)
 	if err != nil {
 		return nil, err
 	}
-	switch resp.StatusCode {
-	case 200:
-		return resp.paymentMethod()
+
+	if resp.StatusCode != 200 {
+		return nil, &invalidResponseError{resp}
 	}
+
+	if paypalAccount, err := resp.paypalAccount(); err == nil {
+		return paypalAccount, nil
+	}
+
+	if creditCard, err := resp.creditCard(); err == nil {
+		return creditCard, nil
+	}
+
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *PaymentMethodGatewayImpl) Find(token string) (*PaymentMethod, error) {
+func (g *PaymentMethodGatewayImpl) Find(token string) (interface{}, error) {
 	resp, err := g.execute("GET", "payment_methods/any/"+token, nil)
 	if err != nil {
 		return nil, err
 	}
-	switch resp.StatusCode {
-	case 200:
-		return resp.paymentMethod()
+
+	if resp.StatusCode != 200 {
+		return nil, &invalidResponseError{resp}
 	}
+
+	if paypalAccount, err := resp.paypalAccount(); err == nil {
+		return paypalAccount, nil
+	}
+
+	if creditCard, err := resp.creditCard(); err == nil {
+		return creditCard, nil
+	}
+
 	return nil, &invalidResponseError{resp}
 }
 
@@ -52,9 +79,9 @@ func (g *PaymentMethodGatewayImpl) Delete(token string) error {
 	if err != nil {
 		return err
 	}
-	switch resp.StatusCode {
-	case 200:
-		return nil
+
+	if resp.StatusCode != 200 {
+		return &invalidResponseError{resp}
 	}
-	return &invalidResponseError{resp}
+	return nil
 }
