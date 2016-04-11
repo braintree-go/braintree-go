@@ -1,7 +1,7 @@
 package braintree
 
 type PaymentMethodGateway interface {
-	Create(*PaymentMethod) (interface{}, error)
+	Create(*PaymentMethod) (string, interface{}, error)
 	Delete(string) error
 	Find(string) (interface{}, error)
 	Update(string, *PaymentMethod) (interface{}, error)
@@ -11,25 +11,25 @@ type PaymentMethodGatewayImpl struct {
 	*Braintree
 }
 
-func (g *PaymentMethodGatewayImpl) Create(paymentMethod *PaymentMethod) (interface{}, error) {
+func (g *PaymentMethodGatewayImpl) Create(paymentMethod *PaymentMethod) (string, interface{}, error) {
 	resp, err := g.execute("POST", "payment_methods", paymentMethod)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 
 	if resp.StatusCode != 201 {
-		return nil, &invalidResponseError{resp}
+		return "", nil, &invalidResponseError{resp}
 	}
 
 	if paypalAccount, err := resp.paypalAccount(); err == nil {
-		return paypalAccount, nil
+		return paypalAccount.Token, paypalAccount, nil
 	}
 
 	if creditCard, err := resp.creditCard(); err == nil {
-		return creditCard, nil
+		return creditCard.Token, creditCard, nil
 	}
 
-	return nil, &invalidResponseError{resp}
+	return "", nil, &invalidResponseError{resp}
 }
 
 func (g *PaymentMethodGatewayImpl) Update(token string, paymentMethod *PaymentMethod) (interface{}, error) {

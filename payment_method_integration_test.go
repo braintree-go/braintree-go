@@ -18,7 +18,7 @@ func TestPaymentMethod(t *testing.T) {
 	g := testGateway.PaymentMethod()
 
 	// Create
-	paymentMethod, err := g.Create(&PaymentMethod{
+	paymentMethodToken, paymentMethod, err := g.Create(&PaymentMethod{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: testFakeValidNonce,
 	})
@@ -29,7 +29,7 @@ func TestPaymentMethod(t *testing.T) {
 
 	t.Log(paymentMethod)
 
-	if creditCard.Token == "" {
+	if creditCard.Token == "" || creditCard.Token != paymentMethodToken {
 		t.Fatal("invalid token")
 	}
 
