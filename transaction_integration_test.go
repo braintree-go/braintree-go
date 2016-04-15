@@ -2,9 +2,9 @@ package braintree
 
 import (
 	"math/rand"
-	"strconv"
 	"testing"
-	"time"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 func randomAmount() *Decimal {
@@ -79,20 +79,21 @@ func TestTransactionSearch(t *testing.T) {
 		return err
 	}
 
-	ts := strconv.FormatInt(time.Now().Unix(), 10)
-	name := "Erik-" + ts
+	unique := testhelpers.RandomString()
 
-	if err := createTx(randomAmount(), name); err != nil {
+	name0 := "Erik-" + unique
+	if err := createTx(randomAmount(), name0); err != nil {
 		t.Fatal(err)
 	}
 
-	if err := createTx(randomAmount(), "Lionel-"+ts); err != nil {
+	name1 := "Lionel-" + unique
+	if err := createTx(randomAmount(), name1); err != nil {
 		t.Fatal(err)
 	}
 
 	query := new(SearchQuery)
 	f := query.AddTextField("customer-first-name")
-	f.Is = name
+	f.Is = name0
 
 	result, err := txg.Search(query)
 	if err != nil {
@@ -104,8 +105,8 @@ func TestTransactionSearch(t *testing.T) {
 	}
 
 	tx := result.Transactions[0]
-	if x := tx.Customer.FirstName; x != name {
-		t.Log(name)
+	if x := tx.Customer.FirstName; x != name0 {
+		t.Log(name0)
 		t.Fatal(x)
 	}
 }

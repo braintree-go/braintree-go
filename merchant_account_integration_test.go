@@ -2,21 +2,19 @@ package braintree
 
 import (
 	"encoding/xml"
-	"math/rand"
-	"strconv"
 	"testing"
-	"time"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
-var acctId int
+var acctId string
 
 func TestMerchantAccountCreate(t *testing.T) {
-	rand.Seed(time.Now().UTC().UnixNano())
-	acctId = rand.Int() + 1
+	acctId = testhelpers.RandomString()
 	acct := MerchantAccount{
 		MasterMerchantAccountId: testMerchantAccountId,
 		TOSAccepted:             true,
-		Id:                      strconv.Itoa(acctId),
+		Id:                      acctId,
 		Individual: &MerchantAccountPerson{
 			FirstName:   "Kayle",
 			LastName:    "Gishen",
@@ -67,7 +65,7 @@ func TestMerchantAccountCreate(t *testing.T) {
 }
 
 func TestMerchantAccountTransaction(t *testing.T) {
-	if acctId == 0 {
+	if acctId == "" {
 		TestMerchantAccountCreate(t)
 	}
 
@@ -81,7 +79,7 @@ func TestMerchantAccountTransaction(t *testing.T) {
 			ExpirationDate: "05/14",
 		},
 		ServiceFeeAmount:  NewDecimal(500, 2),
-		MerchantAccountId: strconv.Itoa(acctId),
+		MerchantAccountId: acctId,
 	})
 
 	t.Log(tx)
