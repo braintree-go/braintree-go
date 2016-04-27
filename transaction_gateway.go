@@ -75,6 +75,45 @@ func (g *TransactionGateway) Void(id string) (*Transaction, error) {
 	return nil, &invalidResponseError{resp}
 }
 
+// CancelRelease cancels a pending release of a transaction with the given id from escrow.
+func (g *TransactionGateway) CancelRelease(id string) (*Transaction, error) {
+	resp, err := g.execute("PUT", "transactions/"+id+"/cancel_release", nil)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.transaction()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
+// ReleaseFromEscrow submits the transaction with the given id for release from escrow.
+func (g *TransactionGateway) ReleaseFromEscrow(id string) (*Transaction, error) {
+	resp, err := g.execute("PUT", "transactions/"+id+"/release_from_escrow", nil)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.transaction()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
+// HoldInEscrow holds the transaction with the given id for escrow.
+func (g *TransactionGateway) HoldInEscrow(id string) (*Transaction, error) {
+	resp, err := g.execute("PUT", "transactions/"+id+"/hold_in_escrow", nil)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.transaction()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
 // A transaction can be refunded if it is settled or settling.
 // If the transaction has not yet begun settlement, use Void() instead.
 // If you do not specify an amount to refund, the entire transaction amount will be refunded.
