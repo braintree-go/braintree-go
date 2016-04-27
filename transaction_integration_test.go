@@ -490,3 +490,127 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestHoldInEscrowOnCreate(t *testing.T) {
+	amount := NewDecimal(6200, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccountId,
+		ServiceFeeAmount:  amount,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+			HoldInEscrow:        true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.HoldPending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.HoldPending, txn.EscrowStatus)
+	}
+}
+
+func TestHoldInEscrowAfterSale(t *testing.T) {
+	amount := NewDecimal(6300, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccountId,
+		ServiceFeeAmount:  amount,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	id := txn.Id
+	txn, err = testGateway.Transaction().HoldInEscrow(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.HoldPending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.HoldPending, txn.EscrowStatus)
+	}
+}
+
+// func TestReleaseFromEscrow(t *testing.T) {
+// 	amount := NewDecimal(6400, 2)
+// 	txn, err := testGateway.Transaction().Create(&Transaction{
+// 		Type:   "sale",
+// 		Amount: amount,
+// 		CreditCard: &CreditCard{
+// 			Number:         testCreditCards["visa"].Number,
+// 			ExpirationDate: "05/14",
+// 		},
+// 		MerchantAccountId: testSubMerchantAccountId,
+// 		ServiceFeeAmount:  amount,
+// 	})
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	id := txn.Id
+// 	_, err = escrow(id)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	txn, err = testGateway.Transaction().ReleaseFromEscrow(id)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	if txn.EscrowStatus != EscrowStatus.ReleasePending {
+// 		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.ReleasePending, txn.EscrowStatus)
+// 	}
+// }
+//
+// func TestCancelRelease(t *testing.T) {
+// 	amount := NewDecimal(6500, 2)
+// 	txn, err := testGateway.Transaction().Create(&Transaction{
+// 		Type:   "sale",
+// 		Amount: amount,
+// 		CreditCard: &CreditCard{
+// 			Number:         testCreditCards["visa"].Number,
+// 			ExpirationDate: "05/14",
+// 		},
+// 		MerchantAccountId: testSubMerchantAccountId,
+// 		ServiceFeeAmount:  amount,
+// 	})
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	t.Logf("merchant url: %s", testGateway.MerchantURL())
+// 	id := txn.Id
+// 	_, err = escrow(id)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	_, err = testGateway.Transaction().ReleaseFromEscrow(id)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	txn, err = testGateway.Transaction().CancelRelease(id)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	if txn.EscrowStatus != EscrowStatus.ReleasePending {
+// 		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.ReleasePending, txn.EscrowStatus)
+// 	}
+// }
+//
+// func escrow(id string) (*Transaction, error) {
+// 	resp, err := testGateway.Transaction().execute("PUT", "transactions/"+id+"/escrow", nil)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	switch resp.StatusCode {
+// 	case 200:
+// 		return resp.transaction()
+// 	}
+// 	return nil, &invalidResponseError{resp}
+// }
