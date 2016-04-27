@@ -725,3 +725,52 @@ func TestTransactionCreateWithCustomFields(t *testing.T) {
 		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
 	}
 }
+
+func TestHoldInEscrowOnCreate(t *testing.T) {
+	amount := NewDecimal(6200, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccountId,
+		ServiceFeeAmount:  amount,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+			HoldInEscrow:        true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.HoldPending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.HoldPending, txn.EscrowStatus)
+	}
+}
+
+func TestHoldInEscrowAfterSale(t *testing.T) {
+	amount := NewDecimal(6300, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccountId,
+		ServiceFeeAmount:  amount,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	id := txn.Id
+	txn, err = testGateway.Transaction().HoldInEscrow(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.HoldPending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.HoldPending, txn.EscrowStatus)
+	}
+}
