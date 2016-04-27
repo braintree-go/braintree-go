@@ -7,15 +7,17 @@ import (
 	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
-type EscrowStatus string
-
-const (
-	HoldPending    EscrowStatus = "hold_pending"
-	Held           EscrowStatus = "held"
-	ReleasePending EscrowStatus = "release_pending"
-	Released       EscrowStatus = "released"
-	Refunded       EscrowStatus = "refunded"
-	Unrecognized   EscrowStatus = "unrecognized"
+var (
+	EscrowStatus = struct {
+		HoldPending, Held, ReleasePending, Released, Refunded, Unrecognized string
+	}{
+		HoldPending:    "hold_pending",
+		Held:           "held",
+		ReleasePending: "release_pending",
+		Released:       "released",
+		Refunded:       "refunded",
+		Unrecognized:   "unrecognized",
+	}
 )
 
 type Transaction struct {
@@ -47,7 +49,7 @@ type Transaction struct {
 	ProcessorResponseText       string                    `xml:"processor-response-text,omitempty"`
 	ProcessorAuthorizationCode  string                    `xml:"processor-authorization-code,omitempty"`
 	SettlementBatchId           string                    `xml:"settlement-batch-id,omitempty"`
-	EscrowStatus                EscrowStatus              `xml:"escrow-status,omitempty"`
+	EscrowStatus                string                    `xml:"escrow-status,omitempty"`
 	PaymentInstrumentType       string                    `xml:"payment-instrument-type,omitempty"`
 	PayPalDetails               *PayPalDetails            `xml:"paypal,omitempty"`
 	AdditionalProcessorResponse string                    `xml:"additional-processor-response,omitempty"`
