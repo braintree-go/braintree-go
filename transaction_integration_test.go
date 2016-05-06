@@ -492,6 +492,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 }
 
 func TestHoldInEscrowOnCreate(t *testing.T) {
+	testSubMerchantAccountId := getSubMerchantAccount(t)
 	amount := NewDecimal(6200, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
@@ -516,6 +517,7 @@ func TestHoldInEscrowOnCreate(t *testing.T) {
 }
 
 func TestHoldInEscrowAfterSale(t *testing.T) {
+	testSubMerchantAccountId := getSubMerchantAccount(t)
 	amount := NewDecimal(6300, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
@@ -541,6 +543,7 @@ func TestHoldInEscrowAfterSale(t *testing.T) {
 }
 
 func TestReleaseFromEscrow(t *testing.T) {
+	testSubMerchantAccountId := getSubMerchantAccount(t)
 	amount := NewDecimal(6400, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
@@ -575,6 +578,7 @@ func TestReleaseFromEscrow(t *testing.T) {
 }
 
 func TestCancelRelease(t *testing.T) {
+	testSubMerchantAccountId := getSubMerchantAccount(t)
 	amount := NewDecimal(6500, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
@@ -623,4 +627,48 @@ func settle(t *testing.T, id string) error {
 		t.Fatalf("expected Status to be submitted_for_settlement, settling, or settled, was %s", txn.Status)
 	}
 	return nil
+}
+
+var subMerchantAccountID string
+
+func getSubMerchantAccount(t *testing.T) string {
+	if subMerchantAccountID == "" {
+		rand.Seed(time.Now().UTC().UnixNano())
+		acctId = rand.Int() + 1
+		acct := MerchantAccount{
+			MasterMerchantAccountId: testMerchantAccountId,
+			TOSAccepted:             true,
+			Id:                      strconv.Itoa(acctId),
+			Individual: &MerchantAccountPerson{
+				FirstName:   "Kayle",
+				LastName:    "Gishen",
+				Email:       "kayle.gishen@example.com",
+				Phone:       "5556789012",
+				DateOfBirth: "1-1-1989",
+				Address: &Address{
+					StreetAddress:   "1 E Main St",
+					ExtendedAddress: "Suite 404",
+					Locality:        "Chicago",
+					Region:          "IL",
+					PostalCode:      "60622",
+				},
+			},
+			FundingOptions: &MerchantAccountFundingOptions{
+				Destination: FUNDING_DEST_MOBILE_PHONE,
+				MobilePhone: "5552344567",
+			},
+		}
+
+		merchantAccount, err := testGateway.MerchantAccount().Create(&acct)
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if merchantAccount.Id == "" {
+			t.Fatal("invalid merchant account id")
+		}
+		subMerchantAccountID = merchantAccount.Id
+	}
+	return subMerchantAccountID
 }

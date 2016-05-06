@@ -9,7 +9,6 @@ Before running the integration tests with `go test`, make sure the following env
 ```
 export BRAINTREE_MERCH_ID={your-merchant-id}
 export BRAINTREE_MERCH_ACCT_ID={your-merchant-account-id}
-export BRAINTREE_SUB_MERCH_ACCT_ID={your-sub-merchant-account-id}
 export BRAINTREE_PUB_KEY={your-public-key}
 export BRAINTREE_PRIV_KEY={your-private-key}
 ```
