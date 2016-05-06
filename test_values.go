@@ -32,4 +32,3 @@ var testTimeZone = func() *time.Location {
 }()
 
 var testMerchantAccountId = os.Getenv("BRAINTREE_MERCH_ACCT_ID")
-var testSubMerchantAccountId = os.Getenv("BRAINTREE_SUB_MERCH_ACCT_ID")
