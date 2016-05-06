@@ -551,12 +551,17 @@ func TestReleaseFromEscrow(t *testing.T) {
 		},
 		MerchantAccountId: testSubMerchantAccountId,
 		ServiceFeeAmount:  amount,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+			HoldInEscrow:        true,
+		},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	id := txn.Id
-	_, err = escrow(id)
+	// _, err = escrow(id)
+	err = settle(t, id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -580,37 +585,42 @@ func TestCancelRelease(t *testing.T) {
 		},
 		MerchantAccountId: testSubMerchantAccountId,
 		ServiceFeeAmount:  amount,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+			HoldInEscrow:        true,
+		},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("merchant url: %s", testGateway.MerchantURL())
 	id := txn.Id
-	_, err = escrow(id)
+	err = settle(t, id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = testGateway.Transaction().ReleaseFromEscrow(id)
-	if err != nil {
-		t.Fatal(err)
-	}
-	txn, err = testGateway.Transaction().CancelRelease(id)
+	txn, err = testGateway.Transaction().ReleaseFromEscrow(id)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if txn.EscrowStatus != EscrowStatus.ReleasePending {
 		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.ReleasePending, txn.EscrowStatus)
 	}
+	txn, err = testGateway.Transaction().CancelRelease(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.Held {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.Held, txn.EscrowStatus)
+	}
 }
 
-func escrow(id string) (*Transaction, error) {
-	resp, err := testGateway.Transaction().execute("PUT", "transactions/"+id+"/escrow", nil)
+func settle(t *testing.T, id string) error {
+	txn, err := testGateway.Transaction().Settle(id)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	switch resp.StatusCode {
-	case 200:
-		return resp.transaction()
+	if txn.Status != "submitted_for_settlement" && txn.Status != "settling" && txn.Status != "settled" {
+		t.Fatalf("expected Status to be submitted_for_settlement, settling, or settled, was %s", txn.Status)
 	}
-	return nil, &invalidResponseError{resp}
+	return nil
 }
