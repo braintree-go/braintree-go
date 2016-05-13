@@ -14,6 +14,8 @@ env:
     BRAINTREE_PRIV_KEY=66062a3876e2dc298f2195f0bf173f5a
     BRAINTREE_CSE_KEY=MIIBCgKCAQEAvs9I/M9J2q82+v2xedowoF4MOExF4zkQRZ7DIPg9Fh7Y9N3Cx0Xq+vxPrUvgJpGz0zbmlHzQFxfhvKmm1tE1nh1KFdk1ALmBVmWgYDVIH+16hk6KW2TQQncqV96DZbfiZroHAPNKeRlF7lqQrGFTSE0gsedJnsvgPUBsFFayLs5JPlzU5O9jUGVctNf1f6pwK8G0LaqKTvXme5p0Hc4AZWguX/AN6fQQYCRVeRG0iQaJFAtTmtB1dFG7rabSCTeI2Zv4SXyVPAkEOqqjG6AS3Mpn/o1qQZx9deD7jzFegNX+L8Z7G65haPBm/BRoVjfZL7MiK1eOQI+/0Nw56tOdXwIDAQAB
 
+go_import_path: github.com/lionelbarrow/braintree-go
+
 test:
   - go vet ./...
   - go test -v ./...
