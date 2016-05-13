@@ -1,3 +1,19 @@
+/*
+
+  This sample application shows how to use Braintree Go to process
+	subscriptions in a safe, PCI-compliant way. To use it yourself, export your
+	Braintree sandbox credentials as these environmental variables:
+
+   export BRAINTREE_MERCH_ID={your-merchant-id}
+   export BRAINTREE_PUB_KEY={your-public-key}
+   export BRAINTREE_PRIV_KEY={your-private-key}
+   export BRAINTREE_CSE_KEY={your-cse-key}
+
+  For a list of testing values and expected behaviors, see
+  https://www.braintreepayments.com/docs/ruby/reference/sandbox
+
+*/
+
 package main
 
 import (
@@ -5,29 +21,25 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/lionelbarrow/braintree-go"
 )
 
 func main() {
 	bt := braintree.New(
-		braintree.Sandbox,  // We're testing, so this is the env
-		"<YourMechID>",     // Mech ID
-		"<YourPublicKey>",  // Public Key
-		"<YourPrivateKey>", // Private key
+		braintree.Sandbox,
+		os.Getenv("BRAINTREE_MERCH_ID"),
+		os.Getenv("BRAINTREE_PUB_KEY"),
+		os.Getenv("BRAINTREE_PRIV_KEY"),
 	)
 
-	// Basic serving of payment form
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// We generate a clientToken for the client side JS
 		clientToken, err := bt.ClientToken().Generate()
 		if err != nil {
 			log.Fatal(err)
 		}
-		// Create a template.
-		t := template.New("form.html")
-		// Parse the template file.
-		t, _ = t.ParseFiles("form.html")
+		t := template.Must(template.ParseFiles("form.html"))
 		w.WriteHeader(http.StatusOK)
 		err = t.Execute(w, clientToken)
 		if err != nil {
@@ -35,9 +47,7 @@ func main() {
 		}
 	})
 
-	// Handle the checkout
 	http.HandleFunc("/checkout", func(w http.ResponseWriter, r *http.Request) {
-		// paymentMethodNonce is generated at client side by the Braintree JS
 		paymentMethodNonce := r.PostFormValue("payment_method_nonce")
 		if paymentMethodNonce == "" {
 			log.Fatal("Payment method nonce is empty")
@@ -77,10 +87,9 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// Hooray!
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(fmt.Sprintf("Success! Subscription #%s created with user ID %s", subscription.Id, customer.Id)))
 	})
-	http.ListenAndServe(":8080", nil)
 
+	http.ListenAndServe(":8080", nil)
 }
