@@ -121,7 +121,7 @@ type TransactionOptions struct {
 	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
 	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
 	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
-	HoldInEscrow                     bool `xml:"hold-in-escrow,omniempty"`
+	HoldInEscrow                     bool `xml:"hold-in-escrow,omitempty"`
 }
 
 type TransactionSearchResult struct {
