@@ -132,7 +132,7 @@ type InvalidResponseError interface {
 }
 
 func (e *invalidResponseError) Error() string {
-	return fmt.Sprintf("braintree returned invalid response (%d)", e.resp.StatusCode)
+	return fmt.Sprintf("braintree returned invalid response - status(%d) body(%s)", e.resp.StatusCode, string(e.resp.Body))
 }
 
 func (e *invalidResponseError) Response() *Response {
