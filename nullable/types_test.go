@@ -9,7 +9,7 @@ func TestNullInt64UnmarshalText(t *testing.T) {
 	tests := []struct {
 		in          []byte
 		out         NullInt64
-		sholudError bool
+		shouldError bool
 	}{
 		{[]byte(""), NewNullInt64(0, false), false},
 		{[]byte("10"), NewNullInt64(10, true), false},
@@ -20,7 +20,7 @@ func TestNullInt64UnmarshalText(t *testing.T) {
 		n := NullInt64{}
 		err := n.UnmarshalText(tt.in)
 
-		if tt.sholudError {
+		if tt.shouldError {
 			if err == nil {
 				t.Errorf("expected UnmarshalText(%q) => to error, but it did not", tt.in)
 			}
@@ -58,7 +58,7 @@ func TestNullBoolUnmarshalText(t *testing.T) {
 	tests := []struct {
 		in          []byte
 		out         NullBool
-		sholudError bool
+		shouldError bool
 	}{
 		{[]byte(""), NewNullBool(false, false), false},
 		{[]byte("true"), NewNullBool(true, true), false},
@@ -69,7 +69,7 @@ func TestNullBoolUnmarshalText(t *testing.T) {
 		n := NullBool{}
 		err := n.UnmarshalText(tt.in)
 
-		if tt.sholudError {
+		if tt.shouldError {
 			if err == nil {
 				t.Errorf("expected UnmarshalText(%q) => to error, but it did not", tt.in)
 			}

@@ -49,6 +49,7 @@ func TestDecimalMarshalText(t *testing.T) {
 		{NewDecimal(250, -2), []byte("25000")},
 		{NewDecimal(2, 0), []byte("2")},
 		{NewDecimal(0, 2), []byte("0.00")},
+		{NewDecimal(5, 2), []byte("0.05")},
 		{NewDecimal(250, 2), []byte("2.50")},
 		{NewDecimal(4586, 2), []byte("45.86")},
 		{NewDecimal(-5504, 2), []byte("-55.04")},
@@ -57,11 +58,10 @@ func TestDecimalMarshalText(t *testing.T) {
 	for _, tt := range tests {
 		b, err := tt.in.MarshalText()
 		if err != nil {
-			t.Errorf("expected %+v.MarshaText() => to not error, but it did with %s", tt.in, err)
+			t.Errorf("expected %+v.MarshalText() => to not error, but it did with %s", tt.in, err)
 		}
-
 		if string(tt.out) != string(b) {
-			t.Errorf("%+v.MarshaText() => %s, want %s", tt.in, b, tt.out)
+			t.Errorf("%+v.MarshalText() => %s, want %s", tt.in, b, tt.out)
 		}
 	}
 }

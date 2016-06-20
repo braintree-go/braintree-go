@@ -29,7 +29,7 @@ func (d *Decimal) MarshalText() (text []byte, err error) {
 	} else {
 		str := strconv.FormatInt(d.Unscaled, 10)
 		if len(str) < d.Scale {
-			str = str + strings.Repeat("0", d.Scale)
+			str = strings.Repeat("0", d.Scale) + str
 		}
 		b.WriteString(str[:len(str)-d.Scale])
 		b.WriteString(".")
