@@ -1,8 +1,9 @@
 package braintree
 
 import (
-	"github.com/lionelbarrow/braintree-go/nullable"
 	"time"
+
+	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
 type Transaction struct {
@@ -21,6 +22,7 @@ type Transaction struct {
 	Customer                   *Customer            `xml:"customer,omitempty"`
 	BillingAddress             *Address             `xml:"billing,omitempty"`
 	ShippingAddress            *Address             `xml:"shipping,omitempty"`
+	DeviceData                 string               `xml:"device_data,omitempty"`
 	Options                    *TransactionOptions  `xml:"options,omitempty"`
 	ServiceFeeAmount           *Decimal             `xml:"service-fee-amount,attr,omitempty"`
 	CreatedAt                  *time.Time           `xml:"created-at,omitempty"`
