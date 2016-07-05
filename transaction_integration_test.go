@@ -194,6 +194,11 @@ func TestAllTransactionFields(t *testing.T) {
 			AddBillingAddressToPaymentMethod: true,
 			StoreShippingAddressInVault:      true,
 		},
+		Descriptor: &Descriptor{
+			Name:  "braintreepmt*testingtx",
+			Phone: "877-434-2894",
+			Url:   "braintree.com",
+		},
 	}
 
 	tx2, err := testGateway.Transaction().Create(tx)
@@ -245,6 +250,15 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 	if tx2.Status != "submitted_for_settlement" {
 		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
+	}
+	if tx.Descriptor.Name != tx2.Descriptor.Name {
+		t.Fatalf("expected descriptor name to be %s, but got %s", tx.Descriptor.Name, tx2.Descriptor.Name)
+	}
+	if tx.Descriptor.Phone != tx2.Descriptor.Phone {
+		t.Fatalf("expected descriptor phone to be %s, but got %s", tx.Descriptor.Phone, tx2.Descriptor.Phone)
+	}
+	if tx.Descriptor.Url != tx2.Descriptor.Url {
+		t.Fatalf("expected descriptor url to be %s, but got %s", tx.Descriptor.Url, tx2.Descriptor.Url)
 	}
 }
 

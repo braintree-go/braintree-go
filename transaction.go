@@ -34,6 +34,13 @@ type Transaction struct {
 	ProcessorResponseText      string               `xml:"processor-response-text,omitempty"`
 	ProcessorAuthorizationCode string               `xml:"processor-authorization-code,omitempty"`
 	SettlementBatchId          string               `xml:"settlement-batch-id,omitempty"`
+	Descriptor                 *Descriptor          `xml:"descriptor,omitempty"`
+}
+
+type Descriptor struct {
+	Name  string `xml:"name,omitempty"`
+	Phone string `xml:"phone,omitmepty"`
+	Url   string `xml:"url,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
@@ -82,10 +89,6 @@ type Transaction struct {
 //   </subscription>
 //   <add-ons type="array"/>
 //   <discounts type="array"/>
-//   <descriptor>
-//     <name nil="true"></name>
-//     <phone nil="true"></phone>
-//   </descriptor>
 //   <recurring type="boolean">true</recurring>
 //   <channel nil="true"></channel>
 //   <escrow-status nil="true"></escrow-status>
