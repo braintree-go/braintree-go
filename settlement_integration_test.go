@@ -35,7 +35,7 @@ func TestSettlementBatch(t *testing.T) {
 	}
 
 	// Settle
-	tx, err = testGateway.Transaction().Settle(tx.Id)
+	tx, err = testGateway.Testing().Settle(tx.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
