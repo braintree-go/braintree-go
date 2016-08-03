@@ -5,6 +5,21 @@ import (
 	"time"
 )
 
+const (
+	ThreeDSecureStatusUnsupportedCard                      = "unsupported_card"
+	ThreeDSecureStatusLookupError                          = "lookup_error"
+	ThreeDSecureStatusLookupEnrolled                       = "lookup_enrolled"
+	ThreeDSecureStatusLookupNotEnrolled                    = "lookup_not_enrolled"
+	ThreeDSecureStatusAuthSuccessfulIssuerNotParticipating = "authenticate_successful_issuer_not_participating"
+	ThreeDSecureStatusAuthUnavailable                      = "authentication_unavailable"
+	ThreeDSecureStatusAuthSignatureVerificationFailed      = "authenticate_signature_verification_failed"
+	ThreeDSecureStatusAuthSuccessful                       = "authenticate_successful"
+	ThreeDSecureStatusAuthAttemptSuccessful                = "authenticate_attempt_successful"
+	ThreeDSecureStatusAuthFailed                           = "authenticate_attempt_successful"
+	ThreeDSecureStatusAuthUnableToAuthenticate             = "authenticate_unable_to_authenticate"
+	ThreeDSecureStatusAuthError                            = "authenticate_error"
+)
+
 type Transaction struct {
 	XMLName                    string               `xml:"transaction"`
 	Id                         string               `xml:"id,omitempty"`
@@ -33,6 +48,7 @@ type Transaction struct {
 	ProcessorResponseText      string               `xml:"processor-response-text,omitempty"`
 	ProcessorAuthorizationCode string               `xml:"processor-authorization-code,omitempty"`
 	SettlementBatchId          string               `xml:"settlement-batch-id,omitempty"`
+	ThreeDSecureInfo           *ThreeDSecureInfo    `xml:"three-d-secure-info,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
@@ -94,11 +110,16 @@ type Transactions struct {
 	Transaction []*Transaction `xml:"transaction"`
 }
 
+type Transaction3DS struct {
+	Required bool `xml:"required,omitempty"`
+}
+
 type TransactionOptions struct {
-	SubmitForSettlement              bool `xml:"submit-for-settlement,omitempty"`
-	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
-	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
-	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
+	SubmitForSettlement              bool            `xml:"submit-for-settlement,omitempty"`
+	StoreInVault                     bool            `xml:"store-in-vault,omitempty"`
+	AddBillingAddressToPaymentMethod bool            `xml:"add-billing-address-to-payment-method,omitempty"`
+	StoreShippingAddressInVault      bool            `xml:"store-shipping-address-in-vault,omitempty"`
+	ThreeDSecure                     *Transaction3DS `xml:"three_d_secure,omitempty`
 }
 
 type TransactionSearchResult struct {
@@ -107,4 +128,11 @@ type TransactionSearchResult struct {
 	PageSize          *nullable.NullInt64 `xml:"page-size"`
 	TotalItems        *nullable.NullInt64 `xml:"total-items"`
 	Transactions      []*Transaction      `xml:"transaction"`
+}
+
+type ThreeDSecureInfo struct {
+	Enrolled               bool   `xml:"enrolled"`
+	LiabilityShiftPossible bool   `xml:"liability-shift-possible"`
+	LiabilityShifted       bool   `xml:"liability-shifted`
+	Status                 string `xml:"status"`
 }
