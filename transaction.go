@@ -127,7 +127,7 @@ type TransactionOptions struct {
 	StoreInVault                     bool            `xml:"store-in-vault,omitempty"`
 	AddBillingAddressToPaymentMethod bool            `xml:"add-billing-address-to-payment-method,omitempty"`
 	StoreShippingAddressInVault      bool            `xml:"store-shipping-address-in-vault,omitempty"`
-	ThreeDSecure                     *Transaction3DS `xml:"three_d_secure,omitempty`
+	ThreeDSecure                     *Transaction3DS `xml:"three-d-secure,omitempty`
 }
 
 type TransactionSearchResult struct {
