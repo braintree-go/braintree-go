@@ -20,6 +20,14 @@ const (
 	ThreeDSecureStatusAuthError                            = "authenticate_error"
 )
 
+const (
+	ThreeDSecureEnrollementYes = "Y"
+	ThreeDSecureEnrollementNo = "N"
+	ThreeDSecureEnrollementUnavailable = "U"
+	ThreeDSecureEnrollementBypass = "B"
+	ThreeDSecureEnrollementRequestFailure = "E"
+)
+
 type Transaction struct {
 	XMLName                    string               `xml:"transaction"`
 	Id                         string               `xml:"id,omitempty"`
@@ -131,7 +139,7 @@ type TransactionSearchResult struct {
 }
 
 type ThreeDSecureInfo struct {
-	Enrolled               bool   `xml:"enrolled"`
+	Enrolled               string `xml:"enrolled"`
 	LiabilityShiftPossible bool   `xml:"liability-shift-possible"`
 	LiabilityShifted       bool   `xml:"liability-shifted`
 	Status                 string `xml:"status"`
