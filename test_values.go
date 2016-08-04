@@ -9,10 +9,10 @@ var testCreditCards = map[string]CreditCard{
 	"mastercard": CreditCard{Number: "5555555555554444"},
 	"discover":   CreditCard{Number: "6011111111111117"},
 	// See https://developers.braintreepayments.com/reference/general/testing/python#3d-secure
-	"visa_3ds_success": CreditCard{Number: "4000000000000002"},
+	"visa_3ds_success":       CreditCard{Number: "4000000000000002"},
 	"mastercard_3ds_success": CreditCard{Number: "5200000000000007"},
-	"visa_3ds_fail": CreditCard{Number: "4000000000000028"},
-	"mastercard_3ds_fail": CreditCard{Number: "5200000000000023"},
+	"visa_3ds_fail":          CreditCard{Number: "4000000000000028"},
+	"mastercard_3ds_fail":    CreditCard{Number: "5200000000000023"},
 }
 
 var testGateway = New(

@@ -21,10 +21,10 @@ const (
 )
 
 const (
-	ThreeDSecureEnrollementYes = "Y"
-	ThreeDSecureEnrollementNo = "N"
-	ThreeDSecureEnrollementUnavailable = "U"
-	ThreeDSecureEnrollementBypass = "B"
+	ThreeDSecureEnrollementYes            = "Y"
+	ThreeDSecureEnrollementNo             = "N"
+	ThreeDSecureEnrollementUnavailable    = "U"
+	ThreeDSecureEnrollementBypass         = "B"
 	ThreeDSecureEnrollementRequestFailure = "E"
 )
 

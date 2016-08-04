@@ -495,10 +495,10 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 	amount := NewDecimal(1007, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
-		Type:       "sale",
-		Amount:     amount,
+		Type:   "sale",
+		Amount: amount,
 		CreditCard: &CreditCard{
-			Number: testCreditCards["visa_3ds_success"].Number,
+			Number:         testCreditCards["visa_3ds_success"].Number,
 			ExpirationDate: "01/2020",
 		},
 		Options: &TransactionOptions{
@@ -511,7 +511,7 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if !txn.ThreeDSecureInfo.Enrolled {
+	if txn.ThreeDSecureInfo.Enrolled != ThreeDSecureEnrollementYes {
 		t.Fatalf("Card should be enrolled")
 	}
 	if txn.ThreeDSecureInfo.LiabilityShifted {
@@ -541,10 +541,10 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 	amount := NewDecimal(1007, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
-		Type:       "sale",
-		Amount:     amount,
+		Type:   "sale",
+		Amount: amount,
 		CreditCard: &CreditCard{
-			Number: testCreditCards["mastercard_3ds_fail"].Number,
+			Number:         testCreditCards["mastercard_3ds_fail"].Number,
 			ExpirationDate: "01/2020",
 		},
 		Options: &TransactionOptions{
@@ -557,7 +557,7 @@ func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if !txn.ThreeDSecureInfo.Enrolled {
+	if txn.ThreeDSecureInfo.Enrolled != ThreeDSecureEnrollementYes {
 		t.Fatalf("Card should be enrolled")
 	}
 	if txn.ThreeDSecureInfo.LiabilityShifted {
