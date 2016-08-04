@@ -501,6 +501,11 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 			Number: testCreditCards["visa_3ds_success"].Number,
 			ExpirationDate: "01/2020",
 		},
+		Options: &TransactionOptions{
+			ThreeDSecure: &Transaction3DS{
+				Required: true,
+			},
+		},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -541,6 +546,11 @@ func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 		CreditCard: &CreditCard{
 			Number: testCreditCards["mastercard_3ds_fail"].Number,
 			ExpirationDate: "01/2020",
+		},
+		Options: &TransactionOptions{
+			ThreeDSecure: &Transaction3DS{
+				Required: true,
+			},
 		},
 	})
 	if err != nil {
