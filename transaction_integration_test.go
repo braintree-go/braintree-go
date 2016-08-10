@@ -491,3 +491,38 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestTransactionCreateSettleFromNonceCheckCreditCardDetails(t *testing.T) {
+	amount := NewDecimal(10000, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:               "sale",
+		Amount:             amount,
+		PaymentMethodNonce: "fake-valid-maestro-nonce",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.PaymentInstrumentType != "credit_card" {
+		t.Fatalf("Returned payment instrument doesn't match input, expected %q, got %q",
+			"credit_card", txn.PaymentInstrumentType)
+	}
+	if txn.CreditCard.CardType != "Maestro" {
+		t.Fatalf("Returned credit card detail doesn't match input, expected %q, got %q",
+			"Maestro", txn.CreditCard.CardType)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().Settle(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "settled" {
+		t.Fatal(txn.Status)
+	}
+}
