@@ -1,9 +1,8 @@
 package braintree
 
 import (
-	"time"
-
 	"github.com/lionelbarrow/braintree-go/nullable"
+	"time"
 )
 
 type Transaction struct {
