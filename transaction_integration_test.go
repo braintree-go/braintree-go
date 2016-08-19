@@ -187,6 +187,7 @@ func TestAllTransactionFields(t *testing.T) {
 			Region:        "IL",
 			PostalCode:    "60637",
 		},
+		DeviceData: `{"device_session_id": "dsi_1234", "fraud_merchant_id": "fmi_1234", "correlation_id": "ci_1234"}`,
 		Options: &TransactionOptions{
 			SubmitForSettlement:              true,
 			StoreInVault:                     true,
