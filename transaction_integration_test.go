@@ -127,6 +127,13 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	if err.Error() != "Card Issuer Declined CVV" {
 		t.Fatal(err)
 	}
+	if err.(*BraintreeError).Transaction.ProcessorResponseCode != 2010 {
+		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be 2010, but got %s", err.(*BraintreeError).Transaction.ProcessorResponseCode)
+	}
+
+	if err.(*BraintreeError).Transaction.AdditionalProcessorResponse != "2010 : Card Issuer Declined CVV" {
+		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be `2010 : Card Issuer Declined CVV`, but got %s", err.(*BraintreeError).Transaction.AdditionalProcessorResponse)
+	}
 }
 
 func TestFindTransaction(t *testing.T) {
@@ -244,6 +251,18 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 	if tx2.Status != "submitted_for_settlement" {
 		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
+	}
+	if tx2.AdditionalProcessorResponse != "" {
+		t.Fatalf("expected tx2.AdditionalProcessorResponse to be empty, but got %s", tx2.AdditionalProcessorResponse)
+	}
+	if tx2.RiskData == nil {
+		t.Fatal("expected tx2.RiskData not to be empty")
+	}
+	if tx2.RiskData.ID == "" {
+		t.Fatal("expected tx2.RiskData.ID not to be empty")
+	}
+	if tx2.RiskData.Decision != "Approve" {
+		t.Fatalf("expected tx2.RiskData.Decision to be Approve, but got %s", tx2.RiskData.Decision)
 	}
 }
 
