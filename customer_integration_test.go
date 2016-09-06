@@ -3,7 +3,7 @@ package braintree
 import (
 	"testing"
 
-	"github.com/brianpowell/braintree-go/testhelpers"
+	"github.com/CompleteSet/braintree-go/testhelpers"
 )
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.

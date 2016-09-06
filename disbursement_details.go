@@ -2,7 +2,7 @@ package braintree
 
 import (
 	"encoding/xml"
-	"github.com/brianpowell/braintree-go/nullable"
+	"github.com/CompleteSet/braintree-go/nullable"
 )
 
 type DisbursementDetails struct {

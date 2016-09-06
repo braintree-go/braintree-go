@@ -2,7 +2,7 @@ package braintree
 
 import (
 	"encoding/xml"
-	"github.com/brianpowell/braintree-go/date"
+	"github.com/CompleteSet/braintree-go/date"
 )
 
 type Disbursement struct {

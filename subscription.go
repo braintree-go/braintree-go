@@ -1,6 +1,6 @@
 package braintree
 
-import "github.com/brianpowell/braintree-go/nullable"
+import "github.com/CompleteSet/braintree-go/nullable"
 
 const (
 	SubscriptionStatusActive       = "Active"

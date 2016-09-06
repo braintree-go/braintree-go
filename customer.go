@@ -1,6 +1,6 @@
 package braintree
 
-import "github.com/brianpowell/braintree-go/nullable"
+import "github.com/CompleteSet/braintree-go/nullable"
 
 type Customer struct {
 	XMLName     string       `xml:"customer" json:"customer" bson:"customer"`
