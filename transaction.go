@@ -1,38 +1,38 @@
 package braintree
 
 import (
-	"github.com/lionelbarrow/braintree-go/nullable"
+	"github.com/brianpowell/braintree-go/nullable"
 	"time"
 )
 
 type Transaction struct {
-	XMLName                    string               `xml:"transaction"`
-	Id                         string               `xml:"id,omitempty"`
-	CustomerID                 string               `xml:"customer-id,omitempty"`
-	Status                     string               `xml:"status,omitempty"`
-	Type                       string               `xml:"type,omitempty"`
-	Amount                     *Decimal             `xml:"amount"`
-	OrderId                    string               `xml:"order-id,omitempty"`
-	PaymentMethodToken         string               `xml:"payment-method-token,omitempty"`
-	PaymentMethodNonce         string               `xml:"payment-method-nonce,omitempty"`
-	MerchantAccountId          string               `xml:"merchant-account-id,omitempty"`
-	PlanId                     string               `xml:"plan-id,omitempty"`
-	CreditCard                 *CreditCard          `xml:"credit-card,omitempty"`
-	Customer                   *Customer            `xml:"customer,omitempty"`
-	BillingAddress             *Address             `xml:"billing,omitempty"`
-	ShippingAddress            *Address             `xml:"shipping,omitempty"`
-	Options                    *TransactionOptions  `xml:"options,omitempty"`
-	ServiceFeeAmount           *Decimal             `xml:"service-fee-amount,attr,omitempty"`
-	CreatedAt                  *time.Time           `xml:"created-at,omitempty"`
-	UpdatedAt                  *time.Time           `xml:"updated-at,omitempty"`
-	DisbursementDetails        *DisbursementDetails `xml:"disbursement-details,omitempty"`
-	RefundId                   string               `xml:"refund-id,omitempty"`
-	RefundIds                  *[]string            `xml:"refund-ids>item,omitempty"`
-	RefundedTransactionId      *string              `xml:"refunded-transaction-id,omitempty"`
-	ProcessorResponseCode      int                  `xml:"processor-response-code,omitempty"`
-	ProcessorResponseText      string               `xml:"processor-response-text,omitempty"`
-	ProcessorAuthorizationCode string               `xml:"processor-authorization-code,omitempty"`
-	SettlementBatchId          string               `xml:"settlement-batch-id,omitempty"`
+	XMLName                    string               `xml:"transaction" json:"transaction" bson:"transaction"`
+	Id                         string               `xml:"id,omitempty" json:"id,omitempty" bson:"id,omitempty"`
+	CustomerID                 string               `xml:"customer-id,omitempty" json:"customerId,omitempty" bson:"customerId,omitempty"`
+	Status                     string               `xml:"status,omitempty" json:"status,omitempty" bson:"status,omitempty"`
+	Type                       string               `xml:"type,omitempty" json:"type,omitempty" bson:"type,omitempty"`
+	Amount                     *Decimal             `xml:"amount" json:"amount" bson:"amount"`
+	OrderId                    string               `xml:"order-id,omitempty" json:"orderId,omitempty" bson:"orderId,omitempty"`
+	PaymentMethodToken         string               `xml:"payment-method-token,omitempty" json:"paymentMethodToken,omitempty" bson:"paymentMethodToken,omitempty"`
+	PaymentMethodNonce         string               `xml:"payment-method-nonce,omitempty" json:"paymentMethodNonce,omitempty" bson:"paymentMethodNonce,omitempty"`
+	MerchantAccountId          string               `xml:"merchant-account-id,omitempty" json:"merchantAccountId,omitempty" bson:"merchantAccountId,omitempty"`
+	PlanId                     string               `xml:"plan-id,omitempty" json:"planId,omitempty" bson:"planId,omitempty"`
+	CreditCard                 *CreditCard          `xml:"credit-card,omitempty" json:"creditCard,omitempty" bson:"creditCard,omitempty"`
+	Customer                   *Customer            `xml:"customer,omitempty" json:"customer,omitempty" bson:"customer,omitempty"`
+	BillingAddress             *Address             `xml:"billing,omitempty" json:"billing,omitempty" bson:"billing,omitempty"`
+	ShippingAddress            *Address             `xml:"shipping,omitempty" json:"shipping,omitempty" bson:"shipping,omitempty"`
+	Options                    *TransactionOptions  `xml:"options,omitempty" json:"options,omitempty" json:"options,omitempty"`
+	ServiceFeeAmount           *Decimal             `xml:"service-fee-amount,attr,omitempty" json:"serviceFeeAmount,attr,omitempty" bson:"serviceFeeAmount,attr,omitempty"`
+	CreatedAt                  *time.Time           `xml:"created-at,omitempty" json:"createdAt,omitempty" bson:"createdAt,omitempty"`
+	UpdatedAt                  *time.Time           `xml:"updated-at,omitempty" json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
+	DisbursementDetails        *DisbursementDetails `xml:"disbursement-details,omitempty" json:"disbursementDetails,omitempty" bson:"disbursementDetails,omitempty"`
+	RefundId                   string               `xml:"refund-id,omitempty" json:"refundId,omitempty" bson:"refundId,omitempty"`
+	RefundIds                  *[]string            `xml:"refund-ids>item,omitempty" json:"refundIds.item,omitempty" bson:"refundIds.item,omitempty"`
+	RefundedTransactionId      *string              `xml:"refunded-transaction-id,omitempty" json:"refundedTransactionId,omitempty" bson:"refundedTransactionId,omitempty"`
+	ProcessorResponseCode      int                  `xml:"processor-response-code,omitempty" json:"processorResponseCode,omitempty" bson:"processorResponseCode,omitempty"`
+	ProcessorResponseText      string               `xml:"processor-response-text,omitempty" json:"processorResponseText,omitempty" bson:"processorResponseText,omitempty"`
+	ProcessorAuthorizationCode string               `xml:"processor-authorization-code,omitempty" json:"processorAuthorizationCode,omitempty" bson:"processorAuthorizationCode,omitempty"`
+	SettlementBatchId          string               `xml:"settlement-batch-id,omitempty" json:"settlementBatchId,omitempty" bson:"settlementBatchId,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)

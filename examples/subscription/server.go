@@ -23,7 +23,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/lionelbarrow/braintree-go"
+	"github.com/brianpowell/braintree-go"
 )
 
 func main() {
