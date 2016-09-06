@@ -25,10 +25,10 @@ const (
 )
 
 type WebhookNotification struct {
-	XMLName   xml.Name        `xml:"notification"`
-	Timestamp time.Time       `xml:"timestamp"`
-	Kind      string          `xml:"kind"`
-	Subject   *webhookSubject `xml:"subject"`
+	XMLName   xml.Name        `xml:"notification" json:"notification" bson:"notification"`
+	Timestamp time.Time       `xml:"timestamp" json:"timestamp" bson:"timestamp"`
+	Kind      string          `xml:"kind" json:"kind" bson:"kind"`
+	Subject   *webhookSubject `xml:"subject" json:"subject" bson:"subject"`
 }
 
 func (n *WebhookNotification) MerchantAccount() *MerchantAccount {
@@ -49,12 +49,12 @@ func (n *WebhookNotification) Disbursement() *Disbursement {
 }
 
 type webhookSubject struct {
-	XMLName          xml.Name         `xml:"subject"`
-	APIErrorResponse *BraintreeError  `xml:",omitempty"`
-	Disbursement     *Disbursement    `xml:"disbursement,omitempty"`
-	Subscription     *Subscription    `xml:",omitempty"`
-	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty"`
-	Transaction      *Transaction     `xml:",omitempty"`
+	XMLName          xml.Name         `xml:"subject" json:"subject" bson:"subject"`
+	APIErrorResponse *BraintreeError  `xml:",omitempty" json:",omitempty" bson:",omitempty"`
+	Disbursement     *Disbursement    `xml:"disbursement,omitempty" json:"disbursement,omitempty" bson:"disbursement,omitempty"`
+	Subscription     *Subscription    `xml:",omitempty" json:",omitempty" bson:",omitempty"`
+	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty" json:"merchantAccount,omitempty" bson:"merchantAccount,omitempty"`
+	Transaction      *Transaction     `xml:",omitempty" json:",omitempty" bson:",omitempty"`
 
 	// Remaining Fields:
 	// partner_merchant

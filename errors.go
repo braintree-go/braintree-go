@@ -18,11 +18,11 @@ type errorGroup interface {
 
 type BraintreeError struct {
 	statusCode      int
-	XMLName         string           `xml:"api-error-response"`
-	Errors          responseErrors   `xml:"errors"`
-	ErrorMessage    string           `xml:"message"`
-	MerchantAccount *MerchantAccount `xml:",omitempty"`
-	Transaction     Transaction      `xml:"transaction"`
+	XMLName         string           `xml:"api-error-response" json:"apiErrorResponse" bson:"apiErrorResponse"`
+	Errors          responseErrors   `xml:"errors" json:"errors" bson:"errors"`
+	ErrorMessage    string           `xml:"message" json:"message" bson:"message"`
+	MerchantAccount *MerchantAccount `xml:",omitempty" json:",omitempty" bson:",omitempty"`
+	Transaction     Transaction      `xml:"transaction" json:"transaction" bson:"transaction"`
 }
 
 func (e *BraintreeError) Error() string {
@@ -56,13 +56,13 @@ func (e *BraintreeError) On(item string) []FieldError {
 }
 
 type responseErrors struct {
-	TransactionErrors responseError `xml:"transaction"`
+	TransactionErrors responseError `xml:"transaction" json:"transaction" bson:"transaction"`
 }
 
 type responseError struct {
-	ErrorList        errorList  `xml:"errors"`
-	CreditCardErrors errorBlock `xml:"credit-card"`
-	CustomerErrors   errorBlock `xml:"customer"`
+	ErrorList        errorList  `xml:"errors" json:"errors" bson:"errors"`
+	CreditCardErrors errorBlock `xml:"credit-card" json:"credit-card" bson:"credit-card"`
+	CustomerErrors   errorBlock `xml:"customer" json:"customer" bson:"customer"`
 }
 
 func (r responseError) For(item string) errorGroup {
@@ -92,11 +92,11 @@ func (r responseError) On(item string) []FieldError {
 }
 
 type errorBlock struct {
-	ErrorList errorList `xml:"errors"`
+	ErrorList errorList `xml:"errors" json:"errors" bson:"errors"`
 }
 
 type errorList struct {
-	Errors FieldErrorList `xml:"error"`
+	Errors FieldErrorList `xml:"error" json:"error" bson:"error"`
 }
 
 type FieldErrorList []FieldError
@@ -116,7 +116,7 @@ func (f FieldErrorList) On(item string) []FieldError {
 }
 
 type FieldError struct {
-	Code      string `xml:"code"`
-	Attribute string `xml:"attribute"`
-	Message   string `xml:"message"`
+	Code      string `xml:"code" json:"code" bson:"code"`
+	Attribute string `xml:"attribute" json:"attribute" bson:"attribute"`
+	Message   string `xml:"message" json:"message" bson:"message"`
 }

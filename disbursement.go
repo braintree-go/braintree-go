@@ -2,23 +2,23 @@ package braintree
 
 import (
 	"encoding/xml"
-	"github.com/lionelbarrow/braintree-go/date"
+	"github.com/CompleteSet/braintree-go/date"
 )
 
 type Disbursement struct {
-	XMLName            xml.Name         `xml:"disbursement"`
-	Id                 string           `xml:"id"`
-	ExceptionMessage   string           `xml:"exception-message"`
-	DisbursementDate   *date.Date       `xml:"disbursement-date"`
-	FollowUpAction     string           `xml:"follow-up-action"`
-	Success            bool             `xml:"success"`
-	Retry              bool             `xml:"retry"`
-	Amount             *Decimal         `xml:"amount"`
-	MerchantAccount    *MerchantAccount `xml:"merchant-account"`
-	CurrencyIsoCode    string           `xml:"currency-iso-code"`
-	SubmerchantAccount bool             `xml:"sub-merchant-account"`
-	Status             string           `xml:"status"`
-	TransactionIds     []string         `xml:"transaction-ids>item"`
+	XMLName            xml.Name         `xml:"disbursement" json:"disbursement" bson:"disbursement"`
+	Id                 string           `xml:"id" json:"id" bson:"id"`
+	ExceptionMessage   string           `xml:"exception-message" json:"exceptionMessage" bson:"exceptionMessage"`
+	DisbursementDate   *date.Date       `xml:"disbursement-date" json:"disbursementDate" bson:"disbursementDate"`
+	FollowUpAction     string           `xml:"follow-up-action" json:"followUpAction" bson:"followUpAction"`
+	Success            bool             `xml:"success" json:"success" bson:"success"`
+	Retry              bool             `xml:"retry" json:"retry" bson:"retry"`
+	Amount             *Decimal         `xml:"amount" json:"amount" bson:"amount"`
+	MerchantAccount    *MerchantAccount `xml:"merchant-account" json:"merchantAccount" bson:"merchantAccount"`
+	CurrencyIsoCode    string           `xml:"currency-iso-code" json:"currencyIsoCode" bson:"currencyIsoCode"`
+	SubmerchantAccount bool             `xml:"sub-merchant-account" json:"subMerchantAccount" bson:"subMerchantAccount"`
+	Status             string           `xml:"status" json:"status" bson:"status"`
+	TransactionIds     []string         `xml:"transaction-ids>item" json:"transactionIds.item" bson:"transactionIds.item"`
 }
 
 const (
