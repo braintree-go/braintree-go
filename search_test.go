@@ -20,10 +20,47 @@ func TestSearchXMLEncode(t *testing.T) {
 	f2.Min = 10.01
 	f2.Max = 20.01
 
-	f3 := s.AddMultiField("status")
-	f3.Items = []string{
+	start_date := "09/11/2016 00:00"
+	end_date := "09/11/2016 23:59"
+	f3 := s.AddRangeField("settled-at")
+	f3.Min = start_date
+	f3.Max = end_date
+
+	f4 := s.AddRangeField("created-at")
+	f4.Min = start_date
+
+	f5 := s.AddRangeField("authorization-expired-at")
+	f5.Min = start_date
+
+	f6 := s.AddRangeField("authorized-at")
+	f6.Min = start_date
+
+	f7 := s.AddRangeField("failed-at")
+	f7.Min = start_date
+
+	f8 := s.AddRangeField("gateway-rejected-at")
+	f8.Min = start_date
+
+	f9 := s.AddRangeField("processor-declined-at")
+	f9.Min = start_date
+
+	f10 := s.AddRangeField("submitted-for-settlement-at")
+	f10.Min = start_date
+
+	f11 := s.AddRangeField("voided-at")
+	f11.Min = start_date
+
+	f12 := s.AddRangeField("disbursement-date")
+	f12.Min = start_date
+
+	f13 := s.AddRangeField("dispute-date")
+	f13.Min = start_date
+
+	f14 := s.AddMultiField("status")
+	f14.Items = []string{
 		"authorized",
 		"submitted_for_settlement",
+		"settled",
 	}
 
 	b, err := xml.MarshalIndent(s, "", "  ")
@@ -45,9 +82,44 @@ func TestSearchXMLEncode(t *testing.T) {
     <min>10.01</min>
     <max>20.01</max>
   </amount>
+  <settled-at>
+    <min>09/11/2016 00:00</min>
+    <max>09/11/2016 23:59</max>
+  </settled-at>
+  <created-at>
+    <min>09/11/2016 00:00</min>
+  </created-at>
+  <authorization-expired-at>
+    <min>09/11/2016 00:00</min>
+  </authorization-expired-at>
+  <authorized-at>
+    <min>09/11/2016 00:00</min>
+  </authorized-at>
+  <failed-at>
+    <min>09/11/2016 00:00</min>
+  </failed-at>
+  <gateway-rejected-at>
+    <min>09/11/2016 00:00</min>
+  </gateway-rejected-at>
+  <processor-declined-at>
+    <min>09/11/2016 00:00</min>
+  </processor-declined-at>
+  <submitted-for-settlement-at>
+    <min>09/11/2016 00:00</min>
+  </submitted-for-settlement-at>
+  <voided-at>
+    <min>09/11/2016 00:00</min>
+  </voided-at>
+  <disbursement-date>
+    <min>09/11/2016 00:00</min>
+  </disbursement-date>
+  <dispute-date>
+    <min>09/11/2016 00:00</min>
+  </dispute-date>
   <status type="array">
     <item>authorized</item>
     <item>submitted_for_settlement</item>
+    <item>settled</item>
   </status>
 </search>`
 

@@ -28,9 +28,9 @@ type TextField struct {
 
 type RangeField struct {
 	XMLName xml.Name
-	Is      float64 `xml:"is,omitempty"`
-	Min     float64 `xml:"min,omitempty"`
-	Max     float64 `xml:"max,omitempty"`
+	Is      interface{} `xml:"is,omitempty"`
+	Min     interface{} `xml:"min,omitempty"`
+	Max     interface{} `xml:"max,omitempty"`
 }
 
 type MultiField struct {
