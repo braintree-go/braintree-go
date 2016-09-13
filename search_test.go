@@ -20,41 +20,41 @@ func TestSearchXMLEncode(t *testing.T) {
 	f2.Min = 10.01
 	f2.Max = 20.01
 
-	start_date := "09/11/2016 00:00"
-	end_date := "09/11/2016 23:59"
+	startDate := "09/11/2016 00:00"
+	endDate := "09/11/2016 23:59"
 	f3 := s.AddRangeField("settled-at")
-	f3.Min = start_date
-	f3.Max = end_date
+	f3.Min = startDate
+	f3.Max = endDate
 
 	f4 := s.AddRangeField("created-at")
-	f4.Min = start_date
+	f4.Min = startDate
 
 	f5 := s.AddRangeField("authorization-expired-at")
-	f5.Min = start_date
+	f5.Min = startDate
 
 	f6 := s.AddRangeField("authorized-at")
-	f6.Min = start_date
+	f6.Min = startDate
 
 	f7 := s.AddRangeField("failed-at")
-	f7.Min = start_date
+	f7.Min = startDate
 
 	f8 := s.AddRangeField("gateway-rejected-at")
-	f8.Min = start_date
+	f8.Min = startDate
 
 	f9 := s.AddRangeField("processor-declined-at")
-	f9.Min = start_date
+	f9.Min = startDate
 
 	f10 := s.AddRangeField("submitted-for-settlement-at")
-	f10.Min = start_date
+	f10.Min = startDate
 
 	f11 := s.AddRangeField("voided-at")
-	f11.Min = start_date
+	f11.Min = startDate
 
 	f12 := s.AddRangeField("disbursement-date")
-	f12.Min = start_date
+	f12.Min = startDate
 
 	f13 := s.AddRangeField("dispute-date")
-	f13.Min = start_date
+	f13.Min = startDate
 
 	f14 := s.AddMultiField("status")
 	f14.Items = []string{
