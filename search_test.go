@@ -3,6 +3,7 @@ package braintree
 import (
 	"encoding/xml"
 	"testing"
+	"time"
 )
 
 func TestSearchXMLEncode(t *testing.T) {
@@ -20,40 +21,40 @@ func TestSearchXMLEncode(t *testing.T) {
 	f2.Min = 10.01
 	f2.Max = 20.01
 
-	startDate := "09/11/2016 00:00"
-	endDate := "09/11/2016 23:59"
-	f3 := s.AddRangeField("settled-at")
+	startDate := time.Date(2016, time.September, 11, 0, 0, 0, 0, time.UTC)
+	endDate := time.Date(2016, time.September, 11, 23, 59, 59, 0, time.UTC)
+	f3 := s.AddRangeDateField("settled-at")
 	f3.Min = startDate
 	f3.Max = endDate
 
-	f4 := s.AddRangeField("created-at")
+	f4 := s.AddRangeDateField("created-at")
 	f4.Min = startDate
 
-	f5 := s.AddRangeField("authorization-expired-at")
+	f5 := s.AddRangeDateField("authorization-expired-at")
 	f5.Min = startDate
 
-	f6 := s.AddRangeField("authorized-at")
+	f6 := s.AddRangeDateField("authorized-at")
 	f6.Min = startDate
 
-	f7 := s.AddRangeField("failed-at")
+	f7 := s.AddRangeDateField("failed-at")
 	f7.Min = startDate
 
-	f8 := s.AddRangeField("gateway-rejected-at")
+	f8 := s.AddRangeDateField("gateway-rejected-at")
 	f8.Min = startDate
 
-	f9 := s.AddRangeField("processor-declined-at")
+	f9 := s.AddRangeDateField("processor-declined-at")
 	f9.Min = startDate
 
-	f10 := s.AddRangeField("submitted-for-settlement-at")
+	f10 := s.AddRangeDateField("submitted-for-settlement-at")
 	f10.Min = startDate
 
-	f11 := s.AddRangeField("voided-at")
+	f11 := s.AddRangeDateField("voided-at")
 	f11.Min = startDate
 
-	f12 := s.AddRangeField("disbursement-date")
+	f12 := s.AddRangeDateField("disbursement-date")
 	f12.Min = startDate
 
-	f13 := s.AddRangeField("dispute-date")
+	f13 := s.AddRangeDateField("dispute-date")
 	f13.Min = startDate
 
 	f14 := s.AddMultiField("status")
@@ -83,38 +84,38 @@ func TestSearchXMLEncode(t *testing.T) {
     <max>20.01</max>
   </amount>
   <settled-at>
-    <min>09/11/2016 00:00</min>
-    <max>09/11/2016 23:59</max>
+    <min>09/11/2016 00:00:00</min>
+    <max>09/11/2016 23:59:59</max>
   </settled-at>
   <created-at>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </created-at>
   <authorization-expired-at>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </authorization-expired-at>
   <authorized-at>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </authorized-at>
   <failed-at>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </failed-at>
   <gateway-rejected-at>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </gateway-rejected-at>
   <processor-declined-at>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </processor-declined-at>
   <submitted-for-settlement-at>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </submitted-for-settlement-at>
   <voided-at>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </voided-at>
   <disbursement-date>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </disbursement-date>
   <dispute-date>
-    <min>09/11/2016 00:00</min>
+    <min>09/11/2016 00:00:00</min>
   </dispute-date>
   <status type="array">
     <item>authorized</item>
@@ -124,7 +125,8 @@ func TestSearchXMLEncode(t *testing.T) {
 </search>`
 
 	if xmls != expect {
-		t.Fatal(xmls)
+		t.Fatalf("%+v\n\n%+v\n", xmls, expect)
+		// t.Fatal(expect)
 	}
 }
 

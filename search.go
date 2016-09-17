@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"encoding/xml"
+	"time"
 )
 
 type SearchQuery struct {
@@ -28,9 +29,35 @@ type TextField struct {
 
 type RangeField struct {
 	XMLName xml.Name
-	Is      interface{} `xml:"is,omitempty"`
-	Min     interface{} `xml:"min,omitempty"`
-	Max     interface{} `xml:"max,omitempty"`
+	Is      float64 `xml:"is,omitempty"`
+	Min     float64 `xml:"min,omitempty"`
+	Max     float64 `xml:"max,omitempty"`
+}
+
+type RangeDateField struct {
+	XMLName xml.Name
+	Is      time.Time `xml:"is,omitempty"`
+	Min     time.Time `xml:"min,omitempty"`
+	Max     time.Time `xml:"max,omitempty"`
+}
+
+func (d RangeDateField) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	var err error
+	e.EncodeToken(xml.StartElement{Name: d.XMLName})
+	format := "01/02/2006 15:04:05"
+
+	if !d.Is.IsZero() {
+		e.EncodeElement(d.Is.Format(format), xml.StartElement{Name: xml.Name{Local: "is"}})
+	}
+	if !d.Min.IsZero() {
+		e.EncodeElement(d.Min.Format(format), xml.StartElement{Name: xml.Name{Local: "min"}})
+	}
+	if !d.Max.IsZero() {
+		e.EncodeElement(d.Max.Format(format), xml.StartElement{Name: xml.Name{Local: "max"}})
+	}
+
+	e.EncodeToken(xml.EndElement{Name: d.XMLName})
+	return err
 }
 
 type MultiField struct {
@@ -47,6 +74,12 @@ func (s *SearchQuery) AddTextField(field string) *TextField {
 
 func (s *SearchQuery) AddRangeField(field string) *RangeField {
 	f := &RangeField{XMLName: xml.Name{Local: field}}
+	s.Fields = append(s.Fields, f)
+	return f
+}
+
+func (s *SearchQuery) AddRangeDateField(field string) *RangeDateField {
+	f := &RangeDateField{XMLName: xml.Name{Local: field}}
 	s.Fields = append(s.Fields, f)
 	return f
 }
