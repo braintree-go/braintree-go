@@ -43,20 +43,20 @@ type RangeDateField struct {
 
 func (d RangeDateField) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	var err error
-	e.EncodeToken(xml.StartElement{Name: d.XMLName})
+	err = e.EncodeToken(xml.StartElement{Name: d.XMLName})
 	format := "01/02/2006 15:04:05"
 
 	if !d.Is.IsZero() {
-		e.EncodeElement(d.Is.Format(format), xml.StartElement{Name: xml.Name{Local: "is"}})
+		err = e.EncodeElement(d.Is.Format(format), xml.StartElement{Name: xml.Name{Local: "is"}})
 	}
 	if !d.Min.IsZero() {
-		e.EncodeElement(d.Min.Format(format), xml.StartElement{Name: xml.Name{Local: "min"}})
+		err = e.EncodeElement(d.Min.Format(format), xml.StartElement{Name: xml.Name{Local: "min"}})
 	}
 	if !d.Max.IsZero() {
-		e.EncodeElement(d.Max.Format(format), xml.StartElement{Name: xml.Name{Local: "max"}})
+		err = e.EncodeElement(d.Max.Format(format), xml.StartElement{Name: xml.Name{Local: "max"}})
 	}
 
-	e.EncodeToken(xml.EndElement{Name: d.XMLName})
+	err = e.EncodeToken(xml.EndElement{Name: d.XMLName})
 	return err
 }
 
