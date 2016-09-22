@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type Environment string
@@ -39,6 +40,21 @@ func New(env Environment, merchId, pubKey, privKey string) *Braintree {
 	}
 }
 
+func NewFromAccessToken(accessToken string) (*Braintree, error) {
+	splittedAccessToken := strings.Split(accessToken, "$")
+	if len(splittedAccessToken) < 2 {
+		return nil, fmt.Errorf("no environment found in access token %s", accessToken)
+	} else if len(splittedAccessToken) < 3 {
+		return nil, fmt.Errorf("no merchant id found in access token %s", accessToken)
+	}
+
+	return &Braintree{
+		Environment: Environment(splittedAccessToken[1]),
+		MerchantId:  splittedAccessToken[2],
+		AccessToken: accessToken,
+	}, nil
+}
+
 func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string, client *http.Client) *Braintree {
 	return &Braintree{
 		Environment: env,
@@ -54,6 +70,7 @@ type Braintree struct {
 	MerchantId  string
 	PublicKey   string
 	PrivateKey  string
+	AccessToken string
 	Logger      *log.Logger
 	HttpClient  *http.Client
 }
@@ -91,7 +108,15 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header.Set("User-Agent", fmt.Sprintf("Braintree Go %s", LibraryVersion))
 	req.Header.Set("X-ApiVersion", "3")
-	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
+
+	if g.AccessToken != "" {
+		req.Header.Set(
+			"Authorization",
+			fmt.Sprintf("Bearer %s", g.AccessToken),
+		)
+	} else {
+		req.SetBasicAuth(g.PublicKey, g.PrivateKey)
+	}
 
 	httpClient := g.HttpClient
 	if httpClient == nil {
