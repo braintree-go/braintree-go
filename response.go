@@ -116,7 +116,7 @@ func (r *Response) apiError() error {
 
 func (r *Response) httpError() error {
 	switch r.StatusCode {
-	case http.StatusOK, http.StatusCreated, http.StatusUnprocessableEntity:
+	case 200, 201, 422:
 		return nil
 	default:
 		return httpError(r.StatusCode)
