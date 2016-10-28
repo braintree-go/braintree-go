@@ -111,15 +111,31 @@ func (r *Response) apiError() error {
 		b.statusCode = r.StatusCode
 		return &b
 	}
-	if r.StatusCode > 299 {
-		return fmt.Errorf("%s (%d)", http.StatusText(r.StatusCode), r.StatusCode)
-	}
 	return nil
+}
+
+func (r *Response) httpError() error {
+	switch r.StatusCode {
+	case http.StatusOK, http.StatusCreated, http.StatusUnprocessableEntity:
+		return nil
+	default:
+		return httpError(r.StatusCode)
+	}
 }
 
 type APIError interface {
 	error
 	StatusCode() int
+}
+
+type httpError int
+
+func (e httpError) StatusCode() int {
+	return int(e)
+}
+
+func (e httpError) Error() string {
+	return http.StatusText(int(e))
 }
 
 type invalidResponseError struct {
