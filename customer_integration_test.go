@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
@@ -107,7 +108,7 @@ func TestCustomer(t *testing.T) {
 	if err == nil {
 		t.Fatal("should return 404")
 	}
-	if err.Error() != "Not Found (404)" {
+	if apiErr, ok := err.(APIError); !(ok && apiErr.StatusCode() == http.StatusNotFound) {
 		t.Fatal(err)
 	}
 	if c4 != nil {
