@@ -21,6 +21,7 @@ type Transaction struct {
 	Customer                   *Customer            `xml:"customer,omitempty" json:"customer,omitempty" bson:"customer,omitempty"`
 	BillingAddress             *Address             `xml:"billing,omitempty" json:"billing,omitempty" bson:"billing,omitempty"`
 	ShippingAddress            *Address             `xml:"shipping,omitempty" json:"shipping,omitempty" bson:"shipping,omitempty"`
+	DeviceData                 string               `xml:"device-data,omitempty" json:"device-data,omitempty" bson:"device-data,omitempty"`
 	Options                    *TransactionOptions  `xml:"options,omitempty" json:"options,omitempty" json:"options,omitempty"`
 	ServiceFeeAmount           *Decimal             `xml:"service-fee-amount,attr,omitempty" json:"serviceFeeAmount,attr,omitempty" bson:"serviceFeeAmount,attr,omitempty"`
 	CreatedAt                  *time.Time           `xml:"created-at,omitempty" json:"createdAt,omitempty" bson:"createdAt,omitempty"`
