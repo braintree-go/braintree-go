@@ -151,6 +151,10 @@ func (g *Braintree) Plan() *PlanGateway {
 	return &PlanGateway{g}
 }
 
+func (g *Braintree) PaymentMethod() *PaymentMethodGateway {
+	return &PaymentMethodGateway{g}
+}
+
 func (g *Braintree) Address() *AddressGateway {
 	return &AddressGateway{g}
 }
