@@ -1,7 +1,6 @@
 package braintree
 
 type PaymentMethod struct {
-	UserId             string                `xml:"user-id,omitempty" json:"user_id,omitempty" bson:"user_id,omitempty"`
 	CustomerId         string                `xml:"customer-id,omitempty" json:"customer_id,omitempty" bson:"customer_id,omitempty"`
 	Token              string                `xml:"token,omitempty" json:"token,omitempty" bson:"token,omitempty"`
 	PaymentMethodNonce string                `xml:"payment-method-nonce,omitempty" json:"payment_method_nonce,omitempty" bson:"payment_method_nonce,omitempty"`
@@ -25,5 +24,6 @@ type PaymentMethodOptions struct {
 }
 
 type PaymentMethods struct {
-	PaymentMethod []*PaymentMethod `xml:"payment-method" json:"payment_method" bson:"payment_method"`
+	ID             string           `xml:"id,omitempty" json:"id,omitempty" bson:"_id,omitempty"`
+	PaymentMethods []*PaymentMethod `xml:"payment-methods" json:"payment_methods" bson:"payment_methods"`
 }
