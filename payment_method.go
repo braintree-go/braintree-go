@@ -72,3 +72,8 @@ type PaymentMethods struct {
 	ID             string           `xml:"id,omitempty" json:"id,omitempty" bson:"_id,omitempty"`
 	PaymentMethods []*PaymentMethod `xml:"payment-methods" json:"payment_methods" bson:"payment_methods"`
 }
+
+type PaymentMethodsSmall struct {
+	ID             string                `xml:"id,omitempty" json:"id,omitempty" bson:"_id,omitempty"`
+	PaymentMethods []*PaymentMethodSmall `xml:"payment-methods" json:"payment_methods" bson:"payment_methods"`
+}
