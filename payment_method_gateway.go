@@ -41,7 +41,31 @@ func (g *PaymentMethodGateway) Find(token string) (*PaymentMethod, error) {
 }
 
 func (g *PaymentMethodGateway) Delete(paymentmethod *PaymentMethod) error {
-	resp, err := g.execute("DELETE", "payment_methods/any/"+paymentmethod.Token, nil)
+	resp, err := g.execute("DELETE", "payment_methods/"+paymentmethod.Token, nil)
+	if err != nil {
+		return err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return nil
+	}
+	return &invalidResponseError{resp}
+}
+
+func (g *PaymentMethodGateway) PayPalFind(token string) (*PaymentMethod, error) {
+	resp, err := g.execute("GET", "payment_methods/paypal_account/"+token, nil)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.paymentMethod()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
+func (g *PaymentMethodGateway) PayPalRevoke(paymentmethod *PaymentMethod) error {
+	resp, err := g.execute("DELETE", "payment_methods/paypal_account/"+paymentmethod.Token, nil)
 	if err != nil {
 		return err
 	}
