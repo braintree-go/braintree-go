@@ -17,7 +17,7 @@ func (g *PaymentMethodGateway) Create(paymentmethod *PaymentMethod) (*PaymentMet
 }
 
 func (g *PaymentMethodGateway) Update(paymentmethod *PaymentMethod) (*PaymentMethod, error) {
-	resp, err := g.execute("PUT", "payment_methods/"+paymentmethod.Token, paymentmethod)
+	resp, err := g.execute("PUT", "payment_methods/any/"+paymentmethod.Token, paymentmethod)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (g *PaymentMethodGateway) Find(token string) (*PaymentMethod, error) {
 }
 
 func (g *PaymentMethodGateway) Delete(paymentmethod *PaymentMethod) error {
-	resp, err := g.execute("DELETE", "payment_methods/"+paymentmethod.Token, nil)
+	resp, err := g.execute("DELETE", "payment_methods/any/"+paymentmethod.Token, nil)
 	if err != nil {
 		return err
 	}
