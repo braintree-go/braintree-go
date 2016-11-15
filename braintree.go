@@ -139,12 +139,20 @@ func (g *Braintree) CreditCard() *CreditCardGateway {
 	return &CreditCardGateway{g}
 }
 
+func (g *Braintree) PaypalAccount() *PaypalAccountGateway {
+	return &PaypalAccountGateway{g}
+}
+
 func (g *Braintree) Customer() *CustomerGateway {
 	return &CustomerGateway{g}
 }
 
 func (g *Braintree) Subscription() *SubscriptionGateway {
 	return &SubscriptionGateway{g}
+}
+
+func (g *Braintree) PaymentMethod() PaymentMethodGateway {
+	return &PaymentMethodGatewayImpl{g}
 }
 
 func (g *Braintree) Plan() *PlanGateway {

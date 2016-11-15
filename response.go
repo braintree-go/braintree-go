@@ -39,6 +39,14 @@ func (r *Response) creditCard() (*CreditCard, error) {
 	return &b, nil
 }
 
+func (r *Response) paypalAccount() (*PaypalAccount, error) {
+	var b PaypalAccount
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
 func (r *Response) customer() (*Customer, error) {
 	var b Customer
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
@@ -57,6 +65,14 @@ func (r *Response) subscription() (*Subscription, error) {
 
 func (r *Response) settlement() (*SettlementBatchSummary, error) {
 	var b SettlementBatchSummary
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) paymentMethod() (*PaymentMethod, error) {
+	var b PaymentMethod
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}
