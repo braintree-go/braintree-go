@@ -1,8 +1,9 @@
 package braintree
 
 import (
-	"github.com/lionelbarrow/braintree-go/nullable"
 	"time"
+
+	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
 type Transaction struct {
@@ -30,7 +31,7 @@ type Transaction struct {
 	RefundId                   string               `xml:"refund-id,omitempty"`
 	RefundIds                  *[]string            `xml:"refund-ids>item,omitempty"`
 	RefundedTransactionId      *string              `xml:"refunded-transaction-id,omitempty"`
-	ProcessorResponseCode      int                  `xml:"processor-response-code,omitempty"`
+	ProcessorResponseCode      nullable.NullInt64   `xml:"processor-response-code,omitempty"`
 	ProcessorResponseText      string               `xml:"processor-response-text,omitempty"`
 	ProcessorAuthorizationCode string               `xml:"processor-authorization-code,omitempty"`
 	SettlementBatchId          string               `xml:"settlement-batch-id,omitempty"`
