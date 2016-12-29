@@ -1,7 +1,7 @@
 package braintree
 
 import (
-	"github.com/lionelbarrow/braintree-go/nullable"
+	"github.com/DotDashPay/braintree-go/nullable"
 	"time"
 )
 

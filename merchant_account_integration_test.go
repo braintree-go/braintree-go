@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 	"testing"
 
-	"github.com/lionelbarrow/braintree-go/testhelpers"
+	"github.com/DotDashPay/braintree-go/testhelpers"
 )
 
 var acctId string
