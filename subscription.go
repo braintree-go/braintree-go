@@ -12,15 +12,17 @@ const (
 )
 
 type Subscription struct {
-	XMLName                 string               `xml:"subscription"`
-	Id                      string               `xml:"id,omitempty"`
-	Balance                 *Decimal             `xml:"balance,omitempty"`
-	BillingDayOfMonth       string               `xml:"billing-day-of-month,omitempty"`
-	BillingPeriodEndDate    string               `xml:"billing-period-end-date,omitempty"`
-	BillingPeriodStartDate  string               `xml:"billing-period-start-date,omitempty"`
-	CurrentBillingCycle     string               `xml:"current-billing-cycle,omitempty"`
-	DaysPastDue             string               `xml:"days-past-due,omitempty"`
-	Discounts               []interface{}        `xml:"discounts,omitempty"`
+	XMLName                 string `xml:"subscription"`
+	Id                      string `xml:"id,omitempty"`
+	AddOns                  AddOnList
+	Balance                 *Decimal                `xml:"balance,omitempty"`
+	BillingDayOfMonth       string                  `xml:"billing-day-of-month,omitempty"`
+	BillingPeriodEndDate    string                  `xml:"billing-period-end-date,omitempty"`
+	BillingPeriodStartDate  string                  `xml:"billing-period-start-date,omitempty"`
+	CurrentBillingCycle     int                     `xml:"current-billing-cycle,omitempty"`
+	DaysPastDue             string                  `xml:"days-past-due,omitempty"`
+	Descriptor              *SubscriptionDescriptor `xml:"descriptor,omitempty"`
+	Discounts               DiscountList
 	FailureCount            string               `xml:"failure-count,omitempty"`
 	FirstBillingDate        string               `xml:"first-billing-date,omitempty"`
 	MerchantAccountId       string               `xml:"merchant-account-id,omitempty"`
@@ -39,12 +41,38 @@ type Subscription struct {
 	TrialPeriod             *nullable.NullBool   `xml:"trial-period,omitempty"`
 	Transactions            *Transactions        `xml:"transactions,omitempty"`
 	Options                 *SubscriptionOptions `xml:"options,omitempty"`
-	// AddOns                  []interface{} `xml:"add-ons,omitempty"`
-	// Descriptor              interface{}   `xml:"descriptor,omitempty"`   // struct with name, phone
+}
+
+type SubscriptionRequest struct {
+	XMLName               string                  `xml:"subscription"`
+	Id                    string                  `xml:"id,omitempty"`
+	AddOns                *ModificationsRequest   `xml:"addOns,omitempty"`
+	BillingDayOfMonth     int                     `xml:"billing-day-of-month,omitempty"`
+	Descriptor            *SubscriptionDescriptor `xml:"descriptor,omitempty"`
+	Discounts             *ModificationsRequest   `xml:"discounts,omitempty"`
+	FailureCount          string                  `xml:"failure-count,omitempty"`
+	FirstBillingDate      string                  `xml:"first-billing-date,omitempty"`
+	MerchantAccountId     string                  `xml:"merchant-account-id,omitempty"`
+	NeverExpires          *nullable.NullBool      `xml:"never-expires,omitempty"`
+	NumberOfBillingCycles *nullable.NullInt64     `xml:"number-of-billing-cycles,omitempty"`
+	Options               *SubscriptionOptions    `xml:"options,omitempty"`
+	PaymentMethodNonce    string                  `xml:"paymentMethodNonce,omitempty"`
+	PaymentMethodToken    string                  `xml:"paymentMethodToken,omitempty"`
+	PlanId                string                  `xml:"planId,omitempty"`
+	Price                 *Decimal                `xml:"price,omitempty"`
+	TrialDuration         string                  `xml:"trial-duration,omitempty"`
+	TrialDurationUnit     string                  `xml:"trial-duration-unit,omitempty"`
+	TrialPeriod           *nullable.NullBool      `xml:"trial-period,omitempty"`
 }
 
 type Subscriptions struct {
 	Subscription []*Subscription `xml:"subscription"`
+}
+
+type SubscriptionDescriptor struct {
+	Name  string `xml:"name,omitempty"`
+	Phone string `xml:"phone,omitempty"`
+	URL   string `xml:"url,omitempty"`
 }
 
 type SubscriptionOptions struct {

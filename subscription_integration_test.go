@@ -35,7 +35,7 @@ func TestSubscription(t *testing.T) {
 	}
 
 	// Create
-	sub, err := g.Create(&Subscription{
+	sub, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: token,
 		PlanId:             "test_plan",
 		Options: &SubscriptionOptions{
@@ -55,7 +55,7 @@ func TestSubscription(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&Subscription{
+	sub2, err := g.Update(&SubscriptionRequest{
 		Id:     sub.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
