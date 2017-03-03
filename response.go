@@ -41,12 +41,20 @@ func (r *Response) transaction() (*Transaction, error) {
 	return &b, nil
 }
 
-func (r *Response) paymentMethod() (*PaymentMethod, error) {
-	var b PaymentMethod
-	if err := xml.Unmarshal(r.Body, &b); err != nil {
+func (r *Response) paymentMethod() (PaymentMethod, error) {
+	entityName, err := r.entityName()
+	if err != nil {
 		return nil, err
 	}
-	return &b, nil
+
+	switch entityName {
+	case "credit-card":
+		return r.creditCard()
+	case "paypal-account":
+		return r.paypalAccount()
+	}
+
+	return nil, fmt.Errorf("Unrecognized payment method %#v", entityName)
 }
 
 func (r *Response) creditCard() (*CreditCard, error) {

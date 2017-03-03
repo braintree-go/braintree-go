@@ -19,17 +19,7 @@ func (g *PaymentMethodGateway) Create(paymentMethodRequest *PaymentMethodRequest
 	}
 	switch resp.StatusCode {
 	case 201:
-		entityName, err := resp.entityName()
-		if err != nil {
-			return nil, err
-		}
-
-		switch entityName {
-		case "credit-card":
-			return resp.creditCard()
-		case "paypal-account":
-			return resp.paypalAccount()
-		}
+		return resp.paymentMethod()
 	}
 	return nil, &invalidResponseError{resp}
 }
