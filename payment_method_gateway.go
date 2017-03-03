@@ -27,6 +27,8 @@ func (g *PaymentMethodGateway) Create(paymentMethodRequest *PaymentMethodRequest
 		switch entityName {
 		case "credit-card":
 			return resp.creditCard()
+		case "paypal-account":
+			return resp.paypalAccount()
 		}
 	}
 	return nil, &invalidResponseError{resp}

@@ -16,6 +16,14 @@ type PaypalAccounts struct {
 	PaypalAccount []*PaypalAccount `xml:"paypal-account"`
 }
 
+func (paypalAccount *PaypalAccount) GetCustomerId() string {
+	return paypalAccount.CustomerId
+}
+
+func (paypalAccount *PaypalAccount) GetToken() string {
+	return paypalAccount.Token
+}
+
 // AllSubscriptions returns all subscriptions for this paypal account, or nil if none present.
 func (paypalAccount *PaypalAccount) AllSubscriptions() []*Subscription {
 	if paypalAccount.Subscriptions != nil {
