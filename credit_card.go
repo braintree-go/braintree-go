@@ -50,6 +50,14 @@ type CreditCardOptions struct {
 	UpdateExistingToken           string `xml:"update-existing-token,omitempty"`
 }
 
+func (card *CreditCard) GetCustomerId() string {
+	return card.CustomerId
+}
+
+func (card *CreditCard) GetToken() string {
+	return card.Token
+}
+
 // AllSubscriptions returns all subscriptions for this card, or nil if none present.
 func (card *CreditCard) AllSubscriptions() []*Subscription {
 	if card.Subscriptions != nil {

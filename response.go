@@ -15,6 +15,16 @@ type Response struct {
 
 // TODO: remove dedicated unmarshal methods (redundant)
 
+func (r *Response) entityName() (string, error) {
+	var b struct {
+		XMLName xml.Name
+	}
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return "", err
+	}
+	return b.XMLName.Local, nil
+}
+
 func (r *Response) merchantAccount() (*MerchantAccount, error) {
 	var b MerchantAccount
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
@@ -25,6 +35,14 @@ func (r *Response) merchantAccount() (*MerchantAccount, error) {
 
 func (r *Response) transaction() (*Transaction, error) {
 	var b Transaction
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) paymentMethod() (*PaymentMethod, error) {
+	var b PaymentMethod
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}

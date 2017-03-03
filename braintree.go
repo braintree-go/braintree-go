@@ -136,6 +136,10 @@ func (g *Braintree) Transaction() *TransactionGateway {
 	return &TransactionGateway{g}
 }
 
+func (g *Braintree) PaymentMethod() *PaymentMethodGateway {
+	return &PaymentMethodGateway{g}
+}
+
 func (g *Braintree) CreditCard() *CreditCardGateway {
 	return &CreditCardGateway{g}
 }
