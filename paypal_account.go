@@ -2,7 +2,7 @@ package braintree
 
 import "time"
 
-type PaypalAccount struct {
+type PayPalAccount struct {
 	CustomerId    string         `xml:"customer-id,omitempty"`
 	Token         string         `xml:"token,omitempty"`
 	Email         string         `xml:"email,omitempty"`
@@ -12,20 +12,20 @@ type PaypalAccount struct {
 	Subscriptions *Subscriptions `xml:"subscriptions,omitempty"`
 }
 
-type PaypalAccounts struct {
-	PaypalAccount []*PaypalAccount `xml:"paypal-account"`
+type PayPalAccounts struct {
+	PayPalAccount []*PayPalAccount `xml:"paypal-account"`
 }
 
-func (paypalAccount *PaypalAccount) GetCustomerId() string {
+func (paypalAccount *PayPalAccount) GetCustomerId() string {
 	return paypalAccount.CustomerId
 }
 
-func (paypalAccount *PaypalAccount) GetToken() string {
+func (paypalAccount *PayPalAccount) GetToken() string {
 	return paypalAccount.Token
 }
 
 // AllSubscriptions returns all subscriptions for this paypal account, or nil if none present.
-func (paypalAccount *PaypalAccount) AllSubscriptions() []*Subscription {
+func (paypalAccount *PayPalAccount) AllSubscriptions() []*Subscription {
 	if paypalAccount.Subscriptions != nil {
 		subs := paypalAccount.Subscriptions.Subscription
 		if len(subs) > 0 {

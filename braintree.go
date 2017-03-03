@@ -144,8 +144,8 @@ func (g *Braintree) CreditCard() *CreditCardGateway {
 	return &CreditCardGateway{g}
 }
 
-func (g *Braintree) PaypalAccount() *PaypalAccountGateway {
-	return &PaypalAccountGateway{g}
+func (g *Braintree) PayPalAccount() *PayPalAccountGateway {
+	return &PayPalAccountGateway{g}
 }
 
 func (g *Braintree) Customer() *CustomerGateway {

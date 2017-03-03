@@ -57,8 +57,8 @@ func (r *Response) creditCard() (*CreditCard, error) {
 	return &b, nil
 }
 
-func (r *Response) paypalAccount() (*PaypalAccount, error) {
-	var b PaypalAccount
+func (r *Response) paypalAccount() (*PayPalAccount, error) {
+	var b PayPalAccount
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}

@@ -2,7 +2,7 @@ package braintree
 
 import "testing"
 
-func TestPaypalAccount(t *testing.T) {
+func TestPayPalAccount(t *testing.T) {
 	cust, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -10,7 +10,7 @@ func TestPaypalAccount(t *testing.T) {
 
 	nonce := FakeNoncePayPalFuturePayment
 
-	g := testGateway.PaypalAccount()
+	g := testGateway.PayPalAccount()
 	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: nonce,
@@ -32,7 +32,7 @@ func TestPaypalAccount(t *testing.T) {
 	}
 
 	// Update
-	paypalAccount2, err := g.Update(&PaypalAccount{
+	paypalAccount2, err := g.Update(&PayPalAccount{
 		Token: paypalAccount.Token,
 		Email: "new-email@example.com",
 	})
@@ -56,8 +56,8 @@ func TestPaypalAccount(t *testing.T) {
 	}
 }
 
-func TestFindPaypalAccountBadData(t *testing.T) {
-	paypalAccount, err := testGateway.PaypalAccount().Find("invalid_token")
+func TestFindPayPalAccountBadData(t *testing.T) {
+	paypalAccount, err := testGateway.PayPalAccount().Find("invalid_token")
 
 	t.Log(paypalAccount)
 
