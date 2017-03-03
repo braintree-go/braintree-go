@@ -30,6 +30,13 @@ func (e Environment) BaseURL() string {
 	panic(`invalid environment "` + e + `"`)
 }
 
+type ApiVersion int
+
+const (
+	ApiVersion3 ApiVersion = 3
+	ApiVersion4            = 4
+)
+
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
 	return &Braintree{
 		Environment: env,
@@ -53,6 +60,10 @@ func (g *Braintree) MerchantURL() string {
 }
 
 func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
+	return g.executeVersion(method, path, xmlObj, ApiVersion3)
+}
+
+func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, apiVersion ApiVersion) (*Response, error) {
 	var buf bytes.Buffer
 	if xmlObj != nil {
 		xmlBody, err := xml.Marshal(xmlObj)
@@ -80,7 +91,7 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("Accept", "application/xml")
 	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header.Set("User-Agent", fmt.Sprintf("Braintree Go %s", LibraryVersion))
-	req.Header.Set("X-ApiVersion", "3")
+	req.Header.Set("X-ApiVersion", fmt.Sprintf("%d", apiVersion))
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
 	httpClient := g.HttpClient

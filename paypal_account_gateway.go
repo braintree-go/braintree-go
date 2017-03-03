@@ -5,7 +5,7 @@ type PaypalAccountGateway struct {
 }
 
 func (g *PaypalAccountGateway) Update(paypalAccount *PaypalAccount) (*PaypalAccount, error) {
-	resp, err := g.execute("PUT", "payment_methods/paypal_account/"+paypalAccount.Token, paypalAccount)
+	resp, err := g.executeVersion("PUT", "payment_methods/paypal_account/"+paypalAccount.Token, paypalAccount, ApiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -17,7 +17,7 @@ func (g *PaypalAccountGateway) Update(paypalAccount *PaypalAccount) (*PaypalAcco
 }
 
 func (g *PaypalAccountGateway) Find(token string) (*PaypalAccount, error) {
-	resp, err := g.execute("GET", "payment_methods/paypal_account/"+token, nil)
+	resp, err := g.executeVersion("GET", "payment_methods/paypal_account/"+token, nil, ApiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func (g *PaypalAccountGateway) Find(token string) (*PaypalAccount, error) {
 }
 
 func (g *PaypalAccountGateway) Delete(paypalAccount *PaypalAccount) error {
-	resp, err := g.execute("DELETE", "payment_methods/paypal_account/"+paypalAccount.Token, nil)
+	resp, err := g.executeVersion("DELETE", "payment_methods/paypal_account/"+paypalAccount.Token, nil, ApiVersion4)
 	if err != nil {
 		return err
 	}
