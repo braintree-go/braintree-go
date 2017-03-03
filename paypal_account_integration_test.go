@@ -3,19 +3,24 @@ package braintree
 import "testing"
 
 func TestPaypalAccount(t *testing.T) {
-	_, err := testGateway.Customer().Create(&Customer{})
+	cust, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g := testGateway.PaypalAccount()
+	nonce := FakeNoncePayPalFuturePayment
 
-	if testPaypalAccounts["test"].Token == "" {
-		t.Skip("No paypal token for test account, skipping integration test")
+	g := testGateway.PaypalAccount()
+	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         cust.Id,
+		PaymentMethodNonce: nonce,
+	})
+	if err != nil {
+		t.Fatal(err)
 	}
 
 	// Find
-	paypalAccount, err := g.Find(testPaypalAccounts["test"].Token)
+	paypalAccount, err := g.Find(paymentMethod.GetToken())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,7 +34,7 @@ func TestPaypalAccount(t *testing.T) {
 	// Update
 	paypalAccount2, err := g.Update(&PaypalAccount{
 		Token: paypalAccount.Token,
-		Email: testPaypalAccounts["example"].Email,
+		Email: "new-email@example.com",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -40,7 +45,7 @@ func TestPaypalAccount(t *testing.T) {
 	if paypalAccount2.Token != paypalAccount.Token {
 		t.Fatal("tokens do not match")
 	}
-	if paypalAccount2.Email != testPaypalAccounts["example"].Email {
+	if paypalAccount2.Email != "new-email@example.com" {
 		t.Fatal("paypalAccount email does not match")
 	}
 
