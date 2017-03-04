@@ -40,19 +40,26 @@ func (h hmacer) verifySignature(signature, payload string) (bool, error) {
 	return hmac.Equal([]byte(expectedSignature), []byte(signature)), nil
 }
 
-func (h hmacer) parseSignature(signatureKeyPair string) (string, error) {
-	if !strings.Contains(signatureKeyPair, "|") {
+func (h hmacer) getMatchingSignature(signaturePairs string) (string, string) {
+	pairs := strings.Split(signaturePairs, "&")
+	for _, pair := range pairs {
+		split := strings.Split(pair, "|")
+		if len(split) == 2 && split[0] == h.Braintree.PublicKey {
+			return split[0], split[1]
+		}
+	}
+	return "", ""
+}
+
+func (h hmacer) parseSignature(signatureKeyPairs string) (string, error) {
+	if !strings.Contains(signatureKeyPairs, "|") {
 		return "", SignatureError{"Signature-key pair does not contain |"}
 	}
-	split := strings.Split(signatureKeyPair, "|")
-	if len(split) != 2 {
-		return "", SignatureError{"Signature-key pair contains more than one |"}
-	}
-	publicKey := split[0]
+	publicKey, signature := h.getMatchingSignature(signatureKeyPairs)
 	if publicKey != h.Braintree.PublicKey {
 		return "", SignatureError{"Signature-key pair contains the wrong public key!"}
 	}
-	return split[1], nil
+	return signature, nil
 }
 
 func (h hmacer) hmac(payload string) (string, error) {

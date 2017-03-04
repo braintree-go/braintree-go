@@ -31,6 +31,7 @@ type Subscription struct {
 	NumberOfBillingCycles   *nullable.NullInt64  `xml:"number-of-billing-cycles,omitempty"`
 	PaidThroughDate         string               `xml:"paid-through-date,omitempty"`
 	PaymentMethodToken      string               `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce      string               `xml:"payment-method-nonce,omitempty"`
 	PlanId                  string               `xml:"plan-id,omitempty"`
 	Price                   *Decimal             `xml:"price,omitempty"`
 	Status                  string               `xml:"status,omitempty"`

@@ -492,3 +492,185 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestHoldInEscrowOnCreate(t *testing.T) {
+	testSubMerchantAccountId := getSubMerchantAccount(t)
+	amount := NewDecimal(6200, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccountId,
+		ServiceFeeAmount:  amount,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+			HoldInEscrow:        true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.HoldPending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.HoldPending, txn.EscrowStatus)
+	}
+}
+
+func TestHoldInEscrowAfterSale(t *testing.T) {
+	testSubMerchantAccountId := getSubMerchantAccount(t)
+	amount := NewDecimal(6300, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccountId,
+		ServiceFeeAmount:  amount,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	id := txn.Id
+	txn, err = testGateway.Transaction().HoldInEscrow(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.HoldPending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.HoldPending, txn.EscrowStatus)
+	}
+}
+
+func TestReleaseFromEscrow(t *testing.T) {
+	testSubMerchantAccountId := getSubMerchantAccount(t)
+	amount := NewDecimal(6400, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccountId,
+		ServiceFeeAmount:  amount,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+			HoldInEscrow:        true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	id := txn.Id
+	// _, err = escrow(id)
+	err = settle(t, id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	txn, err = testGateway.Transaction().ReleaseFromEscrow(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.ReleasePending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.ReleasePending, txn.EscrowStatus)
+	}
+}
+
+func TestCancelRelease(t *testing.T) {
+	testSubMerchantAccountId := getSubMerchantAccount(t)
+	amount := NewDecimal(6500, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccountId,
+		ServiceFeeAmount:  amount,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+			HoldInEscrow:        true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	id := txn.Id
+	err = settle(t, id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	txn, err = testGateway.Transaction().ReleaseFromEscrow(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.ReleasePending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.ReleasePending, txn.EscrowStatus)
+	}
+	txn, err = testGateway.Transaction().CancelRelease(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if txn.EscrowStatus != EscrowStatus.Held {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.Held, txn.EscrowStatus)
+	}
+}
+
+func settle(t *testing.T, id string) error {
+	txn, err := testGateway.Transaction().Settle(id)
+	if err != nil {
+		return err
+	}
+	if txn.Status != "submitted_for_settlement" && txn.Status != "settling" && txn.Status != "settled" {
+		t.Fatalf("expected Status to be submitted_for_settlement, settling, or settled, was %s", txn.Status)
+	}
+	return nil
+}
+
+var subMerchantAccountID string
+
+func getSubMerchantAccount(t *testing.T) string {
+	if subMerchantAccountID == "" {
+		rand.Seed(time.Now().UTC().UnixNano())
+		acctId = rand.Int() + 1
+		acct := MerchantAccount{
+			MasterMerchantAccountId: testMerchantAccountId,
+			TOSAccepted:             true,
+			Id:                      strconv.Itoa(acctId),
+			Individual: &MerchantAccountPerson{
+				FirstName:   "Kayle",
+				LastName:    "Gishen",
+				Email:       "kayle.gishen@example.com",
+				Phone:       "5556789012",
+				DateOfBirth: "1-1-1989",
+				Address: &Address{
+					StreetAddress:   "1 E Main St",
+					ExtendedAddress: "Suite 404",
+					Locality:        "Chicago",
+					Region:          "IL",
+					PostalCode:      "60622",
+				},
+			},
+			FundingOptions: &MerchantAccountFundingOptions{
+				Destination: FUNDING_DEST_MOBILE_PHONE,
+				MobilePhone: "5552344567",
+			},
+		}
+
+		merchantAccount, err := testGateway.MerchantAccount().Create(&acct)
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if merchantAccount.Id == "" {
+			t.Fatal("invalid merchant account id")
+		}
+		subMerchantAccountID = merchantAccount.Id
+	}
+	return subMerchantAccountID
+}
