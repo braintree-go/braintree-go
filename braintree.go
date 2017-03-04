@@ -11,17 +11,19 @@ import (
 type Environment string
 
 const (
-	Development Environment = "development"
-	Sandbox     Environment = "sandbox"
-	Production  Environment = "production"
+	Testing    Environment = "testing"
+	Sandbox    Environment = "sandbox"
+	Production Environment = "production"
 
 	LibraryVersion = "0.9.0"
 )
 
+var testUrl = "http://localhost:3000"
+
 func (e Environment) BaseURL() string {
 	switch e {
-	case Development:
-		return "http://localhost:3000"
+	case Testing:
+		return testUrl
 	case Sandbox:
 		return "https://sandbox.braintreegateway.com"
 	case Production:
@@ -63,6 +65,13 @@ type Braintree struct {
 	PrivateKey  string
 	Logger      *log.Logger
 	HttpClient  *http.Client
+}
+
+// SetTestUrl sets the URL used in lieu of a Braintree url
+// when using the Testing Environment, i.e. all http requests
+// will go to this URL instead of a Braintree URL.
+func SetTestUrl(url string) {
+	testUrl = url
 }
 
 func (g *Braintree) MerchantURL() string {
