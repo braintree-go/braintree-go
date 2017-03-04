@@ -145,3 +145,110 @@ func TestCustomerPayPalAccount(t *testing.T) {
 		t.Fatalf("Got Customer %#v PayPalAccount %#v, want %#v", customerFound, customerFound.PayPalAccounts.PayPalAccount[0], paypalAccount)
 	}
 }
+
+func TestCustomerPaymentMethods(t *testing.T) {
+	customer, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	paymentMethod1, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNoncePayPalFuturePayment,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod2, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expectedPaymentMethods := []PaymentMethod{
+		paymentMethod2,
+		paymentMethod1,
+	}
+
+	customerFound, err := testGateway.Customer().Find(customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(customerFound.PaymentMethods(), expectedPaymentMethods) {
+		t.Fatalf("Got Customer %#v PaymentMethods %#v, want %#v", customerFound, customerFound.PaymentMethods(), expectedPaymentMethods)
+	}
+}
+
+func TestCustomerDefaultPaymentMethod(t *testing.T) {
+	customer, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defaultPaymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNoncePayPalFuturePayment,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	customerFound, err := testGateway.Customer().Find(customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(customerFound.DefaultPaymentMethod(), defaultPaymentMethod) {
+		t.Fatalf("Got Customer %#v DefaultPaymentMethod %#v, want %#v", customerFound, customerFound.DefaultPaymentMethod(), defaultPaymentMethod)
+	}
+}
+
+func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
+	customer, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod2, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNoncePayPalFuturePayment,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paypalAccount, err := testGateway.PayPalAccount().Update(&PayPalAccount{
+		Token: paymentMethod2.GetToken(),
+		Options: &PayPalAccountOptions{
+			MakeDefault: true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	customerFound, err := testGateway.Customer().Find(customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(customerFound.DefaultPaymentMethod(), paypalAccount) {
+		t.Fatalf("Got Customer %#v DefaultPaymentMethod %#v, want %#v", customerFound, customerFound.DefaultPaymentMethod(), paypalAccount)
+	}
+}
