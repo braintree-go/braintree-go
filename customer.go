@@ -14,7 +14,6 @@ type Customer struct {
 	Website        string          `xml:"website,omitempty"`
 	CreditCard     *CreditCard     `xml:"credit-card,omitempty"`
 	CreditCards    *CreditCards    `xml:"credit-cards,omitempty"`
-	PayPalAccount  *PayPalAccount  `xml:"paypal-account,omitempty"`
 	PayPalAccounts *PayPalAccounts `xml:"paypal-accounts,omitempty"`
 }
 
