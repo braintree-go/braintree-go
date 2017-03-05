@@ -13,7 +13,14 @@ type TransactionGateway struct {
 func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
 	resp, err := g.execute("POST", "transactions", tx)
 	if err != nil {
-		return nil, err
+		// Gateway errors and Processor Declined errors still create a braintree transaction.
+		// Check to see if the error is a braintree error so we can return the transaction.
+		bterr, ok := err.(*BraintreeError)
+		if !ok {
+			return nil, err
+		} else {
+			return &bterr.Transaction, err
+		}
 	}
 	switch resp.StatusCode {
 	case 201:
