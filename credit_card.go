@@ -62,6 +62,10 @@ func (card *CreditCard) IsDefault() bool {
 	return card.Default
 }
 
+func (card *CreditCard) GetImageURL() string {
+	return card.ImageURL
+}
+
 // AllSubscriptions returns all subscriptions for this card, or nil if none present.
 func (card *CreditCard) AllSubscriptions() []*Subscription {
 	if card.Subscriptions != nil {

@@ -34,6 +34,10 @@ func (paypalAccount *PayPalAccount) IsDefault() bool {
 	return paypalAccount.Default
 }
 
+func (paypalAccount *PayPalAccount) GetImageURL() string {
+	return paypalAccount.ImageURL
+}
+
 // AllSubscriptions returns all subscriptions for this paypal account, or nil if none present.
 func (paypalAccount *PayPalAccount) AllSubscriptions() []*Subscription {
 	if paypalAccount.Subscriptions != nil {
