@@ -58,6 +58,10 @@ func (card *CreditCard) GetToken() string {
 	return card.Token
 }
 
+func (card *CreditCard) IsDefault() bool {
+	return card.Default
+}
+
 func (card *CreditCard) GetImageURL() string {
 	return card.ImageURL
 }
