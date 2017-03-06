@@ -3,6 +3,7 @@ package braintree
 import (
 	"fmt"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 	"time"
@@ -84,6 +85,8 @@ func TestSettlementBatch(t *testing.T) {
 	for _, record := range batchSummary.Records.Type {
 		foundTypes = append(foundTypes, record.CardType)
 	}
+	sort.Strings(cardTypes)
+	sort.Strings(foundTypes)
 	if !reflect.DeepEqual(cardTypes, foundTypes) {
 		t.Fatal(fmt.Sprintf("Expected card types: %s, got: %s", cardTypes, foundTypes))
 	}
