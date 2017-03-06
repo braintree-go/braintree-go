@@ -58,6 +58,10 @@ func (card *CreditCard) GetToken() string {
 	return card.Token
 }
 
+func (card *CreditCard) IsDefault() bool {
+	return card.Default
+}
+
 // AllSubscriptions returns all subscriptions for this card, or nil if none present.
 func (card *CreditCard) AllSubscriptions() []*Subscription {
 	if card.Subscriptions != nil {
