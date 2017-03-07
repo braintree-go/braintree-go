@@ -246,6 +246,9 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Status != "submitted_for_settlement" {
 		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
 	}
+	if tx2.PaymentInstrumentType != "credit_card" {
+		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", "credit_card", tx2.PaymentInstrumentType)
+	}
 }
 
 // This test will only pass on Travis. See TESTING.md for more details.
@@ -490,5 +493,43 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 
 	if err.Error() != "Refund amount is too large." {
 		t.Fatal(err)
+	}
+}
+
+func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
+	amount := NewDecimal(10000, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["discover"].Number,
+			ExpirationDate: "05/14",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.PaymentInstrumentType != "credit_card" {
+		t.Fatalf("Returned payment instrument doesn't match input, expected %q, got %q",
+			"credit_card", txn.PaymentInstrumentType)
+	}
+	if txn.CreditCard.CardType != "Discover" {
+		t.Fatalf("Returned credit card detail doesn't match input, expected %q, got %q",
+			"Visa", txn.CreditCard.CardType)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().Settle(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "settled" {
+		t.Fatal(txn.Status)
 	}
 }
