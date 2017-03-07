@@ -52,9 +52,6 @@ type Transaction struct {
 //   <avs-street-address-response-code>I</avs-street-address-response-code>
 //   <cvv-response-code>I</cvv-response-code>
 //   <gateway-rejection-reason nil="true"></gateway-rejection-reason>
-//   <processor-response-code>2001</processor-response-code>
-//   <processor-response-text>Insufficient Funds</processor-response-text>
-//   <additional-processor-response>2001 : Insufficient Funds</additional-processor-response>
 //   <voice-referral-number nil="true"></voice-referral-number>
 //   <purchase-order-number nil="true"></purchase-order-number>
 //   <tax-amount nil="true"></tax-amount>
@@ -97,11 +94,6 @@ type Transaction struct {
 //   <recurring type="boolean">true</recurring>
 //   <channel nil="true"></channel>
 //   <escrow-status nil="true"></escrow-status>
-//   <payment-instrument-type>credit_card</payment-instrument-type>
-//   <risk-data>
-//     <id>PNMN0WDTT35J</id>
-//     <decision>Approve</decision>
-//   </risk-data>
 // </transaction>
 
 type Transactions struct {
