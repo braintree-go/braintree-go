@@ -1,8 +1,12 @@
 package braintree
 
-import "time"
+import (
+	"encoding/xml"
+	"time"
+)
 
 type CreditCard struct {
+	XMLName                   xml.Name           `xml:"credit-card`
 	CustomerId                string             `xml:"customer-id,omitempty"`
 	Token                     string             `xml:"token,omitempty"`
 	PaymentMethodNonce        string             `xml:"payment-method-nonce,omitempty"`
@@ -48,6 +52,22 @@ type CreditCardOptions struct {
 	FailOnDuplicatePaymentMethod  bool   `xml:"fail-on-duplicate-payment-method,omitempty"`
 	VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
 	UpdateExistingToken           string `xml:"update-existing-token,omitempty"`
+}
+
+func (card *CreditCard) GetCustomerId() string {
+	return card.CustomerId
+}
+
+func (card *CreditCard) GetToken() string {
+	return card.Token
+}
+
+func (card *CreditCard) IsDefault() bool {
+	return card.Default
+}
+
+func (card *CreditCard) GetImageURL() string {
+	return card.ImageURL
 }
 
 // AllSubscriptions returns all subscriptions for this card, or nil if none present.

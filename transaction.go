@@ -1,8 +1,9 @@
 package braintree
 
 import (
-	"github.com/lionelbarrow/braintree-go/nullable"
 	"time"
+
+	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
 type Transaction struct {
@@ -21,6 +22,7 @@ type Transaction struct {
 	Customer                   *Customer            `xml:"customer,omitempty"`
 	BillingAddress             *Address             `xml:"billing,omitempty"`
 	ShippingAddress            *Address             `xml:"shipping,omitempty"`
+	DeviceData                 string               `xml:"device-data,omitempty"`
 	Options                    *TransactionOptions  `xml:"options,omitempty"`
 	ServiceFeeAmount           *Decimal             `xml:"service-fee-amount,attr,omitempty"`
 	CreatedAt                  *time.Time           `xml:"created-at,omitempty"`
@@ -34,6 +36,7 @@ type Transaction struct {
 	ProcessorAuthorizationCode string               `xml:"processor-authorization-code,omitempty"`
 	SettlementBatchId          string               `xml:"settlement-batch-id,omitempty"`
 	PaymentInstrumentType      string               `xml:"payment-instrument-type,omitempty"`
+	PayPalDetails              *PayPalDetails       `xml:"paypal,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
