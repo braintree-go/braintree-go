@@ -245,6 +245,9 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Status != "submitted_for_settlement" {
 		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
 	}
+	if tx2.PaymentInstrumentType != "credit_card" {
+		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", "credit_card", tx2.PaymentInstrumentType)
+	}
 }
 
 // This test will only pass on Travis. See TESTING.md for more details.
