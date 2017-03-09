@@ -6,7 +6,7 @@ import (
 )
 
 type CreditCard struct {
-	XMLName                   xml.Name           `xml:"credit-card`
+	XMLName                   xml.Name           `xml:"credit-card"`
 	CustomerId                string             `xml:"customer-id,omitempty"`
 	Token                     string             `xml:"token,omitempty"`
 	PaymentMethodNonce        string             `xml:"payment-method-nonce,omitempty"`
