@@ -22,8 +22,8 @@ type Plan struct {
 	TrialPeriod           *nullable.NullBool  `xml:"trial-period"`
 	CreatedAt             *time.Time          `xml:"created-at"`
 	UpdatedAt             *time.Time          `xml:"updated-at"`
-	AddOns                AddOnList           `xml:"add-ons"`
-	Discounts             DiscountList        `xml:"discounts"`
+	AddOns                *AddOnList          `xml:"add-ons"`
+	Discounts             *DiscountList       `xml:"discounts"`
 }
 
 type Plans struct {
