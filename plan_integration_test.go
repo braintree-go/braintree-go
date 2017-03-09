@@ -69,7 +69,7 @@ func TestPlan(t *testing.T) {
 	}
 
 	// Add Ons
-	if plan.AddOns == nil || len(plan.AddOns.AddOns) == 0 {
+	if len(plan.AddOns.AddOns) == 0 {
 		t.Fatal(plan.AddOns)
 	}
 	addOn := plan.AddOns.AddOns[0]
@@ -89,7 +89,7 @@ func TestPlan(t *testing.T) {
 	}
 
 	// Discounts
-	if plan.Discounts == nil || len(plan.Discounts.Discounts) == 0 {
+	if len(plan.Discounts.Discounts) == 0 {
 		t.Fatal(plan.Discounts)
 	}
 	discount := plan.Discounts.Discounts[0]
