@@ -18,6 +18,6 @@ env:
 
 go_import_path: github.com/lionelbarrow/braintree-go
 
-test:
+script:
   - go vet ./...
   - go test -v ./...

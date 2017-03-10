@@ -128,7 +128,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err.(*BraintreeError).Transaction.ProcessorResponseCode != 2010 {
-		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be 2010, but got %s", err.(*BraintreeError).Transaction.ProcessorResponseCode)
+		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be 2010, but got %d", err.(*BraintreeError).Transaction.ProcessorResponseCode)
 	}
 
 	if err.(*BraintreeError).Transaction.AdditionalProcessorResponse != "2010 : Card Issuer Declined CVV" {
