@@ -6,18 +6,13 @@ import (
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestSubscription(t *testing.T) {
-	customer, err := testGateway.Customer().Create(&Customer{
-		FirstName: "Lionel",
-		LastName:  "Barrow",
-		Company:   "Braintree",
-		Email:     "lionel.barrow@example.com",
-		Phone:     "312.555.1234",
-		Fax:       "614.555.5678",
-		Website:   "http://www.example.com",
-		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
-			ExpirationDate: "05/14",
-		},
+	customer, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -27,16 +22,9 @@ func TestSubscription(t *testing.T) {
 
 	g := testGateway.Subscription()
 
-	token := customer.CreditCards.CreditCard[0].Token
-	if token == "" {
-		t.Fatal("invalid payment method token")
-	} else {
-		t.Log(token)
-	}
-
 	// Create
 	sub, err := g.Create(&Subscription{
-		PaymentMethodToken: token,
+		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		Options: &SubscriptionOptions{
 			ProrateCharges:                       true,
