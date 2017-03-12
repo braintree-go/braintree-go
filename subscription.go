@@ -11,6 +11,11 @@ const (
 	SubscriptionStatusUnrecognized = "Unrecognized"
 )
 
+const (
+	SubscriptionTrialDurationUnitDay   = "day"
+	SubscriptionTrialDurationUnitMonth = "month"
+)
+
 type Subscription struct {
 	XMLName                 string               `xml:"subscription"`
 	Id                      string               `xml:"id,omitempty"`
