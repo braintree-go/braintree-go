@@ -99,7 +99,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 
 	// Create
 	numberOfBillingCycles := nullable.NewNullInt64(2, true)
-	sub1, err := g.Create(&Subscription{
+	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
@@ -133,7 +133,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&Subscription{
+	sub2, err := g.Update(&SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -190,7 +190,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 
 	// Create
 	neverExpires := nullable.NewNullBool(true, true)
-	sub1, err := g.Create(&Subscription{
+	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
@@ -224,7 +224,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&Subscription{
+	sub2, err := g.Update(&SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -282,7 +282,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	// Create
 	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
 	numberOfBillingCycles := nullable.NewNullInt64(2, true)
-	sub1, err := g.Create(&Subscription{
+	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
@@ -319,7 +319,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&Subscription{
+	sub2, err := g.Update(&SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -377,7 +377,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	// Create
 	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
 	neverExpires := nullable.NewNullBool(true, true)
-	sub1, err := g.Create(&Subscription{
+	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
@@ -414,7 +414,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&Subscription{
+	sub2, err := g.Update(&SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -473,7 +473,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	trialPeriod := nullable.NewNullBool(true, true)
 	firstBillingDate := time.Now().AddDate(0, 0, 7)
 	numberOfBillingCycles := nullable.NewNullInt64(2, true)
-	sub1, err := g.Create(&Subscription{
+	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
@@ -518,7 +518,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&Subscription{
+	sub2, err := g.Update(&SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -577,7 +577,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	trialPeriod := nullable.NewNullBool(true, true)
 	firstBillingDate := time.Now().AddDate(0, 0, 7)
 	neverExpires := nullable.NewNullBool(true, true)
-	sub1, err := g.Create(&Subscription{
+	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
@@ -622,7 +622,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&Subscription{
+	sub2, err := g.Update(&SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
