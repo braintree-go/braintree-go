@@ -98,12 +98,13 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
+	billingDayOfMonth := nullable.NewNullInt64(15, true)
 	numberOfBillingCycles := nullable.NewNullInt64(2, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
-		BillingDayOfMonth:     "15",
+		BillingDayOfMonth:     &billingDayOfMonth,
 		NumberOfBillingCycles: &numberOfBillingCycles,
 		Price: NewDecimal(100, 2),
 	})
@@ -189,12 +190,13 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
+	billingDayOfMonth := nullable.NewNullInt64(15, true)
 	neverExpires := nullable.NewNullBool(true, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
-		BillingDayOfMonth:  "15",
+		BillingDayOfMonth:  &billingDayOfMonth,
 		NeverExpires:       &neverExpires,
 		Price:              NewDecimal(100, 2),
 	})

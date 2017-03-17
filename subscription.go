@@ -51,7 +51,7 @@ type Subscription struct {
 type SubscriptionRequest struct {
 	XMLName               string               `xml:"subscription"`
 	Id                    string               `xml:"id,omitempty"`
-	BillingDayOfMonth     int                  `xml:"billing-day-of-month,omitempty"`
+	BillingDayOfMonth     *nullable.NullInt64  `xml:"billing-day-of-month,omitempty"`
 	FailureCount          string               `xml:"failure-count,omitempty"`
 	FirstBillingDate      string               `xml:"first-billing-date,omitempty"`
 	MerchantAccountId     string               `xml:"merchant-account-id,omitempty"`
