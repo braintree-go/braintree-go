@@ -27,7 +27,7 @@ func TestSubscriptionSimple(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	sub, err := g.Create(&Subscription{
+	sub, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 	})
@@ -42,7 +42,7 @@ func TestSubscriptionSimple(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&Subscription{
+	sub2, err := g.Update(&SubscriptionRequest{
 		Id:     sub.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
