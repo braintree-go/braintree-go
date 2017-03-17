@@ -48,6 +48,25 @@ type Subscription struct {
 	// Descriptor              interface{}   `xml:"descriptor,omitempty"`   // struct with name, phone
 }
 
+type SubscriptionRequest struct {
+	XMLName               string               `xml:"subscription"`
+	Id                    string               `xml:"id,omitempty"`
+	BillingDayOfMonth     *nullable.NullInt64  `xml:"billing-day-of-month,omitempty"`
+	FailureCount          string               `xml:"failure-count,omitempty"`
+	FirstBillingDate      string               `xml:"first-billing-date,omitempty"`
+	MerchantAccountId     string               `xml:"merchant-account-id,omitempty"`
+	NeverExpires          *nullable.NullBool   `xml:"never-expires,omitempty"`
+	NumberOfBillingCycles *nullable.NullInt64  `xml:"number-of-billing-cycles,omitempty"`
+	Options               *SubscriptionOptions `xml:"options,omitempty"`
+	PaymentMethodNonce    string               `xml:"paymentMethodNonce,omitempty"`
+	PaymentMethodToken    string               `xml:"paymentMethodToken,omitempty"`
+	PlanId                string               `xml:"planId,omitempty"`
+	Price                 *Decimal             `xml:"price,omitempty"`
+	TrialDuration         string               `xml:"trial-duration,omitempty"`
+	TrialDurationUnit     string               `xml:"trial-duration-unit,omitempty"`
+	TrialPeriod           *nullable.NullBool   `xml:"trial-period,omitempty"`
+}
+
 type Subscriptions struct {
 	Subscription []*Subscription `xml:"subscription"`
 }
