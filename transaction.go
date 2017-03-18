@@ -39,6 +39,7 @@ type Transaction struct {
 	PayPalDetails               *PayPalDetails       `xml:"paypal,omitempty"`
 	AdditionalProcessorResponse string               `xml:"additional-processor-response,omitempty"`
 	RiskData                    *RiskData            `xml:"risk-data,omitempty"`
+	Descriptor                  *Descriptor          `xml:"descriptor,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)

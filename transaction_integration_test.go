@@ -169,6 +169,47 @@ func TestFindNonExistantTransaction(t *testing.T) {
 	}
 }
 
+// This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
+func TestTransactionDescriptorFields(t *testing.T) {
+	tx := &Transaction{
+		Type:               "sale",
+		Amount:             randomAmount(),
+		PaymentMethodNonce: FakeNonceTransactable,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+		},
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
+	}
+
+	tx2, err := testGateway.Transaction().Create(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if tx2.Type != tx.Type {
+		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
+	}
+	if tx2.Amount.Cmp(tx.Amount) != 0 {
+		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
+	}
+	if tx2.Status != "submitted_for_settlement" {
+		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
+	}
+	if tx2.Descriptor.Name != "Company Name*Product 1" {
+		t.Fatalf("expected tx2.Descriptor.Name to be Company Name*Product 1, but got %s", tx2.Descriptor.Name)
+	}
+	if tx2.Descriptor.Phone != "0000000000" {
+		t.Fatalf("expected tx2.Descriptor.Phone to be 0000000000, but got %s", tx2.Descriptor.Phone)
+	}
+	if tx2.Descriptor.URL != "example.com" {
+		t.Fatalf("expected tx2.Descriptor.URL to be example.com, but got %s", tx2.Descriptor.URL)
+	}
+}
+
 func TestAllTransactionFields(t *testing.T) {
 	tx := &Transaction{
 		Type:    "sale",

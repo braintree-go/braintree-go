@@ -107,6 +107,11 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 		BillingDayOfMonth:     &billingDayOfMonth,
 		NumberOfBillingCycles: &numberOfBillingCycles,
 		Price: NewDecimal(100, 2),
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
 	})
 
 	t.Log("sub1", sub1)
@@ -131,6 +136,15 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	}
 	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
 		t.Fatalf("got trial period %#v, want false", x)
+	}
+	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
+		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
+	}
+	if x := sub1.Descriptor.Phone; x != "0000000000" {
+		t.Fatalf("got descriptor phone %#v, want 0000000000", x)
+	}
+	if x := sub1.Descriptor.URL; x != "example.com" {
+		t.Fatalf("got descriptor url %#v, want example.com", x)
 	}
 
 	// Update
@@ -199,6 +213,11 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 		BillingDayOfMonth:  &billingDayOfMonth,
 		NeverExpires:       &neverExpires,
 		Price:              NewDecimal(100, 2),
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
 	})
 
 	t.Log("sub1", sub1)
@@ -223,6 +242,15 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	}
 	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
 		t.Fatalf("got trial period %#v, want false", x)
+	}
+	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
+		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
+	}
+	if x := sub1.Descriptor.Phone; x != "0000000000" {
+		t.Fatalf("got descriptor phone %#v, want 0000000000", x)
+	}
+	if x := sub1.Descriptor.URL; x != "example.com" {
+		t.Fatalf("got descriptor url %#v, want example.com", x)
 	}
 
 	// Update
@@ -291,6 +319,11 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 		FirstBillingDate:      firstBillingDate,
 		NumberOfBillingCycles: &numberOfBillingCycles,
 		Price: NewDecimal(100, 2),
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
 	})
 
 	t.Log("sub1", sub1)
@@ -318,6 +351,15 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	}
 	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
 		t.Fatalf("got trial period %#v, want false", x)
+	}
+	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
+		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
+	}
+	if x := sub1.Descriptor.Phone; x != "0000000000" {
+		t.Fatalf("got descriptor phone %#v, want 0000000000", x)
+	}
+	if x := sub1.Descriptor.URL; x != "example.com" {
+		t.Fatalf("got descriptor url %#v, want example.com", x)
 	}
 
 	// Update
@@ -386,6 +428,11 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 		FirstBillingDate:   firstBillingDate,
 		NeverExpires:       &neverExpires,
 		Price:              NewDecimal(100, 2),
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
 	})
 
 	t.Log("sub1", sub1)
@@ -413,6 +460,15 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	}
 	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
 		t.Fatalf("got trial period %#v, want false", x)
+	}
+	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
+		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
+	}
+	if x := sub1.Descriptor.Phone; x != "0000000000" {
+		t.Fatalf("got descriptor phone %#v, want 0000000000", x)
+	}
+	if x := sub1.Descriptor.URL; x != "example.com" {
+		t.Fatalf("got descriptor url %#v, want example.com", x)
 	}
 
 	// Update
@@ -484,6 +540,11 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 		TrialDurationUnit:     SubscriptionTrialDurationUnitDay,
 		NumberOfBillingCycles: &numberOfBillingCycles,
 		Price: NewDecimal(100, 2),
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
 	})
 
 	t.Log("sub1", sub1)
@@ -517,6 +578,15 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	}
 	if sub1.TrialDurationUnit != SubscriptionTrialDurationUnitDay {
 		t.Fatalf("got trial duration unit %#v, want day", sub1.TrialDurationUnit)
+	}
+	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
+		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
+	}
+	if x := sub1.Descriptor.Phone; x != "0000000000" {
+		t.Fatalf("got descriptor phone %#v, want 0000000000", x)
+	}
+	if x := sub1.Descriptor.URL; x != "example.com" {
+		t.Fatalf("got descriptor url %#v, want example.com", x)
 	}
 
 	// Update
@@ -588,6 +658,11 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 		TrialDurationUnit:  SubscriptionTrialDurationUnitDay,
 		NeverExpires:       &neverExpires,
 		Price:              NewDecimal(100, 2),
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
 	})
 
 	t.Log("sub1", sub1)
@@ -621,6 +696,15 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	}
 	if sub1.TrialDurationUnit != SubscriptionTrialDurationUnitDay {
 		t.Fatalf("got trial duration unit %#v, want day", sub1.TrialDurationUnit)
+	}
+	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
+		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
+	}
+	if x := sub1.Descriptor.Phone; x != "0000000000" {
+		t.Fatalf("got descriptor phone %#v, want 0000000000", x)
+	}
+	if x := sub1.Descriptor.URL; x != "example.com" {
+		t.Fatalf("got descriptor url %#v, want example.com", x)
 	}
 
 	// Update
