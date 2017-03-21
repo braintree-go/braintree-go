@@ -6,6 +6,8 @@ import (
 )
 
 func TestModificationsXMLEmpty(t *testing.T) {
+	t.Parallel()
+
 	m := ModificationsRequest{}
 	output, err := xml.MarshalIndent(m, "", "  ")
 	if err != nil {
@@ -18,6 +20,8 @@ func TestModificationsXMLEmpty(t *testing.T) {
 }
 
 func TestModificationsXMLMinimalFields(t *testing.T) {
+	t.Parallel()
+
 	m := ModificationsRequest{
 		Add: []AddModificationRequest{
 			{
@@ -72,6 +76,8 @@ func TestModificationsXMLMinimalFields(t *testing.T) {
 }
 
 func TestModificationsXMLAllFields(t *testing.T) {
+	t.Parallel()
+
 	m := ModificationsRequest{
 		Add: []AddModificationRequest{
 			{
