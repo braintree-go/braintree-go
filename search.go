@@ -36,9 +36,9 @@ type RangeField struct {
 
 type RangeDateField struct {
 	XMLName xml.Name
-	Is      time.Time `xml:"is,omitempty"`
-	Min     time.Time `xml:"min,omitempty"`
-	Max     time.Time `xml:"max,omitempty"`
+	Is      time.Time
+	Min     time.Time
+	Max     time.Time
 }
 
 func (d RangeDateField) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
