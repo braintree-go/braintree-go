@@ -125,7 +125,7 @@ func TestSearchXMLEncode(t *testing.T) {
 </search>`
 
 	if xmls != expect {
-		t.Fatal(expect)
+		t.Fatalf("got %#v, want %#v", xmls, expect)
 	}
 }
 
