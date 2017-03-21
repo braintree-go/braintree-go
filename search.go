@@ -74,10 +74,10 @@ func (d TimeField) marshalXMLCriterion(e *xml.Encoder, name string, value time.T
 	if value.IsZero() {
 		return nil
 	}
-	const format = "01/02/2006 15:04:05"
+	const format = "2006-01-02T15:04:05Z"
 	start := xml.StartElement{Name: xml.Name{Local: name}}
 	start.Attr = []xml.Attr{{Name: xml.Name{Local: "type"}, Value: "datetime"}}
-	return e.EncodeElement(value.Format(format), start)
+	return e.EncodeElement(value.UTC().Format(format), start)
 }
 
 type MultiField struct {

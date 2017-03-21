@@ -84,38 +84,38 @@ func TestSearchXMLEncode(t *testing.T) {
     <max>20.01</max>
   </amount>
   <settled-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
-    <max type="datetime">09/11/2016 23:59:59</max>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
+    <max type="datetime">2016-09-11T23:59:59Z</max>
   </settled-at>
   <created-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </created-at>
   <authorization-expired-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </authorization-expired-at>
   <authorized-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </authorized-at>
   <failed-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </failed-at>
   <gateway-rejected-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </gateway-rejected-at>
   <processor-declined-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </processor-declined-at>
   <submitted-for-settlement-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </submitted-for-settlement-at>
   <voided-at>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </voided-at>
   <disbursement-date>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </disbursement-date>
   <dispute-date>
-    <min type="datetime">09/11/2016 00:00:00</min>
+    <min type="datetime">2016-09-11T00:00:00Z</min>
   </dispute-date>
   <status type="array">
     <item>authorized</item>
