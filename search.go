@@ -34,14 +34,14 @@ type RangeField struct {
 	Max     float64 `xml:"max,omitempty"`
 }
 
-type RangeDateField struct {
+type TimeField struct {
 	XMLName xml.Name
 	Is      time.Time
 	Min     time.Time
 	Max     time.Time
 }
 
-func (d RangeDateField) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+func (d TimeField) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start = start.Copy()
 	start.Name = d.XMLName
 
@@ -70,7 +70,7 @@ func (d RangeDateField) MarshalXML(e *xml.Encoder, start xml.StartElement) error
 	return err
 }
 
-func (d RangeDateField) marshalXMLCriterion(e *xml.Encoder, name string, value time.Time) error {
+func (d TimeField) marshalXMLCriterion(e *xml.Encoder, name string, value time.Time) error {
 	if value.IsZero() {
 		return nil
 	}
@@ -98,8 +98,8 @@ func (s *SearchQuery) AddRangeField(field string) *RangeField {
 	return f
 }
 
-func (s *SearchQuery) AddRangeDateField(field string) *RangeDateField {
-	f := &RangeDateField{XMLName: xml.Name{Local: field}}
+func (s *SearchQuery) AddTimeField(field string) *TimeField {
+	f := &TimeField{XMLName: xml.Name{Local: field}}
 	s.Fields = append(s.Fields, f)
 	return f
 }

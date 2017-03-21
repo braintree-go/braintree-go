@@ -145,7 +145,7 @@ func TestTransactionSearchTime(t *testing.T) {
 		query := new(SearchQuery)
 		f1 := query.AddTextField("customer-first-name")
 		f1.Is = name0
-		f2 := query.AddRangeDateField("created-at")
+		f2 := query.AddTimeField("created-at")
 		f2.Max = time.Now()
 
 		result, err := txg.Search(query)
@@ -168,7 +168,7 @@ func TestTransactionSearchTime(t *testing.T) {
 		query := new(SearchQuery)
 		f1 := query.AddTextField("customer-first-name")
 		f1.Is = name0
-		f2 := query.AddRangeDateField("created-at")
+		f2 := query.AddTimeField("created-at")
 		f2.Max = time.Now().Add(-time.Hour)
 
 		result, err := txg.Search(query)

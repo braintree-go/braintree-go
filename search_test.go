@@ -23,38 +23,38 @@ func TestSearchXMLEncode(t *testing.T) {
 
 	startDate := time.Date(2016, time.September, 11, 0, 0, 0, 0, time.UTC)
 	endDate := time.Date(2016, time.September, 11, 23, 59, 59, 0, time.UTC)
-	f3 := s.AddRangeDateField("settled-at")
+	f3 := s.AddTimeField("settled-at")
 	f3.Min = startDate
 	f3.Max = endDate
 
-	f4 := s.AddRangeDateField("created-at")
+	f4 := s.AddTimeField("created-at")
 	f4.Min = startDate
 
-	f5 := s.AddRangeDateField("authorization-expired-at")
+	f5 := s.AddTimeField("authorization-expired-at")
 	f5.Min = startDate
 
-	f6 := s.AddRangeDateField("authorized-at")
+	f6 := s.AddTimeField("authorized-at")
 	f6.Min = startDate
 
-	f7 := s.AddRangeDateField("failed-at")
+	f7 := s.AddTimeField("failed-at")
 	f7.Min = startDate
 
-	f8 := s.AddRangeDateField("gateway-rejected-at")
+	f8 := s.AddTimeField("gateway-rejected-at")
 	f8.Min = startDate
 
-	f9 := s.AddRangeDateField("processor-declined-at")
+	f9 := s.AddTimeField("processor-declined-at")
 	f9.Min = startDate
 
-	f10 := s.AddRangeDateField("submitted-for-settlement-at")
+	f10 := s.AddTimeField("submitted-for-settlement-at")
 	f10.Min = startDate
 
-	f11 := s.AddRangeDateField("voided-at")
+	f11 := s.AddTimeField("voided-at")
 	f11.Min = startDate
 
-	f12 := s.AddRangeDateField("disbursement-date")
+	f12 := s.AddTimeField("disbursement-date")
 	f12.Min = startDate
 
-	f13 := s.AddRangeDateField("dispute-date")
+	f13 := s.AddTimeField("dispute-date")
 	f13.Min = startDate
 
 	f14 := s.AddMultiField("status")
