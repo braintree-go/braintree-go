@@ -76,6 +76,7 @@ func (d RangeDateField) marshalXMLCriterion(e *xml.Encoder, name string, value t
 	}
 	const format = "01/02/2006 15:04:05"
 	start := xml.StartElement{Name: xml.Name{Local: name}}
+	start.Attr = []xml.Attr{{Name: xml.Name{Local: "type"}, Value: "datetime"}}
 	return e.EncodeElement(value.Format(format), start)
 }
 
