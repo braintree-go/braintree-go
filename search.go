@@ -46,33 +46,37 @@ func (d RangeDateField) MarshalXML(e *xml.Encoder, start xml.StartElement) error
 	start.Name = d.XMLName
 
 	var err error
-	format := "01/02/2006 15:04:05"
 	err = e.EncodeToken(start)
 	if err != nil {
 		return err
 	}
 
-	if !d.Is.IsZero() {
-		err = e.EncodeElement(d.Is.Format(format), xml.StartElement{Name: xml.Name{Local: "is"}})
-		if err != nil {
-			return err
-		}
+	err = d.marshalXMLCriterion(e, "is", d.Is)
+	if err != nil {
+		return err
 	}
-	if !d.Min.IsZero() {
-		err = e.EncodeElement(d.Min.Format(format), xml.StartElement{Name: xml.Name{Local: "min"}})
-		if err != nil {
-			return err
-		}
+
+	err = d.marshalXMLCriterion(e, "min", d.Min)
+	if err != nil {
+		return err
 	}
-	if !d.Max.IsZero() {
-		err = e.EncodeElement(d.Max.Format(format), xml.StartElement{Name: xml.Name{Local: "max"}})
-		if err != nil {
-			return err
-		}
+
+	err = d.marshalXMLCriterion(e, "max", d.Max)
+	if err != nil {
+		return err
 	}
 
 	err = e.EncodeToken(start.End())
 	return err
+}
+
+func (d RangeDateField) marshalXMLCriterion(e *xml.Encoder, name string, value time.Time) error {
+	if value.IsZero() {
+		return nil
+	}
+	const format = "01/02/2006 15:04:05"
+	start := xml.StartElement{Name: xml.Name{Local: name}}
+	return e.EncodeElement(value.Format(format), start)
 }
 
 type MultiField struct {
