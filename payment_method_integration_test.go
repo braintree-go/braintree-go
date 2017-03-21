@@ -8,6 +8,8 @@ import (
 )
 
 func TestPaymentMethod(t *testing.T) {
+	t.Parallel()
+
 	cust, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)

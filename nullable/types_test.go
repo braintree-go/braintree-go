@@ -6,6 +6,8 @@ import (
 )
 
 func TestNullInt64UnmarshalText(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		in          []byte
 		out         NullInt64
@@ -37,6 +39,8 @@ func TestNullInt64UnmarshalText(t *testing.T) {
 }
 
 func TestNullInt64MarshalText(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		in  NullInt64
 		out []byte
@@ -55,6 +59,8 @@ func TestNullInt64MarshalText(t *testing.T) {
 }
 
 func TestNullBoolUnmarshalText(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		in          []byte
 		out         NullBool
@@ -86,6 +92,8 @@ func TestNullBoolUnmarshalText(t *testing.T) {
 }
 
 func TestNullBoolMarshalText(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		in  NullBool
 		out []byte

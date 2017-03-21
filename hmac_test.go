@@ -5,6 +5,8 @@ import (
 )
 
 func TestHmacerParseSignature(t *testing.T) {
+	t.Parallel()
+
 	hmacer := newHmacer(testGateway)
 
 	// Happy path
@@ -35,6 +37,8 @@ func TestHmacerParseSignature(t *testing.T) {
 }
 
 func TestHmacerVerifySignature(t *testing.T) {
+	t.Parallel()
+
 	gateway := New(Sandbox, "my_merchant_id", "my_public_key", "my_private_key")
 	hmacer := newHmacer(gateway)
 	signatureKeyPair := gateway.PublicKey + "|fa654fa4fe5537934960c483dbb0ee575d64b6ad"

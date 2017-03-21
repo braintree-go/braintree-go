@@ -6,6 +6,8 @@ import (
 )
 
 func TestWebhookParseMerchantAccountAccepted(t *testing.T) {
+	t.Parallel()
+
 	webhookGateway := testGateway.WebhookNotification()
 	hmacer := newHmacer(testGateway)
 
@@ -47,6 +49,8 @@ func TestWebhookParseMerchantAccountAccepted(t *testing.T) {
 }
 
 func TestWebhookParseMerchantAccountDeclined(t *testing.T) {
+	t.Parallel()
+
 	webhookGateway := testGateway.WebhookNotification()
 	hmacer := newHmacer(testGateway)
 
@@ -106,6 +110,8 @@ func TestWebhookParseMerchantAccountDeclined(t *testing.T) {
 }
 
 func TestWebhookParseDisbursement(t *testing.T) {
+	t.Parallel()
+
 	webhookGateway := testGateway.WebhookNotification()
 	hmacer := newHmacer(testGateway)
 
@@ -163,6 +169,8 @@ func TestWebhookParseDisbursement(t *testing.T) {
 }
 
 func TestWebhookParseDisbursementException(t *testing.T) {
+	t.Parallel()
+
 	webhookGateway := testGateway.WebhookNotification()
 	hmacer := newHmacer(testGateway)
 

@@ -10,6 +10,8 @@ import (
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestSubscriptionSimple(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -81,6 +83,8 @@ func TestSubscriptionSimple(t *testing.T) {
 }
 
 func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -187,6 +191,8 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 }
 
 func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -293,6 +299,8 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 }
 
 func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -402,6 +410,8 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 }
 
 func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -511,6 +521,8 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 }
 
 func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -629,6 +641,8 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 }
 
 func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)

@@ -14,6 +14,8 @@ const (
 )
 
 func TestSettlementBatch(t *testing.T) {
+	t.Parallel()
+
 	// Get current batch summary
 	y, m, d := time.Now().Date()
 	date := fmt.Sprintf("%d-%d-%d", y, m, d)

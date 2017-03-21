@@ -6,6 +6,8 @@ import (
 )
 
 func TestSearchXMLEncode(t *testing.T) {
+	t.Parallel()
+
 	s := new(SearchQuery)
 
 	f := s.AddTextField("customer-first-name")
@@ -57,6 +59,8 @@ func TestSearchXMLEncode(t *testing.T) {
 }
 
 func TestSearchResultUnmarshal(t *testing.T) {
+	t.Parallel()
+
 	xmls := `<search-results>
   <page-size type="integer">50</page-size>
   <ids type="array">
