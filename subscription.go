@@ -44,8 +44,8 @@ type Subscription struct {
 	TrialPeriod             *nullable.NullBool   `xml:"trial-period,omitempty"`
 	Transactions            *Transactions        `xml:"transactions,omitempty"`
 	Options                 *SubscriptionOptions `xml:"options,omitempty"`
+	Descriptor              *Descriptor          `xml:"descriptor,omitempty"`
 	// AddOns                  []interface{} `xml:"add-ons,omitempty"`
-	// Descriptor              interface{}   `xml:"descriptor,omitempty"`   // struct with name, phone
 }
 
 type SubscriptionRequest struct {
@@ -65,6 +65,7 @@ type SubscriptionRequest struct {
 	TrialDuration         string               `xml:"trial-duration,omitempty"`
 	TrialDurationUnit     string               `xml:"trial-duration-unit,omitempty"`
 	TrialPeriod           *nullable.NullBool   `xml:"trial-period,omitempty"`
+	Descriptor            *Descriptor          `xml:"descriptor,omitempty"`
 }
 
 type Subscriptions struct {
