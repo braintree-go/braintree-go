@@ -541,7 +541,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 
 	// Create
 	trialPeriod := nullable.NewNullBool(true, true)
-	firstBillingDate := time.Now().AddDate(0, 0, 7)
+	firstBillingDate := time.Now().In(testTimeZone).AddDate(0, 0, 7)
 	numberOfBillingCycles := nullable.NewNullInt64(2, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
@@ -661,7 +661,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 
 	// Create
 	trialPeriod := nullable.NewNullBool(true, true)
-	firstBillingDate := time.Now().AddDate(0, 0, 7)
+	firstBillingDate := time.Now().In(testTimeZone).AddDate(0, 0, 7)
 	neverExpires := nullable.NewNullBool(true, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),

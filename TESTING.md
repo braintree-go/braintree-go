@@ -13,6 +13,12 @@ export BRAINTREE_PUB_KEY={your-public-key}
 export BRAINTREE_PRIV_KEY={your-private-key}
 ```
 
+You can also optional set an environment variable with the timezone of your sandbox account. The default is below but should match your account's timezone to ensure tests pass.
+
+```
+export BRAINTREE_TIMEZONE="US/Mountain"
+```
+
 When using Braintree Go in a production environment, we recommend that you continue to store these credentials in environment variables. See [the 12 Factor App](http://www.12factor.net/config) for details.
 
 #### Sandbox settings
