@@ -13,6 +13,8 @@ func randomAmount() *Decimal {
 }
 
 func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
+	t.Parallel()
+
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
@@ -64,6 +66,8 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 }
 
 func TestTransactionSearch(t *testing.T) {
+	t.Parallel()
+
 	txg := testGateway.Transaction()
 	createTx := func(amount *Decimal, customerName string) error {
 		_, err := txg.Create(&Transaction{
@@ -184,6 +188,8 @@ func TestTransactionSearchTime(t *testing.T) {
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
+	t.Parallel()
+
 	_, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: NewDecimal(201000, 2),
@@ -208,6 +214,8 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 }
 
 func TestFindTransaction(t *testing.T) {
+	t.Parallel()
+
 	createdTransaction, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: randomAmount(),
@@ -231,6 +239,8 @@ func TestFindTransaction(t *testing.T) {
 }
 
 func TestFindNonExistantTransaction(t *testing.T) {
+	t.Parallel()
+
 	_, err := testGateway.Transaction().Find("bad_transaction_id")
 	if err == nil {
 		t.Fatal("Did not receive error when finding an invalid tx ID")
@@ -242,6 +252,8 @@ func TestFindNonExistantTransaction(t *testing.T) {
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestTransactionDescriptorFields(t *testing.T) {
+	t.Parallel()
+
 	tx := &Transaction{
 		Type:               "sale",
 		Amount:             randomAmount(),
@@ -282,6 +294,8 @@ func TestTransactionDescriptorFields(t *testing.T) {
 }
 
 func TestAllTransactionFields(t *testing.T) {
+	t.Parallel()
+
 	tx := &Transaction{
 		Type:    "sale",
 		Amount:  randomAmount(),
@@ -384,6 +398,8 @@ func TestAllTransactionFields(t *testing.T) {
 
 // This test will only pass on Travis. See TESTING.md for more details.
 func TestTransactionDisbursementDetails(t *testing.T) {
+	t.Parallel()
+
 	txn, err := testGateway.Transaction().Find("dskdmb")
 	if err != nil {
 		t.Fatal(err)
@@ -410,6 +426,8 @@ func TestTransactionDisbursementDetails(t *testing.T) {
 }
 
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["discover"].Number,
@@ -439,6 +457,8 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 }
 
 func TestSettleTransaction(t *testing.T) {
+	t.Parallel()
+
 	old_environment := testGateway.Environment
 
 	txn, err := testGateway.Transaction().Create(&Transaction{
@@ -479,6 +499,8 @@ func TestSettleTransaction(t *testing.T) {
 }
 
 func TestTrxPaymentMethodNonce(t *testing.T) {
+	t.Parallel()
+
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:               "sale",
 		Amount:             randomAmount(),
@@ -495,6 +517,8 @@ func TestTrxPaymentMethodNonce(t *testing.T) {
 }
 
 func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
+	t.Parallel()
+
 	amount := NewDecimal(20000, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
@@ -567,6 +591,8 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 }
 
 func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
+	t.Parallel()
+
 	amount := NewDecimal(10000, 2)
 	refundAmt1 := NewDecimal(5000, 2)
 	refundAmt2 := NewDecimal(5001, 2)
@@ -628,6 +654,8 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 }
 
 func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
+	t.Parallel()
+
 	amount := NewDecimal(10000, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",

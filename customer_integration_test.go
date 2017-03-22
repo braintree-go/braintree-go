@@ -9,6 +9,8 @@ import (
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestCustomer(t *testing.T) {
+	t.Parallel()
+
 	oc := &Customer{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
@@ -117,6 +119,8 @@ func TestCustomer(t *testing.T) {
 }
 
 func TestCustomerPayPalAccount(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -147,6 +151,8 @@ func TestCustomerPayPalAccount(t *testing.T) {
 }
 
 func TestCustomerPaymentMethods(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -183,6 +189,8 @@ func TestCustomerPaymentMethods(t *testing.T) {
 }
 
 func TestCustomerDefaultPaymentMethod(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -214,6 +222,8 @@ func TestCustomerDefaultPaymentMethod(t *testing.T) {
 }
 
 func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)

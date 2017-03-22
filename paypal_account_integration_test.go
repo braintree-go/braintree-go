@@ -3,6 +3,8 @@ package braintree
 import "testing"
 
 func TestPayPalAccount(t *testing.T) {
+	t.Parallel()
+
 	cust, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -57,6 +59,8 @@ func TestPayPalAccount(t *testing.T) {
 }
 
 func TestFindPayPalAccountBadData(t *testing.T) {
+	t.Parallel()
+
 	paypalAccount, err := testGateway.PayPalAccount().Find("invalid_token")
 
 	t.Log(paypalAccount)

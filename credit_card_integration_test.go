@@ -5,6 +5,8 @@ import (
 )
 
 func TestCreditCard(t *testing.T) {
+	t.Parallel()
+
 	cust, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -61,6 +63,8 @@ func TestCreditCard(t *testing.T) {
 }
 
 func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -82,6 +86,8 @@ func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
 }
 
 func TestCreateCreditCardInvalidInput(t *testing.T) {
+	t.Parallel()
+
 	card, err := testGateway.CreditCard().Create(&CreditCard{
 		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
@@ -98,6 +104,8 @@ func TestCreateCreditCardInvalidInput(t *testing.T) {
 }
 
 func TestFindCreditCard(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -134,6 +142,8 @@ func TestFindCreditCard(t *testing.T) {
 }
 
 func TestFindCreditCardBadData(t *testing.T) {
+	t.Parallel()
+
 	card, err := testGateway.CreditCard().Find("invalid_token")
 
 	t.Log(card)
@@ -144,6 +154,8 @@ func TestFindCreditCardBadData(t *testing.T) {
 }
 
 func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)
@@ -161,6 +173,8 @@ func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
 }
 
 func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
 		t.Fatal(err)

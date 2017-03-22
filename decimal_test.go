@@ -6,6 +6,8 @@ import (
 )
 
 func TestDecimalUnmarshalText(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		in          []byte
 		out         *Decimal
@@ -42,6 +44,8 @@ func TestDecimalUnmarshalText(t *testing.T) {
 }
 
 func TestDecimalMarshalText(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		in  *Decimal
 		out []byte
@@ -67,6 +71,8 @@ func TestDecimalMarshalText(t *testing.T) {
 }
 
 func TestDecimalCmp(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		x, y *Decimal
 		out  int
