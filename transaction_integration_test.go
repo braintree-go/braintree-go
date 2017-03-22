@@ -3,6 +3,7 @@ package braintree
 import (
 	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
@@ -108,6 +109,76 @@ func TestTransactionSearch(t *testing.T) {
 	if x := tx.Customer.FirstName; x != name0 {
 		t.Log(name0)
 		t.Fatal(x)
+	}
+}
+
+func TestTransactionSearchTime(t *testing.T) {
+	txg := testGateway.Transaction()
+	createTx := func(amount *Decimal, customerName string) error {
+		_, err := txg.Create(&Transaction{
+			Type:   "sale",
+			Amount: amount,
+			Customer: &Customer{
+				FirstName: customerName,
+			},
+			CreditCard: &CreditCard{
+				Number:         testCreditCards["visa"].Number,
+				ExpirationDate: "05/14",
+			},
+		})
+		return err
+	}
+
+	unique := testhelpers.RandomString()
+
+	name0 := "Erik-" + unique
+	if err := createTx(randomAmount(), name0); err != nil {
+		t.Fatal(err)
+	}
+
+	name1 := "Lionel-" + unique
+	if err := createTx(randomAmount(), name1); err != nil {
+		t.Fatal(err)
+	}
+
+	{ // test: txn is returned if querying for created at before now
+		query := new(SearchQuery)
+		f1 := query.AddTextField("customer-first-name")
+		f1.Is = name0
+		f2 := query.AddTimeField("created-at")
+		f2.Max = time.Now()
+
+		result, err := txg.Search(query)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !result.TotalItems.Valid || result.TotalItems.Int64 != 1 {
+			t.Fatal(result.Transactions)
+		}
+
+		tx := result.Transactions[0]
+		if x := tx.Customer.FirstName; x != name0 {
+			t.Log(name0)
+			t.Fatal(x)
+		}
+	}
+
+	{ // test: txn is not returned if querying for created at before 1 hour ago
+		query := new(SearchQuery)
+		f1 := query.AddTextField("customer-first-name")
+		f1.Is = name0
+		f2 := query.AddTimeField("created-at")
+		f2.Max = time.Now().Add(-time.Hour)
+
+		result, err := txg.Search(query)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !result.TotalItems.Valid || result.TotalItems.Int64 != 0 {
+			t.Fatal(result.Transactions)
+		}
 	}
 }
 
