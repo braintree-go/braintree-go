@@ -28,39 +28,42 @@ type ModificationsRequest struct {
 }
 
 func (m ModificationsRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	e.EncodeToken(start)
+	type addSchema struct {
+		Type          string                   `xml:"type,attr"`
+		Modifications []AddModificationRequest `xml:"modification"`
+	}
+	type updateSchema struct {
+		Type          string                      `xml:"type,attr"`
+		Modifications []UpdateModificationRequest `xml:"modification"`
+	}
+	type removeSchema struct {
+		Type        string   `xml:"type,attr"`
+		ExistingIDs []string `xml:"modification"`
+	}
+	type schema struct {
+		Add    *addSchema    `xml:"add,omitempty"`
+		Update *updateSchema `xml:"update,omitempty"`
+		Remove *removeSchema `xml:"remove,omitempty"`
+	}
+
+	x := schema{}
 	if len(m.Add) > 0 {
-		if err := m.marshalXMLModifications(e, "add", m.Add); err != nil {
-			return err
+		x.Add = &addSchema{
+			Type:          "array",
+			Modifications: m.Add,
 		}
 	}
 	if len(m.Update) > 0 {
-		if err := m.marshalXMLModifications(e, "update", m.Update); err != nil {
-			return err
+		x.Update = &updateSchema{
+			Type:          "array",
+			Modifications: m.Update,
 		}
 	}
 	if len(m.RemoveExistingIDs) > 0 {
-		if err := m.marshalXMLModifications(e, "remove", m.RemoveExistingIDs); err != nil {
-			return err
+		x.Remove = &removeSchema{
+			Type:        "array",
+			ExistingIDs: m.RemoveExistingIDs,
 		}
 	}
-	e.EncodeToken(start.End())
-	return nil
-}
-
-func (m ModificationsRequest) marshalXMLModifications(e *xml.Encoder, name string, modifications interface{}) error {
-	attr := []xml.Attr{{Name: xml.Name{Local: "type"}, Value: "array"}}
-	start := xml.StartElement{Name: xml.Name{Local: name}, Attr: attr}
-
-	if err := e.EncodeToken(start); err != nil {
-		return err
-	}
-	if err := e.EncodeElement(modifications, xml.StartElement{Name: xml.Name{Local: "modification"}}); err != nil {
-		return err
-	}
-	if err := e.EncodeToken(start.End()); err != nil {
-		return err
-	}
-
-	return nil
+	return e.EncodeElement(x, start)
 }
