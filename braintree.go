@@ -8,27 +8,7 @@ import (
 	"net/http"
 )
 
-type Environment string
-
-const (
-	Development Environment = "development"
-	Sandbox     Environment = "sandbox"
-	Production  Environment = "production"
-
-	LibraryVersion = "0.9.0"
-)
-
-func (e Environment) BaseURL() string {
-	switch e {
-	case Development:
-		return "http://localhost:3000"
-	case Sandbox:
-		return "https://sandbox.braintreegateway.com"
-	case Production:
-		return "https://www.braintreegateway.com"
-	}
-	panic(`invalid environment "` + e + `"`)
-}
+const LibraryVersion = "0.9.0"
 
 type ApiVersion int
 
@@ -66,7 +46,7 @@ type Braintree struct {
 }
 
 func (g *Braintree) MerchantURL() string {
-	return g.Environment.BaseURL() + "/merchants/" + g.MerchantId
+	return g.Environment.BaseURL + "/merchants/" + g.MerchantId
 }
 
 func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {

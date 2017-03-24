@@ -13,7 +13,7 @@ func TestEnvironmentBaseURL(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		actual := test.Environment.BaseURL()
+		actual := test.Environment.BaseURL
 		if actual != test.WantedBaseURL {
 			t.Fatalf("%#v.BaseURL() = %#v, want %#v", test.Environment, actual, test.WantedBaseURL)
 		}
