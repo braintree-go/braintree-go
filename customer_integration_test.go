@@ -118,6 +118,36 @@ func TestCustomer(t *testing.T) {
 	}
 }
 
+func TestCustomerWithCustomFields(t *testing.T) {
+	t.Parallel()
+
+	customFields := map[string]string{
+		"custom_field_1": "custom value",
+	}
+
+	c := &Customer{
+		CustomFields: customFields,
+	}
+
+	customer, err := testGateway.Customer().Create(c)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(customer.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
+	}
+
+	customer, err = testGateway.Customer().Find(customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(customer.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
+	}
+}
+
 func TestCustomerPayPalAccount(t *testing.T) {
 	t.Parallel()
 

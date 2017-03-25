@@ -3,43 +3,45 @@ package braintree
 import (
 	"time"
 
+	"github.com/lionelbarrow/braintree-go/customfields"
 	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
 type Transaction struct {
-	XMLName                     string               `xml:"transaction"`
-	Id                          string               `xml:"id,omitempty"`
-	CustomerID                  string               `xml:"customer-id,omitempty"`
-	Status                      string               `xml:"status,omitempty"`
-	Type                        string               `xml:"type,omitempty"`
-	Amount                      *Decimal             `xml:"amount"`
-	OrderId                     string               `xml:"order-id,omitempty"`
-	PaymentMethodToken          string               `xml:"payment-method-token,omitempty"`
-	PaymentMethodNonce          string               `xml:"payment-method-nonce,omitempty"`
-	MerchantAccountId           string               `xml:"merchant-account-id,omitempty"`
-	PlanId                      string               `xml:"plan-id,omitempty"`
-	CreditCard                  *CreditCard          `xml:"credit-card,omitempty"`
-	Customer                    *Customer            `xml:"customer,omitempty"`
-	BillingAddress              *Address             `xml:"billing,omitempty"`
-	ShippingAddress             *Address             `xml:"shipping,omitempty"`
-	DeviceData                  string               `xml:"device-data,omitempty"`
-	Options                     *TransactionOptions  `xml:"options,omitempty"`
-	ServiceFeeAmount            *Decimal             `xml:"service-fee-amount,attr,omitempty"`
-	CreatedAt                   *time.Time           `xml:"created-at,omitempty"`
-	UpdatedAt                   *time.Time           `xml:"updated-at,omitempty"`
-	DisbursementDetails         *DisbursementDetails `xml:"disbursement-details,omitempty"`
-	RefundId                    string               `xml:"refund-id,omitempty"`
-	RefundIds                   *[]string            `xml:"refund-ids>item,omitempty"`
-	RefundedTransactionId       *string              `xml:"refunded-transaction-id,omitempty"`
-	ProcessorResponseCode       int                  `xml:"processor-response-code,omitempty"`
-	ProcessorResponseText       string               `xml:"processor-response-text,omitempty"`
-	ProcessorAuthorizationCode  string               `xml:"processor-authorization-code,omitempty"`
-	SettlementBatchId           string               `xml:"settlement-batch-id,omitempty"`
-	PaymentInstrumentType       string               `xml:"payment-instrument-type,omitempty"`
-	PayPalDetails               *PayPalDetails       `xml:"paypal,omitempty"`
-	AdditionalProcessorResponse string               `xml:"additional-processor-response,omitempty"`
-	RiskData                    *RiskData            `xml:"risk-data,omitempty"`
-	Descriptor                  *Descriptor          `xml:"descriptor,omitempty"`
+	XMLName                     string                    `xml:"transaction"`
+	Id                          string                    `xml:"id,omitempty"`
+	CustomerID                  string                    `xml:"customer-id,omitempty"`
+	Status                      string                    `xml:"status,omitempty"`
+	Type                        string                    `xml:"type,omitempty"`
+	Amount                      *Decimal                  `xml:"amount"`
+	OrderId                     string                    `xml:"order-id,omitempty"`
+	PaymentMethodToken          string                    `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce          string                    `xml:"payment-method-nonce,omitempty"`
+	MerchantAccountId           string                    `xml:"merchant-account-id,omitempty"`
+	PlanId                      string                    `xml:"plan-id,omitempty"`
+	CreditCard                  *CreditCard               `xml:"credit-card,omitempty"`
+	Customer                    *Customer                 `xml:"customer,omitempty"`
+	BillingAddress              *Address                  `xml:"billing,omitempty"`
+	ShippingAddress             *Address                  `xml:"shipping,omitempty"`
+	DeviceData                  string                    `xml:"device-data,omitempty"`
+	Options                     *TransactionOptions       `xml:"options,omitempty"`
+	ServiceFeeAmount            *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
+	CreatedAt                   *time.Time                `xml:"created-at,omitempty"`
+	UpdatedAt                   *time.Time                `xml:"updated-at,omitempty"`
+	DisbursementDetails         *DisbursementDetails      `xml:"disbursement-details,omitempty"`
+	RefundId                    string                    `xml:"refund-id,omitempty"`
+	RefundIds                   *[]string                 `xml:"refund-ids>item,omitempty"`
+	RefundedTransactionId       *string                   `xml:"refunded-transaction-id,omitempty"`
+	ProcessorResponseCode       int                       `xml:"processor-response-code,omitempty"`
+	ProcessorResponseText       string                    `xml:"processor-response-text,omitempty"`
+	ProcessorAuthorizationCode  string                    `xml:"processor-authorization-code,omitempty"`
+	SettlementBatchId           string                    `xml:"settlement-batch-id,omitempty"`
+	PaymentInstrumentType       string                    `xml:"payment-instrument-type,omitempty"`
+	PayPalDetails               *PayPalDetails            `xml:"paypal,omitempty"`
+	AdditionalProcessorResponse string                    `xml:"additional-processor-response,omitempty"`
+	RiskData                    *RiskData                 `xml:"risk-data,omitempty"`
+	Descriptor                  *Descriptor               `xml:"descriptor,omitempty"`
+	CustomFields                customfields.CustomFields `xml:"custom-fields,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
