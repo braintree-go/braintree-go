@@ -5,6 +5,8 @@ import (
 )
 
 func TestAddOn(t *testing.T) {
+	t.Parallel()
+
 	addOns, err := testGateway.AddOn().All()
 
 	if err != nil {

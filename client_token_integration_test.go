@@ -4,6 +4,8 @@ import "testing"
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestClientToken(t *testing.T) {
+	t.Parallel()
+
 	g := testGateway.ClientToken()
 	token, err := g.Generate()
 	if err != nil {
@@ -15,6 +17,8 @@ func TestClientToken(t *testing.T) {
 }
 
 func TestClientTokenWithCustomer(t *testing.T) {
+	t.Parallel()
+
 	customerRequest := &Customer{FirstName: "Lionel"}
 
 	customer, err := testGateway.Customer().Create(customerRequest)

@@ -55,6 +55,13 @@ For details on this package, see [GoDoc](http://godoc.org/github.com/lionelbarro
 The integration tests run against a sandbox account created in the [Braintree Sandbox](https://sandbox.braintreegateway.com/).
 See [TESTING.md](TESTING.md) for further instructions on how to set up your sandbox for integration testing.
 
+You can run tests locally using the same credentials that Travis CI uses by using the credentials in `.default.env`. Simply `cp .default.env .env` if you use a tool that autoloads `.env` files, or `source .default.env` to load the credentials into your shell. Then run tests with `go test ./...`.
+
+```
+source .default.env
+go test ./...
+```
+
 ### License
 
 The MIT License (MIT)

@@ -5,6 +5,8 @@ import (
 )
 
 func TestDiscounts(t *testing.T) {
+	t.Parallel()
+
 	discounts, err := testGateway.Discount().All()
 
 	if err != nil {
