@@ -1,11 +1,15 @@
 package braintree
 
 type Environment struct {
-	BaseURL string
+	GatewayBaseURL string
+}
+
+func (e Environment) BaseURL() string {
+	return e.GatewayBaseURL
 }
 
 var (
-	Development = Environment{BaseURL: "http://localhost:3000"}
-	Sandbox     = Environment{BaseURL: "https://sandbox.braintreegateway.com"}
-	Production  = Environment{BaseURL: "https://www.braintreegateway.com"}
+	Development = Environment{GatewayBaseURL: "http://localhost:3000"}
+	Sandbox     = Environment{GatewayBaseURL: "https://sandbox.braintreegateway.com"}
+	Production  = Environment{GatewayBaseURL: "https://www.braintreegateway.com"}
 )

@@ -46,7 +46,7 @@ type Braintree struct {
 }
 
 func (g *Braintree) MerchantURL() string {
-	return g.Environment.BaseURL + "/merchants/" + g.MerchantId
+	return g.Environment.BaseURL() + "/merchants/" + g.MerchantId
 }
 
 func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
