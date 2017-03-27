@@ -22,7 +22,7 @@ var testGateway = New(
 var testTimeZone = func() *time.Location {
 	tzName := os.Getenv("BRAINTREE_TIMEZONE")
 	if tzName == "" {
-		tzName = "US/Mountain"
+		return time.UTC
 	}
 	tz, err := time.LoadLocation(tzName)
 	if err != nil {
