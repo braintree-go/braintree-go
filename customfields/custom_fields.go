@@ -18,7 +18,9 @@ type xmlField struct {
 var nameMarshalReplacer = strings.NewReplacer("_", "-")
 var nameUnmarshalReplacer = strings.NewReplacer("-", "_")
 
-// MarshalXML encodes the map of custom fields names to values with the name as an xml tag and the value as it's contents. Tag names have underscores replaced with hyphens, as required by the Braintree API.
+// MarshalXML encodes the map of custom fields names to values with the name as
+// an xml tag and the value as it's contents. Tag names have underscores
+// replaced with hyphens, as required by the Braintree API.
 func (c CustomFields) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	if len(c) == 0 {
 		return nil
@@ -40,7 +42,9 @@ func (c CustomFields) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	return e.EncodeToken(start.End())
 }
 
-// UnmarshalXML decodes the tags within into a map of custom fields names to values with the xml tag is the name and the contents is it's value. Tag names have hyphens replaced with underscores.
+// UnmarshalXML decodes the tags within into a map of custom fields names to
+// values with the xml tag is the name and the contents is it's value. Tag
+// names have hyphens replaced with underscores.
 func (c *CustomFields) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	*c = CustomFields{}
 	for {
