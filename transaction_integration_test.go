@@ -460,8 +460,6 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 func TestSettleTransaction(t *testing.T) {
 	t.Parallel()
 
-	old_environment := testGateway.Environment
-
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: randomAmount(),
@@ -479,15 +477,20 @@ func TestSettleTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	testGateway.Environment = Production
-
-	_, err = testGateway.Transaction().Settle(txn.Id)
-	if err.Error() != "Operation not allowed in production environment" {
-		t.Log(testGateway.Environment)
-		t.Fatal(err)
+	prodGateway := Braintree{
+		Credentials: NewAPIKey(
+			Production,
+			testGateway.Credentials.(apiKey).merchantID,
+			testGateway.Credentials.(apiKey).publicKey,
+			testGateway.Credentials.(apiKey).privateKey,
+		),
 	}
 
-	testGateway.Environment = old_environment
+	_, err = prodGateway.Transaction().Settle(txn.Id)
+	if err.Error() != "Operation not allowed in production environment" {
+		t.Log(prodGateway.Environment())
+		t.Fatal(err)
+	}
 
 	txn, err = testGateway.Transaction().Settle(txn.Id)
 	if err != nil {

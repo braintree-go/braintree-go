@@ -45,7 +45,7 @@ func (g *TransactionGateway) SubmitForSettlement(id string, amount ...*Decimal) 
 // Settle settles a transaction.
 // This action is only available in the sandbox environment.
 func (g *TransactionGateway) Settle(id string) (*Transaction, error) {
-	if g.Environment != Production {
+	if g.Environment() != Production {
 		resp, err := g.execute("PUT", "transactions/"+id+"/settle", nil)
 		if err != nil {
 			return nil, err
