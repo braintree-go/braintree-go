@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"math/rand"
+	"reflect"
 	"testing"
 	"time"
 
@@ -690,5 +691,37 @@ func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 
 	if txn.Status != "settled" {
 		t.Fatal(txn.Status)
+	}
+}
+
+func TestTransactionCreateWithCustomFields(t *testing.T) {
+	t.Parallel()
+
+	customFields := map[string]string{
+		"custom_field_1": "custom value",
+	}
+
+	amount := NewDecimal(10000, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:               "sale",
+		Amount:             amount,
+		PaymentMethodNonce: FakeNonceTransactable,
+		CustomFields:       customFields,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(txn.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
+	}
+
+	txn, err = testGateway.Transaction().Find(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(txn.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
 	}
 }
