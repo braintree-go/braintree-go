@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/xml"
 	"fmt"
 	"log"
@@ -82,7 +83,9 @@ func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v ap
 	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header.Set("User-Agent", fmt.Sprintf("Braintree Go %s", LibraryVersion))
 	req.Header.Set("X-ApiVersion", fmt.Sprintf("%d", v))
-	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
+
+	basicAuth := g.PublicKey + ":" + g.PrivateKey
+	req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(basicAuth)))
 
 	httpClient := g.HttpClient
 	if httpClient == nil {
