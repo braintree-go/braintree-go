@@ -20,12 +20,13 @@ func (i SignatureError) Error() string {
 	return i.message
 }
 
-func newHmacer(bt *Braintree) hmacer {
-	return hmacer{bt}
+func newHmacer(publicKey, privateKey string) hmacer {
+	return hmacer{publicKey: publicKey, privateKey: privateKey}
 }
 
 type hmacer struct {
-	*Braintree
+	publicKey  string
+	privateKey string
 }
 
 func (h hmacer) verifySignature(signature, payload string) (bool, error) {
@@ -49,7 +50,7 @@ func (h hmacer) parseSignature(signatureKeyPair string) (string, error) {
 		return "", SignatureError{"Signature-key pair contains more than one |"}
 	}
 	publicKey := split[0]
-	if publicKey != h.Braintree.PublicKey {
+	if publicKey != h.publicKey {
 		return "", SignatureError{"Signature-key pair contains the wrong public key!"}
 	}
 	return split[1], nil
@@ -57,7 +58,7 @@ func (h hmacer) parseSignature(signatureKeyPair string) (string, error) {
 
 func (h hmacer) hmac(payload string) (string, error) {
 	s := sha1.New()
-	_, err := io.WriteString(s, h.PrivateKey)
+	_, err := io.WriteString(s, h.privateKey)
 	if err != nil {
 		return "", errors.New("Could not write private key to SHA1")
 	}

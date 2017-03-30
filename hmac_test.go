@@ -7,10 +7,10 @@ import (
 func TestHmacerParseSignature(t *testing.T) {
 	t.Parallel()
 
-	hmacer := newHmacer(testGateway)
+	hmacer := newHmacer(testGateway.PublicKey, testGateway.PrivateKey)
 
 	// Happy path
-	realSignature, err := hmacer.parseSignature(testGateway.PublicKey + "|my_actual_signature")
+	realSignature, err := hmacer.parseSignature(hmacer.publicKey + "|my_actual_signature")
 	if err != nil {
 		t.Fatal(err)
 	} else if realSignature != "my_actual_signature" {
@@ -39,9 +39,8 @@ func TestHmacerParseSignature(t *testing.T) {
 func TestHmacerVerifySignature(t *testing.T) {
 	t.Parallel()
 
-	gateway := New(Sandbox, "my_merchant_id", "my_public_key", "my_private_key")
-	hmacer := newHmacer(gateway)
-	signatureKeyPair := gateway.PublicKey + "|fa654fa4fe5537934960c483dbb0ee575d64b6ad"
+	hmacer := newHmacer("my_public_key", "my_private_key")
+	signatureKeyPair := hmacer.publicKey + "|fa654fa4fe5537934960c483dbb0ee575d64b6ad"
 	payload := "my_random_value"
 
 	// Happy path
