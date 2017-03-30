@@ -10,11 +10,11 @@ import (
 
 const LibraryVersion = "0.9.0"
 
-type ApiVersion int
+type apiVersion int
 
 const (
-	ApiVersion3 ApiVersion = 3
-	ApiVersion4            = 4
+	apiVersion3 apiVersion = 3
+	apiVersion4            = 4
 )
 
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
@@ -50,10 +50,10 @@ func (g *Braintree) MerchantURL() string {
 }
 
 func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
-	return g.executeVersion(method, path, xmlObj, ApiVersion3)
+	return g.executeVersion(method, path, xmlObj, apiVersion3)
 }
 
-func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, apiVersion ApiVersion) (*Response, error) {
+func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
 	var buf bytes.Buffer
 	if xmlObj != nil {
 		xmlBody, err := xml.Marshal(xmlObj)
@@ -81,7 +81,7 @@ func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, apiV
 	req.Header.Set("Accept", "application/xml")
 	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header.Set("User-Agent", fmt.Sprintf("Braintree Go %s", LibraryVersion))
-	req.Header.Set("X-ApiVersion", fmt.Sprintf("%d", apiVersion))
+	req.Header.Set("X-ApiVersion", fmt.Sprintf("%d", v))
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
 	httpClient := g.HttpClient

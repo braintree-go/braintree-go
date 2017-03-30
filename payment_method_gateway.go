@@ -22,7 +22,7 @@ type PaymentMethodRequestOptions struct {
 }
 
 func (g *PaymentMethodGateway) Create(paymentMethodRequest *PaymentMethodRequest) (PaymentMethod, error) {
-	resp, err := g.executeVersion("POST", "payment_methods", paymentMethodRequest, ApiVersion4)
+	resp, err := g.executeVersion("POST", "payment_methods", paymentMethodRequest, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (g *PaymentMethodGateway) Create(paymentMethodRequest *PaymentMethodRequest
 }
 
 func (g *PaymentMethodGateway) Update(token string, paymentMethod *PaymentMethodRequest) (PaymentMethod, error) {
-	resp, err := g.executeVersion("PUT", "payment_methods/any/"+token, paymentMethod, ApiVersion4)
+	resp, err := g.executeVersion("PUT", "payment_methods/any/"+token, paymentMethod, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (g *PaymentMethodGateway) Update(token string, paymentMethod *PaymentMethod
 }
 
 func (g *PaymentMethodGateway) Find(token string) (PaymentMethod, error) {
-	resp, err := g.executeVersion("GET", "payment_methods/any/"+token, nil, ApiVersion4)
+	resp, err := g.executeVersion("GET", "payment_methods/any/"+token, nil, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (g *PaymentMethodGateway) Find(token string) (PaymentMethod, error) {
 }
 
 func (g *PaymentMethodGateway) Delete(token string) error {
-	resp, err := g.executeVersion("DELETE", "payment_methods/any/"+token, nil, ApiVersion4)
+	resp, err := g.executeVersion("DELETE", "payment_methods/any/"+token, nil, apiVersion4)
 	if err != nil {
 		return err
 	}
