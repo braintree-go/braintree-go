@@ -1,6 +1,6 @@
 package braintree
 
-type Credentials interface {
+type credentials interface {
 	Environment() Environment
 	MerchantID() string
 	AuthorizationHeader() string

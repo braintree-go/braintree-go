@@ -4,20 +4,20 @@ import "testing"
 
 func TestCredentials(t *testing.T) {
 	tests := []struct {
-		Credentials                 Credentials
+		Credentials                 credentials
 		ExpectedEnvironment         Environment
 		ExpectedMerchantID          string
 		ExpectedAuthorizationHeader string
 	}{
 		{
-			NewAPIKey(Development, "development_merchant_id", "integration_public_key", "integration_private_key"),
+			newAPIKey(Development, "development_merchant_id", "integration_public_key", "integration_private_key"),
 			Development,
 			"development_merchant_id",
 			"Basic aW50ZWdyYXRpb25fcHVibGljX2tleTppbnRlZ3JhdGlvbl9wcml2YXRlX2tleQ==",
 		},
 		{
-			func() Credentials {
-				c, err := NewAccessToken("access_token$development$integration_merchant_id$4bff9793ed")
+			func() credentials {
+				c, err := newAccessToken("access_token$development$integration_merchant_id$4bff9793ed")
 				if err != nil {
 					t.Fatalf("Failed to create access token for test: %s", err.Error())
 				}

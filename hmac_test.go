@@ -7,7 +7,7 @@ import (
 func TestHmacerParseSignature(t *testing.T) {
 	t.Parallel()
 
-	apiKey := testGateway.Credentials.(apiKey)
+	apiKey := testGateway.credentials.(apiKey)
 	hmacer := newHmacer(apiKey.publicKey, apiKey.privateKey)
 
 	// Happy path

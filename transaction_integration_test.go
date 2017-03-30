@@ -478,11 +478,11 @@ func TestSettleTransaction(t *testing.T) {
 	}
 
 	prodGateway := Braintree{
-		Credentials: NewAPIKey(
+		credentials: newAPIKey(
 			Production,
-			testGateway.Credentials.(apiKey).merchantID,
-			testGateway.Credentials.(apiKey).publicKey,
-			testGateway.Credentials.(apiKey).privateKey,
+			testGateway.credentials.(apiKey).merchantID,
+			testGateway.credentials.(apiKey).publicKey,
+			testGateway.credentials.(apiKey).privateKey,
 		),
 	}
 

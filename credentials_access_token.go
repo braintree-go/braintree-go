@@ -11,7 +11,7 @@ type accessToken struct {
 	merchantID string
 }
 
-func NewAccessToken(accessTokenStr string) (Credentials, error) {
+func newAccessToken(accessTokenStr string) (credentials, error) {
 	parts := strings.Split(accessTokenStr, "$")
 	if len(parts) < 3 || parts[0] != "access_token" {
 		return nil, errors.New("access token is not of expected format")

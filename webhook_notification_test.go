@@ -9,7 +9,7 @@ func TestWebhookParseMerchantAccountAccepted(t *testing.T) {
 	t.Parallel()
 
 	webhookGateway := testGateway.WebhookNotification()
-	apiKey := testGateway.Credentials.(apiKey)
+	apiKey := testGateway.credentials.(apiKey)
 	hmacer := newHmacer(apiKey.publicKey, apiKey.privateKey)
 
 	payload := base64.StdEncoding.EncodeToString([]byte(`
@@ -53,7 +53,7 @@ func TestWebhookParseMerchantAccountDeclined(t *testing.T) {
 	t.Parallel()
 
 	webhookGateway := testGateway.WebhookNotification()
-	apiKey := testGateway.Credentials.(apiKey)
+	apiKey := testGateway.credentials.(apiKey)
 	hmacer := newHmacer(apiKey.publicKey, apiKey.privateKey)
 
 	payload := base64.StdEncoding.EncodeToString([]byte(`
@@ -115,7 +115,7 @@ func TestWebhookParseDisbursement(t *testing.T) {
 	t.Parallel()
 
 	webhookGateway := testGateway.WebhookNotification()
-	apiKey := testGateway.Credentials.(apiKey)
+	apiKey := testGateway.credentials.(apiKey)
 	hmacer := newHmacer(apiKey.publicKey, apiKey.privateKey)
 
 	payload := base64.StdEncoding.EncodeToString([]byte(`
@@ -175,7 +175,7 @@ func TestWebhookParseDisbursementException(t *testing.T) {
 	t.Parallel()
 
 	webhookGateway := testGateway.WebhookNotification()
-	apiKey := testGateway.Credentials.(apiKey)
+	apiKey := testGateway.credentials.(apiKey)
 	hmacer := newHmacer(apiKey.publicKey, apiKey.privateKey)
 
 	payload := base64.StdEncoding.EncodeToString([]byte(`

@@ -12,14 +12,12 @@ var testCreditCards = map[string]CreditCard{
 	"discover":   CreditCard{Number: "6011111111111117"},
 }
 
-var testCredentials = NewAPIKey(
+var testGateway = New(
 	Sandbox,
 	os.Getenv("BRAINTREE_MERCH_ID"),
 	os.Getenv("BRAINTREE_PUB_KEY"),
 	os.Getenv("BRAINTREE_PRIV_KEY"),
 )
-
-var testGateway = &Braintree{Credentials: testCredentials}
 
 var testTimeZone = func() *time.Location {
 	tzName := os.Getenv("BRAINTREE_TIMEZONE")

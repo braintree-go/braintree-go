@@ -5,23 +5,19 @@ Initializing
 
 Initialize it with API Keys:
 
-	c := braintree.NewAPIKey(env, merchantID, publicKey, privateKey)
-	bt := &braintree.Braintree{Credentials: c}
+	braintree.New(Sandbox, merchantId, publicKey, privateKey)
 
 Initialize it with an Access Token:
 
-	c, _ := braintree.NewAccessToken(accessToken)
-	bt := &braintree.Braintree{Credentials: c}
+	braintree.NewWithAccessToken(accessToken)
 
 Loggers and HTTP Clients
 
 Optionally configure a logger and HTTP client:
 
-	bt := &braintree.Braintree{
-		Credentials: ...,
-		Logger: log.New(...),
-		HttpClient: ...,
-	}
+	bt := braintree.New(...)
+	bt.Logger = log.New(...)
+	bt.HttpClient = ...
 
 Creating Transactions
 
