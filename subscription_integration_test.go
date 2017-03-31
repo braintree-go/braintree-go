@@ -759,3 +759,138 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestSubscriptionModifications(t *testing.T) {
+	t.Parallel()
+
+	customer, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(customer)
+
+	g := testGateway.Subscription()
+
+	// Create
+	sub, err := g.Create(&SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan_2",
+	})
+
+	t.Log("sub1", sub)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sub.Id == "" {
+		t.Fatal("invalid subscription id")
+	}
+
+	// Add AddOn
+	sub2, err := g.Update(&SubscriptionRequest{
+		Id: sub.Id,
+		AddOns: &ModificationsRequest{
+			Add: []AddModificationRequest{
+				{
+					InheritedFromID: "test_add_on",
+					ModificationRequest: ModificationRequest{
+						Amount:       NewDecimal(300, 2),
+						Quantity:     1,
+						NeverExpires: true,
+					},
+				},
+			},
+		},
+		Discounts: &ModificationsRequest{
+			Add: []AddModificationRequest{
+				{
+					InheritedFromID: "test_discount",
+					ModificationRequest: ModificationRequest{
+						Amount:       NewDecimal(100, 2),
+						Quantity:     1,
+						NeverExpires: true,
+					},
+				},
+			},
+		},
+	})
+
+	t.Log("sub2", sub2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sub2.Id != sub.Id {
+		t.Fatal(sub2.Id)
+	}
+	if x := sub2.PlanId; x != "test_plan_2" {
+		t.Fatal(x)
+	}
+	if x := sub2.AddOns.AddOns; len(x) != 1 {
+		t.Fatalf("got %d add ons, want 1 add on", len(x))
+	}
+	if x := sub2.AddOns.AddOns[0].Amount; x.String() != NewDecimal(300, 2).String() {
+		t.Fatalf("got %v add on, want 3.00 add on", x)
+	}
+	if x := sub2.Discounts.Discounts; len(x) != 1 {
+		t.Fatalf("got %d discounts, want 1 discount", len(x))
+	}
+	if x := sub2.Discounts.Discounts[0].Amount; x.String() != NewDecimal(100, 2).String() {
+		t.Fatalf("got %v discount, want 1.00 discount", x)
+	}
+
+	// Update AddOn
+	sub3, err := g.Update(&SubscriptionRequest{
+		Id: sub.Id,
+		AddOns: &ModificationsRequest{
+			Update: []UpdateModificationRequest{
+				{
+					ExistingID: "test_add_on",
+					ModificationRequest: ModificationRequest{
+						Amount: NewDecimal(150, 2),
+					},
+				},
+			},
+		},
+		Discounts: &ModificationsRequest{
+			RemoveExistingIDs: []string{
+				"test_discount",
+			},
+		},
+	})
+
+	t.Log("sub3", sub3)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sub3.Id != sub.Id {
+		t.Fatal(sub3.Id)
+	}
+	if x := sub3.PlanId; x != "test_plan_2" {
+		t.Fatal(x)
+	}
+	if x := sub3.AddOns.AddOns; len(x) != 1 {
+		t.Fatalf("got %d add ons, want 1 add on", len(x))
+	}
+	if x := sub3.AddOns.AddOns[0].Amount; x.String() != NewDecimal(150, 2).String() {
+		t.Fatalf("got %v add on, want 1.50 add on", x)
+	}
+	if x := sub3.Discounts.Discounts; len(x) != 0 {
+		t.Fatalf("got %d discounts, want 0 discounts", len(x))
+	}
+
+	// Cancel
+	_, err = g.Cancel(sub3.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
