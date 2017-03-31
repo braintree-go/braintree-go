@@ -108,6 +108,9 @@ func TestCustomer(t *testing.T) {
 	if err == nil {
 		t.Fatal("should return 404")
 	}
+	if err.Error() != "Not Found (404)" {
+		t.Fatal(err)
+	}
 	if apiErr, ok := err.(APIError); !(ok && apiErr.StatusCode() == http.StatusNotFound) {
 		t.Fatal(err)
 	}

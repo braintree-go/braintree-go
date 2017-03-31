@@ -129,7 +129,7 @@ func (e httpError) StatusCode() int {
 }
 
 func (e httpError) Error() string {
-	return http.StatusText(int(e))
+	return fmt.Sprintf("%s (%d)", http.StatusText(e.StatusCode()), e.StatusCode())
 }
 
 type invalidResponseError struct {
