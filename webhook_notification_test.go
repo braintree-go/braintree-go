@@ -6,8 +6,10 @@ import (
 )
 
 func TestWebhookParseMerchantAccountAccepted(t *testing.T) {
+	t.Parallel()
+
 	webhookGateway := testGateway.WebhookNotification()
-	hmacer := newHmacer(testGateway)
+	hmacer := newHmacer(webhookGateway.PublicKey, webhookGateway.PrivateKey)
 
 	payload := base64.StdEncoding.EncodeToString([]byte(`
 <notification>
@@ -28,7 +30,7 @@ func TestWebhookParseMerchantAccountAccepted(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	signature := webhookGateway.PublicKey + "|" + hmacedPayload
+	signature := hmacer.publicKey + "|" + hmacedPayload
 
 	notification, err := webhookGateway.Parse(signature, payload)
 
@@ -47,8 +49,10 @@ func TestWebhookParseMerchantAccountAccepted(t *testing.T) {
 }
 
 func TestWebhookParseMerchantAccountDeclined(t *testing.T) {
+	t.Parallel()
+
 	webhookGateway := testGateway.WebhookNotification()
-	hmacer := newHmacer(testGateway)
+	hmacer := newHmacer(webhookGateway.PublicKey, webhookGateway.PrivateKey)
 
 	payload := base64.StdEncoding.EncodeToString([]byte(`
 <notification>
@@ -84,7 +88,7 @@ func TestWebhookParseMerchantAccountDeclined(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	signature := webhookGateway.PublicKey + "|" + hmacedPayload
+	signature := hmacer.publicKey + "|" + hmacedPayload
 
 	notification, err := webhookGateway.Parse(signature, payload)
 
@@ -106,8 +110,10 @@ func TestWebhookParseMerchantAccountDeclined(t *testing.T) {
 }
 
 func TestWebhookParseDisbursement(t *testing.T) {
+	t.Parallel()
+
 	webhookGateway := testGateway.WebhookNotification()
-	hmacer := newHmacer(testGateway)
+	hmacer := newHmacer(webhookGateway.PublicKey, webhookGateway.PrivateKey)
 
 	payload := base64.StdEncoding.EncodeToString([]byte(`
 <notification>
@@ -139,7 +145,7 @@ func TestWebhookParseDisbursement(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	signature := webhookGateway.PublicKey + "|" + hmacedPayload
+	signature := hmacer.publicKey + "|" + hmacedPayload
 
 	notification, err := webhookGateway.Parse(signature, payload)
 
@@ -163,8 +169,10 @@ func TestWebhookParseDisbursement(t *testing.T) {
 }
 
 func TestWebhookParseDisbursementException(t *testing.T) {
+	t.Parallel()
+
 	webhookGateway := testGateway.WebhookNotification()
-	hmacer := newHmacer(testGateway)
+	hmacer := newHmacer(webhookGateway.PublicKey, webhookGateway.PrivateKey)
 
 	payload := base64.StdEncoding.EncodeToString([]byte(`
 <notification>
@@ -196,7 +204,7 @@ func TestWebhookParseDisbursementException(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	signature := webhookGateway.PublicKey + "|" + hmacedPayload
+	signature := hmacer.publicKey + "|" + hmacedPayload
 
 	notification, err := webhookGateway.Parse(signature, payload)
 

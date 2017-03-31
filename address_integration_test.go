@@ -3,6 +3,8 @@ package braintree
 import "testing"
 
 func TestAddress(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{
 		FirstName: "Jenna",
 		LastName:  "Smith",

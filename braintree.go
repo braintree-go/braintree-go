@@ -8,27 +8,14 @@ import (
 	"net/http"
 )
 
-type Environment string
+const LibraryVersion = "0.9.0"
+
+type apiVersion int
 
 const (
-	Development Environment = "development"
-	Sandbox     Environment = "sandbox"
-	Production  Environment = "production"
-
-	LibraryVersion = "0.9.0"
+	apiVersion3 apiVersion = 3
+	apiVersion4            = 4
 )
-
-func (e Environment) BaseURL() string {
-	switch e {
-	case Development:
-		return "http://localhost:3000"
-	case Sandbox:
-		return "https://sandbox.braintreegateway.com"
-	case Production:
-		return "https://www.braintreegateway.com"
-	}
-	panic(`invalid environment "` + e + `"`)
-}
 
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
 	return &Braintree{
@@ -63,6 +50,10 @@ func (g *Braintree) MerchantURL() string {
 }
 
 func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
+	return g.executeVersion(method, path, xmlObj, apiVersion3)
+}
+
+func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
 	var buf bytes.Buffer
 	if xmlObj != nil {
 		xmlBody, err := xml.Marshal(xmlObj)
@@ -90,7 +81,7 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 	req.Header.Set("Accept", "application/xml")
 	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header.Set("User-Agent", fmt.Sprintf("Braintree Go %s", LibraryVersion))
-	req.Header.Set("X-ApiVersion", "3")
+	req.Header.Set("X-ApiVersion", fmt.Sprintf("%d", v))
 	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
 
 	httpClient := g.HttpClient
@@ -135,8 +126,16 @@ func (g *Braintree) Transaction() *TransactionGateway {
 	return &TransactionGateway{g}
 }
 
+func (g *Braintree) PaymentMethod() *PaymentMethodGateway {
+	return &PaymentMethodGateway{g}
+}
+
 func (g *Braintree) CreditCard() *CreditCardGateway {
 	return &CreditCardGateway{g}
+}
+
+func (g *Braintree) PayPalAccount() *PayPalAccountGateway {
+	return &PayPalAccountGateway{g}
 }
 
 func (g *Braintree) Customer() *CustomerGateway {

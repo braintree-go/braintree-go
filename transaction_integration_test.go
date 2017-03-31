@@ -3,7 +3,9 @@ package braintree
 import (
 	"math/rand"
 	"net/http"
+	"reflect"
 	"testing"
+	"time"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
@@ -13,6 +15,8 @@ func randomAmount() *Decimal {
 }
 
 func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
+	t.Parallel()
+
 	tx, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
@@ -64,6 +68,8 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 }
 
 func TestTransactionSearch(t *testing.T) {
+	t.Parallel()
+
 	txg := testGateway.Transaction()
 	createTx := func(amount *Decimal, customerName string) error {
 		_, err := txg.Create(&Transaction{
@@ -112,8 +118,80 @@ func TestTransactionSearch(t *testing.T) {
 	}
 }
 
+func TestTransactionSearchTime(t *testing.T) {
+	txg := testGateway.Transaction()
+	createTx := func(amount *Decimal, customerName string) error {
+		_, err := txg.Create(&Transaction{
+			Type:   "sale",
+			Amount: amount,
+			Customer: &Customer{
+				FirstName: customerName,
+			},
+			CreditCard: &CreditCard{
+				Number:         testCreditCards["visa"].Number,
+				ExpirationDate: "05/14",
+			},
+		})
+		return err
+	}
+
+	unique := testhelpers.RandomString()
+
+	name0 := "Erik-" + unique
+	if err := createTx(randomAmount(), name0); err != nil {
+		t.Fatal(err)
+	}
+
+	name1 := "Lionel-" + unique
+	if err := createTx(randomAmount(), name1); err != nil {
+		t.Fatal(err)
+	}
+
+	{ // test: txn is returned if querying for created at before now
+		query := new(SearchQuery)
+		f1 := query.AddTextField("customer-first-name")
+		f1.Is = name0
+		f2 := query.AddTimeField("created-at")
+		f2.Max = time.Now()
+
+		result, err := txg.Search(query)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !result.TotalItems.Valid || result.TotalItems.Int64 != 1 {
+			t.Fatal(result.Transactions)
+		}
+
+		tx := result.Transactions[0]
+		if x := tx.Customer.FirstName; x != name0 {
+			t.Log(name0)
+			t.Fatal(x)
+		}
+	}
+
+	{ // test: txn is not returned if querying for created at before 1 hour ago
+		query := new(SearchQuery)
+		f1 := query.AddTextField("customer-first-name")
+		f1.Is = name0
+		f2 := query.AddTimeField("created-at")
+		f2.Max = time.Now().Add(-time.Hour)
+
+		result, err := txg.Search(query)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !result.TotalItems.Valid || result.TotalItems.Int64 != 0 {
+			t.Fatal(result.Transactions)
+		}
+	}
+}
+
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
+	t.Parallel()
+
 	_, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: NewDecimal(201000, 2),
@@ -128,9 +206,18 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	if err.Error() != "Card Issuer Declined CVV" {
 		t.Fatal(err)
 	}
+	if err.(*BraintreeError).Transaction.ProcessorResponseCode != 2010 {
+		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be 2010, but got %d", err.(*BraintreeError).Transaction.ProcessorResponseCode)
+	}
+
+	if err.(*BraintreeError).Transaction.AdditionalProcessorResponse != "2010 : Card Issuer Declined CVV" {
+		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be `2010 : Card Issuer Declined CVV`, but got %s", err.(*BraintreeError).Transaction.AdditionalProcessorResponse)
+	}
 }
 
 func TestFindTransaction(t *testing.T) {
+	t.Parallel()
+
 	createdTransaction, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
 		Amount: randomAmount(),
@@ -154,6 +241,8 @@ func TestFindTransaction(t *testing.T) {
 }
 
 func TestFindNonExistantTransaction(t *testing.T) {
+	t.Parallel()
+
 	_, err := testGateway.Transaction().Find("bad_transaction_id")
 	if err == nil {
 		t.Fatal("Did not receive error when finding an invalid tx ID")
@@ -166,7 +255,52 @@ func TestFindNonExistantTransaction(t *testing.T) {
 	}
 }
 
+// This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
+func TestTransactionDescriptorFields(t *testing.T) {
+	t.Parallel()
+
+	tx := &Transaction{
+		Type:               "sale",
+		Amount:             randomAmount(),
+		PaymentMethodNonce: FakeNonceTransactable,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+		},
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
+	}
+
+	tx2, err := testGateway.Transaction().Create(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if tx2.Type != tx.Type {
+		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
+	}
+	if tx2.Amount.Cmp(tx.Amount) != 0 {
+		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
+	}
+	if tx2.Status != "submitted_for_settlement" {
+		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
+	}
+	if tx2.Descriptor.Name != "Company Name*Product 1" {
+		t.Fatalf("expected tx2.Descriptor.Name to be Company Name*Product 1, but got %s", tx2.Descriptor.Name)
+	}
+	if tx2.Descriptor.Phone != "0000000000" {
+		t.Fatalf("expected tx2.Descriptor.Phone to be 0000000000, but got %s", tx2.Descriptor.Phone)
+	}
+	if tx2.Descriptor.URL != "example.com" {
+		t.Fatalf("expected tx2.Descriptor.URL to be example.com, but got %s", tx2.Descriptor.URL)
+	}
+}
+
 func TestAllTransactionFields(t *testing.T) {
+	t.Parallel()
+
 	tx := &Transaction{
 		Type:    "sale",
 		Amount:  randomAmount(),
@@ -250,10 +384,27 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Status != "submitted_for_settlement" {
 		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
 	}
+	if tx2.PaymentInstrumentType != "credit_card" {
+		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", "credit_card", tx2.PaymentInstrumentType)
+	}
+	if tx2.AdditionalProcessorResponse != "" {
+		t.Fatalf("expected tx2.AdditionalProcessorResponse to be empty, but got %s", tx2.AdditionalProcessorResponse)
+	}
+	if tx2.RiskData == nil {
+		t.Fatal("expected tx2.RiskData not to be empty")
+	}
+	if tx2.RiskData.ID == "" {
+		t.Fatal("expected tx2.RiskData.ID not to be empty")
+	}
+	if tx2.RiskData.Decision != "Approve" {
+		t.Fatalf("expected tx2.RiskData.Decision to be Approve, but got %s", tx2.RiskData.Decision)
+	}
 }
 
 // This test will only pass on Travis. See TESTING.md for more details.
 func TestTransactionDisbursementDetails(t *testing.T) {
+	t.Parallel()
+
 	txn, err := testGateway.Transaction().Find("dskdmb")
 	if err != nil {
 		t.Fatal(err)
@@ -280,6 +431,8 @@ func TestTransactionDisbursementDetails(t *testing.T) {
 }
 
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["discover"].Number,
@@ -309,6 +462,8 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 }
 
 func TestSettleTransaction(t *testing.T) {
+	t.Parallel()
+
 	old_environment := testGateway.Environment
 
 	txn, err := testGateway.Transaction().Create(&Transaction{
@@ -349,6 +504,8 @@ func TestSettleTransaction(t *testing.T) {
 }
 
 func TestTrxPaymentMethodNonce(t *testing.T) {
+	t.Parallel()
+
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:               "sale",
 		Amount:             randomAmount(),
@@ -365,6 +522,8 @@ func TestTrxPaymentMethodNonce(t *testing.T) {
 }
 
 func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
+	t.Parallel()
+
 	amount := NewDecimal(20000, 2)
 	txn, err := testGateway.Transaction().Create(&Transaction{
 		Type:   "sale",
@@ -437,6 +596,8 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 }
 
 func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
+	t.Parallel()
+
 	amount := NewDecimal(10000, 2)
 	refundAmt1 := NewDecimal(5000, 2)
 	refundAmt2 := NewDecimal(5001, 2)
@@ -494,5 +655,77 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 
 	if err.Error() != "Refund amount is too large." {
 		t.Fatal(err)
+	}
+}
+
+func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
+	t.Parallel()
+
+	amount := NewDecimal(10000, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["discover"].Number,
+			ExpirationDate: "05/14",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.PaymentInstrumentType != "credit_card" {
+		t.Fatalf("Returned payment instrument doesn't match input, expected %q, got %q",
+			"credit_card", txn.PaymentInstrumentType)
+	}
+	if txn.CreditCard.CardType != "Discover" {
+		t.Fatalf("Returned credit card detail doesn't match input, expected %q, got %q",
+			"Visa", txn.CreditCard.CardType)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().Settle(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "settled" {
+		t.Fatal(txn.Status)
+	}
+}
+
+func TestTransactionCreateWithCustomFields(t *testing.T) {
+	t.Parallel()
+
+	customFields := map[string]string{
+		"custom_field_1": "custom value",
+	}
+
+	amount := NewDecimal(10000, 2)
+	txn, err := testGateway.Transaction().Create(&Transaction{
+		Type:               "sale",
+		Amount:             amount,
+		PaymentMethodNonce: FakeNonceTransactable,
+		CustomFields:       customFields,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(txn.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
+	}
+
+	txn, err = testGateway.Transaction().Find(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(txn.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
 	}
 }

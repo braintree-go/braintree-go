@@ -15,6 +15,16 @@ type Response struct {
 
 // TODO: remove dedicated unmarshal methods (redundant)
 
+func (r *Response) entityName() (string, error) {
+	var b struct {
+		XMLName xml.Name
+	}
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return "", err
+	}
+	return b.XMLName.Local, nil
+}
+
 func (r *Response) merchantAccount() (*MerchantAccount, error) {
 	var b MerchantAccount
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
@@ -31,8 +41,32 @@ func (r *Response) transaction() (*Transaction, error) {
 	return &b, nil
 }
 
+func (r *Response) paymentMethod() (PaymentMethod, error) {
+	entityName, err := r.entityName()
+	if err != nil {
+		return nil, err
+	}
+
+	switch entityName {
+	case "credit-card":
+		return r.creditCard()
+	case "paypal-account":
+		return r.paypalAccount()
+	}
+
+	return nil, fmt.Errorf("Unrecognized payment method %#v", entityName)
+}
+
 func (r *Response) creditCard() (*CreditCard, error) {
 	var b CreditCard
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) paypalAccount() (*PayPalAccount, error) {
+	var b PayPalAccount
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}

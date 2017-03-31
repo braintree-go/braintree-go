@@ -10,7 +10,7 @@ type WebhookNotificationGateway struct {
 }
 
 func (w *WebhookNotificationGateway) Parse(signature, payload string) (*WebhookNotification, error) {
-	hmacer := newHmacer(w.Braintree)
+	hmacer := newHmacer(w.Braintree.PublicKey, w.Braintree.PrivateKey)
 	if verified, err := hmacer.verifySignature(signature, payload); err != nil {
 		return nil, err
 	} else if !verified {
@@ -31,10 +31,10 @@ func (w *WebhookNotificationGateway) Parse(signature, payload string) (*WebhookN
 }
 
 func (w *WebhookNotificationGateway) Verify(challenge string) (string, error) {
-	hmacer := newHmacer(w.Braintree)
+	hmacer := newHmacer(w.Braintree.PublicKey, w.Braintree.PrivateKey)
 	digest, err := hmacer.hmac(challenge)
 	if err != nil {
 		return ``, err
 	}
-	return hmacer.PublicKey + `|` + digest, nil
+	return hmacer.publicKey + `|` + digest, nil
 }

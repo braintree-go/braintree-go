@@ -10,6 +10,8 @@ import (
 var acctId string
 
 func TestMerchantAccountCreate(t *testing.T) {
+	t.Parallel()
+
 	acctId = testhelpers.RandomString()
 	acct := MerchantAccount{
 		MasterMerchantAccountId: testMerchantAccountId,
