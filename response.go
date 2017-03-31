@@ -111,16 +111,10 @@ func (r *Response) apiError() error {
 		b.statusCode = r.StatusCode
 		return &b
 	}
-	return nil
-}
-
-func (r *Response) httpError() error {
-	switch r.StatusCode {
-	case 200, 201, 422:
-		return nil
-	default:
+	if r.StatusCode > 299 {
 		return httpError(r.StatusCode)
 	}
+	return nil
 }
 
 type APIError interface {

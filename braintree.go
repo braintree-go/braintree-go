@@ -116,11 +116,6 @@ func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response,
 		g.Logger.Printf("<\n%s", string(btr.Body))
 	}
 
-	err = btr.httpError()
-	if err != nil {
-		return nil, err
-	}
-
 	err = btr.apiError()
 	if err != nil {
 		return nil, err
