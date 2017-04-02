@@ -870,7 +870,7 @@ var subMerchantAccountID string
 func getSubMerchantAccount(t *testing.T) string {
 	if subMerchantAccountID == "" {
 		rand.Seed(time.Now().UTC().UnixNano())
-		acctId = rand.Int() + 1
+		acctId := rand.Int() + 1
 		acct := MerchantAccount{
 			MasterMerchantAccountId: testMerchantAccountId,
 			TOSAccepted:             true,
