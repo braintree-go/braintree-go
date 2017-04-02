@@ -44,20 +44,9 @@ func (g *TransactionGateway) SubmitForSettlement(id string, amount ...*Decimal) 
 
 // Settle settles a transaction.
 // This action is only available in the sandbox environment.
+// Deprecated: use the Settle function on the TestingGateway instead. e.g. g.Testing().Settle(id).
 func (g *TransactionGateway) Settle(id string) (*Transaction, error) {
-	if g.Environment != Production {
-		resp, err := g.execute("PUT", "transactions/"+id+"/settle", nil)
-		if err != nil {
-			return nil, err
-		}
-		switch resp.StatusCode {
-		case 200:
-			return resp.transaction()
-		}
-		return nil, &invalidResponseError{resp}
-	} else {
-		return nil, &testOperationPerformedInProductionError{}
-	}
+	return g.Testing().Settle(id)
 }
 
 // Void voids the transaction with the specified id if it has a status of authorized or
