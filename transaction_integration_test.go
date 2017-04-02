@@ -205,12 +205,43 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	if err.Error() != "Card Issuer Declined CVV" {
 		t.Fatal(err)
 	}
-	if err.(*BraintreeError).Transaction.ProcessorResponseCode != 2010 {
-		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be 2010, but got %d", err.(*BraintreeError).Transaction.ProcessorResponseCode)
+	if err.(*BraintreeError).Transaction.ProcessorResponseCode != "2010" {
+		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be 2010, but got %s", err.(*BraintreeError).Transaction.ProcessorResponseCode)
 	}
 
 	if err.(*BraintreeError).Transaction.AdditionalProcessorResponse != "2010 : Card Issuer Declined CVV" {
 		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be `2010 : Card Issuer Declined CVV`, but got %s", err.(*BraintreeError).Transaction.AdditionalProcessorResponse)
+	}
+}
+
+func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&Transaction{
+		Type:               "sale",
+		Amount:             NewDecimal(201000, 2),
+		PaymentMethodNonce: FakeNonceGatewayRejectedFraud,
+	})
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: fraud" {
+		t.Fatal(err)
+	}
+
+	txnID := err.(*BraintreeError).Transaction.Id
+	txn, err := testGateway.Transaction().Find(txnID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "gateway_rejected" {
+		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	}
+
+	if txn.ProcessorResponseCode != "" {
+		t.Fatalf("Got processor response code %q, want %q", txn.ProcessorResponseCode, 0)
 	}
 }
 
