@@ -214,6 +214,37 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	}
 }
 
+func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&Transaction{
+		Type:               "sale",
+		Amount:             NewDecimal(201000, 2),
+		PaymentMethodNonce: FakeNonceGatewayRejectedFraud,
+	})
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: fraud" {
+		t.Fatal(err)
+	}
+
+	txnID := err.(*BraintreeError).Transaction.Id
+	txn, err := testGateway.Transaction().Find(txnID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "gateway_rejected" {
+		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	}
+
+	if txn.ProcessorResponseCode != 0 {
+		t.Fatalf("Got processor response code %q, want %q", txn.ProcessorResponseCode, 0)
+	}
+}
+
 func TestFindTransaction(t *testing.T) {
 	t.Parallel()
 
