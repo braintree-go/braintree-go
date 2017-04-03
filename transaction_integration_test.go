@@ -214,6 +214,37 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	}
 }
 
+func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&Transaction{
+		Type:               "sale",
+		Amount:             NewDecimal(201000, 2),
+		PaymentMethodNonce: FakeNonceGatewayRejectedFraud,
+	})
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: fraud" {
+		t.Fatal(err)
+	}
+
+	txnID := err.(*BraintreeError).Transaction.Id
+	txn, err := testGateway.Transaction().Find(txnID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "gateway_rejected" {
+		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	}
+
+	if txn.ProcessorResponseCode != 0 {
+		t.Fatalf("Got processor response code %q, want %q", txn.ProcessorResponseCode, 0)
+	}
+}
+
 func TestFindTransaction(t *testing.T) {
 	t.Parallel()
 
@@ -457,51 +488,6 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	}
 }
 
-func TestSettleTransaction(t *testing.T) {
-	t.Parallel()
-
-	txn, err := testGateway.Transaction().Create(&Transaction{
-		Type:   "sale",
-		Amount: randomAmount(),
-		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
-			ExpirationDate: "05/14",
-		},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	prodGateway := Braintree{
-		credentials: newAPIKey(
-			Production,
-			testGateway.credentials.(apiKey).merchantID,
-			testGateway.credentials.(apiKey).publicKey,
-			testGateway.credentials.(apiKey).privateKey,
-		),
-	}
-
-	_, err = prodGateway.Transaction().Settle(txn.Id)
-	if err.Error() != "Operation not allowed in production environment" {
-		t.Log(prodGateway.Environment())
-		t.Fatal(err)
-	}
-
-	txn, err = testGateway.Transaction().Settle(txn.Id)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if txn.Status != "settled" {
-		t.Fatal(txn.Status)
-	}
-}
-
 func TestTrxPaymentMethodNonce(t *testing.T) {
 	t.Parallel()
 
@@ -541,7 +527,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -562,7 +548,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		t.Fatal(x)
 	}
 
-	refundTxn, err = testGateway.Transaction().Settle(refundTxn.Id)
+	refundTxn, err = testGateway.Testing().Settle(refundTxn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -617,7 +603,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -638,7 +624,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(x)
 	}
 
-	refundTxn, err = testGateway.Transaction().Settle(refundTxn.Id)
+	refundTxn, err = testGateway.Testing().Settle(refundTxn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -654,46 +640,6 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 
 	if err.Error() != "Refund amount is too large." {
 		t.Fatal(err)
-	}
-}
-
-func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
-	t.Parallel()
-
-	amount := NewDecimal(10000, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
-		Type:   "sale",
-		Amount: amount,
-		CreditCard: &CreditCard{
-			Number:         testCreditCards["discover"].Number,
-			ExpirationDate: "05/14",
-		},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if txn.PaymentInstrumentType != "credit_card" {
-		t.Fatalf("Returned payment instrument doesn't match input, expected %q, got %q",
-			"credit_card", txn.PaymentInstrumentType)
-	}
-	if txn.CreditCard.CardType != "Discover" {
-		t.Fatalf("Returned credit card detail doesn't match input, expected %q, got %q",
-			"Visa", txn.CreditCard.CardType)
-	}
-
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	txn, err = testGateway.Transaction().Settle(txn.Id)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if txn.Status != "settled" {
-		t.Fatal(txn.Status)
 	}
 }
 
