@@ -26,7 +26,7 @@ func (g *TestingGateway) SettlementPending(transactionID string) (*Transaction, 
 }
 
 func (g *TestingGateway) setStatus(transactionID, status string) (*Transaction, error) {
-	if g.Environment != Production {
+	if g.Environment() != Production {
 		resp, err := g.execute("PUT", "transactions/"+transactionID+"/"+status, nil)
 		if err != nil {
 			return nil, err
