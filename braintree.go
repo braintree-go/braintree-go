@@ -29,6 +29,9 @@ func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string
 }
 
 // New creates a Braintree with an Access Token.
+//
+// Note: When using an access token for authorization webhooks are unsupported
+// and the WebhookNotification() function will panic.
 func NewWithAccessToken(accessToken string) (*Braintree, error) {
 	c, err := newAccessToken(accessToken)
 	if err != nil {
