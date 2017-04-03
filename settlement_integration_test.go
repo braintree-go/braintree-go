@@ -1,8 +1,6 @@
 package braintree
 
 import (
-	"log"
-	"os"
 	"testing"
 	"time"
 )
@@ -46,7 +44,6 @@ func TestSettlementBatch(t *testing.T) {
 
 	// Generate Settlement Batch Summary which will include new transaction
 	date := time.Now().Format("2006-01-02")
-	testGateway.Logger = log.New(os.Stdout, "", 0)
 	summary, err := testGateway.Settlement().Generate(&Settlement{Date: date})
 	if err != nil {
 		t.Fatalf("unable to get settlement batch: %s", err)
