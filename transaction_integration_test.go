@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"math/rand"
+	"net/http"
 	"reflect"
 	"testing"
 	"time"
@@ -278,6 +279,9 @@ func TestFindNonExistantTransaction(t *testing.T) {
 		t.Fatal("Did not receive error when finding an invalid tx ID")
 	}
 	if err.Error() != "Not Found (404)" {
+		t.Fatal(err)
+	}
+	if apiErr, ok := err.(APIError); !(ok && apiErr.StatusCode() == http.StatusNotFound) {
 		t.Fatal(err)
 	}
 }
