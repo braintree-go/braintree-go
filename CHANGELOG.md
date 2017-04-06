@@ -1,3 +1,49 @@
+## 0.10.0 (April 14th, 2016)
+
+BACKWARDS INCOMPATIBILITES:
+
+* `Environment`, `MerchantId` wer
+* `PublicKey`, `PrivateKey` were removed from the `Braintree` struct.
+* `Subscription` `Discounts` was changed from an `[]interface{}` to a concrete type.
+* `SubscriptionRequest` replaced `Subscription` as the parameter when creating subscriptions.
+
+DEPRECATED:
+* `TransactionGateway` `Settle` function was marked as deprecated and the `TestingGateway` `Settle` function should be used instead.
+
+IMPROVEMENTS:
+
+* `NewWithAccessToken` added to allow initialization with an access token
+  instead of an API key.
+* `NewWithHttpClient` was added.
+* `PaymentMethodGateway` `Update`, `Find`, and `Delete` were added, and support for non-credit-card payment methods were supported.
+* `PaymentMethod` was added as an interface across all payment methods.
+* `Customer` `DefaultPaymentMethod` was added.
+* `Transaction` `PayPalDetails` was added.
+* `PayPalAccount` and `PayPalAccountGateway` were added.
+* `Transaction` `DeviceData` was added.
+* `Transaction` `RefundedTransactionId` and `RefundIds` were added.
+* `CustomFields` were added to `Transaction` and `Customer`.
+* `Transaction` and `Subscription` `Descriptor` was added to support setting dynamic descriptors.
+* `Transaction` `RiskData` in responses was added.
+* `Transaction` `PaymentInstrumentType` was added.
+* `Subscription` modifications for `AddOn`s and `Discounts` were added as concrete objects.
+* `Plan` `AddOns` and `Discounts` were added.
+* `SettlementGateway` and `Settlement` were added.
+* `SearchQuery` `AddTimeField` was added to support querying on time/date ranges.
+* `Transaction` was added and is accessible on `BraintreeError`.
+* `APIError` is now returned for 404 responses to allow developers to get the
+  status code and check for a 404.
+* `TestingGateway` added with functions for changing the status of transactions in sandbox to `settle`, `settlement_confirm`, `settlement_decline`, and `settlement_pending` to aid with integration tests.
+* `Environment` was changed from `string` to `struct` that can be constructed with a custom base URL.
+
+BUG FIXES:
+
+* `Transaction` `ProcessorResponseCode` will now be zero if no processor response code is returned from the Braintree API.
+* `Decimal` now marshals correctly if they are under $1.00.
+* `Decimal` marshal and unmarshals correctly if it's value is zero.
+* Numerous test reliability improvements to reduce flakiness of integration tests.
+* Documentation improvements.
+
 ## 0.9.0 (August 5th, 2015)
 
 BACKWARDS INCOMPATIBILITES:
