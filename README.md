@@ -90,3 +90,5 @@ THE SOFTWARE.
 
 - [Erik Aigner](http://github.com/eaigner)
 - [Kayle Gishen](https://github.com/kayleg)
+- [Jesse Szwedko](https://github.com/jszwedko)
+- [Leigh McCulloch](https://github.com/leighmcculloch)
