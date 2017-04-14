@@ -373,6 +373,9 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Type != tx.Type {
 		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
 	}
+	if tx2.CurrencyISOCode != "USD" {
+		t.Fatalf("expected CurrencyISOCode to be %s but was %s", "USD", tx2.CurrencyISOCode)
+	}
 	if tx2.Amount.Cmp(tx.Amount) != 0 {
 		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
 	}
