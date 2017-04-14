@@ -329,6 +329,32 @@ func TestTransactionDescriptorFields(t *testing.T) {
 	}
 }
 
+func TestTransactionRiskDataFields(t *testing.T) {
+	t.Parallel()
+
+	tx := &TransactionRequest{
+		Type:               "sale",
+		Amount:             randomAmount(),
+		PaymentMethodNonce: FakeNonceTransactable,
+		RiskData: &RiskDataRequest{
+			CustomerBrowser: "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/540.0 (KHTML,like Gecko) Chrome/9.1.0.0 Safari/540.0",
+			CustomerIP:      "127.0.0.1",
+		},
+	}
+
+	tx2, err := testGateway.Transaction().Create(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if tx2.Type != tx.Type {
+		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
+	}
+	if tx2.Amount.Cmp(tx.Amount) != 0 {
+		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
+	}
+}
+
 func TestAllTransactionFields(t *testing.T) {
 	t.Parallel()
 

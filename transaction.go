@@ -61,6 +61,7 @@ type TransactionRequest struct {
 	DeviceData         string                    `xml:"device-data,omitempty"`
 	Options            *TransactionOptions       `xml:"options,omitempty"`
 	ServiceFeeAmount   *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
+	RiskData           *RiskDataRequest          `xml:"risk-data,omitempty"`
 	Descriptor         *Descriptor               `xml:"descriptor,omitempty"`
 	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
 }
@@ -141,4 +142,9 @@ type TransactionSearchResult struct {
 type RiskData struct {
 	ID       string `xml:"id"`
 	Decision string `xml:"decision"`
+}
+
+type RiskDataRequest struct {
+	CustomerBrowser string `xml:"customer-browser"`
+	CustomerIP      string `xml:"customer-ip"`
 }
