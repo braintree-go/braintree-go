@@ -5,7 +5,7 @@ import "testing"
 func TestSettleTransaction(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -41,7 +41,7 @@ func TestSettleTransaction(t *testing.T) {
 }
 
 func TestSettlementConfirmTransaction(t *testing.T) {
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -77,7 +77,7 @@ func TestSettlementConfirmTransaction(t *testing.T) {
 }
 
 func TestSettlementDeclinedTransaction(t *testing.T) {
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -113,7 +113,7 @@ func TestSettlementDeclinedTransaction(t *testing.T) {
 }
 
 func TestSettlementPendingTransaction(t *testing.T) {
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -152,7 +152,7 @@ func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 	t.Parallel()
 
 	amount := NewDecimal(10000, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{

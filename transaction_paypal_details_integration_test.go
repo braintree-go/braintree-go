@@ -3,7 +3,7 @@ package braintree
 import "testing"
 
 func TestTransactionPayPalDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNoncePayPalOneTimePayment,
@@ -57,7 +57,7 @@ func TestTransactionPayPalDetails(t *testing.T) {
 }
 
 func TestTransactionWithoutPayPalDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceTransactable,

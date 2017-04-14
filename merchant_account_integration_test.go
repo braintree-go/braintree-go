@@ -73,7 +73,7 @@ func TestMerchantAccountTransaction(t *testing.T) {
 
 	amount := NewDecimal(int64(randomAmount().Scale+500), 2)
 
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{

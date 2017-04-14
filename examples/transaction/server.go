@@ -42,7 +42,7 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 		os.Getenv("BRAINTREE_PRIV_KEY"),
 	)
 
-	tx := &braintree.Transaction{
+	tx := &braintree.TransactionRequest{
 		Type:   "sale",
 		Amount: braintree.NewDecimal(10000, 2),
 		CreditCard: &braintree.CreditCard{

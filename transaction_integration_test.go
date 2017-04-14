@@ -17,7 +17,7 @@ func randomAmount() *Decimal {
 func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	t.Parallel()
 
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
@@ -72,7 +72,7 @@ func TestTransactionSearch(t *testing.T) {
 
 	txg := testGateway.Transaction()
 	createTx := func(amount *Decimal, customerName string) error {
-		_, err := txg.Create(&Transaction{
+		_, err := txg.Create(&TransactionRequest{
 			Type:   "sale",
 			Amount: amount,
 			Customer: &Customer{
@@ -121,7 +121,7 @@ func TestTransactionSearch(t *testing.T) {
 func TestTransactionSearchTime(t *testing.T) {
 	txg := testGateway.Transaction()
 	createTx := func(amount *Decimal, customerName string) error {
-		_, err := txg.Create(&Transaction{
+		_, err := txg.Create(&TransactionRequest{
 			Type:   "sale",
 			Amount: amount,
 			Customer: &Customer{
@@ -192,7 +192,7 @@ func TestTransactionSearchTime(t *testing.T) {
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&Transaction{
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(201000, 2),
 		CreditCard: &CreditCard{
@@ -218,7 +218,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&Transaction{
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(201000, 2),
 		PaymentMethodNonce: FakeNonceGatewayRejectedFraud,
@@ -249,7 +249,7 @@ func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
 func TestFindTransaction(t *testing.T) {
 	t.Parallel()
 
-	createdTransaction, err := testGateway.Transaction().Create(&Transaction{
+	createdTransaction, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -290,7 +290,7 @@ func TestFindNonExistantTransaction(t *testing.T) {
 func TestTransactionDescriptorFields(t *testing.T) {
 	t.Parallel()
 
-	tx := &Transaction{
+	tx := &TransactionRequest{
 		Type:               "sale",
 		Amount:             randomAmount(),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -332,7 +332,7 @@ func TestTransactionDescriptorFields(t *testing.T) {
 func TestAllTransactionFields(t *testing.T) {
 	t.Parallel()
 
-	tx := &Transaction{
+	tx := &TransactionRequest{
 		Type:    "sale",
 		Amount:  randomAmount(),
 		OrderId: "my_custom_order",
@@ -480,7 +480,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 		t.Fatal("invalid token")
 	}
 
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		CustomerID:         customer.Id,
 		Amount:             randomAmount(),
@@ -498,7 +498,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 func TestTrxPaymentMethodNonce(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             randomAmount(),
 		PaymentMethodNonce: "fake-apple-pay-mastercard-nonce",
@@ -517,7 +517,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	t.Parallel()
 
 	amount := NewDecimal(20000, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -593,7 +593,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 	amount := NewDecimal(10000, 2)
 	refundAmt1 := NewDecimal(5000, 2)
 	refundAmt2 := NewDecimal(5001, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -658,7 +658,7 @@ func TestTransactionCreateWithCustomFields(t *testing.T) {
 	}
 
 	amount := NewDecimal(10000, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             amount,
 		PaymentMethodNonce: FakeNonceTransactable,

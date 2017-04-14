@@ -9,7 +9,7 @@ func TestSettlementBatch(t *testing.T) {
 	t.Parallel()
 
 	// Create a new transaction
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1000, 2),
 		PaymentMethodNonce: FakeNonceTransactableJCB,
