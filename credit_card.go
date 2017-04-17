@@ -39,6 +39,7 @@ type CreditCard struct {
 	UniqueNumberIdentifier    string             `xml:"unique-number-identifier,omitempty"`
 	BillingAddress            *Address           `xml:"billing-address,omitempty"`
 	Subscriptions             *Subscriptions     `xml:"subscriptions,omitempty"`
+	MaskedNumber		  string	     `xml:"masked_number.omitempty"`
 }
 
 type CreditCards struct {
