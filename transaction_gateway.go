@@ -10,7 +10,7 @@ type TransactionGateway struct {
 }
 
 // Create initiates a transaction.
-func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
+func (g *TransactionGateway) Create(tx *TransactionRequest) (*Transaction, error) {
 	resp, err := g.execute("POST", "transactions", tx)
 	if err != nil {
 		return nil, err
@@ -25,9 +25,9 @@ func (g *TransactionGateway) Create(tx *Transaction) (*Transaction, error) {
 // SubmitForSettlement submits the transaction with the specified id for settlement.
 // If the amount is omitted, the full amount is settled.
 func (g *TransactionGateway) SubmitForSettlement(id string, amount ...*Decimal) (*Transaction, error) {
-	var tx *Transaction
+	var tx *TransactionRequest
 	if len(amount) > 0 {
-		tx = &Transaction{
+		tx = &TransactionRequest{
 			Amount: amount[0],
 		}
 	}
@@ -68,9 +68,9 @@ func (g *TransactionGateway) Void(id string) (*Transaction, error) {
 // If the transaction has not yet begun settlement, use Void() instead.
 // If you do not specify an amount to refund, the entire transaction amount will be refunded.
 func (g *TransactionGateway) Refund(id string, amount ...*Decimal) (*Transaction, error) {
-	var tx *Transaction
+	var tx *TransactionRequest
 	if len(amount) > 0 {
-		tx = &Transaction{
+		tx = &TransactionRequest{
 			Amount: amount[0],
 		}
 	}
