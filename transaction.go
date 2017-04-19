@@ -13,6 +13,7 @@ type Transaction struct {
 	CustomerID                  string                    `xml:"customer-id,omitempty"`
 	Status                      string                    `xml:"status,omitempty"`
 	Type                        string                    `xml:"type,omitempty"`
+	CurrencyISOCode             string                    `xml:"currency-iso-code,omitempty"`
 	Amount                      *Decimal                  `xml:"amount"`
 	OrderId                     string                    `xml:"order-id,omitempty"`
 	PaymentMethodToken          string                    `xml:"payment-method-token,omitempty"`
@@ -47,7 +48,6 @@ type Transaction struct {
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
 //
 // <transaction>
-//   <currency-iso-code>USD</currency-iso-code>
 //   <custom-fields>
 //   </custom-fields>
 //   <avs-error-response-code nil="true"></avs-error-response-code>
