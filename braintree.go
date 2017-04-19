@@ -9,8 +9,6 @@ import (
 	"net/http"
 )
 
-const LibraryVersion = "0.10.0"
-
 type apiVersion int
 
 const (
