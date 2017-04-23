@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 const LibraryVersion = "0.10.0"
@@ -18,14 +19,24 @@ const (
 	apiVersion4            = 4
 )
 
+const defaultTimeout = time.Second * 60
+
+var defaultClient = &http.Client{Timeout: defaultTimeout}
+
 // New creates a Braintree with API Keys.
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
-	return &Braintree{credentials: newAPIKey(env, merchId, pubKey, privKey)}
+	return &Braintree{
+		credentials: newAPIKey(env, merchId, pubKey, privKey),
+		HttpClient:  defaultClient,
+	}
 }
 
 // NewWithHttpClient creates a Braintree with API Keys and a HTTP Client.
 func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string, client *http.Client) *Braintree {
-	return &Braintree{credentials: newAPIKey(env, merchantId, publicKey, privateKey), HttpClient: client}
+	return &Braintree{
+		credentials: newAPIKey(env, merchantId, publicKey, privateKey),
+		HttpClient:  client,
+	}
 }
 
 // New creates a Braintree with an Access Token.
@@ -37,7 +48,11 @@ func NewWithAccessToken(accessToken string) (*Braintree, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Braintree{credentials: c}, nil
+	g := &Braintree{
+		credentials: c,
+		HttpClient:  defaultClient,
+	}
+	return g, nil
 }
 
 // Braintree interacts with the Braintree API.
