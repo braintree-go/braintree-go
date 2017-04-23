@@ -39,7 +39,7 @@ func TestHttpClientTimeout(t *testing.T) {
 			if err == nil {
 				t.Fatal("Expected timeout error, received no error")
 			}
-			if !strings.Contains(err.Error(), "Timeout") {
+			if !strings.Contains(err.Error(), "Timeout") && !strings.Contains(err.Error(), "read tcp") {
 				t.Fatalf("Expected timeout error, received: %s", err)
 			}
 			finished <- true
