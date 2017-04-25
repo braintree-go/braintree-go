@@ -20,7 +20,7 @@ var (
 	Production  = NewEnvironment("https://www.braintreegateway.com")
 )
 
-func environmentFromName(name string) (Environment, error) {
+func EnvironmentFromName(name string) (Environment, error) {
 	switch name {
 	case "development":
 		return Development, nil

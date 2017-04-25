@@ -16,7 +16,7 @@ func newAccessToken(accessTokenStr string) (credentials, error) {
 	if len(parts) < 3 || parts[0] != "access_token" {
 		return nil, errors.New("access token is not of expected format")
 	}
-	env, err := environmentFromName(parts[1])
+	env, err := EnvironmentFromName(parts[1])
 	if err != nil {
 		return nil, errors.New("access token is for unsupported environment, " + err.Error())
 	}
