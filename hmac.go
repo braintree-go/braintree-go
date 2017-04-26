@@ -41,23 +41,23 @@ func (h hmacer) verifySignature(signature, payload string) (bool, error) {
 	return hmac.Equal([]byte(expectedSignature), []byte(signature)), nil
 }
 
-func (h hmacer) getMatchingSignature(signaturePairs string) (string, string) {
+func (h hmacer) getMatchingSignature(signaturePairs string) (sig string, ok bool) {
 	pairs := strings.Split(signaturePairs, "&")
 	for _, pair := range pairs {
 		split := strings.Split(pair, "|")
 		if len(split) == 2 && split[0] == h.publicKey {
-			return split[0], split[1]
+			return split[1], true
 		}
 	}
-	return "", ""
+	return "", false
 }
 
 func (h hmacer) parseSignature(signatureKeyPairs string) (string, error) {
 	if !strings.Contains(signatureKeyPairs, "|") {
 		return "", SignatureError{"Signature-key pair does not contain |"}
 	}
-	publicKey, signature := h.getMatchingSignature(signatureKeyPairs)
-	if publicKey != h.publicKey {
+	signature, ok := h.getMatchingSignature(signatureKeyPairs)
+	if !ok {
 		return "", SignatureError{"Signature-key pair contains the wrong public key!"}
 	}
 	return signature, nil
