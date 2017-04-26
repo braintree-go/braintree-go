@@ -23,6 +23,13 @@ const (
 	PartnerMerchantConnectedWebhook    = "partner_merchant_connected"
 	PartnerMerchantDisconnectedWebhook = "partner_merchant_disconnected"
 	PartnerMerchantDeclinedWebhook     = "partner_merchant_declined"
+
+	TransactionSettledWebhook            = "transaction_settled"
+	TransactionSettlementDeclinedWebhook = "transaction_settlement_declined"
+	DisputeOpenedWebhook                 = "dispute_opened"
+	DisputeLostWebhook                   = "dispute_lost"
+	DisputeWonWebhook                    = "dispute_won"
+	AccountUpdaterDailyReportWebhook     = "account_updater_daily_report"
 )
 
 type WebhookNotification struct {

@@ -140,6 +140,14 @@ func (g *Braintree) Testing() *TestingGateway {
 	return &TestingGateway{g}
 }
 
+func (g *Braintree) WebhookTesting() *WebhookTestingGateway {
+	if apiKey, ok := g.credentials.(apiKey); !ok {
+		panic(errors.New("WebhookTesting can only be used with Braintree Credentials that are API Keys."))
+	} else {
+		return &WebhookTestingGateway{Braintree: g, apiKey: apiKey}
+	}
+}
+
 func (g *Braintree) PaymentMethod() *PaymentMethodGateway {
 	return &PaymentMethodGateway{g}
 }
