@@ -25,12 +25,6 @@ func TestHmacerParseSignature(t *testing.T) {
 			SignatureKeyPairs: "pubkey2|the_signature",
 			ExpectedError:     SignatureError{message: "Signature-key pair contains the wrong public key!"},
 		},
-		// TODO: Add support for multiple signatures
-		// {
-		// 	Description:       "Multiple signatures (one matching)",
-		// 	SignatureKeyPairs: "pubkey|the_signature&pubkey2|the_signature",
-		// 	ExpectedSignature: "the_signature",
-		// },
 		{
 			Description:       "Invalid signatures (too many pipes)",
 			SignatureKeyPairs: "pubkey|the_signature|the_signature",
@@ -71,13 +65,6 @@ func TestHmacerVerifySignature(t *testing.T) {
 			Payload:       "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPG5vdGlm\naWNhdGlvbj4KICA8a2luZD5jaGVjazwva2luZD4KICA8dGltZXN0YW1wIHR5\ncGU9ImRhdGV0aW1lIj4yMDE3LTA0LTI0VDA0OjI1OjEwWjwvdGltZXN0YW1w\nPgogIDxzdWJqZWN0PgogICAgPGNoZWNrIHR5cGU9ImJvb2xlYW4iPnRydWU8\nL2NoZWNrPgogIDwvc3ViamVjdD4KPC9ub3RpZmljYXRpb24+Cg==\n",
 			ExpectedValid: true,
 		},
-		// TODO: Add support for multiple signatures
-		// {
-		// 	Description:   "Multiple signature (valid)",
-		// 	Signature:     "4zn8jg4gdmzyvcyd|dd6390bc9d75985f0cc986d5d5f55fcdb52531cb&cd7jwvrw8jytyfm3|d7fdd777e30a1fd93b58770d7682b577b461cf6f&jkq28pcxj4r85dwr|96dd50905f51f6de1c24790c4d77aa460cb55a3d",
-		// 	Payload:       "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPG5vdGlm\naWNhdGlvbj4KICA8a2luZD5jaGVjazwva2luZD4KICA8dGltZXN0YW1wIHR5\ncGU9ImRhdGV0aW1lIj4yMDE3LTA0LTI0VDA0OjI1OjEwWjwvdGltZXN0YW1w\nPgogIDxzdWJqZWN0PgogICAgPGNoZWNrIHR5cGU9ImJvb2xlYW4iPnRydWU8\nL2NoZWNrPgogIDwvc3ViamVjdD4KPC9ub3RpZmljYXRpb24+Cg==\n",
-		// 	ExpectedValid: true,
-		// },
 		{
 			Description:   "Single signature (invalid)",
 			Signature:     "jkq28pcxj4r85dwr|4af78bab15cc58195871c636c786716f34cd9711",
