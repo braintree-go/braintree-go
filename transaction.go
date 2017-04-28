@@ -70,8 +70,6 @@ type TransactionRequest struct {
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
 //
 // <transaction>
-//   <custom-fields>
-//   </custom-fields>
 //   <avs-error-response-code nil="true"></avs-error-response-code>
 //   <avs-postal-code-response-code>I</avs-postal-code-response-code>
 //   <avs-street-address-response-code>I</avs-street-address-response-code>
