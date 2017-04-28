@@ -6,8 +6,7 @@ import (
 )
 
 const (
-	Check = "check"
-
+	CheckWebhook                             = "check"
 	DisbursementWebhook                      = "disbursement"
 	DisbursementExceptionWebhook             = "disbursement_exception"
 	SubscriptionCanceledWebhook              = "subscription_canceled"

@@ -26,7 +26,7 @@ func TestWebhookParseRequest(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
-	} else if notification.Kind != Check {
+	} else if notification.Kind != CheckWebhook {
 		t.Fatal("Incorrect Notification kind, expected check got", notification.Kind)
 	}
 }
