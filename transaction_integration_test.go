@@ -241,7 +241,7 @@ func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
 		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
 	}
 
-	if txn.GatewayRejectionReason != "fraud" {
+	if txn.GatewayRejectionReason != GatewayRejectionReasonFraud {
 		t.Fatalf("Got gateway rejection reason '%s', wanted 'fraud'", txn.GatewayRejectionReason)
 	}
 

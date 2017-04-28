@@ -42,7 +42,7 @@ type Transaction struct {
 	RiskData                    *RiskData                 `xml:"risk-data,omitempty"`
 	Descriptor                  *Descriptor               `xml:"descriptor,omitempty"`
 	CustomFields                customfields.CustomFields `xml:"custom-fields,omitempty"`
-	GatewayRejectionReason      string                    `xml:"gateway-rejection-reason,omitempty"`
+	GatewayRejectionReason      GatewayRejectionReason    `xml:"gateway-rejection-reason,omitempty"`
 }
 
 type TransactionRequest struct {
@@ -146,3 +146,16 @@ type RiskDataRequest struct {
 	CustomerBrowser string `xml:"customer-browser"`
 	CustomerIP      string `xml:"customer-ip"`
 }
+
+type GatewayRejectionReason string
+
+const (
+	GatewayRejectionReasonApplicationIncomplete GatewayRejectionReason = "application_incomplete"
+	GatewayRejectionReasonAVS                                          = "avs"
+	GatewayRejectionReasonAVSAndCVV                                    = "avs_and_cvv"
+	GatewayRejectionReasonCVV                                          = "cvv"
+	GatewayRejectionReasonDuplicate                                    = "duplicate"
+	GatewayRejectionReasonFraud                                        = "fraud"
+	GatewayRejectionReasonThreeDSecure                                 = "three_d_secure"
+	GatewayRejectionReasonUnrecognized                                 = "unrecognized"
+)
