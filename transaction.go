@@ -42,6 +42,7 @@ type Transaction struct {
 	RiskData                    *RiskData                 `xml:"risk-data,omitempty"`
 	Descriptor                  *Descriptor               `xml:"descriptor,omitempty"`
 	CustomFields                customfields.CustomFields `xml:"custom-fields,omitempty"`
+	GatewayRejectionReason      string                    `xml:"gateway-rejection-reason,omitempty"`
 }
 
 type TransactionRequest struct {
@@ -75,7 +76,6 @@ type TransactionRequest struct {
 //   <avs-postal-code-response-code>I</avs-postal-code-response-code>
 //   <avs-street-address-response-code>I</avs-street-address-response-code>
 //   <cvv-response-code>I</cvv-response-code>
-//   <gateway-rejection-reason nil="true"></gateway-rejection-reason>
 //   <voice-referral-number nil="true"></voice-referral-number>
 //   <purchase-order-number nil="true"></purchase-order-number>
 //   <tax-amount nil="true"></tax-amount>
