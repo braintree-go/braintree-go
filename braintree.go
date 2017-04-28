@@ -25,10 +25,7 @@ var defaultClient = &http.Client{Timeout: defaultTimeout}
 
 // New creates a Braintree with API Keys.
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
-	return &Braintree{
-		credentials: newAPIKey(env, merchId, pubKey, privKey),
-		HttpClient:  defaultClient,
-	}
+	return NewWithHttpClient(env, merchId, pubKey, privKey, defaultClient)
 }
 
 // NewWithHttpClient creates a Braintree with API Keys and a HTTP Client.
