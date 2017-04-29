@@ -13,7 +13,7 @@ import (
 	"text/template"
 )
 
-var payloadTemplate = `
+const payloadTemplate = `
 <notification>
 	<timestamp type="datetime">%s</timestamp>
 	<kind>%s</kind>
