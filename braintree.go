@@ -3,12 +3,13 @@ package braintree
 import (
 	"bytes"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 )
 
-const LibraryVersion = "0.9.0"
+const LibraryVersion = "0.10.0"
 
 type apiVersion int
 
@@ -17,36 +18,45 @@ const (
 	apiVersion4            = 4
 )
 
+// New creates a Braintree with API Keys.
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
-	return &Braintree{
-		Environment: env,
-		MerchantId:  merchId,
-		PublicKey:   pubKey,
-		PrivateKey:  privKey,
-	}
+	return &Braintree{credentials: newAPIKey(env, merchId, pubKey, privKey)}
 }
 
+// NewWithHttpClient creates a Braintree with API Keys and a HTTP Client.
 func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string, client *http.Client) *Braintree {
-	return &Braintree{
-		Environment: env,
-		MerchantId:  merchantId,
-		PublicKey:   publicKey,
-		PrivateKey:  privateKey,
-		HttpClient:  client,
-	}
+	return &Braintree{credentials: newAPIKey(env, merchantId, publicKey, privateKey), HttpClient: client}
 }
 
+// New creates a Braintree with an Access Token.
+//
+// Note: When using an access token, webhooks are unsupported and the
+// WebhookNotification() function will panic.
+func NewWithAccessToken(accessToken string) (*Braintree, error) {
+	c, err := newAccessToken(accessToken)
+	if err != nil {
+		return nil, err
+	}
+	return &Braintree{credentials: c}, nil
+}
+
+// Braintree interacts with the Braintree API.
 type Braintree struct {
-	Environment Environment
-	MerchantId  string
-	PublicKey   string
-	PrivateKey  string
+	credentials credentials
 	Logger      *log.Logger
 	HttpClient  *http.Client
 }
 
+func (g *Braintree) Environment() Environment {
+	return g.credentials.Environment()
+}
+
+func (g *Braintree) MerchantID() string {
+	return g.credentials.MerchantID()
+}
+
 func (g *Braintree) MerchantURL() string {
-	return g.Environment.BaseURL() + "/merchants/" + g.MerchantId
+	return g.Environment().BaseURL() + "/merchants/" + g.MerchantID()
 }
 
 func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
@@ -82,7 +92,7 @@ func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v ap
 	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header.Set("User-Agent", fmt.Sprintf("Braintree Go %s", LibraryVersion))
 	req.Header.Set("X-ApiVersion", fmt.Sprintf("%d", v))
-	req.SetBasicAuth(g.PublicKey, g.PrivateKey)
+	req.Header.Set("Authorization", g.credentials.AuthorizationHeader())
 
 	httpClient := g.HttpClient
 	if httpClient == nil {
@@ -126,6 +136,18 @@ func (g *Braintree) Transaction() *TransactionGateway {
 	return &TransactionGateway{g}
 }
 
+func (g *Braintree) Testing() *TestingGateway {
+	return &TestingGateway{g}
+}
+
+func (g *Braintree) WebhookTesting() *WebhookTestingGateway {
+	if apiKey, ok := g.credentials.(apiKey); !ok {
+		panic(errors.New("WebhookTesting can only be used with Braintree Credentials that are API Keys."))
+	} else {
+		return &WebhookTestingGateway{Braintree: g, apiKey: apiKey}
+	}
+}
+
 func (g *Braintree) PaymentMethod() *PaymentMethodGateway {
 	return &PaymentMethodGateway{g}
 }
@@ -163,7 +185,11 @@ func (g *Braintree) Discount() *DiscountGateway {
 }
 
 func (g *Braintree) WebhookNotification() *WebhookNotificationGateway {
-	return &WebhookNotificationGateway{g}
+	if apiKey, ok := g.credentials.(apiKey); !ok {
+		panic(errors.New("WebhookNotifications can only be used with Braintree Credentials that are API Keys."))
+	} else {
+		return &WebhookNotificationGateway{Braintree: g, apiKey: apiKey}
+	}
 }
 
 func (g *Braintree) Settlement() *SettlementGateway {

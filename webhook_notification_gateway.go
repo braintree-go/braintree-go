@@ -3,14 +3,22 @@ package braintree
 import (
 	"encoding/base64"
 	"encoding/xml"
+	"net/http"
 )
 
 type WebhookNotificationGateway struct {
 	*Braintree
+	apiKey apiKey
+}
+
+func (w *WebhookNotificationGateway) ParseRequest(r *http.Request) (*WebhookNotification, error) {
+	signature := r.PostFormValue("bt_signature")
+	payload := r.PostFormValue("bt_payload")
+	return w.Parse(signature, payload)
 }
 
 func (w *WebhookNotificationGateway) Parse(signature, payload string) (*WebhookNotification, error) {
-	hmacer := newHmacer(w.Braintree.PublicKey, w.Braintree.PrivateKey)
+	hmacer := newHmacer(w.apiKey.publicKey, w.apiKey.privateKey)
 	if verified, err := hmacer.verifySignature(signature, payload); err != nil {
 		return nil, err
 	} else if !verified {
@@ -31,7 +39,7 @@ func (w *WebhookNotificationGateway) Parse(signature, payload string) (*WebhookN
 }
 
 func (w *WebhookNotificationGateway) Verify(challenge string) (string, error) {
-	hmacer := newHmacer(w.Braintree.PublicKey, w.Braintree.PrivateKey)
+	hmacer := newHmacer(w.apiKey.publicKey, w.apiKey.privateKey)
 	digest, err := hmacer.hmac(challenge)
 	if err != nil {
 		return ``, err

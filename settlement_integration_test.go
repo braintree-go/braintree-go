@@ -1,8 +1,6 @@
 package braintree
 
 import (
-	"log"
-	"os"
 	"testing"
 	"time"
 )
@@ -11,7 +9,7 @@ func TestSettlementBatch(t *testing.T) {
 	t.Parallel()
 
 	// Create a new transaction
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1000, 2),
 		PaymentMethodNonce: FakeNonceTransactableJCB,
@@ -35,7 +33,7 @@ func TestSettlementBatch(t *testing.T) {
 	}
 
 	// Settle
-	tx, err = testGateway.Transaction().Settle(tx.Id)
+	tx, err = testGateway.Testing().Settle(tx.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,7 +44,6 @@ func TestSettlementBatch(t *testing.T) {
 
 	// Generate Settlement Batch Summary which will include new transaction
 	date := time.Now().Format("2006-01-02")
-	testGateway.Logger = log.New(os.Stdout, "", 0)
 	summary, err := testGateway.Settlement().Generate(&Settlement{Date: date})
 	if err != nil {
 		t.Fatalf("unable to get settlement batch: %s", err)

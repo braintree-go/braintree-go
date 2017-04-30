@@ -26,7 +26,7 @@ bt := braintree.New(
 So is creating your first transaction.
 
 ```go
-tx, err := bt.Transaction().Create(&braintree.Transaction{
+tx, err := bt.Transaction().Create(&braintree.TransactionRequest{
   Type: "sale",
   Amount: braintree.NewDecimal(100, 2), // 100 cents
   CreditCard: &braintree.CreditCard{
@@ -62,6 +62,48 @@ source .default.env
 go test ./...
 ```
 
+### Webhook Integration Testing
+
+You can use the `WebhookTestingGateway` to write your own integration tests to verify your application is processing incoming webhook notifications correctly.
+
+A simple example:
+
+```go
+package integration_test
+
+import (
+  "testing"
+  "net/http/httptest"
+
+  "github.com/lionelbarrow/braintree-go"
+)
+
+func TestMyWebhook(t *testing.T) {
+  bt := braintree.New(
+    braintree.Sandbox,
+    "merchaint_id",
+    "public_key",
+    "private_key",
+  )
+
+  r, err := bt.WebhookTesting().Request(
+    braintree.SubscriptionChargedSuccessfullyWebhook,
+    "123", // id
+  )
+  if err != nil {
+    t.Fatal(err)
+  }
+
+  // You can now send the payload and signature to your webhook handler
+  // and test your application's busines logic
+
+  w := httptest.NewRecorder()
+  router.ServeHTTP(w, r)
+
+  // assertions
+}
+```
+
 ### License
 
 The MIT License (MIT)
@@ -90,3 +132,5 @@ THE SOFTWARE.
 
 - [Erik Aigner](http://github.com/eaigner)
 - [Kayle Gishen](https://github.com/kayleg)
+- [Jesse Szwedko](https://github.com/jszwedko)
+- [Leigh McCulloch](https://github.com/leighmcculloch)

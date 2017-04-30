@@ -13,6 +13,7 @@ type Transaction struct {
 	CustomerID                  string                    `xml:"customer-id,omitempty"`
 	Status                      string                    `xml:"status,omitempty"`
 	Type                        string                    `xml:"type,omitempty"`
+	CurrencyISOCode             string                    `xml:"currency-iso-code,omitempty"`
 	Amount                      *Decimal                  `xml:"amount"`
 	OrderId                     string                    `xml:"order-id,omitempty"`
 	PaymentMethodToken          string                    `xml:"payment-method-token,omitempty"`
@@ -24,7 +25,6 @@ type Transaction struct {
 	BillingAddress              *Address                  `xml:"billing,omitempty"`
 	ShippingAddress             *Address                  `xml:"shipping,omitempty"`
 	DeviceData                  string                    `xml:"device-data,omitempty"`
-	Options                     *TransactionOptions       `xml:"options,omitempty"`
 	ServiceFeeAmount            *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
 	CreatedAt                   *time.Time                `xml:"created-at,omitempty"`
 	UpdatedAt                   *time.Time                `xml:"updated-at,omitempty"`
@@ -32,7 +32,7 @@ type Transaction struct {
 	RefundId                    string                    `xml:"refund-id,omitempty"`
 	RefundIds                   *[]string                 `xml:"refund-ids>item,omitempty"`
 	RefundedTransactionId       *string                   `xml:"refunded-transaction-id,omitempty"`
-	ProcessorResponseCode       int                       `xml:"processor-response-code,omitempty"`
+	ProcessorResponseCode       ProcessorResponseCode     `xml:"processor-response-code,omitempty"`
 	ProcessorResponseText       string                    `xml:"processor-response-text,omitempty"`
 	ProcessorAuthorizationCode  string                    `xml:"processor-authorization-code,omitempty"`
 	SettlementBatchId           string                    `xml:"settlement-batch-id,omitempty"`
@@ -44,10 +44,31 @@ type Transaction struct {
 	CustomFields                customfields.CustomFields `xml:"custom-fields,omitempty"`
 }
 
+type TransactionRequest struct {
+	XMLName            string                    `xml:"transaction"`
+	CustomerID         string                    `xml:"customer-id,omitempty"`
+	Type               string                    `xml:"type,omitempty"`
+	Amount             *Decimal                  `xml:"amount"`
+	OrderId            string                    `xml:"order-id,omitempty"`
+	PaymentMethodToken string                    `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
+	MerchantAccountId  string                    `xml:"merchant-account-id,omitempty"`
+	PlanId             string                    `xml:"plan-id,omitempty"`
+	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
+	Customer           *Customer                 `xml:"customer,omitempty"`
+	BillingAddress     *Address                  `xml:"billing,omitempty"`
+	ShippingAddress    *Address                  `xml:"shipping,omitempty"`
+	DeviceData         string                    `xml:"device-data,omitempty"`
+	Options            *TransactionOptions       `xml:"options,omitempty"`
+	ServiceFeeAmount   *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
+	RiskData           *RiskDataRequest          `xml:"risk-data,omitempty"`
+	Descriptor         *Descriptor               `xml:"descriptor,omitempty"`
+	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
+}
+
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
 //
 // <transaction>
-//   <currency-iso-code>USD</currency-iso-code>
 //   <custom-fields>
 //   </custom-fields>
 //   <avs-error-response-code nil="true"></avs-error-response-code>
@@ -121,4 +142,9 @@ type TransactionSearchResult struct {
 type RiskData struct {
 	ID       string `xml:"id"`
 	Decision string `xml:"decision"`
+}
+
+type RiskDataRequest struct {
+	CustomerBrowser string `xml:"customer-browser"`
+	CustomerIP      string `xml:"customer-ip"`
 }
