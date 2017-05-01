@@ -4,11 +4,11 @@ type GatewayRejectionReason string
 
 const (
 	GatewayRejectionReasonApplicationIncomplete GatewayRejectionReason = "application_incomplete"
-	GatewayRejectionReasonAVS                                          = "avs"
-	GatewayRejectionReasonAVSAndCVV                                    = "avs_and_cvv"
-	GatewayRejectionReasonCVV                                          = "cvv"
-	GatewayRejectionReasonDuplicate                                    = "duplicate"
-	GatewayRejectionReasonFraud                                        = "fraud"
-	GatewayRejectionReasonThreeDSecure                                 = "three_d_secure"
-	GatewayRejectionReasonUnrecognized                                 = "unrecognized"
+	GatewayRejectionReasonAVS                   GatewayRejectionReason = "avs"
+	GatewayRejectionReasonAVSAndCVV             GatewayRejectionReason = "avs_and_cvv"
+	GatewayRejectionReasonCVV                   GatewayRejectionReason = "cvv"
+	GatewayRejectionReasonDuplicate             GatewayRejectionReason = "duplicate"
+	GatewayRejectionReasonFraud                 GatewayRejectionReason = "fraud"
+	GatewayRejectionReasonThreeDSecure          GatewayRejectionReason = "three_d_secure"
+	GatewayRejectionReasonUnrecognized          GatewayRejectionReason = "unrecognized"
 )
