@@ -358,9 +358,12 @@ func TestTransactionRiskDataFields(t *testing.T) {
 func TestAllTransactionFields(t *testing.T) {
 	t.Parallel()
 
+	amount := randomAmount()
+	taxAmount := NewDecimal(amount.Unscaled/10, 2)
+
 	tx := &TransactionRequest{
 		Type:    "sale",
-		Amount:  randomAmount(),
+		Amount:  amount,
 		OrderId: "my_custom_order",
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
@@ -382,6 +385,7 @@ func TestAllTransactionFields(t *testing.T) {
 			Region:        "IL",
 			PostalCode:    "60637",
 		},
+		TaxAmount:  taxAmount,
 		DeviceData: `{"device_session_id": "dsi_1234", "fraud_merchant_id": "fmi_1234", "correlation_id": "ci_1234"}`,
 		Options: &TransactionOptions{
 			SubmitForSettlement:              true,
@@ -434,6 +438,9 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 	if tx2.ShippingAddress.PostalCode != tx.ShippingAddress.PostalCode {
 		t.Fatalf("expected ShippingAddress.PostalCode to be equal, but %s was not %s", tx2.ShippingAddress.PostalCode, tx.ShippingAddress.PostalCode)
+	}
+	if tx2.TaxAmount.Cmp(tx.TaxAmount) != 0 {
+		t.Fatalf("expected TaxAmount to be equal, but %s was not %s", tx2.TaxAmount, tx.TaxAmount)
 	}
 	if tx2.CreditCard.Token == "" {
 		t.Fatalf("expected CreditCard.Token to be equal, but %s was not %s", tx2.CreditCard.Token, tx.CreditCard.Token)
@@ -705,5 +712,29 @@ func TestTransactionCreateWithCustomFields(t *testing.T) {
 
 	if x := map[string]string(txn.CustomFields); !reflect.DeepEqual(x, customFields) {
 		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
+	}
+}
+
+func TestTransactionTaxExempt(t *testing.T) {
+	t.Parallel()
+
+	amount := NewDecimal(10000, 2)
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:               "sale",
+		Amount:             amount,
+		TaxExempt:          true,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().Find(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !txn.TaxExempt {
+		t.Fatalf("Transaction did not return tax exempt")
 	}
 }
