@@ -231,18 +231,13 @@ func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txnID := err.(*BraintreeError).Transaction.Id
-	txn, err := testGateway.Transaction().Find(txnID)
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	txn := err.(*BraintreeError).Transaction
 	if txn.Status != "gateway_rejected" {
 		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
 	}
 
 	if txn.GatewayRejectionReason != GatewayRejectionReasonFraud {
-		t.Fatalf("Got gateway rejection reason %q, wanted 'fraud'", txn.GatewayRejectionReason)
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonFraud)
 	}
 
 	if txn.ProcessorResponseCode != 0 {
@@ -267,11 +262,7 @@ func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txnID := err.(*BraintreeError).Transaction.Id
-	txn, err := testGateway.Transaction().Find(txnID)
-	if err != nil {
-		t.Fatal(err)
-	}
+	txn := err.(*BraintreeError).Transaction
 
 	if txn.Status != "gateway_rejected" {
 		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
