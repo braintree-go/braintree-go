@@ -277,12 +277,12 @@ func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
 		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
 	}
 
-	if txn.GatewayRejectionReason != "cvv" {
-		t.Fatalf("Got gateway rejection reason '%s', wanted 'cvv'", txn.GatewayRejectionReason)
+	if txn.GatewayRejectionReason != GatewayRejectionReasonCVV {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonCVV)
 	}
 
-	if txn.CVVResponseCode != CVVDoesNotMatch {
-		t.Fatalf("Got CVV Response Code '%s', wanted 'N'", txn.CVVResponseCode)
+	if txn.CVVResponseCode != CVVResponseCodeDoesNotMatch {
+		t.Fatalf("Got CVV Response Code %q, wanted %q", txn.CVVResponseCode, CVVResponseCodeDoesNotMatch)
 	}
 }
 
