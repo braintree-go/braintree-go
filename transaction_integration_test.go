@@ -231,22 +231,49 @@ func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txnID := err.(*BraintreeError).Transaction.Id
-	txn, err := testGateway.Transaction().Find(txnID)
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	txn := err.(*BraintreeError).Transaction
 	if txn.Status != "gateway_rejected" {
 		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
 	}
 
 	if txn.GatewayRejectionReason != GatewayRejectionReasonFraud {
-		t.Fatalf("Got gateway rejection reason %q, wanted 'fraud'", txn.GatewayRejectionReason)
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonFraud)
 	}
 
 	if txn.ProcessorResponseCode != 0 {
 		t.Fatalf("Got processor response code %q, want %q", txn.ProcessorResponseCode, 0)
+	}
+}
+
+func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: randomAmount(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "200", // Should cause CVV does not match response
+		},
+	})
+
+	if err.Error() != "Gateway Rejected: cvv" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+
+	if txn.Status != "gateway_rejected" {
+		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonCVV {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonCVV)
+	}
+
+	if txn.CVVResponseCode != CVVResponseCodeDoesNotMatch {
+		t.Fatalf("Got CVV Response Code %q, wanted %q", txn.CVVResponseCode, CVVResponseCodeDoesNotMatch)
 	}
 }
 

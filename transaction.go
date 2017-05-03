@@ -43,6 +43,7 @@ type Transaction struct {
 	Descriptor                  *Descriptor               `xml:"descriptor,omitempty"`
 	CustomFields                customfields.CustomFields `xml:"custom-fields,omitempty"`
 	GatewayRejectionReason      GatewayRejectionReason    `xml:"gateway-rejection-reason,omitempty"`
+	CVVResponseCode             CVVResponseCode           `xml:"cvv-response-code,omitempty"`
 }
 
 type TransactionRequest struct {
@@ -73,7 +74,6 @@ type TransactionRequest struct {
 //   <avs-error-response-code nil="true"></avs-error-response-code>
 //   <avs-postal-code-response-code>I</avs-postal-code-response-code>
 //   <avs-street-address-response-code>I</avs-street-address-response-code>
-//   <cvv-response-code>I</cvv-response-code>
 //   <voice-referral-number nil="true"></voice-referral-number>
 //   <purchase-order-number nil="true"></purchase-order-number>
 //   <tax-amount nil="true"></tax-amount>
