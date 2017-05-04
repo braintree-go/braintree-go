@@ -277,6 +277,135 @@ func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
 	}
 }
 
+func TestTransactionCreatedWhenAVSBankDoesNotSupport(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		MerchantAccountId: avsAndCVVTestMerchantAccountId,
+		Type:              "sale",
+		Amount:            randomAmount(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "100",
+		},
+		BillingAddress: &Address{
+			StreetAddress: "1 E Main St",
+			Locality:      "Chicago",
+			Region:        "IL",
+			PostalCode:    "30001", // Should cause AVS bank does not support error response.
+		},
+	})
+
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: avs" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+
+	if txn.Status != "gateway_rejected" {
+		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonAVS)
+	}
+
+	if txn.AVSErrorResponseCode != AVSResponseCodeNotSupported {
+		t.Fatalf("Got AVS Error Response Code %q, wanted %q", txn.AVSErrorResponseCode, AVSResponseCodeNotSupported)
+	}
+}
+
+func TestTransactionCreatedWhenAVSPostalDoesNotMatch(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		MerchantAccountId: avsAndCVVTestMerchantAccountId,
+		Type:              "sale",
+		Amount:            randomAmount(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "100",
+		},
+		BillingAddress: &Address{
+			StreetAddress: "1 E Main St",
+			Locality:      "Chicago",
+			Region:        "IL",
+			PostalCode:    "20000", // Should cause AVS postal code does not match response.
+		},
+	})
+
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: avs" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+
+	if txn.Status != "gateway_rejected" {
+		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonAVS)
+	}
+
+	if txn.AVSPostalCodeResponseCode != AVSResponseCodeDoesNotMatch {
+		t.Fatalf("Got AVS postal response code %q, wanted %q", txn.AVSPostalCodeResponseCode, AVSResponseCodeDoesNotMatch)
+	}
+}
+
+func TestTransactionCreatedWhenAVStreetAddressDoesNotMatch(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		MerchantAccountId: avsAndCVVTestMerchantAccountId,
+		Type:              "sale",
+		Amount:            randomAmount(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "100",
+		},
+		BillingAddress: &Address{
+			StreetAddress: "201 E Main St", // Should cause AVS street address not verified response.
+			Locality:      "Chicago",
+			Region:        "IL",
+			PostalCode:    "60637",
+		},
+	})
+
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: avs" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+
+	if txn.Status != "gateway_rejected" {
+		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonAVS)
+	}
+
+	if txn.AVSStreetAddressResponseCode != AVSResponseCodeNotVerified {
+		t.Fatalf("Got AVS street address response code %q, wanted %q", txn.AVSStreetAddressResponseCode, AVSResponseCodeNotVerified)
+	}
+}
+
 func TestFindTransaction(t *testing.T) {
 	t.Parallel()
 
