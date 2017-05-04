@@ -74,41 +74,56 @@ func (g *WebhookTestingGateway) SignPayload(payload string) (string, error) {
 }
 
 func (g *WebhookTestingGateway) subjectXML(kind, id string) string {
+	type subjectXMLData struct {
+		ID string
+	}
+
+	xmlTmpl := g.subjectXMLTemplate(kind)
+	var b bytes.Buffer
+	tmpl, err := template.New("").Parse(xmlTmpl)
+	err = tmpl.Execute(&b, subjectXMLData{ID: id})
+	if err != nil {
+		panic(fmt.Errorf("creating xml template: " + err.Error()))
+	}
+	return b.String()
+}
+
+func (g *WebhookTestingGateway) subjectXMLTemplate(kind string) string {
 	switch kind {
 	case CheckWebhook:
 		return g.checkXML()
 	case SubMerchantAccountApprovedWebhook:
-		return g.merchantAccountXMLApproved(id)
+		return g.merchantAccountXMLApproved()
 	case SubMerchantAccountDeclinedWebhook:
-		return g.merchantAccountXMLDeclined(id)
+		return g.merchantAccountXMLDeclined()
 	case TransactionDisbursedWebhook:
-		return g.transactionDisbursedXML(id)
+		return g.transactionDisbursedXML()
 	case TransactionSettledWebhook:
-		return g.transactionSettledXML(id)
+		return g.transactionSettledXML()
 	case TransactionSettlementDeclinedWebhook:
-		return g.transactionSettlementDeclinedXML(id)
+		return g.transactionSettlementDeclinedXML()
 	case DisbursementWebhook:
-		return g.disbursementXML(id)
+		return g.disbursementXML()
 	case DisputeOpenedWebhook:
-		return g.disputeOpenedXML(id)
+		return g.disputeOpenedXML()
 	case DisputeLostWebhook:
-		return g.disputeLostXML(id)
+		return g.disputeLostXML()
 	case DisputeWonWebhook:
-		return g.disputeWonXML(id)
+		return g.disputeWonXML()
 	case DisbursementExceptionWebhook:
-		return g.disbursementExceptionXML(id)
+		return g.disbursementExceptionXML()
 	case PartnerMerchantConnectedWebhook:
-		return g.partnerMerchantConnectedXML(id)
+		return g.partnerMerchantConnectedXML()
 	case PartnerMerchantDisconnectedWebhook:
-		return g.partnerMerchantDisconnectedXML(id)
+		return g.partnerMerchantDisconnectedXML()
 	case PartnerMerchantDeclinedWebhook:
-		return g.partnerMerchantDeclinedXML(id)
+		return g.partnerMerchantDeclinedXML()
 	case SubscriptionChargedSuccessfullyWebhook:
-		return g.subscriptionChargedSuccessfullyXML(id)
+		return g.subscriptionChargedSuccessfullyXML()
 	case AccountUpdaterDailyReportWebhook:
-		return g.accountUpdaterDailyReportXML(id)
+		return g.accountUpdaterDailyReportXML()
 	default:
-		return g.subscriptionXML(id)
+		return g.subscriptionXML()
 	}
 }
 
@@ -116,10 +131,8 @@ func (g *WebhookTestingGateway) checkXML() string {
 	return `<check type="boolean">true</check>`
 }
 
-func (g *WebhookTestingGateway) merchantAccountXMLApproved(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) merchantAccountXMLApproved() string {
+	return `
 		<merchant_account>
 			<id>{{ $.ID }}</id>
 			<master_merchant_account>
@@ -128,14 +141,11 @@ func (g *WebhookTestingGateway) merchantAccountXMLApproved(id string) string {
 			</master_merchant_account>
 			<status>active</status>
 		</merchant_account>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) merchantAccountXMLDeclined(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) merchantAccountXMLDeclined() string {
+	return `
 		<api-error-response>
 			<message>Credit score is too low</message>
 			<errors type="array"/>
@@ -158,14 +168,11 @@ func (g *WebhookTestingGateway) merchantAccountXMLDeclined(id string) string {
 				</master-merchant-account>
 			</merchant-account>
 		</api-error-response>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) subscriptionXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) subscriptionXML() string {
+	return `
 		<subscription>
 			<id>{{ $.ID }}</id>
 			<transactions type="array">
@@ -175,14 +182,11 @@ func (g *WebhookTestingGateway) subscriptionXML(id string) string {
 			<discounts type="array">
 			</discounts>
 		</subscription>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) subscriptionChargedSuccessfullyXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) subscriptionChargedSuccessfullyXML() string {
+	return `
 		<subscription>
 			<id>{{ $.ID }}</id>
 			<transactions type="array">
@@ -197,14 +201,11 @@ func (g *WebhookTestingGateway) subscriptionChargedSuccessfullyXML(id string) st
 			<discounts type="array">
 			</discounts>
 		</subscription>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) transactionDisbursedXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) transactionDisbursedXML() string {
+	return `
 		<transaction>
 			<id>{{ $.ID }}</id>
 			<amount>100</amount>
@@ -212,14 +213,11 @@ func (g *WebhookTestingGateway) transactionDisbursedXML(id string) string {
 				<disbursement-date type="date">2013-07-09</disbursement-date>
 			</disbursement-details>
 		</transaction>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) transactionSettledXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) transactionSettledXML() string {
+	return `
 		<transaction>
 			<id>{{ $.ID}}</id>
 			<status>settled</status>
@@ -235,14 +233,11 @@ func (g *WebhookTestingGateway) transactionSettledXML(id string) string {
 				<account-holder-name>Dan Schulman</account-holder-name>
 			</us-bank-account>
 		</transaction>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) transactionSettlementDeclinedXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) transactionSettlementDeclinedXML() string {
+	return `
 		<transaction>
 			<id>{{ $.ID }}</id>
 			<status>settlement_declined</status>
@@ -258,14 +253,11 @@ func (g *WebhookTestingGateway) transactionSettlementDeclinedXML(id string) stri
 				<account-holder-name>Dan Schulman</account-holder-name>
 			</us-bank-account>
 		</transaction>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) disputeOpenedXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) disputeOpenedXML() string {
+	return `
 		<dispute>
 			<amount>250.00</amount>
 			<currency-iso-code>USD</currency-iso-code>
@@ -281,14 +273,11 @@ func (g *WebhookTestingGateway) disputeOpenedXML(id string) string {
 			</transaction>
 			<date-opened type="date">2014-03-21</date-opened>
 		</dispute>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) disputeLostXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) disputeLostXML() string {
+	return `
 		<dispute>
 			<amount>250.00</amount>
 			<currency-iso-code>USD</currency-iso-code>
@@ -304,14 +293,11 @@ func (g *WebhookTestingGateway) disputeLostXML(id string) string {
 			</transaction>
 			<date-opened type="date">2014-03-21</date-opened>
 		</dispute>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) disputeWonXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) disputeWonXML() string {
+	return `
 		<dispute>
 			<amount>250.00</amount>
 			<currency-iso-code>USD</currency-iso-code>
@@ -328,14 +314,11 @@ func (g *WebhookTestingGateway) disputeWonXML(id string) string {
 			<date-opened type="date">2014-03-21</date-opened>
 			<date-won type="date">2014-03-22</date-won>
 		</dispute>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) disbursementXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) disbursementXML() string {
+	return `
 		<disbursement>
 			<id>{{ $.ID }}</id>
 			<transaction-ids type="array">
@@ -355,14 +338,11 @@ func (g *WebhookTestingGateway) disbursementXML(id string) string {
 			<exception-message nil="true"/>
 			<follow-up-action nil="true"/>
 		</disbursement>
-		`,
-	)
+		`
 }
 
-func (g *WebhookTestingGateway) disbursementExceptionXML(id string) string {
-	return g.sub(
-		id,
-		`
+func (g *WebhookTestingGateway) disbursementExceptionXML() string {
+	return `
 		<disbursement>
 			<id>{{ $.ID }}</id>
 			<transaction-ids type="array">
@@ -382,11 +362,10 @@ func (g *WebhookTestingGateway) disbursementExceptionXML(id string) string {
 			<exception-message>bank_rejected</exception-message>
 			<follow-up-action>update_funding_information</follow-up-action>
 		</disbursement>
-	`,
-	)
+	`
 }
 
-func (g *WebhookTestingGateway) partnerMerchantConnectedXML(id string) string {
+func (g *WebhookTestingGateway) partnerMerchantConnectedXML() string {
 	return `
 	<partner-merchant>
 		<merchant-public-id>public_id</merchant-public-id>
@@ -398,7 +377,7 @@ func (g *WebhookTestingGateway) partnerMerchantConnectedXML(id string) string {
 	`
 }
 
-func (g *WebhookTestingGateway) partnerMerchantDisconnectedXML(id string) string {
+func (g *WebhookTestingGateway) partnerMerchantDisconnectedXML() string {
 	return `
 	<partner-merchant>
 		<partner-merchant-id>abc123</partner-merchant-id>
@@ -406,7 +385,7 @@ func (g *WebhookTestingGateway) partnerMerchantDisconnectedXML(id string) string
 	`
 }
 
-func (g *WebhookTestingGateway) partnerMerchantDeclinedXML(id string) string {
+func (g *WebhookTestingGateway) partnerMerchantDeclinedXML() string {
 	return `
 	<partner-merchant>
 		<partner-merchant-id>abc123</partner-merchant-id>
@@ -414,21 +393,11 @@ func (g *WebhookTestingGateway) partnerMerchantDeclinedXML(id string) string {
 	`
 }
 
-func (g *WebhookTestingGateway) accountUpdaterDailyReportXML(id string) string {
+func (g *WebhookTestingGateway) accountUpdaterDailyReportXML() string {
 	return `
 	<account-updater-daily-report>
 		<report-date type="date">2016-01-14</report-date>
 		<report-url>link-to-csv-report</report-url>
 	</account-updater-daily-report>
 	`
-}
-
-func (g *WebhookTestingGateway) sub(id string, xmlTemplate string) string {
-	var b bytes.Buffer
-	tmpl, err := template.New("").Parse(xmlTemplate)
-	err = tmpl.Execute(&b, struct{ ID string }{ID: id})
-	if err != nil {
-		panic(fmt.Errorf("creating xml template: " + err.Error()))
-	}
-	return b.String()
 }
