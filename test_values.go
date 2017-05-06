@@ -32,3 +32,6 @@ var testTimeZone = func() *time.Location {
 }()
 
 var testMerchantAccountId = os.Getenv("BRAINTREE_MERCH_ACCT_ID")
+
+// Merchant Account which has AVS and CVV checking turned on.
+var avsAndCVVTestMerchantAccountId = os.Getenv("BRAINTREE_MERCH_ACCT_ID_FOR_AVS_CVV")

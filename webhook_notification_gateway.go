@@ -3,11 +3,18 @@ package braintree
 import (
 	"encoding/base64"
 	"encoding/xml"
+	"net/http"
 )
 
 type WebhookNotificationGateway struct {
 	*Braintree
 	apiKey apiKey
+}
+
+func (w *WebhookNotificationGateway) ParseRequest(r *http.Request) (*WebhookNotification, error) {
+	signature := r.PostFormValue("bt_signature")
+	payload := r.PostFormValue("bt_payload")
+	return w.Parse(signature, payload)
 }
 
 func (w *WebhookNotificationGateway) Parse(signature, payload string) (*WebhookNotification, error) {

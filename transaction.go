@@ -8,42 +8,47 @@ import (
 )
 
 type Transaction struct {
-	XMLName                     string                    `xml:"transaction"`
-	Id                          string                    `xml:"id,omitempty"`
-	CustomerID                  string                    `xml:"customer-id,omitempty"`
-	Status                      string                    `xml:"status,omitempty"`
-	Type                        string                    `xml:"type,omitempty"`
-	CurrencyISOCode             string                    `xml:"currency-iso-code,omitempty"`
-	Amount                      *Decimal                  `xml:"amount"`
-	OrderId                     string                    `xml:"order-id,omitempty"`
-	PaymentMethodToken          string                    `xml:"payment-method-token,omitempty"`
-	PaymentMethodNonce          string                    `xml:"payment-method-nonce,omitempty"`
-	MerchantAccountId           string                    `xml:"merchant-account-id,omitempty"`
-	PlanId                      string                    `xml:"plan-id,omitempty"`
-	CreditCard                  *CreditCard               `xml:"credit-card,omitempty"`
-	Customer                    *Customer                 `xml:"customer,omitempty"`
-	BillingAddress              *Address                  `xml:"billing,omitempty"`
-	ShippingAddress             *Address                  `xml:"shipping,omitempty"`
-	TaxAmount                   *Decimal                  `xml:"tax-amount,omitempty"`
-	TaxExempt                   bool                      `xml:"tax-exempt,omitempty"`
-	DeviceData                  string                    `xml:"device-data,omitempty"`
-	ServiceFeeAmount            *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
-	CreatedAt                   *time.Time                `xml:"created-at,omitempty"`
-	UpdatedAt                   *time.Time                `xml:"updated-at,omitempty"`
-	DisbursementDetails         *DisbursementDetails      `xml:"disbursement-details,omitempty"`
-	RefundId                    string                    `xml:"refund-id,omitempty"`
-	RefundIds                   *[]string                 `xml:"refund-ids>item,omitempty"`
-	RefundedTransactionId       *string                   `xml:"refunded-transaction-id,omitempty"`
-	ProcessorResponseCode       ProcessorResponseCode     `xml:"processor-response-code,omitempty"`
-	ProcessorResponseText       string                    `xml:"processor-response-text,omitempty"`
-	ProcessorAuthorizationCode  string                    `xml:"processor-authorization-code,omitempty"`
-	SettlementBatchId           string                    `xml:"settlement-batch-id,omitempty"`
-	PaymentInstrumentType       string                    `xml:"payment-instrument-type,omitempty"`
-	PayPalDetails               *PayPalDetails            `xml:"paypal,omitempty"`
-	AdditionalProcessorResponse string                    `xml:"additional-processor-response,omitempty"`
-	RiskData                    *RiskData                 `xml:"risk-data,omitempty"`
-	Descriptor                  *Descriptor               `xml:"descriptor,omitempty"`
-	CustomFields                customfields.CustomFields `xml:"custom-fields,omitempty"`
+	XMLName                      string                    `xml:"transaction"`
+	Id                           string                    `xml:"id,omitempty"`
+	CustomerID                   string                    `xml:"customer-id,omitempty"`
+	Status                       string                    `xml:"status,omitempty"`
+	Type                         string                    `xml:"type,omitempty"`
+	CurrencyISOCode              string                    `xml:"currency-iso-code,omitempty"`
+	Amount                       *Decimal                  `xml:"amount"`
+	OrderId                      string                    `xml:"order-id,omitempty"`
+	PaymentMethodToken           string                    `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce           string                    `xml:"payment-method-nonce,omitempty"`
+	MerchantAccountId            string                    `xml:"merchant-account-id,omitempty"`
+	PlanId                       string                    `xml:"plan-id,omitempty"`
+	CreditCard                   *CreditCard               `xml:"credit-card,omitempty"`
+	Customer                     *Customer                 `xml:"customer,omitempty"`
+	BillingAddress               *Address                  `xml:"billing,omitempty"`
+	ShippingAddress              *Address                  `xml:"shipping,omitempty"`
+	TaxAmount                    *Decimal                  `xml:"tax-amount,omitempty"`
+	TaxExempt                    bool                      `xml:"tax-exempt,omitempty"`
+	DeviceData                   string                    `xml:"device-data,omitempty"`
+	ServiceFeeAmount             *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
+	CreatedAt                    *time.Time                `xml:"created-at,omitempty"`
+	UpdatedAt                    *time.Time                `xml:"updated-at,omitempty"`
+	DisbursementDetails          *DisbursementDetails      `xml:"disbursement-details,omitempty"`
+	RefundId                     string                    `xml:"refund-id,omitempty"`
+	RefundIds                    *[]string                 `xml:"refund-ids>item,omitempty"`
+	RefundedTransactionId        *string                   `xml:"refunded-transaction-id,omitempty"`
+	ProcessorResponseCode        ProcessorResponseCode     `xml:"processor-response-code,omitempty"`
+	ProcessorResponseText        string                    `xml:"processor-response-text,omitempty"`
+	ProcessorAuthorizationCode   string                    `xml:"processor-authorization-code,omitempty"`
+	SettlementBatchId            string                    `xml:"settlement-batch-id,omitempty"`
+	PaymentInstrumentType        string                    `xml:"payment-instrument-type,omitempty"`
+	PayPalDetails                *PayPalDetails            `xml:"paypal,omitempty"`
+	AdditionalProcessorResponse  string                    `xml:"additional-processor-response,omitempty"`
+	RiskData                     *RiskData                 `xml:"risk-data,omitempty"`
+	Descriptor                   *Descriptor               `xml:"descriptor,omitempty"`
+	CustomFields                 customfields.CustomFields `xml:"custom-fields,omitempty"`
+	AVSErrorResponseCode         AVSResponseCode           `xml:"avs-error-response-code,omitempty"`
+	AVSPostalCodeResponseCode    AVSResponseCode           `xml:"avs-postal-code-response-code,omitempty"`
+	AVSStreetAddressResponseCode AVSResponseCode           `xml:"avs-street-address-response-code,omitempty"`
+	CVVResponseCode              CVVResponseCode           `xml:"cvv-response-code,omitempty"`
+	GatewayRejectionReason       GatewayRejectionReason    `xml:"gateway-rejection-reason,omitempty"`
 }
 
 type TransactionRequest struct {
@@ -73,13 +78,6 @@ type TransactionRequest struct {
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
 //
 // <transaction>
-//   <custom-fields>
-//   </custom-fields>
-//   <avs-error-response-code nil="true"></avs-error-response-code>
-//   <avs-postal-code-response-code>I</avs-postal-code-response-code>
-//   <avs-street-address-response-code>I</avs-street-address-response-code>
-//   <cvv-response-code>I</cvv-response-code>
-//   <gateway-rejection-reason nil="true"></gateway-rejection-reason>
 //   <voice-referral-number nil="true"></voice-referral-number>
 //   <purchase-order-number nil="true"></purchase-order-number>
 //   <status-history type="array">

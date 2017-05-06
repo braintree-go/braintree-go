@@ -1,6 +1,6 @@
 package braintree
 
-// TestGateway exports actions only available in the sandbox environment.
+// TestingGateway exports actions only available in the sandbox environment.
 type TestingGateway struct {
 	*Braintree
 }
