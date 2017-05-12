@@ -10,7 +10,6 @@ import (
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id,omitempty"`
-	CustomerID                   string                    `xml:"customer-id,omitempty"`
 	Status                       string                    `xml:"status,omitempty"`
 	Type                         string                    `xml:"type,omitempty"`
 	CurrencyISOCode              string                    `xml:"currency-iso-code,omitempty"`
