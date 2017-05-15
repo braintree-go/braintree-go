@@ -18,6 +18,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 
@@ -31,7 +32,10 @@ type BraintreeJS struct {
 func showForm(w http.ResponseWriter, r *http.Request) {
 	config := BraintreeJS{Key: "'" + template.HTML(os.Getenv("BRAINTREE_CSE_KEY")) + "'"}
 	t := template.Must(template.ParseFiles("form.html"))
-	t.Execute(w, config)
+	err := t.Execute(w, config)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
 }
 
 func createTransaction(w http.ResponseWriter, r *http.Request) {
@@ -65,5 +69,8 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", showForm)
 	http.HandleFunc("/create_transaction", createTransaction)
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

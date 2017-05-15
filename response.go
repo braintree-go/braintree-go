@@ -127,7 +127,7 @@ func (r *Response) unpackBody() error {
 		if err != nil {
 			return err
 		}
-		defer r.Response.Body.Close()
+		defer func() { _ = r.Response.Body.Close() }()
 
 		buf, err := ioutil.ReadAll(b)
 		if err != nil {
@@ -140,8 +140,8 @@ func (r *Response) unpackBody() error {
 
 func (r *Response) apiError() error {
 	var b BraintreeError
-	xml.Unmarshal(r.Body, &b)
-	if b.ErrorMessage != "" {
+	err := xml.Unmarshal(r.Body, &b)
+	if err == nil && b.ErrorMessage != "" {
 		b.statusCode = r.StatusCode
 		return &b
 	}
