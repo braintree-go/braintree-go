@@ -7,6 +7,23 @@ import (
 	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
+const (
+	TransactionStatusAuthorizationExpired   = "authorization_expired"
+	TransactionStatusAuthorizing            = "authorizing"
+	TransactionStatusAuthorized             = "authorized"
+	TransactionStatusGatewayRejected        = "gateway_rejected"
+	TransactionStatusFailed                 = "failed"
+	TransactionStatusProcessorDeclined      = "processor_declined"
+	TransactionStatusSettled                = "settled"
+	TransactionStatusSettlementConfirmed    = "settlement_confirmed"
+	TransactionStatusSettlementDeclined     = "settlement_declined"
+	TransactionStatusSettlementPending      = "settlement_pending"
+	TransactionStatusSettling               = "settling"
+	TransactionStatusSubmittedForSettlement = "submitted_for_settlement"
+	TransactionStatusVoided                 = "voided"
+	TransactionStatusUnrecognized           = "unrecognized"
+)
+
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id,omitempty"`
