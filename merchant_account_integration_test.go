@@ -92,7 +92,7 @@ func TestMerchantAccountTransaction(t *testing.T) {
 	if tx.Id == "" {
 		t.Fatal("Received invalid ID on new transaction")
 	}
-	if tx.Status != "authorized" {
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 }

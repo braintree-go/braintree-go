@@ -18,7 +18,7 @@ func TestSettlementBatch(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("transaction : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status)
-	if tx.Status != "authorized" {
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 
@@ -28,7 +28,7 @@ func TestSettlementBatch(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("transaction : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status)
-	if x := tx.Status; x != "submitted_for_settlement" {
+	if x := tx.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
 	}
 
@@ -38,7 +38,7 @@ func TestSettlementBatch(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("transaction : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status)
-	if x := tx.Status; x != "settled" {
+	if x := tx.Status; x != TransactionStatusSettled {
 		t.Fatal(x)
 	}
 
