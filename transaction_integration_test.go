@@ -34,7 +34,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	if tx.Id == "" {
 		t.Fatal("Received invalid ID on new transaction")
 	}
-	if tx.Status != "authorized" {
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 
@@ -47,7 +47,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := tx2.Status; x != "submitted_for_settlement" {
+	if x := tx2.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
 	}
 	if amount := tx2.Amount; amount.Cmp(ten) != 0 {
@@ -62,7 +62,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := tx3.Status; x != "voided" {
+	if x := tx3.Status; x != TransactionStatusVoided {
 		t.Fatal(x)
 	}
 }
@@ -232,8 +232,8 @@ func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
 	}
 
 	txn := err.(*BraintreeError).Transaction
-	if txn.Status != "gateway_rejected" {
-		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
 	}
 
 	if txn.GatewayRejectionReason != GatewayRejectionReasonFraud {
@@ -264,8 +264,8 @@ func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
 
 	txn := err.(*BraintreeError).Transaction
 
-	if txn.Status != "gateway_rejected" {
-		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
 	}
 
 	if txn.GatewayRejectionReason != GatewayRejectionReasonCVV {
@@ -307,8 +307,8 @@ func TestTransactionCreatedWhenAVSBankDoesNotSupport(t *testing.T) {
 
 	txn := err.(*BraintreeError).Transaction
 
-	if txn.Status != "gateway_rejected" {
-		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
 	}
 
 	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
@@ -350,8 +350,8 @@ func TestTransactionCreatedWhenAVSPostalDoesNotMatch(t *testing.T) {
 
 	txn := err.(*BraintreeError).Transaction
 
-	if txn.Status != "gateway_rejected" {
-		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
 	}
 
 	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
@@ -393,8 +393,8 @@ func TestTransactionCreatedWhenAVStreetAddressDoesNotMatch(t *testing.T) {
 
 	txn := err.(*BraintreeError).Transaction
 
-	if txn.Status != "gateway_rejected" {
-		t.Fatalf("Got status %q, want %q", txn.Status, "gateway_rejected")
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
 	}
 
 	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
@@ -475,8 +475,8 @@ func TestTransactionDescriptorFields(t *testing.T) {
 	if tx2.Amount.Cmp(tx.Amount) != 0 {
 		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
 	}
-	if tx2.Status != "submitted_for_settlement" {
-		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
+	if tx2.Status != TransactionStatusSubmittedForSettlement {
+		t.Fatalf("expected tx2.Status to be %s, but got %s", TransactionStatusSubmittedForSettlement, tx2.Status)
 	}
 	if tx2.Descriptor.Name != "Company Name*Product 1" {
 		t.Fatalf("expected tx2.Descriptor.Name to be Company Name*Product 1, but got %s", tx2.Descriptor.Name)
@@ -601,8 +601,8 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Customer.Id == "" {
 		t.Fatalf("expected Customer.Id to be equal, but %s was not %s", tx2.Customer.Id, tx.Customer.Id)
 	}
-	if tx2.Status != "submitted_for_settlement" {
-		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
+	if tx2.Status != TransactionStatusSubmittedForSettlement {
+		t.Fatalf("expected tx2.Status to be %s, but got %s", TransactionStatusSubmittedForSettlement, tx2.Status)
 	}
 	if tx2.PaymentInstrumentType != "credit_card" {
 		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", "credit_card", tx2.PaymentInstrumentType)
@@ -725,7 +725,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settled" {
+	if txn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 
@@ -737,7 +737,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := refundTxn.Status; x != "submitted_for_settlement" {
+	if x := refundTxn.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
 	}
 
@@ -746,7 +746,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if refundTxn.Status != "settled" {
+	if refundTxn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 
@@ -801,7 +801,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settled" {
+	if txn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 
@@ -813,7 +813,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := refundTxn.Status; x != "submitted_for_settlement" {
+	if x := refundTxn.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
 	}
 
@@ -822,7 +822,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if refundTxn.Status != "settled" {
+	if refundTxn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 

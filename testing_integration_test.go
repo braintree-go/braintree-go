@@ -35,7 +35,7 @@ func TestSettleTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settled" {
+	if txn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 }
@@ -71,7 +71,7 @@ func TestSettlementConfirmTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settlement_confirmed" {
+	if txn.Status != TransactionStatusSettlementConfirmed {
 		t.Fatal(txn.Status)
 	}
 }
@@ -107,7 +107,7 @@ func TestSettlementDeclinedTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settlement_declined" {
+	if txn.Status != TransactionStatusSettlementDeclined {
 		t.Fatal(txn.Status)
 	}
 }
@@ -143,7 +143,7 @@ func TestSettlementPendingTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settlement_pending" {
+	if txn.Status != TransactionStatusSettlementPending {
 		t.Fatal(txn.Status)
 	}
 }
@@ -183,7 +183,7 @@ func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settled" {
+	if txn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 }
