@@ -246,7 +246,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	if x := sub1.NeverExpires; x == nil || !x.Valid || !x.Bool {
 		t.Fatalf("got never expires %#v, want true", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || x.Valid {
+	if x := sub1.NumberOfBillingCycles; x != nil {
 		t.Fatalf("got number billing cycles %#v, didn't want", x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
@@ -480,7 +480,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	if x := sub1.NeverExpires; x == nil || !x.Valid || !x.Bool {
 		t.Fatalf("got never expires %#v, want true", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || x.Valid {
+	if x := sub1.NumberOfBillingCycles; x != nil {
 		t.Fatalf("got number billing cycles %#v, didn't want", x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
@@ -723,7 +723,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	if x := sub1.NeverExpires; x == nil || !x.Valid || !x.Bool {
 		t.Fatalf("got never expires %#v, want true", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || x.Valid {
+	if x := sub1.NumberOfBillingCycles; x != nil {
 		t.Fatalf("got number billing cycles %#v, didn't want", x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
