@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/lionelbarrow/braintree-go/xmlnil"
 )
 
 type Response struct {
@@ -133,7 +135,12 @@ func (r *Response) unpackBody() error {
 		if err != nil {
 			return err
 		}
-		r.Body = buf
+		strippedBuf, err := xmlnil.StripNilElements(buf)
+		if err == nil {
+			r.Body = strippedBuf
+		} else {
+			r.Body = buf
+		}
 	}
 	return nil
 }
