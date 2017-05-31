@@ -6,19 +6,20 @@ import (
 )
 
 type Customer struct {
-	XMLName        string                    `xml:"customer"`
-	Id             string                    `xml:"id,omitempty"`
-	FirstName      string                    `xml:"first-name,omitempty"`
-	LastName       string                    `xml:"last-name,omitempty"`
-	Company        string                    `xml:"company,omitempty"`
-	Email          string                    `xml:"email,omitempty"`
-	Phone          string                    `xml:"phone,omitempty"`
-	Fax            string                    `xml:"fax,omitempty"`
-	Website        string                    `xml:"website,omitempty"`
-	CustomFields   customfields.CustomFields `xml:"custom-fields,omitempty"`
-	CreditCard     *CreditCard               `xml:"credit-card,omitempty"`
-	CreditCards    *CreditCards              `xml:"credit-cards,omitempty"`
-	PayPalAccounts *PayPalAccounts           `xml:"paypal-accounts,omitempty"`
+	XMLName            string                    `xml:"customer"`
+	Id                 string                    `xml:"id,omitempty"`
+	FirstName          string                    `xml:"first-name,omitempty"`
+	LastName           string                    `xml:"last-name,omitempty"`
+	Company            string                    `xml:"company,omitempty"`
+	Email              string                    `xml:"email,omitempty"`
+	Phone              string                    `xml:"phone,omitempty"`
+	Fax                string                    `xml:"fax,omitempty"`
+	Website            string                    `xml:"website,omitempty"`
+	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
+	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
+	CreditCards        *CreditCards              `xml:"credit-cards,omitempty"`
+	PayPalAccounts     *PayPalAccounts           `xml:"paypal-accounts,omitempty"`
+	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
 }
 
 // PaymentMethods returns a slice of all PaymentMethods this customer has
