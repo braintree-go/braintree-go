@@ -296,3 +296,21 @@ func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
 		t.Fatalf("Got Customer %#v DefaultPaymentMethod %#v, want %#v", customerFound, customerFound.DefaultPaymentMethod(), paypalAccount)
 	}
 }
+
+func TestCustomerPaymentMethodNonce(t *testing.T) {
+	t.Parallel()
+
+	customer, err := testGateway.Customer().Create(&Customer{PaymentMethodNonce: FakeNonceTransactable})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	customerFound, err := testGateway.Customer().Find(customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(customer.PaymentMethods()) != 1 {
+		t.Fatalf("Customer %#v has %#v payment method(s), want 1 payment method", customerFound, len(customer.PaymentMethods()))
+	}
+}
