@@ -5,15 +5,26 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"net/url"
 )
 
 type apiVersion int
 
+type HTTPClient interface {
+	Do(req *http.Request) (res *http.Response, err error)
+	Get(url string) (res *http.Response, err error)
+	Post(urstring, bodyType string, body io.Reader) (res *http.Response, err error)
+	PostForm(url string, values url.Values) (res *http.Response, err error)
+	Head(url string) (res *http.Response, err error)
+}
+
 const (
-	apiVersion3 apiVersion = 3
-	apiVersion4            = 4
+	apiVersion3    apiVersion = 3
+	apiVersion4               = 4
+	LibraryVersion            = "0.10.0"
 )
 
 // New creates a Braintree with API Keys.
@@ -22,7 +33,7 @@ func New(env Environment, merchId, pubKey, privKey string) *Braintree {
 }
 
 // NewWithHttpClient creates a Braintree with API Keys and a HTTP Client.
-func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string, client *http.Client) *Braintree {
+func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string, client HTTPClient) *Braintree {
 	return &Braintree{credentials: newAPIKey(env, merchantId, publicKey, privateKey), HttpClient: client}
 }
 
@@ -42,7 +53,7 @@ func NewWithAccessToken(accessToken string) (*Braintree, error) {
 type Braintree struct {
 	credentials credentials
 	Logger      *log.Logger
-	HttpClient  *http.Client
+	HttpClient  HTTPClient
 }
 
 func (g *Braintree) Environment() Environment {
