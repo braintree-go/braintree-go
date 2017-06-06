@@ -2,8 +2,34 @@ package braintree
 
 import (
 	"encoding/base64"
+	"io/ioutil"
+	"net/http"
+	"strings"
 	"testing"
 )
+
+func TestWebhookParseRequest(t *testing.T) {
+	t.Parallel()
+
+	gateway := New(Sandbox, "mid", "sz9g7zhxz8838v7h", "0c809a2d2e8f4e4c817900ff441c9554")
+	webhookGateway := gateway.WebhookNotification()
+
+	body := strings.NewReader("bt_signature=sz9g7zhxz8838v7h%7C4b532339b3107eae876d7637d59217858f320098&bt_payload=PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPG5vdGlm%0AaWNhdGlvbj4KICA8a2luZD5jaGVjazwva2luZD4KICA8dGltZXN0YW1wIHR5%0AcGU9ImRhdGV0aW1lIj4yMDE3LTA0LTI2VDA3OjEyOjI0WjwvdGltZXN0YW1w%0APgogIDxzdWJqZWN0PgogICAgPGNoZWNrIHR5cGU9ImJvb2xlYW4iPnRydWU8%0AL2NoZWNrPgogIDwvc3ViamVjdD4KPC9ub3RpZmljYXRpb24%2BCg%3D%3D%0A")
+	r := &http.Request{
+		Method:        "POST",
+		Header:        http.Header{"Content-Type": {"application/x-www-form-urlencoded"}},
+		ContentLength: int64(body.Len()),
+		Body:          ioutil.NopCloser(body),
+	}
+
+	notification, err := webhookGateway.ParseRequest(r)
+
+	if err != nil {
+		t.Fatal(err)
+	} else if notification.Kind != CheckWebhook {
+		t.Fatal("Incorrect Notification kind, expected check got", notification.Kind)
+	}
+}
 
 func TestWebhookParseMerchantAccountAccepted(t *testing.T) {
 	t.Parallel()

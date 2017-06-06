@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-const LibraryVersion = "0.10.0"
-
 type apiVersion int
 
 const (
@@ -115,7 +113,7 @@ func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v ap
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	btr := &Response{
 		Response: resp,
@@ -150,6 +148,14 @@ func (g *Braintree) Transaction() *TransactionGateway {
 
 func (g *Braintree) Testing() *TestingGateway {
 	return &TestingGateway{g}
+}
+
+func (g *Braintree) WebhookTesting() *WebhookTestingGateway {
+	if apiKey, ok := g.credentials.(apiKey); !ok {
+		panic(errors.New("WebhookTesting can only be used with Braintree Credentials that are API Keys."))
+	} else {
+		return &WebhookTestingGateway{Braintree: g, apiKey: apiKey}
+	}
 }
 
 func (g *Braintree) PaymentMethod() *PaymentMethodGateway {
