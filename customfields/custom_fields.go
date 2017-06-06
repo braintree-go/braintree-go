@@ -33,10 +33,13 @@ func (c CustomFields) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	for k, v := range c {
 		tag := nameMarshalReplacer.Replace(k)
-		e.Encode(xmlField{
+		err := e.Encode(xmlField{
 			XMLName: xml.Name{Local: tag},
 			Value:   v,
 		})
+		if err != nil {
+			return err
+		}
 	}
 
 	return e.EncodeToken(start.End())

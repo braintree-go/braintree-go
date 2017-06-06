@@ -101,7 +101,7 @@ func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v ap
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	btr := &Response{
 		Response: resp,
