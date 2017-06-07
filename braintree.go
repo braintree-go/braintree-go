@@ -40,11 +40,7 @@ func NewWithAccessToken(accessToken string) (*Braintree, error) {
 	if err != nil {
 		return nil, err
 	}
-	g := &Braintree{
-		credentials: c,
-		HttpClient:  defaultClient,
-	}
-	return g, nil
+	return &Braintree{credentials: c, HttpClient: defaultClient}, nil
 }
 
 // Braintree interacts with the Braintree API.
