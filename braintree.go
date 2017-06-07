@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"golang.org/x/net/context"
 	"golang.org/x/net/context/ctxhttp"
@@ -19,9 +20,13 @@ const (
 	apiVersion4            = 4
 )
 
+const defaultTimeout = time.Second * 60
+
+var defaultClient = &http.Client{Timeout: defaultTimeout}
+
 // New creates a Braintree with API Keys.
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
-	return &Braintree{credentials: newAPIKey(env, merchId, pubKey, privKey)}
+	return NewWithHttpClient(env, merchId, pubKey, privKey, defaultClient)
 }
 
 // NewWithHttpClient creates a Braintree with API Keys and a HTTP Client.
@@ -38,7 +43,7 @@ func NewWithAccessToken(accessToken string) (*Braintree, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Braintree{credentials: c}, nil
+	return &Braintree{credentials: c, HttpClient: defaultClient}, nil
 }
 
 // Braintree interacts with the Braintree API.
@@ -107,14 +112,14 @@ func (g *Braintree) executeVersionContext(ctx context.Context, method, path stri
 
 	httpClient := g.HttpClient
 	if httpClient == nil {
-		httpClient = http.DefaultClient
+		httpClient = defaultClient
 	}
 
 	resp, err := ctxhttp.Do(ctx, httpClient, req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	btr := &Response{
 		Response: resp,
