@@ -30,14 +30,12 @@ func TestHTTPClientTimeout_NewWithHttpClient(t *testing.T) {
 	)
 }
 
-func TestHTTPClientTimeout_NewNilHttpClient(t *testing.T) {
+func TestHTTPClientTimeout_NewWithHttpClient_Nil(t *testing.T) {
 	t.Parallel()
 	testHTTPClientTimeout(
 		t,
 		func(env Environment) *Braintree {
-			b := New(env, "mid", "pubkey", "privkey")
-			b.HttpClient = nil
-			return b
+			return NewWithHttpClient(env, "mid", "pubkey", "privkey", nil)
 		},
 		time.Second*60,
 	)
