@@ -30,6 +30,14 @@ func TestHttpClientTimeout(t *testing.T) {
 			Braintree:       NewWithHttpClient(env, "mid", "pubkey", "privkey", &http.Client{Timeout: time.Second * 10}),
 			ExpectedTimeout: time.Second * 10,
 		},
+		{
+			Braintree: func() *Braintree {
+				g := New(env, "mid", "pubkey", "privkey")
+				g.HttpClient = nil
+				return g
+			}(),
+			ExpectedTimeout: time.Second * 60,
+		},
 	}
 
 	for _, tc := range testCases {

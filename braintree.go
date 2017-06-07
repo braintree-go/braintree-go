@@ -106,7 +106,7 @@ func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v ap
 
 	httpClient := g.HttpClient
 	if httpClient == nil {
-		httpClient = http.DefaultClient
+		httpClient = defaultClient
 	}
 
 	resp, err := httpClient.Do(req)
