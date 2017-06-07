@@ -8,9 +8,42 @@ import (
 	"time"
 )
 
-func TestHttpClientTimeout(t *testing.T) {
+func TestHTTPClientTimeout_New(t *testing.T) {
 	t.Parallel()
+	testHTTPClientTimeout(
+		t,
+		func(env Environment) *Braintree {
+			return New(env, "mid", "pubkey", "privkey")
+		},
+		time.Second*60,
+	)
+}
 
+func TestHTTPClientTimeout_NewWithHttpClient(t *testing.T) {
+	t.Parallel()
+	testHTTPClientTimeout(
+		t,
+		func(env Environment) *Braintree {
+			return NewWithHttpClient(env, "mid", "pubkey", "privkey", &http.Client{Timeout: time.Second * 10})
+		},
+		time.Second*10,
+	)
+}
+
+func TestHTTPClientTimeout_NewNilHttpClient(t *testing.T) {
+	t.Parallel()
+	testHTTPClientTimeout(
+		t,
+		func(env Environment) *Braintree {
+			b := New(env, "mid", "pubkey", "privkey")
+			b.HttpClient = nil
+			return b
+		},
+		time.Second*60,
+	)
+}
+
+func testHTTPClientTimeout(t *testing.T, braintreeFactory func(env Environment) *Braintree, expectedTimeout time.Duration) {
 	const gracePeriod = time.Second * 10
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -18,46 +51,24 @@ func TestHttpClientTimeout(t *testing.T) {
 	}))
 	env := NewEnvironment(server.URL)
 
-	testCases := []struct {
-		Braintree       *Braintree
-		ExpectedTimeout time.Duration
-	}{
-		{
-			Braintree:       New(env, "mid", "pubkey", "privkey"),
-			ExpectedTimeout: time.Second * 60,
-		},
-		{
-			Braintree:       NewWithHttpClient(env, "mid", "pubkey", "privkey", &http.Client{Timeout: time.Second * 10}),
-			ExpectedTimeout: time.Second * 10,
-		},
-		{
-			Braintree: func() *Braintree {
-				g := New(env, "mid", "pubkey", "privkey")
-				g.HttpClient = nil
-				return g
-			}(),
-			ExpectedTimeout: time.Second * 60,
-		},
-	}
+	b := braintreeFactory(env)
 
-	for _, tc := range testCases {
-		finished := make(chan bool)
-		go func() {
-			_, err := tc.Braintree.Transaction().Create(&TransactionRequest{})
-			if err == nil {
-				t.Fatal("Expected timeout error, received no error")
-			}
-			if !strings.Contains(err.Error(), "Timeout") && !strings.Contains(err.Error(), "read tcp") {
-				t.Fatalf("Expected timeout error, received: %s", err)
-			}
-			finished <- true
-		}()
-
-		select {
-		case <-finished:
-			t.Logf("Timeout received as expected")
-		case <-time.After(tc.ExpectedTimeout + gracePeriod):
-			t.Fatalf("Timeout did not occur around %s, has been at least %s", tc.ExpectedTimeout, tc.ExpectedTimeout+gracePeriod)
+	finished := make(chan bool)
+	go func() {
+		_, err := b.Transaction().Create(&TransactionRequest{})
+		if err == nil {
+			t.Fatal("Expected timeout error, received no error")
 		}
+		if !strings.Contains(err.Error(), "Timeout") && !strings.Contains(err.Error(), "read tcp") {
+			t.Fatalf("Expected timeout error, received: %s", err)
+		}
+		finished <- true
+	}()
+
+	select {
+	case <-finished:
+		t.Logf("Timeout received as expected")
+	case <-time.After(expectedTimeout + gracePeriod):
+		t.Fatalf("Timeout did not occur around %s, has been at least %s", expectedTimeout, expectedTimeout+gracePeriod)
 	}
 }
