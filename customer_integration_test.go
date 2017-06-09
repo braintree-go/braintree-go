@@ -194,7 +194,7 @@ func TestCustomerPaymentMethods(t *testing.T) {
 
 	paymentMethod1, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
 		CustomerId:         customer.Id,
-		PaymentMethodNonce: FakeNoncePayPalFuturePayment,
+		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -239,7 +239,7 @@ func TestCustomerDefaultPaymentMethod(t *testing.T) {
 	}
 	_, err = testGateway.PaymentMethod().Create(&PaymentMethodRequest{
 		CustomerId:         customer.Id,
-		PaymentMethodNonce: FakeNoncePayPalFuturePayment,
+		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -272,7 +272,7 @@ func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
 	}
 	paymentMethod2, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
 		CustomerId:         customer.Id,
-		PaymentMethodNonce: FakeNoncePayPalFuturePayment,
+		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
 	})
 	if err != nil {
 		t.Fatal(err)
