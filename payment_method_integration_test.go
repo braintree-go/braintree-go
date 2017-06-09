@@ -49,7 +49,7 @@ func TestPaymentMethod(t *testing.T) {
 	}
 
 	// Updating with different payment method type should fail
-	if _, err = g.Update(token, &PaymentMethodRequest{PaymentMethodNonce: FakeNoncePayPalFuturePayment}); err == nil {
+	if _, err = g.Update(token, &PaymentMethodRequest{PaymentMethodNonce: FakeNoncePayPalBillingAgreement}); err == nil {
 		t.Errorf("Updating with a different payment method type should have failed")
 	}
 
@@ -74,7 +74,7 @@ func TestPaymentMethod(t *testing.T) {
 	// Create using PayPal
 	paymentMethod, err = g.Create(&PaymentMethodRequest{
 		CustomerId:         cust.Id,
-		PaymentMethodNonce: FakeNoncePayPalFuturePayment,
+		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
 	})
 	if err != nil {
 		t.Fatal(err)
