@@ -19,6 +19,7 @@ type Customer struct {
 	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
 	CreditCards        *CreditCards              `xml:"credit-cards,omitempty"`
 	PayPalAccounts     *PayPalAccounts           `xml:"paypal-accounts,omitempty"`
+	ApplePayCards      *ApplePayCards            `xml:"apple-pay-cards,omitempty"`
 	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
 }
 
@@ -33,6 +34,11 @@ func (c *Customer) PaymentMethods() []PaymentMethod {
 	if c.PayPalAccounts != nil {
 		for _, pp := range c.PayPalAccounts.PayPalAccount {
 			paymentMethods = append(paymentMethods, pp)
+		}
+	}
+	if c.ApplePayCards != nil {
+		for _, a := range c.ApplePayCards.ApplePayCard {
+			paymentMethods = append(paymentMethods, a)
 		}
 	}
 	return paymentMethods
@@ -61,6 +67,13 @@ func (c *Customer) DefaultPaymentMethod() PaymentMethod {
 		for _, pp := range c.PayPalAccounts.PayPalAccount {
 			if pp.IsDefault() {
 				return pp
+			}
+		}
+	}
+	if c.ApplePayCards != nil {
+		for _, a := range c.ApplePayCards.ApplePayCard {
+			if a.IsDefault() {
+				return a
 			}
 		}
 	}

@@ -52,6 +52,8 @@ func (r *Response) paymentMethod() (PaymentMethod, error) {
 		return r.creditCard()
 	case "paypal-account":
 		return r.paypalAccount()
+	case "apple-pay-card":
+		return r.applePayCard()
 	}
 
 	return nil, fmt.Errorf("Unrecognized payment method %#v", entityName)
@@ -67,6 +69,14 @@ func (r *Response) creditCard() (*CreditCard, error) {
 
 func (r *Response) paypalAccount() (*PayPalAccount, error) {
 	var b PayPalAccount
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) applePayCard() (*ApplePayCard, error) {
+	var b ApplePayCard
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}
