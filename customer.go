@@ -26,21 +26,9 @@ type Customer struct {
 // PaymentMethods returns a slice of all PaymentMethods this customer has
 func (c *Customer) PaymentMethods() []PaymentMethod {
 	var paymentMethods []PaymentMethod
-	if c.CreditCards != nil {
-		for _, cc := range c.CreditCards.CreditCard {
-			paymentMethods = append(paymentMethods, cc)
-		}
-	}
-	if c.PayPalAccounts != nil {
-		for _, pp := range c.PayPalAccounts.PayPalAccount {
-			paymentMethods = append(paymentMethods, pp)
-		}
-	}
-	if c.ApplePayCards != nil {
-		for _, a := range c.ApplePayCards.ApplePayCard {
-			paymentMethods = append(paymentMethods, a)
-		}
-	}
+	paymentMethods = append(paymentMethods, c.CreditCards.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.PayPalAccounts.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.ApplePayCards.PaymentMethods()...)
 	return paymentMethods
 }
 
