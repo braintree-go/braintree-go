@@ -56,25 +56,9 @@ func (c *Customer) DefaultCreditCard() *CreditCard {
 
 // DefaultPaymentMethod returns the default payment method, or nil
 func (c *Customer) DefaultPaymentMethod() PaymentMethod {
-	if c.CreditCards != nil {
-		for _, cc := range c.CreditCards.CreditCard {
-			if cc.IsDefault() {
-				return cc
-			}
-		}
-	}
-	if c.PayPalAccounts != nil {
-		for _, pp := range c.PayPalAccounts.PayPalAccount {
-			if pp.IsDefault() {
-				return pp
-			}
-		}
-	}
-	if c.ApplePayCards != nil {
-		for _, a := range c.ApplePayCards.ApplePayCard {
-			if a.IsDefault() {
-				return a
-			}
+	for _, pm := range c.PaymentMethods() {
+		if pm.IsDefault() {
+			return pm
 		}
 	}
 	return nil
