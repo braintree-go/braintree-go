@@ -82,7 +82,7 @@ func (c *Customer) DefaultPaymentMethod() PaymentMethod {
 				return a
 			}
 		}
-  }
+	}
 	if c.ApplePayCards != nil {
 		for _, a := range c.ApplePayCards.ApplePayCard {
 			if a.IsDefault() {
