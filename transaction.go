@@ -141,6 +141,6 @@ type TransactionSearchResult struct {
 type ThreeDSecureInfo struct {
 	Enrolled               string `xml:"enrolled"`
 	LiabilityShiftPossible bool   `xml:"liability-shift-possible"`
-	LiabilityShifted       bool   `xml:"liability-shifted`
+	LiabilityShifted       bool   `xml:"liability-shifted"`
 	Status                 string `xml:"status"`
 }
