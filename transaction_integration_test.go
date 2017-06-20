@@ -870,7 +870,7 @@ func TestTransactionCreateWithCustomFields(t *testing.T) {
 
 func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 	amount := NewDecimal(1007, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -916,7 +916,7 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 
 func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 	amount := NewDecimal(1007, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -950,7 +950,7 @@ func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
