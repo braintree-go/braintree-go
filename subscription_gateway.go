@@ -4,7 +4,7 @@ type SubscriptionGateway struct {
 	*Braintree
 }
 
-func (g *SubscriptionGateway) Create(sub *Subscription) (*Subscription, error) {
+func (g *SubscriptionGateway) Create(sub *SubscriptionRequest) (*Subscription, error) {
 	resp, err := g.execute("POST", "subscriptions", sub)
 	if err != nil {
 		return nil, err
@@ -16,7 +16,7 @@ func (g *SubscriptionGateway) Create(sub *Subscription) (*Subscription, error) {
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *SubscriptionGateway) Update(sub *Subscription) (*Subscription, error) {
+func (g *SubscriptionGateway) Update(sub *SubscriptionRequest) (*Subscription, error) {
 	resp, err := g.execute("PUT", "subscriptions/"+sub.Id, sub)
 	if err != nil {
 		return nil, err

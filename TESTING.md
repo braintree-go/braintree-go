@@ -13,6 +13,12 @@ export BRAINTREE_PUB_KEY={your-public-key}
 export BRAINTREE_PRIV_KEY={your-private-key}
 ```
 
+You can also optional set an environment variable with the timezone of your sandbox account. The default is below but should match your account's timezone to ensure tests pass.
+
+```
+export BRAINTREE_TIMEZONE=UTC
+```
+
 When using Braintree Go in a production environment, we recommend that you continue to store these credentials in environment variables. See [the 12 Factor App](http://www.12factor.net/config) for details.
 
 #### Sandbox settings
@@ -22,7 +28,9 @@ In your sandbox account go to `Settings > Processing > CVV` and enable the follo
   1. `CVV does not match (when provided) (N)` to `For Any Transaction`
   2. `CVV is not verified (when provided) (U)` to `For Any Transaction`
 
-Finally you will also need to create a transaction with a specific id, two plans, an add-on, and a discount. Once you do all of these things, the integration tests should all pass, with the one exception listed below.
+Your sandbox account will also need to be enabled for dynamic descriptors for the transaction dynamic descriptor tests to pass. See the [Braintree docs](https://articles.braintreepayments.com/control-panel/transactions/descriptors).
+
+Finally you will also need to create a transaction with a specific id, two plans, an add-on, and a discount, with the the add on and discount associated with the first plan. Once you do all of these things, the integration tests should all pass, with the one exception listed below.
 
 **Transactions**
 

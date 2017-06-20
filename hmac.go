@@ -20,12 +20,13 @@ func (i SignatureError) Error() string {
 	return i.message
 }
 
-func newHmacer(bt *Braintree) hmacer {
-	return hmacer{bt}
+func newHmacer(publicKey, privateKey string) hmacer {
+	return hmacer{publicKey: publicKey, privateKey: privateKey}
 }
 
 type hmacer struct {
-	*Braintree
+	publicKey  string
+	privateKey string
 }
 
 func (h hmacer) verifySignature(signature, payload string) (bool, error) {
@@ -40,24 +41,31 @@ func (h hmacer) verifySignature(signature, payload string) (bool, error) {
 	return hmac.Equal([]byte(expectedSignature), []byte(signature)), nil
 }
 
-func (h hmacer) parseSignature(signatureKeyPair string) (string, error) {
-	if !strings.Contains(signatureKeyPair, "|") {
+func (h hmacer) getMatchingSignature(signaturePairs string) (sig string, ok bool) {
+	pairs := strings.Split(signaturePairs, "&")
+	for _, pair := range pairs {
+		split := strings.Split(pair, "|")
+		if len(split) == 2 && split[0] == h.publicKey {
+			return split[1], true
+		}
+	}
+	return "", false
+}
+
+func (h hmacer) parseSignature(signatureKeyPairs string) (string, error) {
+	if !strings.Contains(signatureKeyPairs, "|") {
 		return "", SignatureError{"Signature-key pair does not contain |"}
 	}
-	split := strings.Split(signatureKeyPair, "|")
-	if len(split) != 2 {
-		return "", SignatureError{"Signature-key pair contains more than one |"}
-	}
-	publicKey := split[0]
-	if publicKey != h.Braintree.PublicKey {
+	signature, ok := h.getMatchingSignature(signatureKeyPairs)
+	if !ok {
 		return "", SignatureError{"Signature-key pair contains the wrong public key!"}
 	}
-	return split[1], nil
+	return signature, nil
 }
 
 func (h hmacer) hmac(payload string) (string, error) {
 	s := sha1.New()
-	_, err := io.WriteString(s, h.PrivateKey)
+	_, err := io.WriteString(s, h.privateKey)
 	if err != nil {
 		return "", errors.New("Could not write private key to SHA1")
 	}

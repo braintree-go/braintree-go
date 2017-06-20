@@ -2,13 +2,20 @@ package braintree
 
 import "github.com/lionelbarrow/braintree-go/nullable"
 
+type SubscriptionStatus string
+
 const (
-	SubscriptionStatusActive       = "Active"
-	SubscriptionStatusCanceled     = "Canceled"
-	SubscriptionStatusExpired      = "Expired"
-	SubscriptionStatusPastDue      = "Past Due"
-	SubscriptionStatusPending      = "Pending"
-	SubscriptionStatusUnrecognized = "Unrecognized"
+	SubscriptionStatusActive       SubscriptionStatus = "Active"
+	SubscriptionStatusCanceled     SubscriptionStatus = "Canceled"
+	SubscriptionStatusExpired      SubscriptionStatus = "Expired"
+	SubscriptionStatusPastDue      SubscriptionStatus = "Past Due"
+	SubscriptionStatusPending      SubscriptionStatus = "Pending"
+	SubscriptionStatusUnrecognized SubscriptionStatus = "Unrecognized"
+)
+
+const (
+	SubscriptionTrialDurationUnitDay   = "day"
+	SubscriptionTrialDurationUnitMonth = "month"
 )
 
 type Subscription struct {
@@ -20,7 +27,6 @@ type Subscription struct {
 	BillingPeriodStartDate  string               `xml:"billing-period-start-date,omitempty"`
 	CurrentBillingCycle     string               `xml:"current-billing-cycle,omitempty"`
 	DaysPastDue             string               `xml:"days-past-due,omitempty"`
-	Discounts               []interface{}        `xml:"discounts,omitempty"`
 	FailureCount            string               `xml:"failure-count,omitempty"`
 	FirstBillingDate        string               `xml:"first-billing-date,omitempty"`
 	MerchantAccountId       string               `xml:"merchant-account-id,omitempty"`
@@ -33,14 +39,37 @@ type Subscription struct {
 	PaymentMethodToken      string               `xml:"payment-method-token,omitempty"`
 	PlanId                  string               `xml:"plan-id,omitempty"`
 	Price                   *Decimal             `xml:"price,omitempty"`
-	Status                  string               `xml:"status,omitempty"`
+	Status                  SubscriptionStatus   `xml:"status,omitempty"`
 	TrialDuration           string               `xml:"trial-duration,omitempty"`
 	TrialDurationUnit       string               `xml:"trial-duration-unit,omitempty"`
 	TrialPeriod             *nullable.NullBool   `xml:"trial-period,omitempty"`
 	Transactions            *Transactions        `xml:"transactions,omitempty"`
 	Options                 *SubscriptionOptions `xml:"options,omitempty"`
-	// AddOns                  []interface{} `xml:"add-ons,omitempty"`
-	// Descriptor              interface{}   `xml:"descriptor,omitempty"`   // struct with name, phone
+	Descriptor              *Descriptor          `xml:"descriptor,omitempty"`
+	AddOns                  *AddOnList           `xml:"add-ons,omitempty"`
+	Discounts               *DiscountList        `xml:"discounts,omitempty"`
+}
+
+type SubscriptionRequest struct {
+	XMLName               string                `xml:"subscription"`
+	Id                    string                `xml:"id,omitempty"`
+	BillingDayOfMonth     *nullable.NullInt64   `xml:"billing-day-of-month,omitempty"`
+	FailureCount          string                `xml:"failure-count,omitempty"`
+	FirstBillingDate      string                `xml:"first-billing-date,omitempty"`
+	MerchantAccountId     string                `xml:"merchant-account-id,omitempty"`
+	NeverExpires          *nullable.NullBool    `xml:"never-expires,omitempty"`
+	NumberOfBillingCycles *nullable.NullInt64   `xml:"number-of-billing-cycles,omitempty"`
+	Options               *SubscriptionOptions  `xml:"options,omitempty"`
+	PaymentMethodNonce    string                `xml:"paymentMethodNonce,omitempty"`
+	PaymentMethodToken    string                `xml:"paymentMethodToken,omitempty"`
+	PlanId                string                `xml:"planId,omitempty"`
+	Price                 *Decimal              `xml:"price,omitempty"`
+	TrialDuration         string                `xml:"trial-duration,omitempty"`
+	TrialDurationUnit     string                `xml:"trial-duration-unit,omitempty"`
+	TrialPeriod           *nullable.NullBool    `xml:"trial-period,omitempty"`
+	Descriptor            *Descriptor           `xml:"descriptor,omitempty"`
+	AddOns                *ModificationsRequest `xml:"add-ons,omitempty"`
+	Discounts             *ModificationsRequest `xml:"discounts,omitempty"`
 }
 
 type Subscriptions struct {

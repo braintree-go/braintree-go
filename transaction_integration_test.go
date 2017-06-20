@@ -2,7 +2,10 @@ package braintree
 
 import (
 	"math/rand"
+	"net/http"
+	"reflect"
 	"testing"
+	"time"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
@@ -12,7 +15,9 @@ func randomAmount() *Decimal {
 }
 
 func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	t.Parallel()
+
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
@@ -29,7 +34,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	if tx.Id == "" {
 		t.Fatal("Received invalid ID on new transaction")
 	}
-	if tx.Status != "authorized" {
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 
@@ -42,7 +47,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := tx2.Status; x != "submitted_for_settlement" {
+	if x := tx2.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
 	}
 	if amount := tx2.Amount; amount.Cmp(ten) != 0 {
@@ -57,15 +62,17 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := tx3.Status; x != "voided" {
+	if x := tx3.Status; x != TransactionStatusVoided {
 		t.Fatal(x)
 	}
 }
 
 func TestTransactionSearch(t *testing.T) {
+	t.Parallel()
+
 	txg := testGateway.Transaction()
 	createTx := func(amount *Decimal, customerName string) error {
-		_, err := txg.Create(&Transaction{
+		_, err := txg.Create(&TransactionRequest{
 			Type:   "sale",
 			Amount: amount,
 			Customer: &Customer{
@@ -111,9 +118,81 @@ func TestTransactionSearch(t *testing.T) {
 	}
 }
 
+func TestTransactionSearchTime(t *testing.T) {
+	txg := testGateway.Transaction()
+	createTx := func(amount *Decimal, customerName string) error {
+		_, err := txg.Create(&TransactionRequest{
+			Type:   "sale",
+			Amount: amount,
+			Customer: &Customer{
+				FirstName: customerName,
+			},
+			CreditCard: &CreditCard{
+				Number:         testCreditCards["visa"].Number,
+				ExpirationDate: "05/14",
+			},
+		})
+		return err
+	}
+
+	unique := testhelpers.RandomString()
+
+	name0 := "Erik-" + unique
+	if err := createTx(randomAmount(), name0); err != nil {
+		t.Fatal(err)
+	}
+
+	name1 := "Lionel-" + unique
+	if err := createTx(randomAmount(), name1); err != nil {
+		t.Fatal(err)
+	}
+
+	{ // test: txn is returned if querying for created at before now
+		query := new(SearchQuery)
+		f1 := query.AddTextField("customer-first-name")
+		f1.Is = name0
+		f2 := query.AddTimeField("created-at")
+		f2.Max = time.Now()
+
+		result, err := txg.Search(query)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !result.TotalItems.Valid || result.TotalItems.Int64 != 1 {
+			t.Fatal(result.Transactions)
+		}
+
+		tx := result.Transactions[0]
+		if x := tx.Customer.FirstName; x != name0 {
+			t.Log(name0)
+			t.Fatal(x)
+		}
+	}
+
+	{ // test: txn is not returned if querying for created at before 1 hour ago
+		query := new(SearchQuery)
+		f1 := query.AddTextField("customer-first-name")
+		f1.Is = name0
+		f2 := query.AddTimeField("created-at")
+		f2.Max = time.Now().Add(-time.Hour)
+
+		result, err := txg.Search(query)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !result.TotalItems.Valid || result.TotalItems.Int64 != 0 {
+			t.Fatal(result.Transactions)
+		}
+	}
+}
+
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
-	_, err := testGateway.Transaction().Create(&Transaction{
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(201000, 2),
 		CreditCard: &CreditCard{
@@ -127,10 +206,210 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	if err.Error() != "Card Issuer Declined CVV" {
 		t.Fatal(err)
 	}
+	if err.(*BraintreeError).Transaction.ProcessorResponseCode != 2010 {
+		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be 2010, but got %d", err.(*BraintreeError).Transaction.ProcessorResponseCode)
+	}
+
+	if err.(*BraintreeError).Transaction.AdditionalProcessorResponse != "2010 : Card Issuer Declined CVV" {
+		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be `2010 : Card Issuer Declined CVV`, but got %s", err.(*BraintreeError).Transaction.AdditionalProcessorResponse)
+	}
+}
+
+func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:               "sale",
+		Amount:             NewDecimal(201000, 2),
+		PaymentMethodNonce: FakeNonceGatewayRejectedFraud,
+	})
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: fraud" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonFraud {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonFraud)
+	}
+
+	if txn.ProcessorResponseCode != 0 {
+		t.Fatalf("Got processor response code %q, want %q", txn.ProcessorResponseCode, 0)
+	}
+}
+
+func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: randomAmount(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "200", // Should cause CVV does not match response
+		},
+	})
+
+	if err.Error() != "Gateway Rejected: cvv" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonCVV {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonCVV)
+	}
+
+	if txn.CVVResponseCode != CVVResponseCodeDoesNotMatch {
+		t.Fatalf("Got CVV Response Code %q, wanted %q", txn.CVVResponseCode, CVVResponseCodeDoesNotMatch)
+	}
+}
+
+func TestTransactionCreatedWhenAVSBankDoesNotSupport(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		MerchantAccountId: avsAndCVVTestMerchantAccountId,
+		Type:              "sale",
+		Amount:            randomAmount(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "100",
+		},
+		BillingAddress: &Address{
+			StreetAddress: "1 E Main St",
+			Locality:      "Chicago",
+			Region:        "IL",
+			PostalCode:    "30001", // Should cause AVS bank does not support error response.
+		},
+	})
+
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: avs" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonAVS)
+	}
+
+	if txn.AVSErrorResponseCode != AVSResponseCodeNotSupported {
+		t.Fatalf("Got AVS Error Response Code %q, wanted %q", txn.AVSErrorResponseCode, AVSResponseCodeNotSupported)
+	}
+}
+
+func TestTransactionCreatedWhenAVSPostalDoesNotMatch(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		MerchantAccountId: avsAndCVVTestMerchantAccountId,
+		Type:              "sale",
+		Amount:            randomAmount(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "100",
+		},
+		BillingAddress: &Address{
+			StreetAddress: "1 E Main St",
+			Locality:      "Chicago",
+			Region:        "IL",
+			PostalCode:    "20000", // Should cause AVS postal code does not match response.
+		},
+	})
+
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: avs" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonAVS)
+	}
+
+	if txn.AVSPostalCodeResponseCode != AVSResponseCodeDoesNotMatch {
+		t.Fatalf("Got AVS postal response code %q, wanted %q", txn.AVSPostalCodeResponseCode, AVSResponseCodeDoesNotMatch)
+	}
+}
+
+func TestTransactionCreatedWhenAVStreetAddressDoesNotMatch(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
+		MerchantAccountId: avsAndCVVTestMerchantAccountId,
+		Type:              "sale",
+		Amount:            randomAmount(),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+			CVV:            "100",
+		},
+		BillingAddress: &Address{
+			StreetAddress: "201 E Main St", // Should cause AVS street address not verified response.
+			Locality:      "Chicago",
+			Region:        "IL",
+			PostalCode:    "60637",
+		},
+	})
+
+	if err == nil {
+		t.Fatal("Did not receive error when creating invalid transaction")
+	}
+
+	if err.Error() != "Gateway Rejected: avs" {
+		t.Fatal(err)
+	}
+
+	txn := err.(*BraintreeError).Transaction
+
+	if txn.Status != TransactionStatusGatewayRejected {
+		t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusGatewayRejected)
+	}
+
+	if txn.GatewayRejectionReason != GatewayRejectionReasonAVS {
+		t.Fatalf("Got gateway rejection reason %q, wanted %q", txn.GatewayRejectionReason, GatewayRejectionReasonAVS)
+	}
+
+	if txn.AVSStreetAddressResponseCode != AVSResponseCodeNotVerified {
+		t.Fatalf("Got AVS street address response code %q, wanted %q", txn.AVSStreetAddressResponseCode, AVSResponseCodeNotVerified)
+	}
 }
 
 func TestFindTransaction(t *testing.T) {
-	createdTransaction, err := testGateway.Transaction().Create(&Transaction{
+	t.Parallel()
+
+	createdTransaction, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -153,6 +432,8 @@ func TestFindTransaction(t *testing.T) {
 }
 
 func TestFindNonExistantTransaction(t *testing.T) {
+	t.Parallel()
+
 	_, err := testGateway.Transaction().Find("bad_transaction_id")
 	if err == nil {
 		t.Fatal("Did not receive error when finding an invalid tx ID")
@@ -160,10 +441,84 @@ func TestFindNonExistantTransaction(t *testing.T) {
 	if err.Error() != "Not Found (404)" {
 		t.Fatal(err)
 	}
+	if apiErr, ok := err.(APIError); !(ok && apiErr.StatusCode() == http.StatusNotFound) {
+		t.Fatal(err)
+	}
+}
+
+// This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
+func TestTransactionDescriptorFields(t *testing.T) {
+	t.Parallel()
+
+	tx := &TransactionRequest{
+		Type:               "sale",
+		Amount:             randomAmount(),
+		PaymentMethodNonce: FakeNonceTransactable,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+		},
+		Descriptor: &Descriptor{
+			Name:  "Company Name*Product 1",
+			Phone: "0000000000",
+			URL:   "example.com",
+		},
+	}
+
+	tx2, err := testGateway.Transaction().Create(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if tx2.Type != tx.Type {
+		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
+	}
+	if tx2.Amount.Cmp(tx.Amount) != 0 {
+		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
+	}
+	if tx2.Status != TransactionStatusSubmittedForSettlement {
+		t.Fatalf("expected tx2.Status to be %s, but got %s", TransactionStatusSubmittedForSettlement, tx2.Status)
+	}
+	if tx2.Descriptor.Name != "Company Name*Product 1" {
+		t.Fatalf("expected tx2.Descriptor.Name to be Company Name*Product 1, but got %s", tx2.Descriptor.Name)
+	}
+	if tx2.Descriptor.Phone != "0000000000" {
+		t.Fatalf("expected tx2.Descriptor.Phone to be 0000000000, but got %s", tx2.Descriptor.Phone)
+	}
+	if tx2.Descriptor.URL != "example.com" {
+		t.Fatalf("expected tx2.Descriptor.URL to be example.com, but got %s", tx2.Descriptor.URL)
+	}
+}
+
+func TestTransactionRiskDataFields(t *testing.T) {
+	t.Parallel()
+
+	tx := &TransactionRequest{
+		Type:               "sale",
+		Amount:             randomAmount(),
+		PaymentMethodNonce: FakeNonceTransactable,
+		RiskData: &RiskDataRequest{
+			CustomerBrowser: "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/540.0 (KHTML,like Gecko) Chrome/9.1.0.0 Safari/540.0",
+			CustomerIP:      "127.0.0.1",
+		},
+	}
+
+	tx2, err := testGateway.Transaction().Create(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if tx2.Type != tx.Type {
+		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
+	}
+	if tx2.Amount.Cmp(tx.Amount) != 0 {
+		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
+	}
 }
 
 func TestAllTransactionFields(t *testing.T) {
-	tx := &Transaction{
+	t.Parallel()
+
+	tx := &TransactionRequest{
 		Type:    "sale",
 		Amount:  randomAmount(),
 		OrderId: "my_custom_order",
@@ -187,6 +542,7 @@ func TestAllTransactionFields(t *testing.T) {
 			Region:        "IL",
 			PostalCode:    "60637",
 		},
+		DeviceData: `{"device_session_id": "dsi_1234", "fraud_merchant_id": "fmi_1234", "correlation_id": "ci_1234"}`,
 		Options: &TransactionOptions{
 			SubmitForSettlement:              true,
 			StoreInVault:                     true,
@@ -202,6 +558,9 @@ func TestAllTransactionFields(t *testing.T) {
 
 	if tx2.Type != tx.Type {
 		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
+	}
+	if tx2.CurrencyISOCode != "USD" {
+		t.Fatalf("expected CurrencyISOCode to be %s but was %s", "USD", tx2.CurrencyISOCode)
 	}
 	if tx2.Amount.Cmp(tx.Amount) != 0 {
 		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
@@ -242,16 +601,30 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Customer.Id == "" {
 		t.Fatalf("expected Customer.Id to be equal, but %s was not %s", tx2.Customer.Id, tx.Customer.Id)
 	}
-	if tx2.Status != "submitted_for_settlement" {
-		t.Fatalf("expected tx2.Status to be %s, but got %s", "submitted_for_settlement", tx2.Status)
+	if tx2.Status != TransactionStatusSubmittedForSettlement {
+		t.Fatalf("expected tx2.Status to be %s, but got %s", TransactionStatusSubmittedForSettlement, tx2.Status)
 	}
-	if tx2.ThreeDSecureInfo != nil {
-		t.Fatal("expected ThreeDSecureInfo to be nil")
+	if tx2.PaymentInstrumentType != "credit_card" {
+		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", "credit_card", tx2.PaymentInstrumentType)
+	}
+	if tx2.AdditionalProcessorResponse != "" {
+		t.Fatalf("expected tx2.AdditionalProcessorResponse to be empty, but got %s", tx2.AdditionalProcessorResponse)
+	}
+	if tx2.RiskData == nil {
+		t.Fatal("expected tx2.RiskData not to be empty")
+	}
+	if tx2.RiskData.ID == "" {
+		t.Fatal("expected tx2.RiskData.ID not to be empty")
+	}
+	if tx2.RiskData.Decision != "Approve" {
+		t.Fatalf("expected tx2.RiskData.Decision to be Approve, but got %s", tx2.RiskData.Decision)
 	}
 }
 
 // This test will only pass on Travis. See TESTING.md for more details.
 func TestTransactionDisbursementDetails(t *testing.T) {
+	t.Parallel()
+
 	txn, err := testGateway.Transaction().Find("dskdmb")
 	if err != nil {
 		t.Fatal(err)
@@ -278,6 +651,8 @@ func TestTransactionDisbursementDetails(t *testing.T) {
 }
 
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
+	t.Parallel()
+
 	customer, err := testGateway.Customer().Create(&Customer{
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["discover"].Number,
@@ -291,7 +666,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 		t.Fatal("invalid token")
 	}
 
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		CustomerID:         customer.Id,
 		Amount:             randomAmount(),
@@ -306,48 +681,10 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	}
 }
 
-func TestSettleTransaction(t *testing.T) {
-	old_environment := testGateway.Environment
-
-	txn, err := testGateway.Transaction().Create(&Transaction{
-		Type:   "sale",
-		Amount: randomAmount(),
-		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
-			ExpirationDate: "05/14",
-		},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	testGateway.Environment = Production
-
-	_, err = testGateway.Transaction().Settle(txn.Id)
-	if err.Error() != "Operation not allowed in production environment" {
-		t.Log(testGateway.Environment)
-		t.Fatal(err)
-	}
-
-	testGateway.Environment = old_environment
-
-	txn, err = testGateway.Transaction().Settle(txn.Id)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if txn.Status != "settled" {
-		t.Fatal(txn.Status)
-	}
-}
-
 func TestTrxPaymentMethodNonce(t *testing.T) {
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	t.Parallel()
+
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             randomAmount(),
 		PaymentMethodNonce: "fake-apple-pay-mastercard-nonce",
@@ -363,8 +700,10 @@ func TestTrxPaymentMethodNonce(t *testing.T) {
 }
 
 func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
+	t.Parallel()
+
 	amount := NewDecimal(20000, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -381,12 +720,12 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settled" {
+	if txn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 
@@ -398,16 +737,16 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := refundTxn.Status; x != "submitted_for_settlement" {
+	if x := refundTxn.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
 	}
 
-	refundTxn, err = testGateway.Transaction().Settle(refundTxn.Id)
+	refundTxn, err = testGateway.Testing().Settle(refundTxn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if refundTxn.Status != "settled" {
+	if refundTxn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 
@@ -435,10 +774,12 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 }
 
 func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
+	t.Parallel()
+
 	amount := NewDecimal(10000, 2)
 	refundAmt1 := NewDecimal(5000, 2)
 	refundAmt2 := NewDecimal(5001, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -455,12 +796,12 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if txn.Status != "settled" {
+	if txn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 
@@ -472,16 +813,16 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := refundTxn.Status; x != "submitted_for_settlement" {
+	if x := refundTxn.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
 	}
 
-	refundTxn, err = testGateway.Transaction().Settle(refundTxn.Id)
+	refundTxn, err = testGateway.Testing().Settle(refundTxn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if refundTxn.Status != "settled" {
+	if refundTxn.Status != TransactionStatusSettled {
 		t.Fatal(txn.Status)
 	}
 
@@ -492,6 +833,38 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 
 	if err.Error() != "Refund amount is too large." {
 		t.Fatal(err)
+	}
+}
+
+func TestTransactionCreateWithCustomFields(t *testing.T) {
+	t.Parallel()
+
+	customFields := map[string]string{
+		"custom_field_1": "custom value",
+	}
+
+	amount := NewDecimal(10000, 2)
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:               "sale",
+		Amount:             amount,
+		PaymentMethodNonce: FakeNonceTransactable,
+		CustomFields:       customFields,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(txn.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
+	}
+
+	txn, err = testGateway.Transaction().Find(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(txn.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
 	}
 }
 

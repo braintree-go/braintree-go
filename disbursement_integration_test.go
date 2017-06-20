@@ -6,6 +6,8 @@ import (
 
 // This test will fail unless you have a transaction with this ID on your sandbox.
 func TestDisbursementTransactions(t *testing.T) {
+	t.Parallel()
+
 	d := Disbursement{
 		TransactionIds: []string{"dskdmb"},
 	}

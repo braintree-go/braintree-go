@@ -1,21 +1,19 @@
 language: go
-go:
-  - 1.2
-  - 1.3
-  - 1.4
-  - 1.5
-  - 1.6
-  - tip
-env:
-  global:
-    BRAINTREE_MERCH_ID=4ngqq224rnk6gvxh
-    BRAINTREE_MERCH_ACCT_ID=bvps8ckgst59crzs
-    BRAINTREE_PUB_KEY=jkq28pcxj4r85dwr
-    BRAINTREE_PRIV_KEY=66062a3876e2dc298f2195f0bf173f5a
-    BRAINTREE_CSE_KEY=MIIBCgKCAQEAvs9I/M9J2q82+v2xedowoF4MOExF4zkQRZ7DIPg9Fh7Y9N3Cx0Xq+vxPrUvgJpGz0zbmlHzQFxfhvKmm1tE1nh1KFdk1ALmBVmWgYDVIH+16hk6KW2TQQncqV96DZbfiZroHAPNKeRlF7lqQrGFTSE0gsedJnsvgPUBsFFayLs5JPlzU5O9jUGVctNf1f6pwK8G0LaqKTvXme5p0Hc4AZWguX/AN6fQQYCRVeRG0iQaJFAtTmtB1dFG7rabSCTeI2Zv4SXyVPAkEOqqjG6AS3Mpn/o1qQZx9deD7jzFegNX+L8Z7G65haPBm/BRoVjfZL7MiK1eOQI+/0Nw56tOdXwIDAQAB
+matrix:
+  include:
+  - go: 1.6
+  - go: 1.7
+  - go: 1.8
+    env: ERRCHECK=true
+  - go: tip
 
 go_import_path: github.com/lionelbarrow/braintree-go
 
-test:
+install:
+  - if [ -n "$ERRCHECK" ] ; then go get -u github.com/kisielk/errcheck ; fi
+
+script:
+  - source .default.env
   - go vet ./...
-  - go test -v ./...
+  - if [ -n "$ERRCHECK" ] ; then CGO_ENABLED=0 errcheck ./... ; else echo "Skipping errcheck" ; fi
+  - go test -parallel 15 -v ./...
