@@ -52,6 +52,8 @@ func (r *Response) paymentMethod() (PaymentMethod, error) {
 		return r.creditCard()
 	case "paypal-account":
 		return r.paypalAccount()
+	case "venmo-account":
+		return r.venmoAccount()
 	case "android-pay-card":
 		return r.androidPayCard()
 	case "apple-pay-card":
@@ -71,6 +73,14 @@ func (r *Response) creditCard() (*CreditCard, error) {
 
 func (r *Response) paypalAccount() (*PayPalAccount, error) {
 	var b PayPalAccount
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) venmoAccount() (*VenmoAccount, error) {
+	var b VenmoAccount
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}
