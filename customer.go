@@ -27,26 +27,10 @@ type Customer struct {
 // PaymentMethods returns a slice of all PaymentMethods this customer has
 func (c *Customer) PaymentMethods() []PaymentMethod {
 	var paymentMethods []PaymentMethod
-	if c.CreditCards != nil {
-		for _, cc := range c.CreditCards.CreditCard {
-			paymentMethods = append(paymentMethods, cc)
-		}
-	}
-	if c.PayPalAccounts != nil {
-		for _, pp := range c.PayPalAccounts.PayPalAccount {
-			paymentMethods = append(paymentMethods, pp)
-		}
-	}
-	if c.VenmoAccounts != nil {
-		for _, v := range c.VenmoAccounts.VenmoAccount {
-			paymentMethods = append(paymentMethods, v)
-		}
-	}
-	if c.ApplePayCards != nil {
-		for _, a := range c.ApplePayCards.ApplePayCard {
-			paymentMethods = append(paymentMethods, a)
-		}
-	}
+	paymentMethods = append(paymentMethods, c.CreditCards.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.PayPalAccounts.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.VenmoAccounts.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.ApplePayCards.PaymentMethods()...)
 	return paymentMethods
 }
 
@@ -62,32 +46,9 @@ func (c *Customer) DefaultCreditCard() *CreditCard {
 
 // DefaultPaymentMethod returns the default payment method, or nil
 func (c *Customer) DefaultPaymentMethod() PaymentMethod {
-	if c.CreditCards != nil {
-		for _, cc := range c.CreditCards.CreditCard {
-			if cc.IsDefault() {
-				return cc
-			}
-		}
-	}
-	if c.PayPalAccounts != nil {
-		for _, pp := range c.PayPalAccounts.PayPalAccount {
-			if pp.IsDefault() {
-				return pp
-			}
-		}
-	}
-	if c.VenmoAccounts != nil {
-		for _, v := range c.VenmoAccounts.VenmoAccount {
-			if v.IsDefault() {
-				return v
-			}
-		}
-	}
-	if c.ApplePayCards != nil {
-		for _, a := range c.ApplePayCards.ApplePayCard {
-			if a.IsDefault() {
-				return a
-			}
+	for _, pm := range c.PaymentMethods() {
+		if pm.IsDefault() {
+			return pm
 		}
 	}
 	return nil
