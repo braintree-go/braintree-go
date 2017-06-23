@@ -19,6 +19,7 @@ type Customer struct {
 	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
 	CreditCards        *CreditCards              `xml:"credit-cards,omitempty"`
 	PayPalAccounts     *PayPalAccounts           `xml:"paypal-accounts,omitempty"`
+	VenmoAccounts      *VenmoAccounts            `xml:"venmo-accounts,omitempty"`
 	ApplePayCards      *ApplePayCards            `xml:"apple-pay-cards,omitempty"`
 	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
 }
@@ -28,6 +29,7 @@ func (c *Customer) PaymentMethods() []PaymentMethod {
 	var paymentMethods []PaymentMethod
 	paymentMethods = append(paymentMethods, c.CreditCards.PaymentMethods()...)
 	paymentMethods = append(paymentMethods, c.PayPalAccounts.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.VenmoAccounts.PaymentMethods()...)
 	paymentMethods = append(paymentMethods, c.ApplePayCards.PaymentMethods()...)
 	return paymentMethods
 }
