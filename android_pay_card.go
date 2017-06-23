@@ -31,6 +31,17 @@ type AndroidPayCards struct {
 	AndroidPayCard []*AndroidPayCard `xml:"android-pay-card"`
 }
 
+func (a *AndroidPayCards) PaymentMethods() []PaymentMethod {
+	if a == nil {
+		return nil
+	}
+	var paymentMethods []PaymentMethod
+	for _, ac := range a.AndroidPayCard {
+		paymentMethods = append(paymentMethods, ac)
+	}
+	return paymentMethods
+}
+
 func (a *AndroidPayCard) GetCustomerId() string {
 	return a.CustomerId
 }
