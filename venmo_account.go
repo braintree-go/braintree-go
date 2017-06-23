@@ -23,6 +23,17 @@ type VenmoAccounts struct {
 	VenmoAccount []*VenmoAccount `xml:"venmo-account"`
 }
 
+func (v *VenmoAccounts) PaymentMethods() []PaymentMethod {
+	if v == nil {
+		return nil
+	}
+	var paymentMethods []PaymentMethod
+	for _, va := range v.VenmoAccount {
+		paymentMethods = append(paymentMethods, va)
+	}
+	return paymentMethods
+}
+
 func (v *VenmoAccount) GetCustomerId() string {
 	return v.CustomerId
 }
