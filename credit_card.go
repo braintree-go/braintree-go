@@ -45,6 +45,17 @@ type CreditCards struct {
 	CreditCard []*CreditCard `xml:"credit-card"`
 }
 
+func (cards *CreditCards) PaymentMethods() []PaymentMethod {
+	if cards == nil {
+		return nil
+	}
+	var paymentMethods []PaymentMethod
+	for _, cc := range cards.CreditCard {
+		paymentMethods = append(paymentMethods, cc)
+	}
+	return paymentMethods
+}
+
 type CreditCardOptions struct {
 	VerifyCard                    bool   `xml:"verify-card,omitempty"`
 	VenmoSDKSession               string `xml:"venmo-sdk-session,omitempty"`

@@ -27,6 +27,17 @@ type ApplePayCards struct {
 	ApplePayCard []*ApplePayCard `xml:"apple-pay-card"`
 }
 
+func (a *ApplePayCards) PaymentMethods() []PaymentMethod {
+	if a == nil {
+		return nil
+	}
+	var paymentMethods []PaymentMethod
+	for _, a := range a.ApplePayCard {
+		paymentMethods = append(paymentMethods, a)
+	}
+	return paymentMethods
+}
+
 func (a *ApplePayCard) GetCustomerId() string {
 	return a.CustomerId
 }
