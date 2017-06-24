@@ -16,8 +16,8 @@ func (e Environment) BaseURL() string {
 
 var (
 	Development = NewEnvironment("http://localhost:3000")
-	Sandbox     = NewEnvironment("https://sandbox.braintreegateway.com")
-	Production  = NewEnvironment("https://www.braintreegateway.com")
+	Sandbox     = NewEnvironment("https://api.sandbox.braintreegateway.com:443")
+	Production  = NewEnvironment("https://api.braintreegateway.com:443")
 )
 
 func EnvironmentFromName(name string) (Environment, error) {

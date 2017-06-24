@@ -2,13 +2,15 @@ package braintree
 
 import "github.com/lionelbarrow/braintree-go/nullable"
 
+type SubscriptionStatus string
+
 const (
-	SubscriptionStatusActive       = "Active"
-	SubscriptionStatusCanceled     = "Canceled"
-	SubscriptionStatusExpired      = "Expired"
-	SubscriptionStatusPastDue      = "Past Due"
-	SubscriptionStatusPending      = "Pending"
-	SubscriptionStatusUnrecognized = "Unrecognized"
+	SubscriptionStatusActive       SubscriptionStatus = "Active"
+	SubscriptionStatusCanceled     SubscriptionStatus = "Canceled"
+	SubscriptionStatusExpired      SubscriptionStatus = "Expired"
+	SubscriptionStatusPastDue      SubscriptionStatus = "Past Due"
+	SubscriptionStatusPending      SubscriptionStatus = "Pending"
+	SubscriptionStatusUnrecognized SubscriptionStatus = "Unrecognized"
 )
 
 const (
@@ -37,7 +39,7 @@ type Subscription struct {
 	PaymentMethodToken      string               `xml:"payment-method-token,omitempty"`
 	PlanId                  string               `xml:"plan-id,omitempty"`
 	Price                   *Decimal             `xml:"price,omitempty"`
-	Status                  string               `xml:"status,omitempty"`
+	Status                  SubscriptionStatus   `xml:"status,omitempty"`
 	TrialDuration           string               `xml:"trial-duration,omitempty"`
 	TrialDurationUnit       string               `xml:"trial-duration-unit,omitempty"`
 	TrialPeriod             *nullable.NullBool   `xml:"trial-period,omitempty"`

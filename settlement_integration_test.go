@@ -2,7 +2,6 @@ package braintree
 
 import (
 	"testing"
-	"time"
 )
 
 func TestSettlementBatch(t *testing.T) {
@@ -18,7 +17,7 @@ func TestSettlementBatch(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("transaction : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status)
-	if tx.Status != "authorized" {
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 
@@ -28,7 +27,7 @@ func TestSettlementBatch(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("transaction : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status)
-	if x := tx.Status; x != "submitted_for_settlement" {
+	if x := tx.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
 	}
 
@@ -37,13 +36,14 @@ func TestSettlementBatch(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("transaction : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status)
-	if x := tx.Status; x != "settled" {
+	t.Logf("transaction : %s : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status, tx.SettlementBatchId)
+	if x := tx.Status; x != TransactionStatusSettled {
 		t.Fatal(x)
 	}
 
 	// Generate Settlement Batch Summary which will include new transaction
-	date := time.Now().Format("2006-01-02")
+	date := tx.SettlementBatchId[:10]
+	t.Logf("summary     : %s\n", date)
 	summary, err := testGateway.Settlement().Generate(&Settlement{Date: date})
 	if err != nil {
 		t.Fatalf("unable to get settlement batch: %s", err)

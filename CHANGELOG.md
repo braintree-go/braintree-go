@@ -1,4 +1,22 @@
-## 0.10.0 (April 14th, 2016)
+## 0.11.0 (May 12th, 2017)
+
+BACKWARDS INCOMPATIBILITES:
+
+* `TransactionGateway` `Create` now takes a `TransactionRequest`. Fields were removed from `Transaction` that are not included in the response.
+
+IMPROVEMENTS:
+
+* `CurrencyISOCode` added to `Transaction`.
+* `GatewayRejectionReason` added to `Transaction`.
+* `CVVResponseCode` added to `Transaction`.
+* `AVSErrorResponseCode`, `AVSPostalCodeResponseCode` and `AVSStreetAddressResponseCode` added to `Transaction`.
+* `SubscriptionId` added to `Transaction`.
+* `RiskDataRequest` added and can be set on `TransactionRequest` when calling `TransactionGateway` `Create`.
+* `WebhookNotificationGateway` now supports validating signatures on webhook payloads for accounts that have multiple API Keys.
+* `ParseRequest` added to `WebhookNotificationGateway`.
+* `WebhookTestingGateway` added for generating sample webhook notifications.
+
+## 0.10.0 (April 14th, 2017)
 
 BACKWARDS INCOMPATIBILITES:
 

@@ -88,8 +88,14 @@ func main() {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(fmt.Sprintf("Success! Subscription #%s created with user ID %s", subscription.Id, customer.Id)))
+		_, err = w.Write([]byte(fmt.Sprintf("Success! Subscription #%s created with user ID %s", subscription.Id, customer.Id)))
+		if err != nil {
+			log.Fatal(err)
+		}
 	})
 
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

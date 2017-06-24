@@ -44,6 +44,12 @@ In addition to creating transactions, you can also tokenize credit card informat
 
 The usual. `go get github.com/lionelbarrow/braintree-go`
 
+### Supported Go Versions
+
+* 1.6
+* 1.7
+* 1.8
+
 ### Documentation
 
 Braintree provides a [ton of documentation](https://www.braintreepayments.com/docs/ruby/guide/overview) on how to use their API. I recommend you use the Ruby documentation when following along, as the Ruby client library is broadly similar to this one.

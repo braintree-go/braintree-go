@@ -141,6 +141,9 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
+	if x := sub1.Status; x != SubscriptionStatusPending {
+		t.Fatalf("got status %#v, want Pending", x)
+	}
 	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
 		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
 	}
@@ -184,9 +187,12 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub1.Id)
+	sub4, err := g.Cancel(sub1.Id)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if x := sub4.Status; x != SubscriptionStatusCanceled {
+		t.Fatalf("got status %#v, want Canceled", x)
 	}
 }
 
@@ -249,6 +255,9 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
+	if x := sub1.Status; x != SubscriptionStatusPending {
+		t.Fatalf("got status %#v, want Pending", x)
+	}
 	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
 		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
 	}
@@ -292,9 +301,12 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub1.Id)
+	sub4, err := g.Cancel(sub1.Id)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if x := sub4.Status; x != SubscriptionStatusCanceled {
+		t.Fatalf("got status %#v, want Canceled", x)
 	}
 }
 
@@ -360,6 +372,9 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
+	if x := sub1.Status; x != SubscriptionStatusPending {
+		t.Fatalf("got status %#v, want Pending", x)
+	}
 	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
 		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
 	}
@@ -403,9 +418,12 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub1.Id)
+	sub4, err := g.Cancel(sub1.Id)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if x := sub4.Status; x != SubscriptionStatusCanceled {
+		t.Fatalf("got status %#v, want Canceled", x)
 	}
 }
 
@@ -471,6 +489,9 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
+	if x := sub1.Status; x != SubscriptionStatusPending {
+		t.Fatalf("got status %#v, want Pending", x)
+	}
 	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
 		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
 	}
@@ -514,9 +535,12 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub1.Id)
+	sub4, err := g.Cancel(sub1.Id)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if x := sub4.Status; x != SubscriptionStatusCanceled {
+		t.Fatalf("got status %#v, want Canceled", x)
 	}
 }
 
@@ -590,6 +614,9 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	}
 	if sub1.TrialDurationUnit != SubscriptionTrialDurationUnitDay {
 		t.Fatalf("got trial duration unit %#v, want day", sub1.TrialDurationUnit)
+	}
+	if x := sub1.Status; x != SubscriptionStatusActive {
+		t.Fatalf("got status %#v, want Active", x)
 	}
 	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
 		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
@@ -710,6 +737,9 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	}
 	if sub1.TrialDurationUnit != SubscriptionTrialDurationUnitDay {
 		t.Fatalf("got trial duration unit %#v, want day", sub1.TrialDurationUnit)
+	}
+	if x := sub1.Status; x != SubscriptionStatusActive {
+		t.Fatalf("got status %#v, want Active", x)
 	}
 	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
 		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
@@ -890,6 +920,72 @@ func TestSubscriptionModifications(t *testing.T) {
 
 	// Cancel
 	_, err = g.Cancel(sub3.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+// This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
+func TestSubscriptionTransactions(t *testing.T) {
+	t.Parallel()
+
+	customer, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(customer)
+
+	g := testGateway.Subscription()
+
+	// Create
+	sub, err := g.Create(&SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+		Options: &SubscriptionOptions{
+			StartImmediately: true,
+		},
+	})
+
+	t.Log("sub1", sub)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sub.Id == "" {
+		t.Fatal("invalid subscription id")
+	}
+
+	// Find
+	sub2, err := g.Find(sub.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sub2.Id != sub.Id {
+		t.Fatal(sub2.Id)
+	}
+	if x := sub2.PlanId; x != "test_plan" {
+		t.Fatal(x)
+	}
+	if len(sub2.Transactions.Transaction) < 1 {
+		t.Fatalf("Expected transactions slice not to be empty")
+	}
+	if x := sub2.Transactions.Transaction[0].PlanId; x != "test_plan" {
+		t.Fatal(x)
+	}
+	if x := sub2.Transactions.Transaction[0].SubscriptionId; x != sub.Id {
+		t.Fatal(x)
+	}
+
+	// Cancel
+	_, err = g.Cancel(sub2.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -7,11 +7,29 @@ import (
 	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
+type TransactionStatus string
+
+const (
+	TransactionStatusAuthorizationExpired   TransactionStatus = "authorization_expired"
+	TransactionStatusAuthorizing            TransactionStatus = "authorizing"
+	TransactionStatusAuthorized             TransactionStatus = "authorized"
+	TransactionStatusGatewayRejected        TransactionStatus = "gateway_rejected"
+	TransactionStatusFailed                 TransactionStatus = "failed"
+	TransactionStatusProcessorDeclined      TransactionStatus = "processor_declined"
+	TransactionStatusSettled                TransactionStatus = "settled"
+	TransactionStatusSettlementConfirmed    TransactionStatus = "settlement_confirmed"
+	TransactionStatusSettlementDeclined     TransactionStatus = "settlement_declined"
+	TransactionStatusSettlementPending      TransactionStatus = "settlement_pending"
+	TransactionStatusSettling               TransactionStatus = "settling"
+	TransactionStatusSubmittedForSettlement TransactionStatus = "submitted_for_settlement"
+	TransactionStatusVoided                 TransactionStatus = "voided"
+	TransactionStatusUnrecognized           TransactionStatus = "unrecognized"
+)
+
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id,omitempty"`
-	CustomerID                   string                    `xml:"customer-id,omitempty"`
-	Status                       string                    `xml:"status,omitempty"`
+	Status                       TransactionStatus         `xml:"status,omitempty"`
 	Type                         string                    `xml:"type,omitempty"`
 	CurrencyISOCode              string                    `xml:"currency-iso-code,omitempty"`
 	Amount                       *Decimal                  `xml:"amount"`
@@ -20,6 +38,7 @@ type Transaction struct {
 	PaymentMethodNonce           string                    `xml:"payment-method-nonce,omitempty"`
 	MerchantAccountId            string                    `xml:"merchant-account-id,omitempty"`
 	PlanId                       string                    `xml:"plan-id,omitempty"`
+	SubscriptionId               string                    `xml:"subscription-id,omitempty"`
 	CreditCard                   *CreditCard               `xml:"credit-card,omitempty"`
 	Customer                     *Customer                 `xml:"customer,omitempty"`
 	BillingAddress               *Address                  `xml:"billing,omitempty"`
@@ -40,6 +59,8 @@ type Transaction struct {
 	SettlementBatchId            string                    `xml:"settlement-batch-id,omitempty"`
 	PaymentInstrumentType        string                    `xml:"payment-instrument-type,omitempty"`
 	PayPalDetails                *PayPalDetails            `xml:"paypal,omitempty"`
+	VenmoAccountDetails          *VenmoAccountDetails      `xml:"venmo-account,omitempty"`
+	ApplePayDetails              *ApplePayDetails          `xml:"apple-pay,omitempty"`
 	AdditionalProcessorResponse  string                    `xml:"additional-processor-response,omitempty"`
 	RiskData                     *RiskData                 `xml:"risk-data,omitempty"`
 	Descriptor                   *Descriptor               `xml:"descriptor,omitempty"`

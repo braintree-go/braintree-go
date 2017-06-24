@@ -16,7 +16,10 @@ func TestWebhookTestingGatewayRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	r.ParseForm()
+	err = r.ParseForm()
+	if err != nil {
+		t.Fatal(err)
+	}
 	payload := r.FormValue("bt_payload")
 	signature := r.FormValue("bt_signature")
 

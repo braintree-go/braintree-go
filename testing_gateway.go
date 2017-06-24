@@ -22,12 +22,12 @@ func (g *TestingGateway) SettlementDecline(transactionID string) (*Transaction, 
 
 // SettlementPending changes the transaction's status to settlement_pending.
 func (g *TestingGateway) SettlementPending(transactionID string) (*Transaction, error) {
-	return g.setStatus(transactionID, "settlement_pending")
+	return g.setStatus(transactionID, TransactionStatusSettlementPending)
 }
 
-func (g *TestingGateway) setStatus(transactionID, status string) (*Transaction, error) {
+func (g *TestingGateway) setStatus(transactionID string, status TransactionStatus) (*Transaction, error) {
 	if g.Environment() != Production {
-		resp, err := g.execute("PUT", "transactions/"+transactionID+"/"+status, nil)
+		resp, err := g.execute("PUT", "transactions/"+transactionID+"/"+string(status), nil)
 		if err != nil {
 			return nil, err
 		}
