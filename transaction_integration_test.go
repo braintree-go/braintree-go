@@ -606,7 +606,7 @@ func TestAllTransactionFields(t *testing.T) {
 		t.Fatalf("expected TaxAmount to be equal, but %s was not %s", tx2.TaxAmount, tx.TaxAmount)
 	}
 	if tx2.TaxExempt != tx.TaxExempt {
-		t.Fatalf("expected TaxExempt to be equal, but %s was not %s", tx2.TaxExempt, tx.TaxExempt)
+		t.Fatalf("expected TaxExempt to be equal, but %t was not %t", tx2.TaxExempt, tx.TaxExempt)
 	}
 	if tx2.CreditCard.Token == "" {
 		t.Fatalf("expected CreditCard.Token to be equal, but %s was not %s", tx2.CreditCard.Token, tx.CreditCard.Token)
