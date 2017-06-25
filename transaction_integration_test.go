@@ -519,7 +519,7 @@ func TestAllTransactionFields(t *testing.T) {
 	t.Parallel()
 
 	amount := randomAmount()
-	taxAmount := NewDecimal(amount.Unscaled/10, 2)
+	taxAmount := NewDecimal(amount.Unscaled/10, amount.Scale)
 
 	tx := &TransactionRequest{
 		Type:    "sale",
