@@ -104,3 +104,46 @@ func (d *Decimal) String() string {
 
 	return string(b)
 }
+
+// NullDecimal represents a Decimal that may not be set.
+type NullDecimal struct {
+	Decimal
+	Valid bool
+}
+
+// NewNullDecimal creates a new null decimal number equal to
+// unscaled ** 10 ^ (-scale)
+func NewNullDecimal(unscaled int64, scale int) *NullDecimal {
+	return &NullDecimal{Decimal: Decimal{Unscaled: unscaled, Scale: scale}, Valid: true}
+}
+
+// UnmarshalText creates a NullDecimal from a string representation (e.g. 5.20).
+// If the byte array is empty the NullDecimal will be valid = false.
+func (nd *NullDecimal) UnmarshalText(text []byte) (err error) {
+	if len(text) == 0 {
+		return nil
+	}
+	nd.Valid = true
+	return nd.Decimal.UnmarshalText(text)
+}
+
+// MarshalText outputs a NullDecimal representation of the scaled number.
+// If the NullDecimal is valid = false will output an empty byte array.
+func (nd *NullDecimal) MarshalText() (text []byte, err error) {
+	if !nd.Valid {
+		return nil, nil
+	}
+	return nd.Decimal.MarshalText()
+}
+
+// Cmp compares x and y and returns:
+//
+//   -1 if x <  y
+//    0 if x == y
+//   +1 if x >  y
+//
+// If either x or y are not valid, the result is undefined.
+//
+func (x *NullDecimal) Cmp(y *NullDecimal) int {
+	return x.Decimal.Cmp(&y.Decimal)
+}
