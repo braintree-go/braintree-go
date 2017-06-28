@@ -1,3 +1,22 @@
+## 0.12.0 (June 27th, 2017)
+
+BACKWARDS INCOMPATIBILITES:
+
+* Support for Go1.2-1.5 has been dropped. Support from this version onwards is Go1.6+.
+
+IMPROVEMENTS:
+
+* API endpoints updated to use the `api.` prefix: `sandbox.braintreepayments.com` => `api.sandbox.braintreegateway.com`, `www.braintreegateway.com` => `api.braintreegateway.com`.
+* Add support for `VenmoAccount`s.
+* Add support for `AndroidPayCard`s.
+* Add support for `ApplePayCard`s.
+* Added a default timeout of 60s to all connections.
+* `PaymentMethodNonce` added to `Customer`.
+* `Transaction` `Status` constants added.
+
+BUG FIXES:
+* Numerous test and CI reliability improvements to reduce flakiness of integration tests.
+
 ## 0.11.0 (May 12th, 2017)
 
 BACKWARDS INCOMPATIBILITES:
