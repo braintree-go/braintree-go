@@ -23,7 +23,7 @@ Creating Transactions
 
 Create transactions:
 
-	t, err := bt.Transaction().Create(&braintree.Transaction{
+	t, err := bt.Transaction().Create(&braintree.TransactionRequest{
 		Type:   "sale",
 		Amount: braintree.NewDecimal(100, 2), // $1.00
 		PaymentMethodNonce: braintree.FakeNonceTransactable,
