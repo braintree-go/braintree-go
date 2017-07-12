@@ -1,17 +1,31 @@
 language: go
-go:
-  - 1.2
-  - 1.3
-  - 1.4
-  - 1.5
-  - 1.6
-  - 1.7
-  - 1.8
-  - tip
-
 go_import_path: github.com/lionelbarrow/braintree-go
 
-script:
+install:
   - source .default.env
-  - go vet ./...
-  - go test -parallel 15 -v ./...
+
+jobs:
+  include:
+    - stage: analysis
+      go: 1.8
+      script: make analysis
+
+    - stage: test
+      go: 1.8
+      script: make test
+
+    - stage: test
+      go: 1.7
+      script: make test
+
+    - stage: test
+      go: 1.6
+      script: make test
+
+    - stage: analysis-is-backward-compatible-with-master
+      go: 1.8
+      script: make analysis-is-backward-compatible-with-master
+
+  allow_failures:
+    - stage: analysis-is-backward-compatible-with-master
+

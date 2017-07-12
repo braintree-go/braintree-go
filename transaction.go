@@ -57,6 +57,9 @@ type Transaction struct {
 	SettlementBatchId            string                    `xml:"settlement-batch-id,omitempty"`
 	PaymentInstrumentType        string                    `xml:"payment-instrument-type,omitempty"`
 	PayPalDetails                *PayPalDetails            `xml:"paypal,omitempty"`
+	VenmoAccountDetails          *VenmoAccountDetails      `xml:"venmo-account,omitempty"`
+	AndroidPayDetails            *AndroidPayDetails        `xml:"android-pay-card,omitempty"`
+	ApplePayDetails              *ApplePayDetails          `xml:"apple-pay,omitempty"`
 	AdditionalProcessorResponse  string                    `xml:"additional-processor-response,omitempty"`
 	RiskData                     *RiskData                 `xml:"risk-data,omitempty"`
 	Descriptor                   *Descriptor               `xml:"descriptor,omitempty"`
