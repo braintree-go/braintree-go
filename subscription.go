@@ -30,11 +30,11 @@ type Subscription struct {
 	FailureCount            string               `xml:"failure-count,omitempty"`
 	FirstBillingDate        string               `xml:"first-billing-date,omitempty"`
 	MerchantAccountId       string               `xml:"merchant-account-id,omitempty"`
-	NeverExpires            *nullable.NullBool   `xml:"never-expires,omitempty"`
+	NeverExpires            nullable.NullBool    `xml:"never-expires,omitempty"`
 	NextBillAmount          *Decimal             `xml:"next-bill-amount,omitempty"`
 	NextBillingPeriodAmount *Decimal             `xml:"next-billing-period-amount,omitempty"`
 	NextBillingDate         string               `xml:"next-billing-date,omitempty"`
-	NumberOfBillingCycles   *nullable.NullInt64  `xml:"number-of-billing-cycles,omitempty"`
+	NumberOfBillingCycles   nullable.NullInt64   `xml:"number-of-billing-cycles,omitempty"`
 	PaidThroughDate         string               `xml:"paid-through-date,omitempty"`
 	PaymentMethodToken      string               `xml:"payment-method-token,omitempty"`
 	PlanId                  string               `xml:"plan-id,omitempty"`
@@ -42,7 +42,7 @@ type Subscription struct {
 	Status                  SubscriptionStatus   `xml:"status,omitempty"`
 	TrialDuration           string               `xml:"trial-duration,omitempty"`
 	TrialDurationUnit       string               `xml:"trial-duration-unit,omitempty"`
-	TrialPeriod             *nullable.NullBool   `xml:"trial-period,omitempty"`
+	TrialPeriod             nullable.NullBool    `xml:"trial-period,omitempty"`
 	Transactions            *Transactions        `xml:"transactions,omitempty"`
 	Options                 *SubscriptionOptions `xml:"options,omitempty"`
 	Descriptor              *Descriptor          `xml:"descriptor,omitempty"`
