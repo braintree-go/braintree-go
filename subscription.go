@@ -1,7 +1,5 @@
 package braintree
 
-import "github.com/lionelbarrow/braintree-go/nullable"
-
 type SubscriptionStatus string
 
 const (
@@ -30,11 +28,11 @@ type Subscription struct {
 	FailureCount            string               `xml:"failure-count,omitempty"`
 	FirstBillingDate        string               `xml:"first-billing-date,omitempty"`
 	MerchantAccountId       string               `xml:"merchant-account-id,omitempty"`
-	NeverExpires            *nullable.NullBool   `xml:"never-expires,omitempty"`
+	NeverExpires            bool                 `xml:"never-expires,omitempty"`
 	NextBillAmount          *Decimal             `xml:"next-bill-amount,omitempty"`
 	NextBillingPeriodAmount *Decimal             `xml:"next-billing-period-amount,omitempty"`
 	NextBillingDate         string               `xml:"next-billing-date,omitempty"`
-	NumberOfBillingCycles   *nullable.NullInt64  `xml:"number-of-billing-cycles,omitempty"`
+	NumberOfBillingCycles   int                  `xml:"number-of-billing-cycles,omitempty"`
 	PaidThroughDate         string               `xml:"paid-through-date,omitempty"`
 	PaymentMethodToken      string               `xml:"payment-method-token,omitempty"`
 	PlanId                  string               `xml:"plan-id,omitempty"`
@@ -42,7 +40,7 @@ type Subscription struct {
 	Status                  SubscriptionStatus   `xml:"status,omitempty"`
 	TrialDuration           string               `xml:"trial-duration,omitempty"`
 	TrialDurationUnit       string               `xml:"trial-duration-unit,omitempty"`
-	TrialPeriod             *nullable.NullBool   `xml:"trial-period,omitempty"`
+	TrialPeriod             bool                 `xml:"trial-period,omitempty"`
 	Transactions            *Transactions        `xml:"transactions,omitempty"`
 	Options                 *SubscriptionOptions `xml:"options,omitempty"`
 	Descriptor              *Descriptor          `xml:"descriptor,omitempty"`
@@ -53,12 +51,12 @@ type Subscription struct {
 type SubscriptionRequest struct {
 	XMLName               string                `xml:"subscription"`
 	Id                    string                `xml:"id,omitempty"`
-	BillingDayOfMonth     *nullable.NullInt64   `xml:"billing-day-of-month,omitempty"`
+	BillingDayOfMonth     int                   `xml:"billing-day-of-month,omitempty"`
 	FailureCount          string                `xml:"failure-count,omitempty"`
 	FirstBillingDate      string                `xml:"first-billing-date,omitempty"`
 	MerchantAccountId     string                `xml:"merchant-account-id,omitempty"`
-	NeverExpires          *nullable.NullBool    `xml:"never-expires,omitempty"`
-	NumberOfBillingCycles *nullable.NullInt64   `xml:"number-of-billing-cycles,omitempty"`
+	NeverExpires          bool                  `xml:"never-expires,omitempty"`
+	NumberOfBillingCycles int                   `xml:"number-of-billing-cycles,omitempty"`
 	Options               *SubscriptionOptions  `xml:"options,omitempty"`
 	PaymentMethodNonce    string                `xml:"paymentMethodNonce,omitempty"`
 	PaymentMethodToken    string                `xml:"paymentMethodToken,omitempty"`
@@ -66,7 +64,7 @@ type SubscriptionRequest struct {
 	Price                 *Decimal              `xml:"price,omitempty"`
 	TrialDuration         string                `xml:"trial-duration,omitempty"`
 	TrialDurationUnit     string                `xml:"trial-duration-unit,omitempty"`
-	TrialPeriod           *nullable.NullBool    `xml:"trial-period,omitempty"`
+	TrialPeriod           bool                  `xml:"trial-period,omitempty"`
 	Descriptor            *Descriptor           `xml:"descriptor,omitempty"`
 	AddOns                *ModificationsRequest `xml:"add-ons,omitempty"`
 	Discounts             *ModificationsRequest `xml:"discounts,omitempty"`

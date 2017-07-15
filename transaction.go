@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/lionelbarrow/braintree-go/customfields"
-	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
 type TransactionStatus string
@@ -152,11 +151,11 @@ type TransactionOptions struct {
 }
 
 type TransactionSearchResult struct {
-	XMLName           string              `xml:"credit-card-transactions"`
-	CurrentPageNumber *nullable.NullInt64 `xml:"current-page-number"`
-	PageSize          *nullable.NullInt64 `xml:"page-size"`
-	TotalItems        *nullable.NullInt64 `xml:"total-items"`
-	Transactions      []*Transaction      `xml:"transaction"`
+	XMLName           string         `xml:"credit-card-transactions"`
+	CurrentPageNumber int            `xml:"current-page-number"`
+	PageSize          int            `xml:"page-size"`
+	TotalItems        int            `xml:"total-items"`
+	Transactions      []*Transaction `xml:"transaction"`
 }
 
 type RiskData struct {
