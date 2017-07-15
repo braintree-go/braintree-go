@@ -2,7 +2,6 @@ package braintree
 
 import (
 	"github.com/lionelbarrow/braintree-go/customfields"
-	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
 type Customer struct {
@@ -57,9 +56,9 @@ func (c *Customer) DefaultPaymentMethod() PaymentMethod {
 }
 
 type CustomerSearchResult struct {
-	XMLName           string              `xml:"customers"`
-	CurrentPageNumber *nullable.NullInt64 `xml:"current-page-number"`
-	PageSize          *nullable.NullInt64 `xml:"page-size"`
-	TotalItems        *nullable.NullInt64 `xml:"total-items"`
-	Customers         []*Customer         `xml:"customer"`
+	XMLName           string      `xml:"customers"`
+	CurrentPageNumber *int        `xml:"current-page-number"`
+	PageSize          *int        `xml:"page-size"`
+	TotalItems        *int        `xml:"total-items"`
+	Customers         []*Customer `xml:"customer"`
 }

@@ -100,14 +100,12 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	billingDayOfMonth := 15
-	numberOfBillingCycles := 2
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
-		BillingDayOfMonth:     &billingDayOfMonth,
-		NumberOfBillingCycles: &numberOfBillingCycles,
+		BillingDayOfMonth:     IntPtr(15),
+		NumberOfBillingCycles: IntPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -214,14 +212,12 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	billingDayOfMonth := 15
-	neverExpires := true
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
-		BillingDayOfMonth:  &billingDayOfMonth,
-		NeverExpires:       &neverExpires,
+		BillingDayOfMonth:  IntPtr(15),
+		NeverExpires:       BoolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -230,7 +226,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 		},
 	})
 
-	t.Log("sub1", sub1)
+	t.Logf("sub1 %#v", sub1)
 
 	if err != nil {
 		t.Fatal(err)
@@ -329,13 +325,12 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 
 	// Create
 	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
-	numberOfBillingCycles := 2
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
 		FirstBillingDate:      firstBillingDate,
-		NumberOfBillingCycles: &numberOfBillingCycles,
+		NumberOfBillingCycles: IntPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -448,13 +443,12 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 
 	// Create
 	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
-	neverExpires := true
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
 		FirstBillingDate:   firstBillingDate,
-		NeverExpires:       &neverExpires,
+		NeverExpires:       BoolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -564,17 +558,15 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	trialPeriod := true
 	firstBillingDate := time.Now().In(testTimeZone).AddDate(0, 0, 7)
-	numberOfBillingCycles := 2
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
-		TrialPeriod:           &trialPeriod,
+		TrialPeriod:           BoolPtr(true),
 		TrialDuration:         "7",
 		TrialDurationUnit:     SubscriptionTrialDurationUnitDay,
-		NumberOfBillingCycles: &numberOfBillingCycles,
+		NumberOfBillingCycles: IntPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -687,17 +679,15 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	trialPeriod := true
 	firstBillingDate := time.Now().In(testTimeZone).AddDate(0, 0, 7)
-	neverExpires := true
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
-		TrialPeriod:        &trialPeriod,
+		TrialPeriod:        BoolPtr(true),
 		TrialDuration:      "7",
 		TrialDurationUnit:  SubscriptionTrialDurationUnitDay,
-		NeverExpires:       &neverExpires,
+		NeverExpires:       BoolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
