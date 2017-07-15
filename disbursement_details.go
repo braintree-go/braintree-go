@@ -10,6 +10,6 @@ type DisbursementDetails struct {
 	SettlementAmount               *Decimal `xml:"settlement-amount"`
 	SettlementCurrencyIsoCode      string   `xml:"settlement-currency-iso-code"`
 	SettlementCurrencyExchangeRate *Decimal `xml:"settlement-currency-exchange-rate"`
-	FundsHeld                      *bool    `xml:"funds-held"`
-	Success                        *bool    `xml:"success"`
+	FundsHeld                      bool     `xml:"funds-held"`
+	Success                        bool     `xml:"success"`
 }

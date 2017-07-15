@@ -18,7 +18,7 @@ func TestDisbursementTransactions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if result.TotalItems == nil || *result.TotalItems != 1 {
+	if result.TotalItems != 1 {
 		t.Fatal(result)
 	}
 
