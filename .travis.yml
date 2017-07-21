@@ -1,20 +1,30 @@
 language: go
-matrix:
-  include:
-  - go: 1.6
-  - go: 1.7
-  - go: 1.8
-    env: ERRCHECK=true
-  - go: tip
-
 go_import_path: github.com/lionelbarrow/braintree-go
 
 install:
-  - if [ -n "$ERRCHECK" ] ; then go get -u github.com/kisielk/errcheck ; fi
-
-script:
   - source .default.env
-  - go vet ./...
-  - go get ./...
-  - if [ -n "$ERRCHECK" ] ; then CGO_ENABLED=0 errcheck ./... ; else echo "Skipping errcheck" ; fi
-  - go test -parallel 15 -v ./...
+
+jobs:
+  include:
+    - stage: analysis
+      go: 1.8
+      script: make analysis
+
+    - stage: test
+      go: 1.8
+      script: make test
+
+    - stage: test
+      go: 1.7
+      script: make test
+
+    - stage: test
+      go: 1.6
+      script: make test
+
+    - stage: analysis-is-backward-compatible-with-master
+      go: 1.8
+      script: make analysis-is-backward-compatible-with-master
+
+  allow_failures:
+    - stage: analysis-is-backward-compatible-with-master

@@ -19,22 +19,20 @@ type Customer struct {
 	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
 	CreditCards        *CreditCards              `xml:"credit-cards,omitempty"`
 	PayPalAccounts     *PayPalAccounts           `xml:"paypal-accounts,omitempty"`
+	VenmoAccounts      *VenmoAccounts            `xml:"venmo-accounts,omitempty"`
+	AndroidPayCards    *AndroidPayCards          `xml:"android-pay-cards,omitempty"`
+	ApplePayCards      *ApplePayCards            `xml:"apple-pay-cards,omitempty"`
 	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
 }
 
 // PaymentMethods returns a slice of all PaymentMethods this customer has
 func (c *Customer) PaymentMethods() []PaymentMethod {
 	var paymentMethods []PaymentMethod
-	if c.CreditCards != nil {
-		for _, cc := range c.CreditCards.CreditCard {
-			paymentMethods = append(paymentMethods, cc)
-		}
-	}
-	if c.PayPalAccounts != nil {
-		for _, pp := range c.PayPalAccounts.PayPalAccount {
-			paymentMethods = append(paymentMethods, pp)
-		}
-	}
+	paymentMethods = append(paymentMethods, c.CreditCards.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.PayPalAccounts.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.VenmoAccounts.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.AndroidPayCards.PaymentMethods()...)
+	paymentMethods = append(paymentMethods, c.ApplePayCards.PaymentMethods()...)
 	return paymentMethods
 }
 
@@ -50,18 +48,9 @@ func (c *Customer) DefaultCreditCard() *CreditCard {
 
 // DefaultPaymentMethod returns the default payment method, or nil
 func (c *Customer) DefaultPaymentMethod() PaymentMethod {
-	if c.CreditCards != nil {
-		for _, cc := range c.CreditCards.CreditCard {
-			if cc.IsDefault() {
-				return cc
-			}
-		}
-	}
-	if c.PayPalAccounts != nil {
-		for _, pp := range c.PayPalAccounts.PayPalAccount {
-			if pp.IsDefault() {
-				return pp
-			}
+	for _, pm := range c.PaymentMethods() {
+		if pm.IsDefault() {
+			return pm
 		}
 	}
 	return nil

@@ -8,8 +8,8 @@ func TestEnvironmentBaseURL(t *testing.T) {
 		WantedBaseURL string
 	}{
 		{Development, "http://localhost:3000"},
-		{Sandbox, "https://sandbox.braintreegateway.com"},
-		{Production, "https://www.braintreegateway.com"},
+		{Sandbox, "https://api.sandbox.braintreegateway.com:443"},
+		{Production, "https://api.braintreegateway.com:443"},
 	}
 
 	for _, test := range tests {
