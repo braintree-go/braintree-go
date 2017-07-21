@@ -107,7 +107,7 @@ func TestTransactionSearch(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if !result.TotalItems.Valid || result.TotalItems.Int64 != 1 {
+	if result.TotalItems != 1 {
 		t.Fatal(result.Transactions)
 	}
 
@@ -159,7 +159,7 @@ func TestTransactionSearchTime(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if !result.TotalItems.Valid || result.TotalItems.Int64 != 1 {
+		if result.TotalItems != 1 {
 			t.Fatal(result.Transactions)
 		}
 
@@ -182,7 +182,7 @@ func TestTransactionSearchTime(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if !result.TotalItems.Valid || result.TotalItems.Int64 != 0 {
+		if result.TotalItems != 0 {
 			t.Fatal(result.Transactions)
 		}
 	}
