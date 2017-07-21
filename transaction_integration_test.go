@@ -642,10 +642,10 @@ func TestTransactionDisbursementDetails(t *testing.T) {
 	if txn.DisbursementDetails.SettlementCurrencyExchangeRate.Cmp(NewDecimal(100, 2)) != 0 {
 		t.Fatalf("expected settlement currency exchange rate to be %s, was %s", NewDecimal(100, 2), txn.DisbursementDetails.SettlementCurrencyExchangeRate)
 	}
-	if !txn.DisbursementDetails.FundsHeld.Valid || txn.DisbursementDetails.FundsHeld.Bool {
+	if txn.DisbursementDetails.FundsHeld {
 		t.Error("funds held doesn't match")
 	}
-	if !txn.DisbursementDetails.Success.Valid || !txn.DisbursementDetails.Success.Bool {
+	if !txn.DisbursementDetails.Success {
 		t.Error("success doesn't match")
 	}
 }
