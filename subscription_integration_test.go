@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"testing"
 	"time"
-
-	"github.com/lionelbarrow/braintree-go/nullable"
 )
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
@@ -102,14 +100,12 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	billingDayOfMonth := nullable.NewNullInt64(15, true)
-	numberOfBillingCycles := nullable.NewNullInt64(2, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
-		BillingDayOfMonth:     &billingDayOfMonth,
-		NumberOfBillingCycles: &numberOfBillingCycles,
+		BillingDayOfMonth:     intPtr(15),
+		NumberOfBillingCycles: intPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -129,16 +125,16 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	if sub1.BillingDayOfMonth != "15" {
 		t.Fatalf("got billing day of month %#v, want %#v", sub1.BillingDayOfMonth, "15")
 	}
-	if x := sub1.NeverExpires; x == nil || !x.Valid || x.Bool {
+	if x := sub1.NeverExpires; x {
 		t.Fatalf("got never expires %#v, want false", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || !x.Valid || x.Int64 != 2 {
+	if x := sub1.NumberOfBillingCycles; x == nil || *x != 2 {
 		t.Fatalf("got number billing cycles %#v, want 2", x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
 		t.Fatalf("got price %#v, want 1.00", x)
 	}
-	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
+	if x := sub1.TrialPeriod; x {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
 	if x := sub1.Status; x != SubscriptionStatusPending {
@@ -216,14 +212,12 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	billingDayOfMonth := nullable.NewNullInt64(15, true)
-	neverExpires := nullable.NewNullBool(true, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
-		BillingDayOfMonth:  &billingDayOfMonth,
-		NeverExpires:       &neverExpires,
+		BillingDayOfMonth:  intPtr(15),
+		NeverExpires:       boolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -232,7 +226,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 		},
 	})
 
-	t.Log("sub1", sub1)
+	t.Logf("sub1 %#v", sub1)
 
 	if err != nil {
 		t.Fatal(err)
@@ -243,16 +237,16 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	if sub1.BillingDayOfMonth != "15" {
 		t.Fatalf("got billing day of month %#v, want %#v", sub1.BillingDayOfMonth, "15")
 	}
-	if x := sub1.NeverExpires; x == nil || !x.Valid || !x.Bool {
+	if x := sub1.NeverExpires; !x {
 		t.Fatalf("got never expires %#v, want true", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || x.Valid {
+	if x := sub1.NumberOfBillingCycles; x != nil {
 		t.Fatalf("got number billing cycles %#v, didn't want", x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
 		t.Fatalf("got price %#v, want 1.00", x)
 	}
-	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
+	if x := sub1.TrialPeriod; x {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
 	if x := sub1.Status; x != SubscriptionStatusPending {
@@ -331,13 +325,12 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 
 	// Create
 	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
-	numberOfBillingCycles := nullable.NewNullInt64(2, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
 		FirstBillingDate:      firstBillingDate,
-		NumberOfBillingCycles: &numberOfBillingCycles,
+		NumberOfBillingCycles: intPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -360,16 +353,18 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	if sub1.FirstBillingDate != firstBillingDate {
 		t.Fatalf("got first billing date %#v, want %#v", sub1.FirstBillingDate, firstBillingDate)
 	}
-	if x := sub1.NeverExpires; x == nil || !x.Valid || x.Bool {
+	if x := sub1.NeverExpires; x {
 		t.Fatalf("got never expires %#v, want false", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || !x.Valid || x.Int64 != 2 {
-		t.Fatalf("got number billing cycles %#v, want 2", x)
+	if x := sub1.NumberOfBillingCycles; x == nil {
+		t.Fatalf("got number billing cycles nil, want 2")
+	} else if *x != 2 {
+		t.Fatalf("got number billing cycles %#v, want 2", *x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
 		t.Fatalf("got price %#v, want 1.00", x)
 	}
-	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
+	if x := sub1.TrialPeriod; x {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
 	if x := sub1.Status; x != SubscriptionStatusPending {
@@ -448,13 +443,12 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 
 	// Create
 	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
-	neverExpires := nullable.NewNullBool(true, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
 		FirstBillingDate:   firstBillingDate,
-		NeverExpires:       &neverExpires,
+		NeverExpires:       boolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -477,16 +471,16 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	if sub1.FirstBillingDate != firstBillingDate {
 		t.Fatalf("got first billing date %#v, want %#v", sub1.FirstBillingDate, firstBillingDate)
 	}
-	if x := sub1.NeverExpires; x == nil || !x.Valid || !x.Bool {
+	if x := sub1.NeverExpires; !x {
 		t.Fatalf("got never expires %#v, want true", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || x.Valid {
+	if x := sub1.NumberOfBillingCycles; x != nil {
 		t.Fatalf("got number billing cycles %#v, didn't want", x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
 		t.Fatalf("got price %#v, want 1.00", x)
 	}
-	if x := sub1.TrialPeriod; x == nil || !x.Valid || x.Bool {
+	if x := sub1.TrialPeriod; x {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
 	if x := sub1.Status; x != SubscriptionStatusPending {
@@ -564,17 +558,15 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	trialPeriod := nullable.NewNullBool(true, true)
 	firstBillingDate := time.Now().In(testTimeZone).AddDate(0, 0, 7)
-	numberOfBillingCycles := nullable.NewNullInt64(2, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
-		TrialPeriod:           &trialPeriod,
+		TrialPeriod:           boolPtr(true),
 		TrialDuration:         "7",
 		TrialDurationUnit:     SubscriptionTrialDurationUnitDay,
-		NumberOfBillingCycles: &numberOfBillingCycles,
+		NumberOfBillingCycles: intPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -597,16 +589,16 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	if sub1.FirstBillingDate != firstBillingDate.Format("2006-01-02") {
 		t.Fatalf("got first billing date %#v, want %#v", sub1.FirstBillingDate, firstBillingDate)
 	}
-	if x := sub1.NeverExpires; x == nil || !x.Valid || x.Bool {
+	if x := sub1.NeverExpires; x {
 		t.Fatalf("got never expires %#v, want false", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || !x.Valid || x.Int64 != 2 {
+	if x := sub1.NumberOfBillingCycles; x == nil || *x != 2 {
 		t.Fatalf("got number billing cycles %#v, want 2", x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
 		t.Fatalf("got price %#v, want 1.00", x)
 	}
-	if x := sub1.TrialPeriod; x == nil || !x.Valid || !x.Bool {
+	if x := sub1.TrialPeriod; !x {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
 	if sub1.TrialDuration != "7" {
@@ -687,17 +679,15 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	trialPeriod := nullable.NewNullBool(true, true)
 	firstBillingDate := time.Now().In(testTimeZone).AddDate(0, 0, 7)
-	neverExpires := nullable.NewNullBool(true, true)
 	sub1, err := g.Create(&SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
-		TrialPeriod:        &trialPeriod,
+		TrialPeriod:        boolPtr(true),
 		TrialDuration:      "7",
 		TrialDurationUnit:  SubscriptionTrialDurationUnitDay,
-		NeverExpires:       &neverExpires,
+		NeverExpires:       boolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -720,16 +710,16 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	if sub1.FirstBillingDate != firstBillingDate.Format("2006-01-02") {
 		t.Fatalf("got first billing date %#v, want %#v", sub1.FirstBillingDate, firstBillingDate)
 	}
-	if x := sub1.NeverExpires; x == nil || !x.Valid || !x.Bool {
+	if x := sub1.NeverExpires; !x {
 		t.Fatalf("got never expires %#v, want true", x)
 	}
-	if x := sub1.NumberOfBillingCycles; x == nil || x.Valid {
+	if x := sub1.NumberOfBillingCycles; x != nil {
 		t.Fatalf("got number billing cycles %#v, didn't want", x)
 	}
 	if x := sub1.Price; x == nil || x.Scale != 2 || x.Unscaled != 100 {
 		t.Fatalf("got price %#v, want 1.00", x)
 	}
-	if x := sub1.TrialPeriod; x == nil || !x.Valid || !x.Bool {
+	if x := sub1.TrialPeriod; !x {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
 	if sub1.TrialDuration != "7" {
