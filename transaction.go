@@ -42,7 +42,7 @@ type Transaction struct {
 	Customer                     *Customer                 `xml:"customer,omitempty"`
 	BillingAddress               *Address                  `xml:"billing,omitempty"`
 	ShippingAddress              *Address                  `xml:"shipping,omitempty"`
-	TaxAmount                    *NullDecimal              `xml:"tax-amount,omitempty"`
+	TaxAmount                    *Decimal                  `xml:"tax-amount,omitempty"`
 	TaxExempt                    bool                      `xml:"tax-exempt,omitempty"`
 	DeviceData                   string                    `xml:"device-data,omitempty"`
 	ServiceFeeAmount             *Decimal                  `xml:"service-fee-amount,attr,omitempty"`

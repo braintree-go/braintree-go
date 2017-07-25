@@ -599,10 +599,10 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.ShippingAddress.PostalCode != tx.ShippingAddress.PostalCode {
 		t.Fatalf("expected ShippingAddress.PostalCode to be equal, but %s was not %s", tx2.ShippingAddress.PostalCode, tx.ShippingAddress.PostalCode)
 	}
-	if tx2.TaxAmount.Valid != true {
-		t.Fatalf("expected TaxAmount to be valid, but was not")
+	if tx2.TaxAmount == nil {
+		t.Fatalf("expected TaxAmount to be set, but was nil")
 	}
-	if tx2.TaxAmount.Decimal.Cmp(tx.TaxAmount) != 0 {
+	if tx2.TaxAmount.Cmp(tx.TaxAmount) != 0 {
 		t.Fatalf("expected TaxAmount to be equal, but %s was not %s", tx2.TaxAmount, tx.TaxAmount)
 	}
 	if tx2.TaxExempt != tx.TaxExempt {
@@ -903,8 +903,8 @@ func TestTransactionTaxExempt(t *testing.T) {
 	if !txn.TaxExempt {
 		t.Fatalf("Transaction did not return tax exempt")
 	}
-	if txn.TaxAmount.Valid {
-		t.Fatalf("Transaction returned a valid TaxAmont but is tax exempt")
+	if txn.TaxAmount != nil {
+		t.Fatalf("Transaction TaxAmount got %v, want nil", txn.TaxAmount)
 	}
 }
 
@@ -929,7 +929,7 @@ func TestTransactionTaxFieldsNotProvided(t *testing.T) {
 	if g, w := txn.TaxExempt, false; g != w {
 		t.Fatalf("Transaction tax exempt got %v, want %v", g, w)
 	}
-	if g, w := txn.TaxAmount.Valid, false; g != w {
-		t.Fatalf("Transaction tax amount valid got %v, want %v", g, w)
+	if txn.TaxAmount != nil {
+		t.Fatalf("Transaction tax amount got %v, want nil", *txn.TaxAmount)
 	}
 }
