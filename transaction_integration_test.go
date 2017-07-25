@@ -926,8 +926,8 @@ func TestTransactionTaxFieldsNotProvided(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if g, w := txn.TaxExempt, false; g != w {
-		t.Fatalf("Transaction tax exempt got %v, want %v", g, w)
+	if txn.TaxExempt {
+		t.Fatalf("Transaction returned tax exempt, expected not to")
 	}
 	if txn.TaxAmount != nil {
 		t.Fatalf("Transaction tax amount got %v, want nil", *txn.TaxAmount)
