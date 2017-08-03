@@ -42,6 +42,8 @@ type Transaction struct {
 	Customer                     *Customer                 `xml:"customer,omitempty"`
 	BillingAddress               *Address                  `xml:"billing,omitempty"`
 	ShippingAddress              *Address                  `xml:"shipping,omitempty"`
+	TaxAmount                    *Decimal                  `xml:"tax-amount,omitempty"`
+	TaxExempt                    bool                      `xml:"tax-exempt,omitempty"`
 	DeviceData                   string                    `xml:"device-data,omitempty"`
 	ServiceFeeAmount             *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
 	CreatedAt                    *time.Time                `xml:"created-at,omitempty"`
@@ -84,6 +86,8 @@ type TransactionRequest struct {
 	Customer           *Customer                 `xml:"customer,omitempty"`
 	BillingAddress     *Address                  `xml:"billing,omitempty"`
 	ShippingAddress    *Address                  `xml:"shipping,omitempty"`
+	TaxAmount          *Decimal                  `xml:"tax-amount,omitempty"`
+	TaxExempt          bool                      `xml:"tax-exempt,omitempty"`
 	DeviceData         string                    `xml:"device-data,omitempty"`
 	Options            *TransactionOptions       `xml:"options,omitempty"`
 	ServiceFeeAmount   *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
@@ -97,8 +101,6 @@ type TransactionRequest struct {
 // <transaction>
 //   <voice-referral-number nil="true"></voice-referral-number>
 //   <purchase-order-number nil="true"></purchase-order-number>
-//   <tax-amount nil="true"></tax-amount>
-//   <tax-exempt type="boolean">false</tax-exempt>
 //   <status-history type="array">
 //     <status-event>
 //       <timestamp type="datetime">2013-10-07T17:26:14Z</timestamp>
