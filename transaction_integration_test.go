@@ -867,3 +867,95 @@ func TestTransactionCreateWithCustomFields(t *testing.T) {
 		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
 	}
 }
+
+func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
+	amount := NewDecimal(1007, 2)
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa_3ds_success"].Number,
+			ExpirationDate: "01/2020",
+		},
+		Options: &TransactionOptions{
+			ThreeDSecure: &Transaction3DS{
+				Required: true,
+			},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.ThreeDSecureInfo.Enrolled != ThreeDSecureEnrollementYes {
+		t.Fatalf("Card should be enrolled")
+	}
+	if txn.ThreeDSecureInfo.LiabilityShifted {
+		t.Fatalf("Liability should have been shifted")
+	}
+	if txn.ThreeDSecureInfo.Status == ThreeDSecureStatusAuthAttemptSuccessful {
+		t.Fatalf("Status should have been %s, was %s",
+			ThreeDSecureStatusAuthAttemptSuccessful,
+			txn.ThreeDSecureInfo.Status)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().Settle(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "settled" {
+		t.Fatal(txn.Status)
+	}
+}
+
+func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
+	amount := NewDecimal(1007, 2)
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["mastercard_3ds_fail"].Number,
+			ExpirationDate: "01/2020",
+		},
+		Options: &TransactionOptions{
+			ThreeDSecure: &Transaction3DS{
+				Required: true,
+			},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.ThreeDSecureInfo.Enrolled != ThreeDSecureEnrollementYes {
+		t.Fatalf("Card should be enrolled")
+	}
+	if txn.ThreeDSecureInfo.LiabilityShifted {
+		t.Fatalf("Liability should NOT have been shifted")
+	}
+	if txn.ThreeDSecureInfo.Status == ThreeDSecureStatusAuthFailed {
+		t.Fatalf("Status should have been %s, was %s",
+			ThreeDSecureStatusAuthFailed,
+			txn.ThreeDSecureInfo.Status)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Testing().Settle(txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != "settled" {
+		t.Fatal(txn.Status)
+	}
+}

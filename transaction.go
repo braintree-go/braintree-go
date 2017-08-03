@@ -25,6 +25,33 @@ const (
 	TransactionStatusUnrecognized           TransactionStatus = "unrecognized"
 )
 
+type ThreeDSecureStatus string
+
+const (
+	ThreeDSecureStatusUnsupportedCard                      ThreeDSecureStatus = "unsupported_card"
+	ThreeDSecureStatusLookupError                          ThreeDSecureStatus = "lookup_error"
+	ThreeDSecureStatusLookupEnrolled                       ThreeDSecureStatus = "lookup_enrolled"
+	ThreeDSecureStatusLookupNotEnrolled                    ThreeDSecureStatus = "lookup_not_enrolled"
+	ThreeDSecureStatusAuthSuccessfulIssuerNotParticipating ThreeDSecureStatus = "authenticate_successful_issuer_not_participating"
+	ThreeDSecureStatusAuthUnavailable                      ThreeDSecureStatus = "authentication_unavailable"
+	ThreeDSecureStatusAuthSignatureVerificationFailed      ThreeDSecureStatus = "authenticate_signature_verification_failed"
+	ThreeDSecureStatusAuthSuccessful                       ThreeDSecureStatus = "authenticate_successful"
+	ThreeDSecureStatusAuthAttemptSuccessful                ThreeDSecureStatus = "authenticate_attempt_successful"
+	ThreeDSecureStatusAuthFailed                           ThreeDSecureStatus = "authenticate_attempt_successful"
+	ThreeDSecureStatusAuthUnableToAuthenticate             ThreeDSecureStatus = "authenticate_unable_to_authenticate"
+	ThreeDSecureStatusAuthError                            ThreeDSecureStatus = "authenticate_error"
+)
+
+type ThreeDSecureEnrollment string
+
+const (
+	ThreeDSecureEnrollementYes            ThreeDSecureEnrollment = "Y"
+	ThreeDSecureEnrollementNo             ThreeDSecureEnrollment = "N"
+	ThreeDSecureEnrollementUnavailable    ThreeDSecureEnrollment = "U"
+	ThreeDSecureEnrollementBypass         ThreeDSecureEnrollment = "B"
+	ThreeDSecureEnrollementRequestFailure ThreeDSecureEnrollment = "E"
+)
+
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id,omitempty"`
@@ -68,6 +95,7 @@ type Transaction struct {
 	AVSStreetAddressResponseCode AVSResponseCode           `xml:"avs-street-address-response-code,omitempty"`
 	CVVResponseCode              CVVResponseCode           `xml:"cvv-response-code,omitempty"`
 	GatewayRejectionReason       GatewayRejectionReason    `xml:"gateway-rejection-reason,omitempty"`
+	ThreeDSecureInfo             *ThreeDSecureInfo         `xml:"three-d-secure-info,omitempty"`
 }
 
 type TransactionRequest struct {
@@ -143,11 +171,16 @@ type Transactions struct {
 	Transaction []*Transaction `xml:"transaction"`
 }
 
+type Transaction3DS struct {
+	Required bool `xml:"required,omitempty"`
+}
+
 type TransactionOptions struct {
-	SubmitForSettlement              bool `xml:"submit-for-settlement,omitempty"`
-	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
-	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
-	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
+	SubmitForSettlement              bool            `xml:"submit-for-settlement,omitempty"`
+	StoreInVault                     bool            `xml:"store-in-vault,omitempty"`
+	AddBillingAddressToPaymentMethod bool            `xml:"add-billing-address-to-payment-method,omitempty"`
+	StoreShippingAddressInVault      bool            `xml:"store-shipping-address-in-vault,omitempty"`
+	ThreeDSecure                     *Transaction3DS `xml:"three-d-secure,omitempty"`
 }
 
 type TransactionSearchResult struct {
@@ -166,4 +199,11 @@ type RiskData struct {
 type RiskDataRequest struct {
 	CustomerBrowser string `xml:"customer-browser"`
 	CustomerIP      string `xml:"customer-ip"`
+}
+
+type ThreeDSecureInfo struct {
+	Enrolled               ThreeDSecureEnrollment `xml:"enrolled"`
+	LiabilityShiftPossible bool                   `xml:"liability-shift-possible"`
+	LiabilityShifted       bool                   `xml:"liability-shifted"`
+	Status                 ThreeDSecureStatus     `xml:"status"`
 }
