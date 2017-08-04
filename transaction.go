@@ -146,10 +146,18 @@ type Transactions struct {
 }
 
 type TransactionOptions struct {
-	SubmitForSettlement              bool `xml:"submit-for-settlement,omitempty"`
-	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
-	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
-	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
+	SubmitForSettlement              bool                             `xml:"submit-for-settlement,omitempty"`
+	StoreInVault                     bool                             `xml:"store-in-vault,omitempty"`
+	AddBillingAddressToPaymentMethod bool                             `xml:"add-billing-address-to-payment-method,omitempty"`
+	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
+	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
+}
+
+type TransactionOptionsPaypalRequest struct {
+	CustomField       string            `xml:"custom-field,omitempty"`
+	PayeeEmail        string            `xml:"payee-email,omitempty"`
+	Description       string            `xml:"description,omitempty"`
+	SupplementaryData map[string]string `xml:"supplementary-data,omitempty"`
 }
 
 type TransactionSearchResult struct {
