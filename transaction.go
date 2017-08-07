@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"encoding/xml"
 	"time"
 
 	"github.com/lionelbarrow/braintree-go/customfields"
@@ -154,10 +155,38 @@ type TransactionOptions struct {
 }
 
 type TransactionOptionsPaypalRequest struct {
-	CustomField       string            `xml:"custom-field,omitempty"`
-	PayeeEmail        string            `xml:"payee-email,omitempty"`
-	Description       string            `xml:"description,omitempty"`
-	SupplementaryData map[string]string `xml:"supplementary-data,omitempty"`
+	CustomField       string               `xml:"custom-field,omitempty"`
+	PayeeEmail        string               `xml:"payee-email,omitempty"`
+	Description       string               `xml:"description,omitempty"`
+	SupplementaryData supplementaryDataMap `xml:"supplementary-data,omitempty"`
+}
+
+type supplementaryDataMap map[string]string
+
+func (s supplementaryDataMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+
+	tokens := []xml.Token{start}
+
+	for key, value := range s {
+		t := xml.StartElement{Name: xml.Name{"", key}}
+		tokens = append(tokens, t, xml.CharData(value), xml.EndElement{t.Name})
+	}
+
+	tokens = append(tokens, xml.EndElement{start.Name})
+
+	for _, t := range tokens {
+		err := e.EncodeToken(t)
+		if err != nil {
+			return err
+		}
+	}
+	// flush to ensure tokens are written
+	err := e.Flush()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 type TransactionSearchResult struct {
