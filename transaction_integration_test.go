@@ -496,7 +496,10 @@ func TestTransactionPaypalFields(t *testing.T) {
 	const (
 		PayeeEmail  = "payee@payal.com"
 		Description = "One tasty sandwich"
+		CustomField = "foo"
 	)
+	subData := make(map[string]string)
+	subData["faz"] = "bar"
 
 	customer, err := testGateway.Customer().Create(&Customer{})
 	if err != nil {
@@ -525,8 +528,10 @@ func TestTransactionPaypalFields(t *testing.T) {
 		Options: &TransactionOptions{
 			SubmitForSettlement: true,
 			TransactionOptionsPaypalRequest: &TransactionOptionsPaypalRequest{
-				PayeeEmail:  PayeeEmail,
-				Description: Description,
+				PayeeEmail:        PayeeEmail,
+				Description:       Description,
+				CustomField:       CustomField,
+				SupplementaryData: subData,
 			},
 		},
 	}
@@ -548,6 +553,9 @@ func TestTransactionPaypalFields(t *testing.T) {
 	}
 	if tx2.PayPalDetails.Description != Description {
 		t.Fatalf("expected tx2.PaypalDetails.Description to be %s, but got %s", Description, tx2.PayPalDetails.Description)
+	}
+	if tx2.PayPalDetails.CustomField != CustomField {
+		t.Fatalf("expected tx2.PayPalDetails.CustomField to be %s, but got %s", CustomField, tx2.PayPalDetails.CustomField)
 	}
 }
 
