@@ -61,9 +61,9 @@ func TestSearchXMLEncode(t *testing.T) {
 
 	f14 := s.AddMultiField("status")
 	f14.Items = []string{
-		string(TransactionStatusAuthorized),
-		string(TransactionStatusSubmittedForSettlement),
-		string(TransactionStatusSettled),
+		TransactionStatusAuthorized,
+		TransactionStatusSubmittedForSettlement,
+		TransactionStatusSettled,
 	}
 
 	b, err := xml.MarshalIndent(s, "", "  ")
