@@ -1,3 +1,18 @@
+## 0.13.0 (September 1st, 2017)
+
+BACKWARDS INCOMPATIBILITES:
+
+* Nullable struct types were removed, with *NullBool/*NullInt64 replaced with *bool/*int and bool/int.
+
+IMPROVEMENTS:
+
+* `TransactionOptionsPaypalRequest` added to `TransactionOptions`.
+* `TaxAmount` added to `Transaction` and `TransactionRequest`.
+* `TaxExempt` added to `Transaction` and `TransactionRequest`.
+
+BUG FIXES:
+* Minor example typo fix.
+
 ## 0.12.0 (June 27th, 2017)
 
 BACKWARDS INCOMPATIBILITES:
