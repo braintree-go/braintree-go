@@ -155,34 +155,54 @@ type TransactionOptions struct {
 }
 
 type TransactionOptionsPaypalRequest struct {
-	CustomField       string               `xml:"custom-field,omitempty"`
-	PayeeEmail        string               `xml:"payee-email,omitempty"`
-	Description       string               `xml:"description,omitempty"`
-	SupplementaryData supplementaryDataMap `xml:"supplementary-data,omitempty"`
+	CustomField       string
+	PayeeEmail        string
+	Description       string
+	SupplementaryData map[string]string
 }
 
-type supplementaryDataMap map[string]string
+func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	type transactionOptionsPaypalRequest TransactionOptionsPaypalRequest
 
-func (s supplementaryDataMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-
-	tokens := []xml.Token{start}
-
-	for key, value := range s {
-		t := xml.StartElement{Name: xml.Name{Space: "", Local: key}}
-		tokens = append(tokens, t, xml.CharData(value), xml.EndElement{Name: t.Name})
+	if err := e.EncodeToken(start); err != nil {
+		return err
 	}
 
-	tokens = append(tokens, xml.EndElement{Name: start.Name})
-
-	for _, t := range tokens {
-		err := e.EncodeToken(t)
-		if err != nil {
+	if r.CustomField != "" {
+		if err := e.EncodeElement(r.CustomField, xml.StartElement{Name: xml.Name{Local: "custom-field"}}); err != nil {
 			return err
 		}
 	}
-	// flush to ensure tokens are written
-	err := e.Flush()
-	if err != nil {
+	if r.PayeeEmail != "" {
+		if err := e.EncodeElement(r.PayeeEmail, xml.StartElement{Name: xml.Name{Local: "payee-email"}}); err != nil {
+			return err
+		}
+	}
+	if r.Description != "" {
+		if err := e.EncodeElement(r.Description, xml.StartElement{Name: xml.Name{Local: "description"}}); err != nil {
+			return err
+		}
+	}
+	if len(r.SupplementaryData) > 0 {
+		start := xml.StartElement{Name: xml.Name{Local: "supplementary-data"}}
+		if err := e.EncodeToken(start); err != nil {
+			return err
+		}
+		for k, v := range r.SupplementaryData {
+			if err := e.EncodeElement(v, xml.StartElement{Name: xml.Name{Local: k}}); err != nil {
+				return err
+			}
+		}
+		if err := e.EncodeToken(start.End()); err != nil {
+			return err
+		}
+	}
+
+	if err := e.EncodeToken(start.End()); err != nil {
+		return err
+	}
+
+	if err := e.Flush(); err != nil {
 		return err
 	}
 
