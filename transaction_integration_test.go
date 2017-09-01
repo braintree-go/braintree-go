@@ -489,6 +489,76 @@ func TestTransactionDescriptorFields(t *testing.T) {
 	}
 }
 
+// This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
+func TestTransactionPaypalFields(t *testing.T) {
+	t.Parallel()
+
+	const (
+		PayeeEmail  = "payee@payal.com"
+		Description = "One tasty sandwich"
+		CustomField = "foo"
+	)
+	subData := make(map[string]string)
+	subData["faz"] = "bar"
+
+	customer, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	nonce := FakeNoncePayPalFuturePayment
+
+	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: nonce,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paypalAccount, ok := paymentMethod.(*PayPalAccount)
+	if !ok {
+		t.Fatal("Could not assert paypal account")
+	}
+
+	tx := &TransactionRequest{
+		Type:               "sale",
+		Amount:             randomAmount(),
+		PaymentMethodToken: paypalAccount.GetToken(),
+		OrderId:            "123456ABC",
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+			TransactionOptionsPaypalRequest: &TransactionOptionsPaypalRequest{
+				PayeeEmail:        PayeeEmail,
+				Description:       Description,
+				CustomField:       CustomField,
+				SupplementaryData: subData,
+			},
+		},
+	}
+	tx2, err := testGateway.Transaction().Create(tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx2.Type != tx.Type {
+		t.Fatalf("expected Type to be equal, but %s was not %s", tx2.Type, tx.Type)
+	}
+	if tx2.Amount.Cmp(tx.Amount) != 0 {
+		t.Fatalf("expected Amount to be equal, but %s was not %s", tx2.Amount, tx.Amount)
+	}
+	if tx2.Status != TransactionStatusSettling {
+		t.Fatalf("expected tx2.Status to be %s, but got %s", TransactionStatusSettling, tx2.Status)
+	}
+	if tx2.PayPalDetails.PayeeEmail != PayeeEmail {
+		t.Fatalf("expected tx2.PaypalDetails.PayeeEmail to be %s, but got %s", PayeeEmail, tx2.PayPalDetails.PayeeEmail)
+	}
+	if tx2.PayPalDetails.Description != Description {
+		t.Fatalf("expected tx2.PaypalDetails.Description to be %s, but got %s", Description, tx2.PayPalDetails.Description)
+	}
+	if tx2.PayPalDetails.CustomField != CustomField {
+		t.Fatalf("expected tx2.PayPalDetails.CustomField to be %s, but got %s", CustomField, tx2.PayPalDetails.CustomField)
+	}
+}
+
 func TestTransactionRiskDataFields(t *testing.T) {
 	t.Parallel()
 

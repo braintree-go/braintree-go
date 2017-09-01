@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"encoding/xml"
 	"time"
 
 	"github.com/lionelbarrow/braintree-go/customfields"
@@ -146,10 +147,66 @@ type Transactions struct {
 }
 
 type TransactionOptions struct {
-	SubmitForSettlement              bool `xml:"submit-for-settlement,omitempty"`
-	StoreInVault                     bool `xml:"store-in-vault,omitempty"`
-	AddBillingAddressToPaymentMethod bool `xml:"add-billing-address-to-payment-method,omitempty"`
-	StoreShippingAddressInVault      bool `xml:"store-shipping-address-in-vault,omitempty"`
+	SubmitForSettlement              bool                             `xml:"submit-for-settlement,omitempty"`
+	StoreInVault                     bool                             `xml:"store-in-vault,omitempty"`
+	AddBillingAddressToPaymentMethod bool                             `xml:"add-billing-address-to-payment-method,omitempty"`
+	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
+	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
+}
+
+type TransactionOptionsPaypalRequest struct {
+	CustomField       string
+	PayeeEmail        string
+	Description       string
+	SupplementaryData map[string]string
+}
+
+func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	type transactionOptionsPaypalRequest TransactionOptionsPaypalRequest
+
+	if err := e.EncodeToken(start); err != nil {
+		return err
+	}
+
+	if r.CustomField != "" {
+		if err := e.EncodeElement(r.CustomField, xml.StartElement{Name: xml.Name{Local: "custom-field"}}); err != nil {
+			return err
+		}
+	}
+	if r.PayeeEmail != "" {
+		if err := e.EncodeElement(r.PayeeEmail, xml.StartElement{Name: xml.Name{Local: "payee-email"}}); err != nil {
+			return err
+		}
+	}
+	if r.Description != "" {
+		if err := e.EncodeElement(r.Description, xml.StartElement{Name: xml.Name{Local: "description"}}); err != nil {
+			return err
+		}
+	}
+	if len(r.SupplementaryData) > 0 {
+		start := xml.StartElement{Name: xml.Name{Local: "supplementary-data"}}
+		if err := e.EncodeToken(start); err != nil {
+			return err
+		}
+		for k, v := range r.SupplementaryData {
+			if err := e.EncodeElement(v, xml.StartElement{Name: xml.Name{Local: k}}); err != nil {
+				return err
+			}
+		}
+		if err := e.EncodeToken(start.End()); err != nil {
+			return err
+		}
+	}
+
+	if err := e.EncodeToken(start.End()); err != nil {
+		return err
+	}
+
+	if err := e.Flush(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 type TransactionSearchResult struct {
