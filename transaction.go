@@ -98,27 +98,10 @@ type TransactionRequest struct {
 }
 
 type TransactionCloneRequest struct {
-	XMLName            string                    `xml:"transaction-clone"`
-	CustomerID         string                    `xml:"customer-id,omitempty"`
-	Type               string                    `xml:"type,omitempty"`
-	Amount             *Decimal                  `xml:"amount"`
-	OrderId            string                    `xml:"order-id,omitempty"`
-	PaymentMethodToken string                    `xml:"payment-method-token,omitempty"`
-	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
-	MerchantAccountId  string                    `xml:"merchant-account-id,omitempty"`
-	PlanId             string                    `xml:"plan-id,omitempty"`
-	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
-	Customer           *Customer                 `xml:"customer,omitempty"`
-	BillingAddress     *Address                  `xml:"billing,omitempty"`
-	ShippingAddress    *Address                  `xml:"shipping,omitempty"`
-	TaxAmount          *Decimal                  `xml:"tax-amount,omitempty"`
-	TaxExempt          bool                      `xml:"tax-exempt,omitempty"`
-	DeviceData         string                    `xml:"device-data,omitempty"`
-	Options            *TransactionOptions       `xml:"options,omitempty"`
-	ServiceFeeAmount   *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
-	RiskData           *RiskDataRequest          `xml:"risk-data,omitempty"`
-	Descriptor         *Descriptor               `xml:"descriptor,omitempty"`
-	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
+	XMLName string                   `xml:"transaction-clone"`
+	Amount  *Decimal                 `xml:"amount"`
+	Channel string                   `xml:"channel,omitempty"`
+	Options *TransactionCloneOptions `xml:"options,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
@@ -176,6 +159,10 @@ type TransactionOptions struct {
 	AddBillingAddressToPaymentMethod bool                             `xml:"add-billing-address-to-payment-method,omitempty"`
 	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
+}
+
+type TransactionCloneOptions struct {
+	SubmitForSettlement bool `xml:"submit-for-settlement,omitempty"`
 }
 
 type TransactionOptionsPaypalRequest struct {

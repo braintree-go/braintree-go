@@ -54,25 +54,6 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
 	}
 
-	// Clone
-	tx4, err := testGateway.Transaction().Clone(tx2.Id, &TransactionCloneRequest{
-		Amount: ten,
-		Options: &TransactionOptions{
-			SubmitForSettlement: true,
-		},
-	})
-	t.Log(tx4)
-
-	if err != nil {
-		t.Fatal(err)
-	}
-	if x := tx4.Status; x != TransactionStatusSubmittedForSettlement {
-		t.Fatal(x)
-	}
-	if amount := tx4.Amount; amount.Cmp(ten) != 0 {
-		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
-	}
-
 	// Void
 	tx3, err := testGateway.Transaction().Void(tx2.Id)
 
@@ -83,6 +64,66 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	}
 	if x := tx3.Status; x != TransactionStatusVoided {
 		t.Fatal(x)
+	}
+}
+
+func TestTransactionCreateSubmitForSettlementAndClone(t *testing.T) {
+	t.Parallel()
+
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(2000, 2),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+	})
+
+	t.Log(tx)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx.Status != TransactionStatusAuthorized {
+		t.Fatal(tx.Status)
+	}
+
+	// Submit for settlement
+	ten := NewDecimal(1000, 2)
+	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, ten)
+
+	t.Log(tx2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx2.Status; x != TransactionStatusSubmittedForSettlement {
+		t.Fatal(x)
+	}
+	if amount := tx2.Amount; amount.Cmp(ten) != 0 {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
+	}
+
+	// Clone
+	tx3, err := testGateway.Transaction().Clone(tx2.Id, &TransactionCloneRequest{
+		Amount: ten,
+		Options: &TransactionCloneOptions{
+			SubmitForSettlement: true,
+		},
+	})
+	t.Log(tx3)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx3.Status; x != TransactionStatusSubmittedForSettlement {
+		t.Fatal(x)
+	}
+	if amount := tx3.Amount; amount.Cmp(ten) != 0 {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
 	}
 }
 
