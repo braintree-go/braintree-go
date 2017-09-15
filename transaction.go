@@ -57,6 +57,7 @@ type Transaction struct {
 	ProcessorResponseText        string                    `xml:"processor-response-text,omitempty"`
 	ProcessorAuthorizationCode   string                    `xml:"processor-authorization-code,omitempty"`
 	SettlementBatchId            string                    `xml:"settlement-batch-id,omitempty"`
+	EscrowStatus                 EscrowStatus              `xml:"escrow-status,omitempty"`
 	PaymentInstrumentType        string                    `xml:"payment-instrument-type,omitempty"`
 	PayPalDetails                *PayPalDetails            `xml:"paypal,omitempty"`
 	VenmoAccountDetails          *VenmoAccountDetails      `xml:"venmo-account,omitempty"`
@@ -146,7 +147,6 @@ type TransactionCloneRequest struct {
 //   </descriptor>
 //   <recurring type="boolean">true</recurring>
 //   <channel nil="true"></channel>
-//   <escrow-status nil="true"></escrow-status>
 // </transaction>
 
 type Transactions struct {
@@ -158,6 +158,7 @@ type TransactionOptions struct {
 	StoreInVault                     bool                             `xml:"store-in-vault,omitempty"`
 	AddBillingAddressToPaymentMethod bool                             `xml:"add-billing-address-to-payment-method,omitempty"`
 	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
+	HoldInEscrow                     bool                             `xml:"hold-in-escrow,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
 }
 
