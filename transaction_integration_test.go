@@ -1077,7 +1077,6 @@ func TestReleaseFromEscrow(t *testing.T) {
 		t.Fatal(err)
 	}
 	id := txn.Id
-	// _, err = escrow(id)
 	err = settle(t, id)
 	if err != nil {
 		t.Fatal(err)
