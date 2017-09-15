@@ -1004,69 +1004,126 @@ func TestTransactionTaxFieldsNotProvided(t *testing.T) {
 	}
 }
 
-func TestHoldInEscrowOnCreate(t *testing.T) {
-	testSubMerchantAccountId := testSubMerchantAccount()
-	amount := NewDecimal(6200, 2)
+func TestEscrowHoldOnCreate(t *testing.T) {
+	t.Parallel()
+
 	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
-		Amount: amount,
+		Amount: NewDecimal(6200, 2),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
-		MerchantAccountId: testSubMerchantAccountId,
-		ServiceFeeAmount:  amount,
+		MerchantAccountId: testSubMerchantAccount(),
+		ServiceFeeAmount:  NewDecimal(1000, 2),
 		Options: &TransactionOptions{
-			SubmitForSettlement: true,
-			HoldInEscrow:        true,
+			HoldInEscrow: true,
 		},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if txn.EscrowStatus != EscrowStatusHoldPending {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusHoldPending, txn.EscrowStatus)
+		t.Fatalf("Transaction EscrowStatus got %s, want %s", txn.EscrowStatus, EscrowStatusHoldPending)
 	}
 }
 
-func TestHoldInEscrowAfterSale(t *testing.T) {
-	testSubMerchantAccountId := testSubMerchantAccount()
-	amount := NewDecimal(6300, 2)
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+func TestEscrowHoldOnCreateOnMasterMerchant(t *testing.T) {
+	t.Parallel()
+
+	_, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
-		Amount: amount,
+		Amount: NewDecimal(6301, 2),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
-		MerchantAccountId: testSubMerchantAccountId,
-		ServiceFeeAmount:  amount,
+		Options: &TransactionOptions{
+			HoldInEscrow: true,
+		},
+	})
+	if err == nil {
+		t.Fatal("Transaction Sale got no error, want error")
+	}
+	errors := err.(*BraintreeError).Errors.TransactionErrors.For("Base").On("base")
+	if len(errors) != 1 {
+		t.Fatalf("Transaction Sale got %d errors, want 1 error", len(errors))
+	}
+	if g, w := errors[0].Code, "91560"; g != w {
+		t.Errorf("Transaction Sale got error code %s, want %s", g, w)
+	}
+	if g, w := errors[0].Message, "Transaction could not be held in escrow."; g != w {
+		t.Errorf("Transaction Sale got error message %s, want %s", g, w)
+	}
+}
+
+func TestEscrowHoldAfterSale(t *testing.T) {
+	t.Parallel()
+
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(6300, 2),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccount(),
+		ServiceFeeAmount:  NewDecimal(1000, 2),
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	id := txn.Id
-	txn, err = testGateway.Transaction().HoldInEscrow(id)
+	txn, err = testGateway.Transaction().HoldInEscrow(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if txn.EscrowStatus != EscrowStatusHoldPending {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusHoldPending, txn.EscrowStatus)
+		t.Fatalf("Transaction EscrowStatus got %s, want %s", txn.EscrowStatus, EscrowStatusHoldPending)
 	}
 }
 
-func TestReleaseFromEscrow(t *testing.T) {
-	testSubMerchantAccountId := testSubMerchantAccount()
-	amount := NewDecimal(6400, 2)
+func TestEscrowHoldAfterSaleOnMasterMerchant(t *testing.T) {
+	t.Parallel()
+
 	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
-		Amount: amount,
+		Amount: NewDecimal(6301, 2),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
-		MerchantAccountId: testSubMerchantAccountId,
-		ServiceFeeAmount:  amount,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = testGateway.Transaction().HoldInEscrow(txn.Id)
+	if err == nil {
+		t.Fatal("Transaction HoldInEscrow got no error, want error")
+	}
+	errors := err.(*BraintreeError).Errors.TransactionErrors.For("Base").On("base")
+	if len(errors) != 1 {
+		t.Fatalf("Transaction HoldInEscrow got %d errors, want 1 error", len(errors))
+	}
+	if g, w := errors[0].Code, "91560"; g != w {
+		t.Errorf("Transaction HoldInEscrow got error code %s, want %s", g, w)
+	}
+	if g, w := errors[0].Message, "Transaction could not be held in escrow."; g != w {
+		t.Errorf("Transaction HoldInEscrow got error message %s, want %s", g, w)
+	}
+}
+
+func TestEscrowRelease(t *testing.T) {
+	t.Parallel()
+
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(6400, 2),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccount(),
+		ServiceFeeAmount:  NewDecimal(1000, 2),
 		Options: &TransactionOptions{
 			SubmitForSettlement: true,
 			HoldInEscrow:        true,
@@ -1075,32 +1132,63 @@ func TestReleaseFromEscrow(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	id := txn.Id
-	err = settle(t, id)
+	txn, err = testGateway.Transaction().Settle(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	txn, err = testGateway.Transaction().ReleaseFromEscrow(id)
+	txn, err = testGateway.Transaction().ReleaseFromEscrow(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if txn.EscrowStatus != EscrowStatusReleasePending {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusReleasePending, txn.EscrowStatus)
+		t.Fatalf("Transaction EscrowStatus got %s, want %s", txn.EscrowStatus, EscrowStatusReleasePending)
 	}
 }
 
-func TestCancelRelease(t *testing.T) {
-	testSubMerchantAccountId := testSubMerchantAccount()
-	amount := NewDecimal(6500, 2)
+func TestEscrowReleaseNotEscrowed(t *testing.T) {
+	t.Parallel()
+
 	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
-		Amount: amount,
+		Amount: NewDecimal(6401, 2),
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["visa"].Number,
 			ExpirationDate: "05/14",
 		},
-		MerchantAccountId: testSubMerchantAccountId,
-		ServiceFeeAmount:  amount,
+		MerchantAccountId: testSubMerchantAccount(),
+		ServiceFeeAmount:  NewDecimal(1000, 2),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = testGateway.Transaction().ReleaseFromEscrow(txn.Id)
+	if err == nil {
+		t.Fatal("Transaction ReleaseFromEscrow got no error, want error")
+	}
+	errors := err.(*BraintreeError).Errors.TransactionErrors.For("Base").On("base")
+	if len(errors) != 1 {
+		t.Fatalf("Transaction ReleaseFromEscrow got %d errors, want 1 error", len(errors))
+	}
+	if g, w := errors[0].Code, "91561"; g != w {
+		t.Errorf("Transaction ReleaseFromEscrow got error code %s, want %s", g, w)
+	}
+	if g, w := errors[0].Message, "Cannot release a transaction that is not escrowed."; g != w {
+		t.Errorf("Transaction ReleaseFromEscrow got error message %s, want %s", g, w)
+	}
+}
+
+func TestEscrowCancelRelease(t *testing.T) {
+	t.Parallel()
+
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(6500, 2),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccount(),
+		ServiceFeeAmount:  NewDecimal(1000, 2),
 		Options: &TransactionOptions{
 			SubmitForSettlement: true,
 			HoldInEscrow:        true,
@@ -1109,34 +1197,54 @@ func TestCancelRelease(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	id := txn.Id
-	err = settle(t, id)
+	txn, err = testGateway.Transaction().Settle(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	txn, err = testGateway.Transaction().ReleaseFromEscrow(id)
+	txn, err = testGateway.Transaction().ReleaseFromEscrow(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if txn.EscrowStatus != EscrowStatusReleasePending {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusReleasePending, txn.EscrowStatus)
+		t.Fatalf("Transaction EscrowStatus got %s, want %s", txn.EscrowStatus, EscrowStatusReleasePending)
 	}
-	txn, err = testGateway.Transaction().CancelRelease(id)
+	txn, err = testGateway.Transaction().CancelRelease(txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if txn.EscrowStatus != EscrowStatusHeld {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusHeld, txn.EscrowStatus)
+		t.Fatalf("Transaction EscrowStatus got %s, want %s", txn.EscrowStatus, EscrowStatusHeld)
 	}
 }
 
-func settle(t *testing.T, id string) error {
-	txn, err := testGateway.Transaction().Settle(id)
+func TestEscrowCancelReleaseNotPending(t *testing.T) {
+	t.Parallel()
+
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(6501, 2),
+		CreditCard: &CreditCard{
+			Number:         testCreditCards["visa"].Number,
+			ExpirationDate: "05/14",
+		},
+		MerchantAccountId: testSubMerchantAccount(),
+		ServiceFeeAmount:  NewDecimal(1000, 2),
+	})
 	if err != nil {
-		return err
+		t.Fatal(err)
 	}
-	if txn.Status != "submitted_for_settlement" && txn.Status != "settling" && txn.Status != "settled" {
-		t.Fatalf("expected Status to be submitted_for_settlement, settling, or settled, was %s", txn.Status)
+	_, err = testGateway.Transaction().CancelRelease(txn.Id)
+	if err == nil {
+		t.Fatal("Transaction Cancel Release got no error, want error")
 	}
-	return nil
+	errors := err.(*BraintreeError).Errors.TransactionErrors.For("Base").On("base")
+	if len(errors) != 1 {
+		t.Fatalf("Transaction Cancel Release got %d errors, want 1 error", len(errors))
+	}
+	if g, w := errors[0].Code, "91562"; g != w {
+		t.Errorf("Transaction Cancel Release got error code %s, want %s", g, w)
+	}
+	if g, w := errors[0].Message, "Release can only be cancelled if the transaction is submitted for release."; g != w {
+		t.Errorf("Transaction Cancel Release got error message %s, want %s", g, w)
+	}
 }
