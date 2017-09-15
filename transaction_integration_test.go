@@ -1008,7 +1008,7 @@ func TestTransactionTaxFieldsNotProvided(t *testing.T) {
 func TestHoldInEscrowOnCreate(t *testing.T) {
 	testSubMerchantAccountId := getSubMerchantAccount(t)
 	amount := NewDecimal(6200, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -1033,7 +1033,7 @@ func TestHoldInEscrowOnCreate(t *testing.T) {
 func TestHoldInEscrowAfterSale(t *testing.T) {
 	testSubMerchantAccountId := getSubMerchantAccount(t)
 	amount := NewDecimal(6300, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -1059,7 +1059,7 @@ func TestHoldInEscrowAfterSale(t *testing.T) {
 func TestReleaseFromEscrow(t *testing.T) {
 	testSubMerchantAccountId := getSubMerchantAccount(t)
 	amount := NewDecimal(6400, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -1094,7 +1094,7 @@ func TestReleaseFromEscrow(t *testing.T) {
 func TestCancelRelease(t *testing.T) {
 	testSubMerchantAccountId := getSubMerchantAccount(t)
 	amount := NewDecimal(6500, 2)
-	txn, err := testGateway.Transaction().Create(&Transaction{
+	txn, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
