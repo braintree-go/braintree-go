@@ -137,8 +137,8 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	if x := sub1.TrialPeriod; x {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
-	if x := sub1.Status; x != SubscriptionStatusPending {
-		t.Fatalf("got status %#v, want Pending", x)
+	if x := sub1.Status; x != SubscriptionStatusPending && x != SubscriptionStatusActive {
+		t.Fatalf("got status %#v, want Pending or Active (it will be active if todays date matches the billing day of month)", x)
 	}
 	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
 		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
@@ -249,8 +249,8 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	if x := sub1.TrialPeriod; x {
 		t.Fatalf("got trial period %#v, want false", x)
 	}
-	if x := sub1.Status; x != SubscriptionStatusPending {
-		t.Fatalf("got status %#v, want Pending", x)
+	if x := sub1.Status; x != SubscriptionStatusPending && x != SubscriptionStatusActive {
+		t.Fatalf("got status %#v, want Pending or Active (it will be active if todays date matches the billing day of month)", x)
 	}
 	if x := sub1.Descriptor.Name; x != "Company Name*Product 1" {
 		t.Fatalf("got descriptor name %#v, want Company Name*Product 1", x)
