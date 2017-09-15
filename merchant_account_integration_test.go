@@ -73,7 +73,7 @@ func TestMerchantAccountTransaction(t *testing.T) {
 
 	amount := NewDecimal(int64(randomAmount().Scale+500), 2)
 
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -92,7 +92,7 @@ func TestMerchantAccountTransaction(t *testing.T) {
 	if tx.Id == "" {
 		t.Fatal("Received invalid ID on new transaction")
 	}
-	if tx.Status != "authorized" {
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 }

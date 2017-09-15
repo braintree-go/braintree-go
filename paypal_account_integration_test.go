@@ -10,7 +10,7 @@ func TestPayPalAccount(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	nonce := FakeNoncePayPalFuturePayment
+	nonce := FakeNoncePayPalBillingAgreement
 
 	g := testGateway.PayPalAccount()
 	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{

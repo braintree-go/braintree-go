@@ -22,6 +22,17 @@ type PayPalAccounts struct {
 	PayPalAccount []*PayPalAccount `xml:"paypal-account"`
 }
 
+func (pp *PayPalAccounts) PaymentMethods() []PaymentMethod {
+	if pp == nil {
+		return nil
+	}
+	var paymentMethods []PaymentMethod
+	for _, pp := range pp.PayPalAccount {
+		paymentMethods = append(paymentMethods, pp)
+	}
+	return paymentMethods
+}
+
 type PayPalAccountOptions struct {
 	MakeDefault bool `xml:"make-default,omitempty"`
 }

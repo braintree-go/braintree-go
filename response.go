@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/lionelbarrow/braintree-go/xmlnil"
 )
 
 type Response struct {
@@ -52,6 +54,12 @@ func (r *Response) paymentMethod() (PaymentMethod, error) {
 		return r.creditCard()
 	case "paypal-account":
 		return r.paypalAccount()
+	case "venmo-account":
+		return r.venmoAccount()
+	case "android-pay-card":
+		return r.androidPayCard()
+	case "apple-pay-card":
+		return r.applePayCard()
 	}
 
 	return nil, fmt.Errorf("Unrecognized payment method %#v", entityName)
@@ -67,6 +75,30 @@ func (r *Response) creditCard() (*CreditCard, error) {
 
 func (r *Response) paypalAccount() (*PayPalAccount, error) {
 	var b PayPalAccount
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) venmoAccount() (*VenmoAccount, error) {
+	var b VenmoAccount
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) androidPayCard() (*AndroidPayCard, error) {
+	var b AndroidPayCard
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) applePayCard() (*ApplePayCard, error) {
+	var b ApplePayCard
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}
@@ -127,26 +159,31 @@ func (r *Response) unpackBody() error {
 		if err != nil {
 			return err
 		}
-		defer r.Response.Body.Close()
+		defer func() { _ = r.Response.Body.Close() }()
 
 		buf, err := ioutil.ReadAll(b)
 		if err != nil {
 			return err
 		}
-		r.Body = buf
+		strippedBuf, err := xmlnil.StripNilElements(buf)
+		if err == nil {
+			r.Body = strippedBuf
+		} else {
+			r.Body = buf
+		}
 	}
 	return nil
 }
 
 func (r *Response) apiError() error {
 	var b BraintreeError
-	xml.Unmarshal(r.Body, &b)
-	if b.ErrorMessage != "" {
+	err := xml.Unmarshal(r.Body, &b)
+	if err == nil && b.ErrorMessage != "" {
 		b.statusCode = r.StatusCode
 		return &b
 	}
 	if r.StatusCode > 299 {
-		return fmt.Errorf("%s (%d)", http.StatusText(r.StatusCode), r.StatusCode)
+		return httpError(r.StatusCode)
 	}
 	return nil
 }
@@ -154,6 +191,16 @@ func (r *Response) apiError() error {
 type APIError interface {
 	error
 	StatusCode() int
+}
+
+type httpError int
+
+func (e httpError) StatusCode() int {
+	return int(e)
+}
+
+func (e httpError) Error() string {
+	return fmt.Sprintf("%s (%d)", http.StatusText(e.StatusCode()), e.StatusCode())
 }
 
 type invalidResponseError struct {

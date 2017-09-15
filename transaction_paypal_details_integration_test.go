@@ -3,7 +3,7 @@ package braintree
 import "testing"
 
 func TestTransactionPayPalDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNoncePayPalOneTimePayment,
@@ -17,7 +17,7 @@ func TestTransactionPayPalDetails(t *testing.T) {
 	if tx.Id == "" {
 		t.Fatal("Received invalid ID on new transaction")
 	}
-	if tx.Status != "authorized" {
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 
@@ -57,7 +57,7 @@ func TestTransactionPayPalDetails(t *testing.T) {
 }
 
 func TestTransactionWithoutPayPalDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&Transaction{
+	tx, err := testGateway.Transaction().Create(&TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -71,7 +71,7 @@ func TestTransactionWithoutPayPalDetails(t *testing.T) {
 	if tx.Id == "" {
 		t.Fatal("Received invalid ID on new transaction")
 	}
-	if tx.Status != "authorized" {
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 
