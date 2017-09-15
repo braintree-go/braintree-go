@@ -1025,8 +1025,8 @@ func TestHoldInEscrowOnCreate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if txn.EscrowStatus != EscrowStatus.HoldPending {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.HoldPending, txn.EscrowStatus)
+	if txn.EscrowStatus != EscrowStatusHoldPending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusHoldPending, txn.EscrowStatus)
 	}
 }
 
@@ -1051,8 +1051,8 @@ func TestHoldInEscrowAfterSale(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if txn.EscrowStatus != EscrowStatus.HoldPending {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.HoldPending, txn.EscrowStatus)
+	if txn.EscrowStatus != EscrowStatusHoldPending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusHoldPending, txn.EscrowStatus)
 	}
 }
 
@@ -1086,8 +1086,8 @@ func TestReleaseFromEscrow(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if txn.EscrowStatus != EscrowStatus.ReleasePending {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.ReleasePending, txn.EscrowStatus)
+	if txn.EscrowStatus != EscrowStatusReleasePending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusReleasePending, txn.EscrowStatus)
 	}
 }
 
@@ -1120,15 +1120,15 @@ func TestCancelRelease(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if txn.EscrowStatus != EscrowStatus.ReleasePending {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.ReleasePending, txn.EscrowStatus)
+	if txn.EscrowStatus != EscrowStatusReleasePending {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusReleasePending, txn.EscrowStatus)
 	}
 	txn, err = testGateway.Transaction().CancelRelease(id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if txn.EscrowStatus != EscrowStatus.Held {
-		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatus.Held, txn.EscrowStatus)
+	if txn.EscrowStatus != EscrowStatusHeld {
+		t.Fatalf("expected EscrowStatus to be %s, was %s", EscrowStatusHeld, txn.EscrowStatus)
 	}
 }
 
