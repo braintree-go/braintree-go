@@ -8,5 +8,4 @@ const (
 	EscrowStatusReleasePending EscrowStatus = "release_pending"
 	EscrowStatusReleased       EscrowStatus = "released"
 	EscrowStatusRefunded       EscrowStatus = "refunded"
-	EscrowStatusUnrecognized   EscrowStatus = "unrecognized"
 )
