@@ -97,6 +97,30 @@ type TransactionRequest struct {
 	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
 }
 
+type TransactionCloneRequest struct {
+	XMLName            string                    `xml:"transaction-clone"`
+	CustomerID         string                    `xml:"customer-id,omitempty"`
+	Type               string                    `xml:"type,omitempty"`
+	Amount             *Decimal                  `xml:"amount"`
+	OrderId            string                    `xml:"order-id,omitempty"`
+	PaymentMethodToken string                    `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
+	MerchantAccountId  string                    `xml:"merchant-account-id,omitempty"`
+	PlanId             string                    `xml:"plan-id,omitempty"`
+	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
+	Customer           *Customer                 `xml:"customer,omitempty"`
+	BillingAddress     *Address                  `xml:"billing,omitempty"`
+	ShippingAddress    *Address                  `xml:"shipping,omitempty"`
+	TaxAmount          *Decimal                  `xml:"tax-amount,omitempty"`
+	TaxExempt          bool                      `xml:"tax-exempt,omitempty"`
+	DeviceData         string                    `xml:"device-data,omitempty"`
+	Options            *TransactionOptions       `xml:"options,omitempty"`
+	ServiceFeeAmount   *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
+	RiskData           *RiskDataRequest          `xml:"risk-data,omitempty"`
+	Descriptor         *Descriptor               `xml:"descriptor,omitempty"`
+	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
+}
+
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
 //
 // <transaction>

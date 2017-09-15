@@ -54,6 +54,25 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
 	}
 
+	// Clone
+	tx4, err := testGateway.Transaction().Clone(tx2.Id, &TransactionCloneRequest{
+		Amount: ten,
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+		},
+	})
+	t.Log(tx4)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx4.Status; x != TransactionStatusSubmittedForSettlement {
+		t.Fatal(x)
+	}
+	if amount := tx4.Amount; amount.Cmp(ten) != 0 {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
+	}
+
 	// Void
 	tx3, err := testGateway.Transaction().Void(tx2.Id)
 
