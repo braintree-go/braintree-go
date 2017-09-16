@@ -98,13 +98,6 @@ type TransactionRequest struct {
 	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
 }
 
-type TransactionCloneRequest struct {
-	XMLName string                   `xml:"transaction-clone"`
-	Amount  *Decimal                 `xml:"amount"`
-	Channel string                   `xml:"channel,omitempty"`
-	Options *TransactionCloneOptions `xml:"options,omitempty"`
-}
-
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
 //
 // <transaction>
@@ -160,10 +153,6 @@ type TransactionOptions struct {
 	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
 	HoldInEscrow                     bool                             `xml:"hold-in-escrow,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
-}
-
-type TransactionCloneOptions struct {
-	SubmitForSettlement bool `xml:"submit-for-settlement,omitempty"`
 }
 
 type TransactionOptionsPaypalRequest struct {
