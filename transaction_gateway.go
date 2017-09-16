@@ -22,6 +22,19 @@ func (g *TransactionGateway) Create(tx *TransactionRequest) (*Transaction, error
 	return nil, &invalidResponseError{resp}
 }
 
+// Clone clones a transaction.
+func (g *TransactionGateway) Clone(id string, tx *TransactionCloneRequest) (*Transaction, error) {
+	resp, err := g.execute("POST", "transactions/"+id+"/clone", tx)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 201:
+		return resp.transaction()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
 // SubmitForSettlement submits the transaction with the specified id for settlement.
 // If the amount is omitted, the full amount is settled.
 func (g *TransactionGateway) SubmitForSettlement(id string, amount ...*Decimal) (*Transaction, error) {
