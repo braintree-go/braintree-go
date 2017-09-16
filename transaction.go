@@ -66,6 +66,7 @@ type Transaction struct {
 	AdditionalProcessorResponse  string                    `xml:"additional-processor-response,omitempty"`
 	RiskData                     *RiskData                 `xml:"risk-data,omitempty"`
 	Descriptor                   *Descriptor               `xml:"descriptor,omitempty"`
+	Channel                      string                    `xml:"channel,omitempty"`
 	CustomFields                 customfields.CustomFields `xml:"custom-fields,omitempty"`
 	AVSErrorResponseCode         AVSResponseCode           `xml:"avs-error-response-code,omitempty"`
 	AVSPostalCodeResponseCode    AVSResponseCode           `xml:"avs-postal-code-response-code,omitempty"`
@@ -95,6 +96,7 @@ type TransactionRequest struct {
 	ServiceFeeAmount   *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
 	RiskData           *RiskDataRequest          `xml:"risk-data,omitempty"`
 	Descriptor         *Descriptor               `xml:"descriptor,omitempty"`
+	Channel            string                    `xml:"channel,omitempty"`
 	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
 }
 
