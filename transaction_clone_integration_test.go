@@ -20,7 +20,8 @@ func TestTransactionClone(t *testing.T) {
 
 	// Clone
 	tx2, err := testGateway.Transaction().Clone(tx.Id, &TransactionCloneRequest{
-		Amount: NewDecimal(1000, 2),
+		Amount:  NewDecimal(1000, 2),
+		Channel: "ChannelA",
 		Options: &TransactionCloneOptions{
 			SubmitForSettlement: false,
 		},
@@ -34,6 +35,9 @@ func TestTransactionClone(t *testing.T) {
 	}
 	if g, w := tx2.Amount, NewDecimal(1000, 2); g.Cmp(w) != 0 {
 		t.Errorf("Transaction amount got %v, want %v", g, w)
+	}
+	if g, w := tx2.Channel, "ChannelA"; g != w {
+		t.Errorf("Transaction channel got %v, want %v", g, w)
 	}
 	if g, w := tx2.CreditCard.ExpirationMonth, "05"; g != w {
 		t.Errorf("Transaction credit card expiration month got %v, want %v", g, w)
@@ -64,7 +68,8 @@ func TestTransactionCloneSubmittedForSettlement(t *testing.T) {
 
 	// Clone
 	tx2, err := testGateway.Transaction().Clone(tx.Id, &TransactionCloneRequest{
-		Amount: NewDecimal(1000, 2),
+		Amount:  NewDecimal(1000, 2),
+		Channel: "ChannelA",
 		Options: &TransactionCloneOptions{
 			SubmitForSettlement: true,
 		},
@@ -78,6 +83,9 @@ func TestTransactionCloneSubmittedForSettlement(t *testing.T) {
 	}
 	if g, w := tx2.Amount, NewDecimal(1000, 2); g.Cmp(w) != 0 {
 		t.Errorf("Transaction amount got %v, want %v", g, w)
+	}
+	if g, w := tx2.Channel, "ChannelA"; g != w {
+		t.Errorf("Transaction channel got %v, want %v", g, w)
 	}
 	if g, w := tx2.CreditCard.ExpirationMonth, "05"; g != w {
 		t.Errorf("Transaction credit card expiration month got %v, want %v", g, w)

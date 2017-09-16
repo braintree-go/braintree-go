@@ -617,6 +617,7 @@ func TestAllTransactionFields(t *testing.T) {
 		},
 		TaxAmount:  taxAmount,
 		DeviceData: `{"device_session_id": "dsi_1234", "fraud_merchant_id": "fmi_1234", "correlation_id": "ci_1234"}`,
+		Channel:    "ChannelA",
 		Options: &TransactionOptions{
 			SubmitForSettlement:              true,
 			StoreInVault:                     true,
@@ -701,6 +702,9 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 	if tx2.RiskData.Decision != "Approve" {
 		t.Fatalf("expected tx2.RiskData.Decision to be Approve, but got %s", tx2.RiskData.Decision)
+	}
+	if tx2.Channel != "ChannelA" {
+		t.Fatalf("expected tx2.Channel to be ChannelA, but got %s", tx2.Channel)
 	}
 }
 
