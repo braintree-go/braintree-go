@@ -1,3 +1,23 @@
+## 0.14.0 (September 20th, 2017)
+
+IMPROVEMENTS:
+
+* Add support for transaction cloning:
+  * `Clone` function added to transaction gateway.
+  * `TransactionCloneRequest` added.
+  * `TransactionCloneOptions` added.
+* Add support for escrow:
+  * `EscrowStatus` added to `Transaction`.
+  * `HoldInEscrow` added to `TransactionOptions`.
+  * `CancelRelease` function added to transaction gateway.
+  * `ReleaseFromEscrow` function added to transaction gateway.
+  * `HoldInEscrow` function added to transaction gateway.
+* `Channel` added to `Transaction`, `TransactionRequest`, and `TransactionCloneRequest`.
+
+BUG FIXES:
+
+* Test and CI reliability improvements to reduce flakiness of integration tests.
+
 ## 0.13.0 (September 1st, 2017)
 
 BACKWARDS INCOMPATIBILITES:
