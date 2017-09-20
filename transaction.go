@@ -141,7 +141,6 @@ type TransactionRequest struct {
 //     <phone nil="true"></phone>
 //   </descriptor>
 //   <recurring type="boolean">true</recurring>
-//   <channel nil="true"></channel>
 // </transaction>
 
 type Transactions struct {
