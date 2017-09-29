@@ -2,6 +2,8 @@ package braintree
 
 import (
 	"testing"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 func TestCreditCard(t *testing.T) {
@@ -19,7 +21,7 @@ func TestCreditCard(t *testing.T) {
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
-			VerifyCard: true,
+			VerifyCard: testhelpers.BoolPtr(true),
 		},
 	})
 	if err != nil {
@@ -39,7 +41,7 @@ func TestCreditCard(t *testing.T) {
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
-			VerifyCard: true,
+			VerifyCard: testhelpers.BoolPtr(true),
 		},
 	})
 	if err != nil {
@@ -60,6 +62,53 @@ func TestCreditCard(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestCreditCardFailedAutoVerification(t *testing.T) {
+	t.Parallel()
+
+	cust, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	g := testGateway.CreditCard()
+	card, err := g.Create(&CreditCard{
+		CustomerId:         cust.Id,
+		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+	})
+	if err == nil {
+		t.Fatal("Got no error, want error")
+	}
+	if g, w := err.(*BraintreeError).ErrorMessage, "Do Not Honor"; g != w {
+		t.Fatalf("Got error %q, want error %q", g, w)
+	}
+
+	t.Logf("%#v\n", err)
+	t.Logf("%#v\n", card)
+}
+
+func TestCreditCardForceNotVerified(t *testing.T) {
+	t.Parallel()
+
+	cust, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	g := testGateway.CreditCard()
+	card, err := g.Create(&CreditCard{
+		CustomerId:         cust.Id,
+		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+		Options: &CreditCardOptions{
+			VerifyCard: testhelpers.BoolPtr(false),
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%#v\n", card)
 }
 
 func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
@@ -116,7 +165,7 @@ func TestFindCreditCard(t *testing.T) {
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
-			VerifyCard: true,
+			VerifyCard: testhelpers.BoolPtr(true),
 		},
 	})
 

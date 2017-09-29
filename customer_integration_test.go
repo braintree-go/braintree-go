@@ -25,7 +25,7 @@ func TestCustomer(t *testing.T) {
 			ExpirationDate: "05/14",
 			CVV:            "200",
 			Options: &CreditCardOptions{
-				VerifyCard: true,
+				VerifyCard: testhelpers.BoolPtr(true),
 			},
 		},
 	}

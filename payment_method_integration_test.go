@@ -5,6 +5,8 @@ import (
 	"math/rand"
 	"testing"
 	"time"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 func TestPaymentMethod(t *testing.T) {
@@ -100,4 +102,51 @@ func TestPaymentMethod(t *testing.T) {
 	if err := testGateway.Customer().Delete(cust.Id); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestPaymentMethodFailedAutoVerification(t *testing.T) {
+	t.Parallel()
+
+	cust, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	g := testGateway.PaymentMethod()
+	pm, err := g.Create(&PaymentMethodRequest{
+		CustomerId:         cust.Id,
+		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+	})
+	if err == nil {
+		t.Fatal("Got no error, want error")
+	}
+	if g, w := err.(*BraintreeError).ErrorMessage, "Do Not Honor"; g != w {
+		t.Fatalf("Got error %q, want error %q", g, w)
+	}
+
+	t.Logf("%#v\n", err)
+	t.Logf("%#v\n", pm)
+}
+
+func TestPaymentMethodForceNotVerified(t *testing.T) {
+	t.Parallel()
+
+	cust, err := testGateway.Customer().Create(&Customer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	g := testGateway.PaymentMethod()
+	pm, err := g.Create(&PaymentMethodRequest{
+		CustomerId:         cust.Id,
+		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+		Options: &PaymentMethodRequestOptions{
+			VerifyCard: testhelpers.BoolPtr(false),
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%#v\n", pm)
 }

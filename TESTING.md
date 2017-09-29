@@ -23,6 +23,10 @@ When using Braintree Go in a production environment, we recommend that you conti
 
 #### Sandbox settings
 
+In your sandbox account go to `Settings > Processing` and enable the following
+
+  1. `Card Verification`
+
 In your sandbox account go to `Settings > Processing > CVV` and enable the following
 
   1. `CVV does not match (when provided) (N)` to `For Any Transaction`

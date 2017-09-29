@@ -57,7 +57,7 @@ func (cards *CreditCards) PaymentMethods() []PaymentMethod {
 }
 
 type CreditCardOptions struct {
-	VerifyCard                    bool   `xml:"verify-card,omitempty"`
+	VerifyCard                    *bool  `xml:"verify-card,omitempty"`
 	VenmoSDKSession               string `xml:"venmo-sdk-session,omitempty"`
 	MakeDefault                   bool   `xml:"make-default,omitempty"`
 	FailOnDuplicatePaymentMethod  bool   `xml:"fail-on-duplicate-payment-method,omitempty"`
