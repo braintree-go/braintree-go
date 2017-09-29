@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
@@ -104,8 +106,8 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
-		BillingDayOfMonth:     intPtr(15),
-		NumberOfBillingCycles: intPtr(2),
+		BillingDayOfMonth:     testhelpers.IntPtr(15),
+		NumberOfBillingCycles: testhelpers.IntPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -216,8 +218,8 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
-		BillingDayOfMonth:  intPtr(15),
-		NeverExpires:       boolPtr(true),
+		BillingDayOfMonth:  testhelpers.IntPtr(15),
+		NeverExpires:       testhelpers.BoolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -330,7 +332,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
 		FirstBillingDate:      firstBillingDate,
-		NumberOfBillingCycles: intPtr(2),
+		NumberOfBillingCycles: testhelpers.IntPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -448,7 +450,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
 		FirstBillingDate:   firstBillingDate,
-		NeverExpires:       boolPtr(true),
+		NeverExpires:       testhelpers.BoolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -563,10 +565,10 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
-		TrialPeriod:           boolPtr(true),
+		TrialPeriod:           testhelpers.BoolPtr(true),
 		TrialDuration:         "7",
 		TrialDurationUnit:     SubscriptionTrialDurationUnitDay,
-		NumberOfBillingCycles: intPtr(2),
+		NumberOfBillingCycles: testhelpers.IntPtr(2),
 		Price: NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
@@ -684,10 +686,10 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
-		TrialPeriod:        boolPtr(true),
+		TrialPeriod:        testhelpers.BoolPtr(true),
 		TrialDuration:      "7",
 		TrialDurationUnit:  SubscriptionTrialDurationUnitDay,
-		NeverExpires:       boolPtr(true),
+		NeverExpires:       testhelpers.BoolPtr(true),
 		Price:              NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
