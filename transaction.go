@@ -7,29 +7,27 @@ import (
 	"github.com/lionelbarrow/braintree-go/customfields"
 )
 
-type TransactionStatus string
-
 const (
-	TransactionStatusAuthorizationExpired   TransactionStatus = "authorization_expired"
-	TransactionStatusAuthorizing            TransactionStatus = "authorizing"
-	TransactionStatusAuthorized             TransactionStatus = "authorized"
-	TransactionStatusGatewayRejected        TransactionStatus = "gateway_rejected"
-	TransactionStatusFailed                 TransactionStatus = "failed"
-	TransactionStatusProcessorDeclined      TransactionStatus = "processor_declined"
-	TransactionStatusSettled                TransactionStatus = "settled"
-	TransactionStatusSettlementConfirmed    TransactionStatus = "settlement_confirmed"
-	TransactionStatusSettlementDeclined     TransactionStatus = "settlement_declined"
-	TransactionStatusSettlementPending      TransactionStatus = "settlement_pending"
-	TransactionStatusSettling               TransactionStatus = "settling"
-	TransactionStatusSubmittedForSettlement TransactionStatus = "submitted_for_settlement"
-	TransactionStatusVoided                 TransactionStatus = "voided"
-	TransactionStatusUnrecognized           TransactionStatus = "unrecognized"
+	TransactionStatusAuthorizationExpired   = "authorization_expired"
+	TransactionStatusAuthorizing            = "authorizing"
+	TransactionStatusAuthorized             = "authorized"
+	TransactionStatusGatewayRejected        = "gateway_rejected"
+	TransactionStatusFailed                 = "failed"
+	TransactionStatusProcessorDeclined      = "processor_declined"
+	TransactionStatusSettled                = "settled"
+	TransactionStatusSettlementConfirmed    = "settlement_confirmed"
+	TransactionStatusSettlementDeclined     = "settlement_declined"
+	TransactionStatusSettlementPending      = "settlement_pending"
+	TransactionStatusSettling               = "settling"
+	TransactionStatusSubmittedForSettlement = "submitted_for_settlement"
+	TransactionStatusVoided                 = "voided"
+	TransactionStatusUnrecognized           = "unrecognized"
 )
 
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id,omitempty"`
-	Status                       TransactionStatus         `xml:"status,omitempty"`
+	Status                       string                    `xml:"status,omitempty"`
 	Type                         string                    `xml:"type,omitempty"`
 	CurrencyISOCode              string                    `xml:"currency-iso-code,omitempty"`
 	Amount                       *Decimal                  `xml:"amount"`
