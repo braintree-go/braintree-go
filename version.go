@@ -1,3 +1,3 @@
 package braintree
 
-const LibraryVersion = "0.14.0"
+const LibraryVersion = "0.15.0"
