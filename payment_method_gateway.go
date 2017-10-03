@@ -17,7 +17,7 @@ type PaymentMethodRequest struct {
 type PaymentMethodRequestOptions struct {
 	MakeDefault                   bool   `xml:"make-default,omitempty"`
 	FailOnDuplicatePaymentMethod  bool   `xml:"fail-on-duplicate-payment-method,omitempty"`
-	VerifyCard                    bool   `xml:"verify-card,omitempty"`
+	VerifyCard                    *bool  `xml:"verify-card,omitempty"`
 	VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
 }
 

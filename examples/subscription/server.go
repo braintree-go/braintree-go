@@ -70,7 +70,7 @@ func main() {
 			// The nonce from the clinet side
 			PaymentMethodNonce: paymentMethodNonce,
 			Options: &braintree.CreditCardOptions{
-				VerifyCard: true,
+				VerifyCard: func(b bool) *bool { return &b }(true),
 			},
 		})
 		if err != nil {
