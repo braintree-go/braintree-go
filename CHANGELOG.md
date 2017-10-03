@@ -1,3 +1,13 @@
+## 0.15.0 (October 3rd, 2017)
+
+BACKWARDS INCOMPATIBILITES:
+
+* Change `VerifyCard` on `CreditCardOptions` and `PaymentMethodRequestOptions` from `bool` to `*bool`.
+
+BUG FIXES:
+
+* Setting `false` for the `VerifyCard` field on `CreditCardOptions` and `PaymentMethodRequestOptions` did not send a value to Braintree and would not turn off verification if verification was enabled account wide.
+
 ## 0.14.0 (September 20th, 2017)
 
 IMPROVEMENTS:
