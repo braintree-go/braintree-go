@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/lionelbarrow/braintree-go/xmlnil"
 )
@@ -155,13 +156,20 @@ func (r *Response) discounts() ([]Discount, error) {
 
 func (r *Response) unpackBody() error {
 	if len(r.Body) == 0 {
-		b, err := gzip.NewReader(r.Response.Body)
-		if err != nil {
-			return err
+		reader := r.Response.Body
+
+		contentEncoding := strings.ToLower(r.Response.Header.Get("Content-Encoding"))
+		if contentEncoding == "gzip" {
+			gzipReader, err := gzip.NewReader(reader)
+			if err != nil {
+				return err
+			}
+			reader = gzipReader
 		}
+
 		defer func() { _ = r.Response.Body.Close() }()
 
-		buf, err := ioutil.ReadAll(b)
+		buf, err := ioutil.ReadAll(reader)
 		if err != nil {
 			return err
 		}
