@@ -8,6 +8,9 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"golang.org/x/net/context"
+	"golang.org/x/net/context/ctxhttp"
 )
 
 type apiVersion int
@@ -63,10 +66,20 @@ func (g *Braintree) MerchantURL() string {
 }
 
 func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
-	return g.executeVersion(method, path, xmlObj, apiVersion3)
+	return g.executeContext(context.Background(), method, path, xmlObj)
+}
+
+func (g *Braintree) executeContext(ctx context.Context, method, path string, xmlObj interface{}) (*Response, error) {
+	// TODO(jmhodges): rename to execute when all gateways have ctx equivalents
+	return g.executeVersionContext(ctx, method, path, xmlObj, apiVersion3)
 }
 
 func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
+	return g.executeVersionContext(context.Background(), method, path, xmlObj, v)
+}
+
+func (g *Braintree) executeVersionContext(ctx context.Context, method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
+	// TODO(jmhodges): rename to executeVersion when all gateways have ctx equivalents
 	var buf bytes.Buffer
 	if xmlObj != nil {
 		xmlBody, err := xml.Marshal(xmlObj)
@@ -102,7 +115,7 @@ func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v ap
 		httpClient = defaultClient
 	}
 
-	resp, err := httpClient.Do(req)
+	resp, err := ctxhttp.Do(ctx, httpClient, req)
 	if err != nil {
 		return nil, err
 	}

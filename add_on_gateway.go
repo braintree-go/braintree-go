@@ -1,11 +1,17 @@
 package braintree
 
+import "golang.org/x/net/context"
+
 type AddOnGateway struct {
 	*Braintree
 }
 
 func (g *AddOnGateway) All() ([]AddOn, error) {
-	resp, err := g.execute("GET", "add_ons", nil)
+	return g.AllContext(context.Background())
+}
+
+func (g *AddOnGateway) AllContext(ctx context.Context) ([]AddOn, error) {
+	resp, err := g.executeContext(ctx, "GET", "add_ons", nil)
 	if err != nil {
 		return nil, err
 	}

@@ -28,4 +28,3 @@ jobs:
 
   allow_failures:
     - stage: analysis-is-backward-compatible-with-master
-
