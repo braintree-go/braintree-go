@@ -1,7 +1,9 @@
 package braintree
 
 import (
+	"flag"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -69,4 +71,13 @@ func testSubMerchantAccount() string {
 	}
 
 	return merchantAccount.Id
+}
+
+func init() {
+	logEnabled := flag.Bool("log", false, "enables logging")
+	flag.Parse()
+
+	if *logEnabled {
+		testGateway.Logger = log.New(os.Stderr, "", 0)
+	}
 }
