@@ -1,9 +1,14 @@
 package braintree
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestTransactionApplePayDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceApplePayVisa,
@@ -51,7 +56,9 @@ func TestTransactionApplePayDetails(t *testing.T) {
 }
 
 func TestTransactionWithoutApplePayDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceTransactable,

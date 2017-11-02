@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"net/http"
 	"reflect"
 	"testing"
@@ -11,6 +12,8 @@ import (
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestCustomer(t *testing.T) {
 	t.Parallel()
+
+	ctx := context.Background()
 
 	oc := &Customer{
 		FirstName: "Lionel",
@@ -31,7 +34,7 @@ func TestCustomer(t *testing.T) {
 	}
 
 	// Create with errors
-	_, err := testGateway.Customer().Create(oc)
+	_, err := testGateway.Customer().Create(ctx, oc)
 	if err == nil {
 		t.Fatal("Did not receive error when creating invalid customer")
 	}
@@ -39,7 +42,7 @@ func TestCustomer(t *testing.T) {
 	// Create
 	oc.CreditCard.CVV = ""
 	oc.CreditCard.Options = nil
-	customer, err := testGateway.Customer().Create(oc)
+	customer, err := testGateway.Customer().Create(ctx, oc)
 
 	t.Log(customer)
 
@@ -59,7 +62,7 @@ func TestCustomer(t *testing.T) {
 	// Update
 	unique := testhelpers.RandomString()
 	newFirstName := "John" + unique
-	c2, err := testGateway.Customer().Update(&Customer{
+	c2, err := testGateway.Customer().Update(ctx, &Customer{
 		Id:        customer.Id,
 		FirstName: newFirstName,
 	})
@@ -74,7 +77,7 @@ func TestCustomer(t *testing.T) {
 	}
 
 	// Find
-	c3, err := testGateway.Customer().Find(customer.Id)
+	c3, err := testGateway.Customer().Find(ctx, customer.Id)
 
 	t.Log(c3)
 
@@ -89,7 +92,7 @@ func TestCustomer(t *testing.T) {
 	query := new(SearchQuery)
 	f := query.AddTextField("first-name")
 	f.Is = newFirstName
-	searchResult, err := testGateway.Customer().Search(query)
+	searchResult, err := testGateway.Customer().Search(ctx, query)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -101,13 +104,13 @@ func TestCustomer(t *testing.T) {
 	}
 
 	// Delete
-	err = testGateway.Customer().Delete(customer.Id)
+	err = testGateway.Customer().Delete(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Test customer 404
-	c4, err := testGateway.Customer().Find(customer.Id)
+	c4, err := testGateway.Customer().Find(ctx, customer.Id)
 	if err == nil {
 		t.Fatal("should return 404")
 	}
@@ -125,6 +128,8 @@ func TestCustomer(t *testing.T) {
 func TestCustomerWithCustomFields(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	customFields := map[string]string{
 		"custom_field_1": "custom value",
 	}
@@ -133,7 +138,7 @@ func TestCustomerWithCustomFields(t *testing.T) {
 		CustomFields: customFields,
 	}
 
-	customer, err := testGateway.Customer().Create(c)
+	customer, err := testGateway.Customer().Create(ctx, c)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -142,7 +147,7 @@ func TestCustomerWithCustomFields(t *testing.T) {
 		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
 	}
 
-	customer, err = testGateway.Customer().Find(customer.Id)
+	customer, err = testGateway.Customer().Find(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -155,19 +160,21 @@ func TestCustomerWithCustomFields(t *testing.T) {
 func TestCustomerPaymentMethods(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	paymentMethod1, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod1, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod2, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod2, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -180,7 +187,7 @@ func TestCustomerPaymentMethods(t *testing.T) {
 		paymentMethod1,
 	}
 
-	customerFound, err := testGateway.Customer().Find(customer.Id)
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -193,19 +200,21 @@ func TestCustomerPaymentMethods(t *testing.T) {
 func TestCustomerDefaultPaymentMethod(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	defaultPaymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	defaultPaymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	_, err = testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
 	})
@@ -213,7 +222,7 @@ func TestCustomerDefaultPaymentMethod(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	customerFound, err := testGateway.Customer().Find(customer.Id)
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -226,26 +235,28 @@ func TestCustomerDefaultPaymentMethod(t *testing.T) {
 func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	_, err = testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	_, err = testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod2, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod2, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paypalAccount, err := testGateway.PayPalAccount().Update(&PayPalAccount{
+	paypalAccount, err := testGateway.PayPalAccount().Update(ctx, &PayPalAccount{
 		Token: paymentMethod2.GetToken(),
 		Options: &PayPalAccountOptions{
 			MakeDefault: true,
@@ -255,7 +266,7 @@ func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	customerFound, err := testGateway.Customer().Find(customer.Id)
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -268,12 +279,14 @@ func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
 func TestCustomerPaymentMethodNonce(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{PaymentMethodNonce: FakeNonceTransactable})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{PaymentMethodNonce: FakeNonceTransactable})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	customerFound, err := testGateway.Customer().Find(customer.Id)
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

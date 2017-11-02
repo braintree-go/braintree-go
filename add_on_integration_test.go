@@ -1,13 +1,16 @@
 package braintree
 
 import (
+	"context"
 	"testing"
 )
 
 func TestAddOn(t *testing.T) {
 	t.Parallel()
 
-	addOns, err := testGateway.AddOn().All()
+	ctx := context.Background()
+
+	addOns, err := testGateway.AddOn().All(ctx)
 
 	if err != nil {
 		t.Fatal(err)

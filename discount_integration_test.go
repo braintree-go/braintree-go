@@ -1,13 +1,16 @@
 package braintree
 
 import (
+	"context"
 	"testing"
 )
 
 func TestDiscounts(t *testing.T) {
 	t.Parallel()
 
-	discounts, err := testGateway.Discount().All()
+	ctx := context.Background()
+
+	discounts, err := testGateway.Discount().All(ctx)
 
 	if err != nil {
 		t.Error(err)

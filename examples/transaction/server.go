@@ -16,6 +16,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"html/template"
 	"log"
@@ -39,6 +40,8 @@ func showForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func createTransaction(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
 	bt := braintree.New(
 		braintree.Sandbox,
 		os.Getenv("BRAINTREE_MERCH_ID"),
@@ -57,7 +60,7 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	_, err := bt.Transaction().Create(tx)
+	_, err := bt.Transaction().Create(ctx, tx)
 
 	if err == nil {
 		fmt.Fprintf(w, "<h1>Success!</h1>")

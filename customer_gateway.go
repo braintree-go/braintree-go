@@ -1,6 +1,9 @@
 package braintree
 
-import "encoding/xml"
+import (
+	"context"
+	"encoding/xml"
+)
 
 type CustomerGateway struct {
 	*Braintree
@@ -8,8 +11,8 @@ type CustomerGateway struct {
 
 // Create creates a new customer from the passed in customer object.
 // If no Id is set, Braintree will assign one.
-func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
-	resp, err := g.execute("POST", "customers", c)
+func (g *CustomerGateway) Create(ctx context.Context, c *Customer) (*Customer, error) {
+	resp, err := g.execute(ctx, "POST", "customers", c)
 	if err != nil {
 		return nil, err
 	}
@@ -22,8 +25,8 @@ func (g *CustomerGateway) Create(c *Customer) (*Customer, error) {
 
 // Update updates any field that is set in the passed customer object.
 // The Id field is mandatory.
-func (g *CustomerGateway) Update(c *Customer) (*Customer, error) {
-	resp, err := g.execute("PUT", "customers/"+c.Id, c)
+func (g *CustomerGateway) Update(ctx context.Context, c *Customer) (*Customer, error) {
+	resp, err := g.execute(ctx, "PUT", "customers/"+c.Id, c)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +38,8 @@ func (g *CustomerGateway) Update(c *Customer) (*Customer, error) {
 }
 
 // Find finds the customer with the given id.
-func (g *CustomerGateway) Find(id string) (*Customer, error) {
-	resp, err := g.execute("GET", "customers/"+id, nil)
+func (g *CustomerGateway) Find(ctx context.Context, id string) (*Customer, error) {
+	resp, err := g.execute(ctx, "GET", "customers/"+id, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +50,8 @@ func (g *CustomerGateway) Find(id string) (*Customer, error) {
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *CustomerGateway) Search(query *SearchQuery) (*CustomerSearchResult, error) {
-	resp, err := g.execute("POST", "customers/advanced_search", query)
+func (g *CustomerGateway) Search(ctx context.Context, query *SearchQuery) (*CustomerSearchResult, error) {
+	resp, err := g.execute(ctx, "POST", "customers/advanced_search", query)
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +64,8 @@ func (g *CustomerGateway) Search(query *SearchQuery) (*CustomerSearchResult, err
 }
 
 // Delete deletes the customer with the given id.
-func (g *CustomerGateway) Delete(id string) error {
-	resp, err := g.execute("DELETE", "customers/"+id, nil)
+func (g *CustomerGateway) Delete(ctx context.Context, id string) error {
+	resp, err := g.execute(ctx, "DELETE", "customers/"+id, nil)
 	if err != nil {
 		return err
 	}

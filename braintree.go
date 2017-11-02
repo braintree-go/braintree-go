@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"bytes"
+	"context"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -62,11 +63,11 @@ func (g *Braintree) MerchantURL() string {
 	return g.Environment().BaseURL() + "/merchants/" + g.MerchantID()
 }
 
-func (g *Braintree) execute(method, path string, xmlObj interface{}) (*Response, error) {
-	return g.executeVersion(method, path, xmlObj, apiVersion3)
+func (g *Braintree) execute(ctx context.Context, method, path string, xmlObj interface{}) (*Response, error) {
+	return g.executeVersion(ctx, method, path, xmlObj, apiVersion3)
 }
 
-func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
+func (g *Braintree) executeVersion(ctx context.Context, method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
 	var buf bytes.Buffer
 	if xmlObj != nil {
 		xmlBody, err := xml.Marshal(xmlObj)
@@ -89,6 +90,8 @@ func (g *Braintree) executeVersion(method, path string, xmlObj interface{}, v ap
 	if err != nil {
 		return nil, err
 	}
+
+	req = req.WithContext(ctx)
 
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("Accept", "application/xml")

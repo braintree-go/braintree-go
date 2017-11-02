@@ -1,11 +1,16 @@
 package braintree
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestAddress(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{
 		FirstName: "Jenna",
 		LastName:  "Smith",
 	})
@@ -32,7 +37,7 @@ func TestAddress(t *testing.T) {
 		CountryName:        "United States of America",
 	}
 
-	addr2, err := testGateway.Address().Create(addr)
+	addr2, err := testGateway.Address().Create(ctx, addr)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,7 +94,7 @@ func TestAddress(t *testing.T) {
 		t.Fatal("generated updated at is empty")
 	}
 
-	err = testGateway.Address().Delete(customer.Id, addr2.Id)
+	err = testGateway.Address().Delete(ctx, customer.Id, addr2.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"encoding/xml"
 	"testing"
 
@@ -11,6 +12,8 @@ var acctId string
 
 func TestMerchantAccountCreate(t *testing.T) {
 	t.Parallel()
+
+	ctx := context.Background()
 
 	acctId = testhelpers.RandomString()
 	acct := MerchantAccount{
@@ -40,7 +43,7 @@ func TestMerchantAccountCreate(t *testing.T) {
 	x, _ := xml.Marshal(&acct)
 	t.Log(string(x))
 
-	merchantAccount, err := testGateway.MerchantAccount().Create(&acct)
+	merchantAccount, err := testGateway.MerchantAccount().Create(ctx, &acct)
 
 	t.Log(merchantAccount)
 
@@ -52,7 +55,7 @@ func TestMerchantAccountCreate(t *testing.T) {
 		t.Fatal("invalid merchant account id")
 	}
 
-	ma2, err := testGateway.MerchantAccount().Find(merchantAccount.Id)
+	ma2, err := testGateway.MerchantAccount().Find(ctx, merchantAccount.Id)
 
 	t.Log(ma2)
 
@@ -67,13 +70,15 @@ func TestMerchantAccountCreate(t *testing.T) {
 }
 
 func TestMerchantAccountTransaction(t *testing.T) {
+	ctx := context.Background()
+
 	if acctId == "" {
 		TestMerchantAccountCreate(t)
 	}
 
 	amount := NewDecimal(int64(randomAmount().Scale+500), 2)
 
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{

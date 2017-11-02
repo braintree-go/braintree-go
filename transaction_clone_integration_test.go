@@ -1,11 +1,16 @@
 package braintree
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestTransactionClone(t *testing.T) {
 	t.Parallel()
 
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
@@ -19,7 +24,7 @@ func TestTransactionClone(t *testing.T) {
 	}
 
 	// Clone
-	tx2, err := testGateway.Transaction().Clone(tx.Id, &TransactionCloneRequest{
+	tx2, err := testGateway.Transaction().Clone(ctx, tx.Id, &TransactionCloneRequest{
 		Amount:  NewDecimal(1000, 2),
 		Channel: "ChannelA",
 		Options: &TransactionCloneOptions{
@@ -53,7 +58,9 @@ func TestTransactionClone(t *testing.T) {
 func TestTransactionCloneSubmittedForSettlement(t *testing.T) {
 	t.Parallel()
 
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
@@ -67,7 +74,7 @@ func TestTransactionCloneSubmittedForSettlement(t *testing.T) {
 	}
 
 	// Clone
-	tx2, err := testGateway.Transaction().Clone(tx.Id, &TransactionCloneRequest{
+	tx2, err := testGateway.Transaction().Clone(ctx, tx.Id, &TransactionCloneRequest{
 		Amount:  NewDecimal(1000, 2),
 		Channel: "ChannelA",
 		Options: &TransactionCloneOptions{

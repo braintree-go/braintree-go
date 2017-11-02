@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"reflect"
 	"testing"
 )
@@ -8,14 +9,16 @@ import (
 func TestCustomerAndroidPayCard(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	nonce := FakeNonceAndroidPay
 
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: nonce,
 	})
@@ -24,7 +27,7 @@ func TestCustomerAndroidPayCard(t *testing.T) {
 	}
 	androidPayCard := paymentMethod.(*AndroidPayCard)
 
-	customerFound, err := testGateway.Customer().Find(customer.Id)
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

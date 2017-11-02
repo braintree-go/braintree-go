@@ -1,11 +1,16 @@
 package braintree
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestSettleTransaction(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -17,20 +22,20 @@ func TestSettleTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	prodGateway := New(Production, "my_merchant_id", "my_public_key", "my_private_key")
 
-	_, err = prodGateway.Testing().Settle(txn.Id)
+	_, err = prodGateway.Testing().Settle(ctx, txn.Id)
 	if err.Error() != "Operation not allowed in production environment" {
 		t.Log(testGateway.Environment())
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -41,7 +46,9 @@ func TestSettleTransaction(t *testing.T) {
 }
 
 func TestSettlementConfirmTransaction(t *testing.T) {
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -53,20 +60,20 @@ func TestSettlementConfirmTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	prodGateway := New(Production, "my_merchant_id", "my_public_key", "my_private_key")
 
-	_, err = prodGateway.Testing().SettlementConfirm(txn.Id)
+	_, err = prodGateway.Testing().SettlementConfirm(ctx, txn.Id)
 	if err.Error() != "Operation not allowed in production environment" {
 		t.Log(prodGateway.Environment())
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().SettlementConfirm(txn.Id)
+	txn, err = testGateway.Testing().SettlementConfirm(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,7 +84,9 @@ func TestSettlementConfirmTransaction(t *testing.T) {
 }
 
 func TestSettlementDeclinedTransaction(t *testing.T) {
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -89,20 +98,20 @@ func TestSettlementDeclinedTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	prodGateway := New(Production, "my_merchant_id", "my_public_key", "my_private_key")
 
-	_, err = prodGateway.Testing().SettlementDecline(txn.Id)
+	_, err = prodGateway.Testing().SettlementDecline(ctx, txn.Id)
 	if err.Error() != "Operation not allowed in production environment" {
 		t.Log(prodGateway.Environment())
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().SettlementDecline(txn.Id)
+	txn, err = testGateway.Testing().SettlementDecline(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -113,7 +122,9 @@ func TestSettlementDeclinedTransaction(t *testing.T) {
 }
 
 func TestSettlementPendingTransaction(t *testing.T) {
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -125,20 +136,20 @@ func TestSettlementPendingTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	prodGateway := New(Production, "my_merchant_id", "my_public_key", "my_private_key")
 
-	_, err = prodGateway.Testing().SettlementPending(txn.Id)
+	_, err = prodGateway.Testing().SettlementPending(ctx, txn.Id)
 	if err.Error() != "Operation not allowed in production environment" {
 		t.Log(prodGateway.Environment())
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().SettlementPending(txn.Id)
+	txn, err = testGateway.Testing().SettlementPending(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -151,8 +162,10 @@ func TestSettlementPendingTransaction(t *testing.T) {
 func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	amount := NewDecimal(10000, 2)
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -173,12 +186,12 @@ func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 			"Visa", txn.CreditCard.CardType)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
