@@ -1,3 +1,18 @@
+## 0.16.0 (November 11th, 2017)
+
+BACKWARDS INCOMPATIBILITES:
+
+* Support for Go1.6 has been dropped. Support from this version onwards is Go1.7+.
+* Add `context.Context` as the first parameter to call functions that make an outgoing remote call.
+
+IMPROVEMENTS:
+
+* Add `go test` `-log` flag that logs requests and responses to stderr.
+
+BUG FIXES:
+
+* Responses not GZIP encoded were still attempted to be GZIP decoded.
+
 ## 0.15.0 (October 3rd, 2017)
 
 BACKWARDS INCOMPATIBILITES:
