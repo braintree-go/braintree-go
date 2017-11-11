@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -65,7 +66,7 @@ func testSubMerchantAccount() string {
 		},
 	}
 
-	merchantAccount, err := testGateway.MerchantAccount().Create(&acct)
+	merchantAccount, err := testGateway.MerchantAccount().Create(context.Background(), &acct)
 	if err != nil {
 		panic(fmt.Errorf("Error creating test sub merchant account: %s", err))
 	}

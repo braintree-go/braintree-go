@@ -1,9 +1,14 @@
 package braintree
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestTransactionPayPalDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNoncePayPalOneTimePayment,
@@ -57,7 +62,9 @@ func TestTransactionPayPalDetails(t *testing.T) {
 }
 
 func TestTransactionWithoutPayPalDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceTransactable,

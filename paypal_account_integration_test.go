@@ -1,11 +1,16 @@
 package braintree
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestPayPalAccount(t *testing.T) {
 	t.Parallel()
 
-	cust, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	cust, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -13,7 +18,7 @@ func TestPayPalAccount(t *testing.T) {
 	nonce := FakeNoncePayPalBillingAgreement
 
 	g := testGateway.PayPalAccount()
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: nonce,
 	})
@@ -22,7 +27,7 @@ func TestPayPalAccount(t *testing.T) {
 	}
 
 	// Find
-	paypalAccount, err := g.Find(paymentMethod.GetToken())
+	paypalAccount, err := g.Find(ctx, paymentMethod.GetToken())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -34,7 +39,7 @@ func TestPayPalAccount(t *testing.T) {
 	}
 
 	// Update
-	paypalAccount2, err := g.Update(&PayPalAccount{
+	paypalAccount2, err := g.Update(ctx, &PayPalAccount{
 		Token: paypalAccount.Token,
 		Email: "new-email@example.com",
 	})
@@ -52,7 +57,7 @@ func TestPayPalAccount(t *testing.T) {
 	}
 
 	// Delete
-	err = g.Delete(paypalAccount2)
+	err = g.Delete(ctx, paypalAccount2)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +66,9 @@ func TestPayPalAccount(t *testing.T) {
 func TestFindPayPalAccountBadData(t *testing.T) {
 	t.Parallel()
 
-	paypalAccount, err := testGateway.PayPalAccount().Find("invalid_token")
+	ctx := context.Background()
+
+	paypalAccount, err := testGateway.PayPalAccount().Find(ctx, "invalid_token")
 
 	t.Log(paypalAccount)
 

@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"math/rand"
 	"net/http"
 	"reflect"
@@ -17,7 +18,9 @@ func randomAmount() *Decimal {
 func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	t.Parallel()
 
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
@@ -40,7 +43,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 
 	// Submit for settlement
 	ten := NewDecimal(1000, 2)
-	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, ten)
+	tx2, err := testGateway.Transaction().SubmitForSettlement(ctx, tx.Id, ten)
 
 	t.Log(tx2)
 
@@ -55,7 +58,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	}
 
 	// Void
-	tx3, err := testGateway.Transaction().Void(tx2.Id)
+	tx3, err := testGateway.Transaction().Void(ctx, tx2.Id)
 
 	t.Log(tx3)
 
@@ -70,9 +73,11 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 func TestTransactionSearch(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	txg := testGateway.Transaction()
 	createTx := func(amount *Decimal, customerName string) error {
-		_, err := txg.Create(&TransactionRequest{
+		_, err := txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
 			Amount: amount,
 			Customer: &Customer{
@@ -102,7 +107,7 @@ func TestTransactionSearch(t *testing.T) {
 	f := query.AddTextField("customer-first-name")
 	f.Is = name0
 
-	result, err := txg.Search(query)
+	result, err := txg.Search(ctx, query)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -119,9 +124,11 @@ func TestTransactionSearch(t *testing.T) {
 }
 
 func TestTransactionSearchTime(t *testing.T) {
+	ctx := context.Background()
+
 	txg := testGateway.Transaction()
 	createTx := func(amount *Decimal, customerName string) error {
-		_, err := txg.Create(&TransactionRequest{
+		_, err := txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
 			Amount: amount,
 			Customer: &Customer{
@@ -154,7 +161,7 @@ func TestTransactionSearchTime(t *testing.T) {
 		f2 := query.AddTimeField("created-at")
 		f2.Max = time.Now()
 
-		result, err := txg.Search(query)
+		result, err := txg.Search(ctx, query)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -177,7 +184,7 @@ func TestTransactionSearchTime(t *testing.T) {
 		f2 := query.AddTimeField("created-at")
 		f2.Max = time.Now().Add(-time.Hour)
 
-		result, err := txg.Search(query)
+		result, err := txg.Search(ctx, query)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -192,7 +199,9 @@ func TestTransactionSearchTime(t *testing.T) {
 func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(201000, 2),
 		CreditCard: &CreditCard{
@@ -218,7 +227,9 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(201000, 2),
 		PaymentMethodNonce: FakeNonceGatewayRejectedFraud,
@@ -248,7 +259,9 @@ func TestTransactionCreateWhenGatewayRejectedFraud(t *testing.T) {
 func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -280,7 +293,9 @@ func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
 func TestTransactionCreatedWhenAVSBankDoesNotSupport(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		MerchantAccountId: avsAndCVVTestMerchantAccountId,
 		Type:              "sale",
 		Amount:            randomAmount(),
@@ -323,7 +338,9 @@ func TestTransactionCreatedWhenAVSBankDoesNotSupport(t *testing.T) {
 func TestTransactionCreatedWhenAVSPostalDoesNotMatch(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		MerchantAccountId: avsAndCVVTestMerchantAccountId,
 		Type:              "sale",
 		Amount:            randomAmount(),
@@ -366,7 +383,9 @@ func TestTransactionCreatedWhenAVSPostalDoesNotMatch(t *testing.T) {
 func TestTransactionCreatedWhenAVStreetAddressDoesNotMatch(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		MerchantAccountId: avsAndCVVTestMerchantAccountId,
 		Type:              "sale",
 		Amount:            randomAmount(),
@@ -409,7 +428,9 @@ func TestTransactionCreatedWhenAVStreetAddressDoesNotMatch(t *testing.T) {
 func TestFindTransaction(t *testing.T) {
 	t.Parallel()
 
-	createdTransaction, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	createdTransaction, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -421,7 +442,7 @@ func TestFindTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	foundTransaction, err := testGateway.Transaction().Find(createdTransaction.Id)
+	foundTransaction, err := testGateway.Transaction().Find(ctx, createdTransaction.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -434,7 +455,9 @@ func TestFindTransaction(t *testing.T) {
 func TestFindNonExistantTransaction(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Find("bad_transaction_id")
+	ctx := context.Background()
+
+	_, err := testGateway.Transaction().Find(ctx, "bad_transaction_id")
 	if err == nil {
 		t.Fatal("Did not receive error when finding an invalid tx ID")
 	}
@@ -450,6 +473,8 @@ func TestFindNonExistantTransaction(t *testing.T) {
 func TestTransactionDescriptorFields(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	tx := &TransactionRequest{
 		Type:               "sale",
 		Amount:             randomAmount(),
@@ -464,7 +489,7 @@ func TestTransactionDescriptorFields(t *testing.T) {
 		},
 	}
 
-	tx2, err := testGateway.Transaction().Create(tx)
+	tx2, err := testGateway.Transaction().Create(ctx, tx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -493,6 +518,8 @@ func TestTransactionDescriptorFields(t *testing.T) {
 func TestTransactionPaypalFields(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	const (
 		PayeeEmail  = "payee@payal.com"
 		Description = "One tasty sandwich"
@@ -501,14 +528,14 @@ func TestTransactionPaypalFields(t *testing.T) {
 	subData := make(map[string]string)
 	subData["faz"] = "bar"
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	nonce := FakeNoncePayPalFuturePayment
 
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: nonce,
 	})
@@ -535,7 +562,7 @@ func TestTransactionPaypalFields(t *testing.T) {
 			},
 		},
 	}
-	tx2, err := testGateway.Transaction().Create(tx)
+	tx2, err := testGateway.Transaction().Create(ctx, tx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -562,6 +589,8 @@ func TestTransactionPaypalFields(t *testing.T) {
 func TestTransactionRiskDataFields(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	tx := &TransactionRequest{
 		Type:               "sale",
 		Amount:             randomAmount(),
@@ -572,7 +601,7 @@ func TestTransactionRiskDataFields(t *testing.T) {
 		},
 	}
 
-	tx2, err := testGateway.Transaction().Create(tx)
+	tx2, err := testGateway.Transaction().Create(ctx, tx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -587,6 +616,8 @@ func TestTransactionRiskDataFields(t *testing.T) {
 
 func TestAllTransactionFields(t *testing.T) {
 	t.Parallel()
+
+	ctx := context.Background()
 
 	amount := randomAmount()
 	taxAmount := NewDecimal(amount.Unscaled/10, amount.Scale)
@@ -626,7 +657,7 @@ func TestAllTransactionFields(t *testing.T) {
 		},
 	}
 
-	tx2, err := testGateway.Transaction().Create(tx)
+	tx2, err := testGateway.Transaction().Create(ctx, tx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -712,7 +743,9 @@ func TestAllTransactionFields(t *testing.T) {
 func TestTransactionDisbursementDetails(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Find("dskdmb")
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Find(ctx, "dskdmb")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -740,7 +773,9 @@ func TestTransactionDisbursementDetails(t *testing.T) {
 func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["discover"].Number,
 			ExpirationDate: "05/14",
@@ -753,7 +788,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 		t.Fatal("invalid token")
 	}
 
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		CustomerID:         customer.Id,
 		Amount:             randomAmount(),
@@ -771,7 +806,9 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 func TestTrxPaymentMethodNonce(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             randomAmount(),
 		PaymentMethodNonce: "fake-apple-pay-mastercard-nonce",
@@ -780,7 +817,7 @@ func TestTrxPaymentMethodNonce(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -789,8 +826,10 @@ func TestTrxPaymentMethodNonce(t *testing.T) {
 func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	amount := NewDecimal(20000, 2)
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -802,12 +841,12 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -817,7 +856,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	}
 
 	// Refund
-	refundTxn, err := testGateway.Transaction().Refund(txn.Id)
+	refundTxn, err := testGateway.Transaction().Refund(ctx, txn.Id)
 
 	t.Log(refundTxn)
 
@@ -828,7 +867,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		t.Fatal(x)
 	}
 
-	refundTxn, err = testGateway.Testing().Settle(refundTxn.Id)
+	refundTxn, err = testGateway.Testing().Settle(ctx, refundTxn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -842,7 +881,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	}
 
 	// Check that the refund shows up in the original transaction
-	txn, err = testGateway.Transaction().Find(txn.Id)
+	txn, err = testGateway.Transaction().Find(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -852,7 +891,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	}
 
 	// Second refund should fail
-	refundTxn, err = testGateway.Transaction().Refund(txn.Id)
+	refundTxn, err = testGateway.Transaction().Refund(ctx, txn.Id)
 	t.Log(refundTxn)
 
 	if err.Error() != "Transaction has already been completely refunded." {
@@ -863,10 +902,12 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	amount := NewDecimal(10000, 2)
 	refundAmt1 := NewDecimal(5000, 2)
 	refundAmt2 := NewDecimal(5001, 2)
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -878,12 +919,12 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(txn.Id, txn.Amount)
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().Settle(txn.Id)
+	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -893,7 +934,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 	}
 
 	// Refund
-	refundTxn, err := testGateway.Transaction().Refund(txn.Id, refundAmt1)
+	refundTxn, err := testGateway.Transaction().Refund(ctx, txn.Id, refundAmt1)
 
 	t.Log(refundTxn)
 
@@ -904,7 +945,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		t.Fatal(x)
 	}
 
-	refundTxn, err = testGateway.Testing().Settle(refundTxn.Id)
+	refundTxn, err = testGateway.Testing().Settle(ctx, refundTxn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -914,7 +955,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 	}
 
 	// Refund amount too large
-	refundTxn, err = testGateway.Transaction().Refund(txn.Id, refundAmt2)
+	refundTxn, err = testGateway.Transaction().Refund(ctx, txn.Id, refundAmt2)
 
 	t.Log(refundTxn)
 
@@ -926,12 +967,14 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 func TestTransactionCreateWithCustomFields(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	customFields := map[string]string{
 		"custom_field_1": "custom value",
 	}
 
 	amount := NewDecimal(10000, 2)
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             amount,
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -945,7 +988,7 @@ func TestTransactionCreateWithCustomFields(t *testing.T) {
 		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
 	}
 
-	txn, err = testGateway.Transaction().Find(txn.Id)
+	txn, err = testGateway.Transaction().Find(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -958,8 +1001,10 @@ func TestTransactionCreateWithCustomFields(t *testing.T) {
 func TestTransactionTaxExempt(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	amount := NewDecimal(10000, 2)
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             amount,
 		TaxExempt:          true,
@@ -969,7 +1014,7 @@ func TestTransactionTaxExempt(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().Find(txn.Id)
+	txn, err = testGateway.Transaction().Find(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -985,8 +1030,10 @@ func TestTransactionTaxExempt(t *testing.T) {
 func TestTransactionTaxFieldsNotProvided(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	amount := NewDecimal(10000, 2)
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             amount,
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -995,7 +1042,7 @@ func TestTransactionTaxFieldsNotProvided(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().Find(txn.Id)
+	txn, err = testGateway.Transaction().Find(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1011,7 +1058,9 @@ func TestTransactionTaxFieldsNotProvided(t *testing.T) {
 func TestEscrowHoldOnCreate(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(6200, 2),
 		CreditCard: &CreditCard{
@@ -1035,7 +1084,9 @@ func TestEscrowHoldOnCreate(t *testing.T) {
 func TestEscrowHoldOnCreateOnMasterMerchant(t *testing.T) {
 	t.Parallel()
 
-	_, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(6301, 2),
 		CreditCard: &CreditCard{
@@ -1064,7 +1115,9 @@ func TestEscrowHoldOnCreateOnMasterMerchant(t *testing.T) {
 func TestEscrowHoldAfterSale(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(6300, 2),
 		CreditCard: &CreditCard{
@@ -1077,7 +1130,7 @@ func TestEscrowHoldAfterSale(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	txn, err = testGateway.Transaction().HoldInEscrow(txn.Id)
+	txn, err = testGateway.Transaction().HoldInEscrow(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1089,7 +1142,9 @@ func TestEscrowHoldAfterSale(t *testing.T) {
 func TestEscrowHoldAfterSaleOnMasterMerchant(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(6301, 2),
 		CreditCard: &CreditCard{
@@ -1100,7 +1155,7 @@ func TestEscrowHoldAfterSaleOnMasterMerchant(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = testGateway.Transaction().HoldInEscrow(txn.Id)
+	_, err = testGateway.Transaction().HoldInEscrow(ctx, txn.Id)
 	if err == nil {
 		t.Fatal("Transaction HoldInEscrow got no error, want error")
 	}
@@ -1119,7 +1174,9 @@ func TestEscrowHoldAfterSaleOnMasterMerchant(t *testing.T) {
 func TestEscrowRelease(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(6400, 2),
 		CreditCard: &CreditCard{
@@ -1136,11 +1193,11 @@ func TestEscrowRelease(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	txn, err = testGateway.Transaction().Settle(txn.Id)
+	txn, err = testGateway.Transaction().Settle(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	txn, err = testGateway.Transaction().ReleaseFromEscrow(txn.Id)
+	txn, err = testGateway.Transaction().ReleaseFromEscrow(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1152,7 +1209,9 @@ func TestEscrowRelease(t *testing.T) {
 func TestEscrowReleaseNotEscrowed(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(6401, 2),
 		CreditCard: &CreditCard{
@@ -1165,7 +1224,7 @@ func TestEscrowReleaseNotEscrowed(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = testGateway.Transaction().ReleaseFromEscrow(txn.Id)
+	_, err = testGateway.Transaction().ReleaseFromEscrow(ctx, txn.Id)
 	if err == nil {
 		t.Fatal("Transaction ReleaseFromEscrow got no error, want error")
 	}
@@ -1184,7 +1243,9 @@ func TestEscrowReleaseNotEscrowed(t *testing.T) {
 func TestEscrowCancelRelease(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(6500, 2),
 		CreditCard: &CreditCard{
@@ -1201,18 +1262,18 @@ func TestEscrowCancelRelease(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	txn, err = testGateway.Transaction().Settle(txn.Id)
+	txn, err = testGateway.Transaction().Settle(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	txn, err = testGateway.Transaction().ReleaseFromEscrow(txn.Id)
+	txn, err = testGateway.Transaction().ReleaseFromEscrow(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if txn.EscrowStatus != EscrowStatusReleasePending {
 		t.Fatalf("Transaction EscrowStatus got %s, want %s", txn.EscrowStatus, EscrowStatusReleasePending)
 	}
-	txn, err = testGateway.Transaction().CancelRelease(txn.Id)
+	txn, err = testGateway.Transaction().CancelRelease(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1224,7 +1285,9 @@ func TestEscrowCancelRelease(t *testing.T) {
 func TestEscrowCancelReleaseNotPending(t *testing.T) {
 	t.Parallel()
 
-	txn, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(6501, 2),
 		CreditCard: &CreditCard{
@@ -1237,7 +1300,7 @@ func TestEscrowCancelReleaseNotPending(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = testGateway.Transaction().CancelRelease(txn.Id)
+	_, err = testGateway.Transaction().CancelRelease(ctx, txn.Id)
 	if err == nil {
 		t.Fatal("Transaction Cancel Release got no error, want error")
 	}

@@ -1,9 +1,14 @@
 package braintree
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestTransactionAndroidPayDetails_AndroidPayProxyCardNonce(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceAndroidPayDiscover,
@@ -63,7 +68,9 @@ func TestTransactionAndroidPayDetails_AndroidPayProxyCardNonce(t *testing.T) {
 }
 
 func TestTransactionAndroidPayDetails_AndroidPayNetworkTokenNonce(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceAndroidPayMasterCard,
@@ -123,7 +130,9 @@ func TestTransactionAndroidPayDetails_AndroidPayNetworkTokenNonce(t *testing.T) 
 }
 
 func TestTransactionWithoutAndroidPayDetails(t *testing.T) {
-	tx, err := testGateway.Transaction().Create(&TransactionRequest{
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceTransactable,

@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"testing"
 )
 
@@ -8,8 +9,10 @@ import (
 func TestPlan(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	g := testGateway.Plan()
-	plans, err := g.All()
+	plans, err := g.All(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,7 +114,7 @@ func TestPlan(t *testing.T) {
 	}
 
 	// Find
-	plan2, err := g.Find("test_plan_2")
+	plan2, err := g.Find(ctx, "test_plan_2")
 	if err != nil {
 		t.Fatal(err)
 	}

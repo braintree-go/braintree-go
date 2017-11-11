@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -12,11 +13,13 @@ import (
 func TestSubscriptionSimple(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -29,7 +32,7 @@ func TestSubscriptionSimple(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	sub, err := g.Create(&SubscriptionRequest{
+	sub, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 	})
@@ -44,7 +47,7 @@ func TestSubscriptionSimple(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&SubscriptionRequest{
+	sub2, err := g.Update(ctx, &SubscriptionRequest{
 		Id:     sub.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -67,7 +70,7 @@ func TestSubscriptionSimple(t *testing.T) {
 	}
 
 	// Find
-	sub3, err := g.Find(sub.Id)
+	sub3, err := g.Find(ctx, sub.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -76,7 +79,7 @@ func TestSubscriptionSimple(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub2.Id)
+	_, err = g.Cancel(ctx, sub2.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -85,11 +88,13 @@ func TestSubscriptionSimple(t *testing.T) {
 func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -102,7 +107,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	sub1, err := g.Create(&SubscriptionRequest{
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
@@ -153,7 +158,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&SubscriptionRequest{
+	sub2, err := g.Update(ctx, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -176,7 +181,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	}
 
 	// Find
-	sub3, err := g.Find(sub1.Id)
+	sub3, err := g.Find(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -185,7 +190,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	}
 
 	// Cancel
-	sub4, err := g.Cancel(sub1.Id)
+	sub4, err := g.Cancel(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -197,11 +202,13 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -214,7 +221,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	sub1, err := g.Create(&SubscriptionRequest{
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
@@ -265,7 +272,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&SubscriptionRequest{
+	sub2, err := g.Update(ctx, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -288,7 +295,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	}
 
 	// Find
-	sub3, err := g.Find(sub1.Id)
+	sub3, err := g.Find(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -297,7 +304,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	}
 
 	// Cancel
-	sub4, err := g.Cancel(sub1.Id)
+	sub4, err := g.Cancel(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -309,11 +316,13 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -327,7 +336,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 
 	// Create
 	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
-	sub1, err := g.Create(&SubscriptionRequest{
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
@@ -383,7 +392,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&SubscriptionRequest{
+	sub2, err := g.Update(ctx, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -406,7 +415,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	}
 
 	// Find
-	sub3, err := g.Find(sub1.Id)
+	sub3, err := g.Find(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -415,7 +424,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	}
 
 	// Cancel
-	sub4, err := g.Cancel(sub1.Id)
+	sub4, err := g.Cancel(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -427,11 +436,13 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -445,7 +456,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 
 	// Create
 	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
-	sub1, err := g.Create(&SubscriptionRequest{
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
@@ -499,7 +510,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&SubscriptionRequest{
+	sub2, err := g.Update(ctx, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -522,7 +533,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	}
 
 	// Find
-	sub3, err := g.Find(sub1.Id)
+	sub3, err := g.Find(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -531,7 +542,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	}
 
 	// Cancel
-	sub4, err := g.Cancel(sub1.Id)
+	sub4, err := g.Cancel(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -543,11 +554,13 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -561,7 +574,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 
 	// Create
 	firstBillingDate := time.Now().In(testTimeZone).AddDate(0, 0, 7)
-	sub1, err := g.Create(&SubscriptionRequest{
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken:    paymentMethod.GetToken(),
 		PlanId:                "test_plan",
 		MerchantAccountId:     testMerchantAccountId,
@@ -623,7 +636,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&SubscriptionRequest{
+	sub2, err := g.Update(ctx, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -646,7 +659,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	}
 
 	// Find
-	sub3, err := g.Find(sub1.Id)
+	sub3, err := g.Find(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -655,7 +668,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub1.Id)
+	_, err = g.Cancel(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -664,11 +677,13 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -682,7 +697,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 
 	// Create
 	firstBillingDate := time.Now().In(testTimeZone).AddDate(0, 0, 7)
-	sub1, err := g.Create(&SubscriptionRequest{
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		MerchantAccountId:  testMerchantAccountId,
@@ -744,7 +759,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(&SubscriptionRequest{
+	sub2, err := g.Update(ctx, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -767,7 +782,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	}
 
 	// Find
-	sub3, err := g.Find(sub1.Id)
+	sub3, err := g.Find(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -776,7 +791,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub1.Id)
+	_, err = g.Cancel(ctx, sub1.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -785,11 +800,13 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 func TestSubscriptionModifications(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -802,7 +819,7 @@ func TestSubscriptionModifications(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	sub, err := g.Create(&SubscriptionRequest{
+	sub, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan_2",
 	})
@@ -817,7 +834,7 @@ func TestSubscriptionModifications(t *testing.T) {
 	}
 
 	// Add AddOn
-	sub2, err := g.Update(&SubscriptionRequest{
+	sub2, err := g.Update(ctx, &SubscriptionRequest{
 		Id: sub.Id,
 		AddOns: &ModificationsRequest{
 			Add: []AddModificationRequest{
@@ -870,7 +887,7 @@ func TestSubscriptionModifications(t *testing.T) {
 	}
 
 	// Update AddOn
-	sub3, err := g.Update(&SubscriptionRequest{
+	sub3, err := g.Update(ctx, &SubscriptionRequest{
 		Id: sub.Id,
 		AddOns: &ModificationsRequest{
 			Update: []UpdateModificationRequest{
@@ -911,7 +928,7 @@ func TestSubscriptionModifications(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub3.Id)
+	_, err = g.Cancel(ctx, sub3.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -921,11 +938,13 @@ func TestSubscriptionModifications(t *testing.T) {
 func TestSubscriptionTransactions(t *testing.T) {
 	t.Parallel()
 
-	customer, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	paymentMethod, err := testGateway.PaymentMethod().Create(&PaymentMethodRequest{
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactable,
 	})
@@ -938,7 +957,7 @@ func TestSubscriptionTransactions(t *testing.T) {
 	g := testGateway.Subscription()
 
 	// Create
-	sub, err := g.Create(&SubscriptionRequest{
+	sub, err := g.Create(ctx, &SubscriptionRequest{
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 		Options: &SubscriptionOptions{
@@ -956,7 +975,7 @@ func TestSubscriptionTransactions(t *testing.T) {
 	}
 
 	// Find
-	sub2, err := g.Find(sub.Id)
+	sub2, err := g.Find(ctx, sub.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -977,7 +996,7 @@ func TestSubscriptionTransactions(t *testing.T) {
 	}
 
 	// Cancel
-	_, err = g.Cancel(sub2.Id)
+	_, err = g.Cancel(ctx, sub2.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

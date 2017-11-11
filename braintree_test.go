@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -53,7 +54,7 @@ func testHTTPClientTimeout(t *testing.T, braintreeFactory func(env Environment) 
 
 	finished := make(chan bool)
 	go func() {
-		_, err := b.Transaction().Create(&TransactionRequest{})
+		_, err := b.Transaction().Create(context.Background(), &TransactionRequest{})
 		if err == nil {
 			t.Fatal("Expected timeout error, received no error")
 		}

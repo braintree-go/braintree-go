@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"testing"
@@ -12,7 +13,9 @@ import (
 func TestPaymentMethod(t *testing.T) {
 	t.Parallel()
 
-	cust, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	cust, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,7 +23,7 @@ func TestPaymentMethod(t *testing.T) {
 	g := testGateway.PaymentMethod()
 
 	// Create using credit card
-	paymentMethod, err := g.Create(&PaymentMethodRequest{
+	paymentMethod, err := g.Create(ctx, &PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: FakeNonceTransactableVisa,
 	})
@@ -38,7 +41,7 @@ func TestPaymentMethod(t *testing.T) {
 	// Update using different credit card
 	rand.Seed(time.Now().UTC().UnixNano())
 	token := fmt.Sprintf("btgo_test_token_%d", rand.Int()+1)
-	paymentMethod, err = g.Update(paymentMethod.GetToken(), &PaymentMethodRequest{
+	paymentMethod, err = g.Update(ctx, paymentMethod.GetToken(), &PaymentMethodRequest{
 		PaymentMethodNonce: FakeNonceTransactableMasterCard,
 		Token:              token,
 	})
@@ -51,12 +54,12 @@ func TestPaymentMethod(t *testing.T) {
 	}
 
 	// Updating with different payment method type should fail
-	if _, err = g.Update(token, &PaymentMethodRequest{PaymentMethodNonce: FakeNoncePayPalBillingAgreement}); err == nil {
+	if _, err = g.Update(ctx, token, &PaymentMethodRequest{PaymentMethodNonce: FakeNoncePayPalBillingAgreement}); err == nil {
 		t.Errorf("Updating with a different payment method type should have failed")
 	}
 
 	// Find credit card
-	paymentMethod, err = g.Find(token)
+	paymentMethod, err = g.Find(ctx, token)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -69,12 +72,12 @@ func TestPaymentMethod(t *testing.T) {
 	}
 
 	// Delete credit card
-	if err := g.Delete(token); err != nil {
+	if err := g.Delete(ctx, token); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create using PayPal
-	paymentMethod, err = g.Create(&PaymentMethodRequest{
+	paymentMethod, err = g.Create(ctx, &PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
 	})
@@ -83,23 +86,23 @@ func TestPaymentMethod(t *testing.T) {
 	}
 
 	// Find PayPal
-	_, err = g.Find(paymentMethod.GetToken())
+	_, err = g.Find(ctx, paymentMethod.GetToken())
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Updating a PayPal account with a different payment method nonce of any kind should fail
-	if _, err = g.Update(paymentMethod.GetToken(), &PaymentMethodRequest{PaymentMethodNonce: FakeNoncePayPalOneTimePayment}); err == nil {
+	if _, err = g.Update(ctx, paymentMethod.GetToken(), &PaymentMethodRequest{PaymentMethodNonce: FakeNoncePayPalOneTimePayment}); err == nil {
 		t.Errorf("Updating a PayPal account with a different nonce should have failed")
 	}
 
 	// Delete PayPal
-	if err := g.Delete(paymentMethod.GetToken()); err != nil {
+	if err := g.Delete(ctx, paymentMethod.GetToken()); err != nil {
 		t.Fatal(err)
 	}
 
 	// Cleanup
-	if err := testGateway.Customer().Delete(cust.Id); err != nil {
+	if err := testGateway.Customer().Delete(ctx, cust.Id); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -107,13 +110,15 @@ func TestPaymentMethod(t *testing.T) {
 func TestPaymentMethodFailedAutoVerification(t *testing.T) {
 	t.Parallel()
 
-	cust, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	cust, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	g := testGateway.PaymentMethod()
-	pm, err := g.Create(&PaymentMethodRequest{
+	pm, err := g.Create(ctx, &PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
 	})
@@ -131,13 +136,15 @@ func TestPaymentMethodFailedAutoVerification(t *testing.T) {
 func TestPaymentMethodForceNotVerified(t *testing.T) {
 	t.Parallel()
 
-	cust, err := testGateway.Customer().Create(&Customer{})
+	ctx := context.Background()
+
+	cust, err := testGateway.Customer().Create(ctx, &Customer{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	g := testGateway.PaymentMethod()
-	pm, err := g.Create(&PaymentMethodRequest{
+	pm, err := g.Create(ctx, &PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
 		Options: &PaymentMethodRequestOptions{

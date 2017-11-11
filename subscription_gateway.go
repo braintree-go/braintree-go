@@ -1,11 +1,13 @@
 package braintree
 
+import "context"
+
 type SubscriptionGateway struct {
 	*Braintree
 }
 
-func (g *SubscriptionGateway) Create(sub *SubscriptionRequest) (*Subscription, error) {
-	resp, err := g.execute("POST", "subscriptions", sub)
+func (g *SubscriptionGateway) Create(ctx context.Context, sub *SubscriptionRequest) (*Subscription, error) {
+	resp, err := g.execute(ctx, "POST", "subscriptions", sub)
 	if err != nil {
 		return nil, err
 	}
@@ -16,8 +18,8 @@ func (g *SubscriptionGateway) Create(sub *SubscriptionRequest) (*Subscription, e
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *SubscriptionGateway) Update(sub *SubscriptionRequest) (*Subscription, error) {
-	resp, err := g.execute("PUT", "subscriptions/"+sub.Id, sub)
+func (g *SubscriptionGateway) Update(ctx context.Context, sub *SubscriptionRequest) (*Subscription, error) {
+	resp, err := g.execute(ctx, "PUT", "subscriptions/"+sub.Id, sub)
 	if err != nil {
 		return nil, err
 	}
@@ -28,8 +30,8 @@ func (g *SubscriptionGateway) Update(sub *SubscriptionRequest) (*Subscription, e
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *SubscriptionGateway) Find(subId string) (*Subscription, error) {
-	resp, err := g.execute("GET", "subscriptions/"+subId, nil)
+func (g *SubscriptionGateway) Find(ctx context.Context, subId string) (*Subscription, error) {
+	resp, err := g.execute(ctx, "GET", "subscriptions/"+subId, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -40,8 +42,8 @@ func (g *SubscriptionGateway) Find(subId string) (*Subscription, error) {
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *SubscriptionGateway) Cancel(subId string) (*Subscription, error) {
-	resp, err := g.execute("PUT", "subscriptions/"+subId+"/cancel", nil)
+func (g *SubscriptionGateway) Cancel(ctx context.Context, subId string) (*Subscription, error) {
+	resp, err := g.execute(ctx, "PUT", "subscriptions/"+subId+"/cancel", nil)
 	if err != nil {
 		return nil, err
 	}

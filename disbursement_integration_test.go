@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"context"
 	"testing"
 )
 
@@ -8,11 +9,13 @@ import (
 func TestDisbursementTransactions(t *testing.T) {
 	t.Parallel()
 
+	ctx := context.Background()
+
 	d := Disbursement{
 		TransactionIds: []string{"dskdmb"},
 	}
 
-	result, err := d.Transactions(testGateway.Transaction())
+	result, err := d.Transactions(ctx, testGateway.Transaction())
 
 	if err != nil {
 		t.Fatal(err)
