@@ -646,9 +646,10 @@ func TestAllTransactionFields(t *testing.T) {
 			Region:        "IL",
 			PostalCode:    "60637",
 		},
-		TaxAmount:  taxAmount,
-		DeviceData: `{"device_session_id": "dsi_1234", "fraud_merchant_id": "fmi_1234", "correlation_id": "ci_1234"}`,
-		Channel:    "ChannelA",
+		TaxAmount:           taxAmount,
+		DeviceData:          `{"device_session_id": "dsi_1234", "fraud_merchant_id": "fmi_1234", "correlation_id": "ci_1234"}`,
+		Channel:             "ChannelA",
+		PurchaseOrderNumber: "PONUMBER",
 		Options: &TransactionOptions{
 			SubmitForSettlement:              true,
 			StoreInVault:                     true,
@@ -736,6 +737,9 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 	if tx2.Channel != "ChannelA" {
 		t.Fatalf("expected tx2.Channel to be ChannelA, but got %s", tx2.Channel)
+	}
+	if tx2.PurchaseOrderNumber != tx.PurchaseOrderNumber {
+		t.Fatalf("expected PurchaseOrderNumber to be %s, but got %s", tx.PurchaseOrderNumber, tx2.PurchaseOrderNumber)
 	}
 }
 
