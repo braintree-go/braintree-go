@@ -73,38 +73,39 @@ type Transaction struct {
 	AVSStreetAddressResponseCode AVSResponseCode           `xml:"avs-street-address-response-code,omitempty"`
 	CVVResponseCode              CVVResponseCode           `xml:"cvv-response-code,omitempty"`
 	GatewayRejectionReason       GatewayRejectionReason    `xml:"gateway-rejection-reason,omitempty"`
+	PurchaseOrderNumber          string                    `xml:"purchase-order-number,omitempty"`
 }
 
 type TransactionRequest struct {
-	XMLName            string                    `xml:"transaction"`
-	CustomerID         string                    `xml:"customer-id,omitempty"`
-	Type               string                    `xml:"type,omitempty"`
-	Amount             *Decimal                  `xml:"amount"`
-	OrderId            string                    `xml:"order-id,omitempty"`
-	PaymentMethodToken string                    `xml:"payment-method-token,omitempty"`
-	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
-	MerchantAccountId  string                    `xml:"merchant-account-id,omitempty"`
-	PlanId             string                    `xml:"plan-id,omitempty"`
-	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
-	Customer           *Customer                 `xml:"customer,omitempty"`
-	BillingAddress     *Address                  `xml:"billing,omitempty"`
-	ShippingAddress    *Address                  `xml:"shipping,omitempty"`
-	TaxAmount          *Decimal                  `xml:"tax-amount,omitempty"`
-	TaxExempt          bool                      `xml:"tax-exempt,omitempty"`
-	DeviceData         string                    `xml:"device-data,omitempty"`
-	Options            *TransactionOptions       `xml:"options,omitempty"`
-	ServiceFeeAmount   *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
-	RiskData           *RiskDataRequest          `xml:"risk-data,omitempty"`
-	Descriptor         *Descriptor               `xml:"descriptor,omitempty"`
-	Channel            string                    `xml:"channel,omitempty"`
-	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
+	XMLName             string                    `xml:"transaction"`
+	CustomerID          string                    `xml:"customer-id,omitempty"`
+	Type                string                    `xml:"type,omitempty"`
+	Amount              *Decimal                  `xml:"amount"`
+	OrderId             string                    `xml:"order-id,omitempty"`
+	PaymentMethodToken  string                    `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce  string                    `xml:"payment-method-nonce,omitempty"`
+	MerchantAccountId   string                    `xml:"merchant-account-id,omitempty"`
+	PlanId              string                    `xml:"plan-id,omitempty"`
+	CreditCard          *CreditCard               `xml:"credit-card,omitempty"`
+	Customer            *Customer                 `xml:"customer,omitempty"`
+	BillingAddress      *Address                  `xml:"billing,omitempty"`
+	ShippingAddress     *Address                  `xml:"shipping,omitempty"`
+	TaxAmount           *Decimal                  `xml:"tax-amount,omitempty"`
+	TaxExempt           bool                      `xml:"tax-exempt,omitempty"`
+	DeviceData          string                    `xml:"device-data,omitempty"`
+	Options             *TransactionOptions       `xml:"options,omitempty"`
+	ServiceFeeAmount    *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
+	RiskData            *RiskDataRequest          `xml:"risk-data,omitempty"`
+	Descriptor          *Descriptor               `xml:"descriptor,omitempty"`
+	Channel             string                    `xml:"channel,omitempty"`
+	CustomFields        customfields.CustomFields `xml:"custom-fields,omitempty"`
+	PurchaseOrderNumber string                    `xml:"purchase-order-number,omitempty"`
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
 //
 // <transaction>
 //   <voice-referral-number nil="true"></voice-referral-number>
-//   <purchase-order-number nil="true"></purchase-order-number>
 //   <status-history type="array">
 //     <status-event>
 //       <timestamp type="datetime">2013-10-07T17:26:14Z</timestamp>
