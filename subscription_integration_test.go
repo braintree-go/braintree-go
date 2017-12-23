@@ -853,9 +853,9 @@ func TestSubscriptionModifications(t *testing.T) {
 				{
 					InheritedFromID: "test_discount",
 					ModificationRequest: ModificationRequest{
-						Amount:       NewDecimal(100, 2),
-						Quantity:     1,
-						NeverExpires: true,
+						Amount:                NewDecimal(100, 2),
+						Quantity:              1,
+						NumberOfBillingCycles: 2,
 					},
 				},
 			},
@@ -884,6 +884,9 @@ func TestSubscriptionModifications(t *testing.T) {
 	}
 	if x := sub2.Discounts.Discounts[0].Amount; x.String() != NewDecimal(100, 2).String() {
 		t.Fatalf("got %v discount, want 1.00 discount", x)
+	}
+	if x := sub2.Discounts.Discounts[0].NumberOfBillingCycles; x != 2 {
+		t.Fatalf("got %v number of billing cycles on discount, want 2 billing cycles", x)
 	}
 
 	// Update AddOn

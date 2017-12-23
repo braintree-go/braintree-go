@@ -91,6 +91,8 @@ func TestPlan(t *testing.T) {
 		t.Fatalf("expected NeverExpires to be %v, was %v", true, addOn.NeverExpires)
 	} else if addOn.Description != "A test add-on" {
 		t.Fatalf("expected Description to be %s, was %s", "A test add-on", addOn.Description)
+	} else if addOn.NumberOfBillingCycles != 0 {
+		t.Fatalf("expected NumberOfBillingCycles to be %d, was %d", 0, addOn.NumberOfBillingCycles)
 	}
 
 	// Discounts
@@ -111,6 +113,8 @@ func TestPlan(t *testing.T) {
 		t.Fatalf("expected NeverExpires to be %v, was %v", true, discount.NeverExpires)
 	} else if discount.Description != "A test discount" {
 		t.Fatalf("expected Description to be %s, was %s", "A test discount", discount.Description)
+	} else if discount.NumberOfBillingCycles != 0 {
+		t.Fatalf("expected NumberOfBillingCycles to be %d, was %d", 0, discount.NumberOfBillingCycles)
 	}
 
 	// Find
