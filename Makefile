@@ -1,7 +1,13 @@
 SHELL:=/bin/bash
 
 test:
-	go test -parallel 15 ./...
+	go test -parallel 15 -tags='unit integration' ./...
+
+unit:
+	go test -tags=unit ./...
+
+integration:
+	go test -parallel 15 -tags=integration ./...
 
 analysis:
 	diff -u <(echo -n) <(gofmt -d .)
