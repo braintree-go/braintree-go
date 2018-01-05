@@ -1,3 +1,17 @@
+## 0.17.0 (January 5th, 2018)
+
+IMPROVEMENTS:
+
+* Add NumerOfBillingCycles to Modifications.
+* Add PurchaseOrderNumber to Transaction and TransactionRequest.
+
+INTERNAL:
+
+* Remove omitempty from structs only used for deserialization.
+* Add build tags for unit and integration tests.
+* Add analysis detailed warning messages.
+* Remove slow unit tests.
+
 ## 0.16.0 (November 11th, 2017)
 
 BACKWARDS INCOMPATIBILITES:
