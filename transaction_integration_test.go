@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -125,6 +126,57 @@ func TestTransactionSearch(t *testing.T) {
 	}
 }
 
+func TestTransactionSearchPagination(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	txg := testGateway.Transaction()
+	createTx := func(amount *Decimal, customerName string) error {
+		_, err := txg.Create(ctx, &TransactionRequest{
+			Type:   "sale",
+			Amount: amount,
+			Customer: &Customer{
+				FirstName: customerName,
+			},
+			CreditCard: &CreditCard{
+				Number:         testCreditCards["visa"].Number,
+				ExpirationDate: "05/14",
+			},
+		})
+		return err
+	}
+
+	const pageSize = 50
+	prefix := "PaginationTest-" + testhelpers.RandomString()
+	for i := 0; i < pageSize+1; i++ {
+		unique := testhelpers.RandomString()
+		if err := createTx(randomAmount(), prefix+unique); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	query := new(SearchQuery)
+	f := query.AddTextField("customer-first-name")
+	f.StartsWith = prefix
+
+	result, err := txg.Search(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if result.TotalItems != pageSize+1 {
+		t.Fatalf("result.TotalItems = %v, want %v", result.TotalItems, pageSize+1)
+	}
+
+	for i := 0; i < pageSize+1; i++ {
+		tx := result.Transactions[i]
+		if firstName := tx.Customer.FirstName; !strings.HasPrefix(firstName, prefix) {
+			t.Fatalf("tx.Customer.FirstName = %q, want prefix of %q", firstName, prefix)
+		}
+	}
+}
+
 func TestTransactionSearchTime(t *testing.T) {
 	ctx := context.Background()
 
@@ -169,6 +221,7 @@ func TestTransactionSearchTime(t *testing.T) {
 		}
 
 		if result.TotalItems != 1 {
+			t.Log(result.TotalItems)
 			t.Fatal(result.Transactions)
 		}
 
