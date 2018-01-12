@@ -65,7 +65,7 @@ func (g *TransactionGateway) Settle(ctx context.Context, id string) (*Transactio
 
 // Void voids the transaction with the specified id if it has a status of authorized or
 // submitted_for_settlement. When the transaction is voided Braintree will do an authorization
-// reversal if possible so that the customer won’t have a pending charge on their card
+// reversal if possible so that the customer won't have a pending charge on their card
 func (g *TransactionGateway) Void(ctx context.Context, id string) (*Transaction, error) {
 	resp, err := g.execute(ctx, "PUT", "transactions/"+id+"/void", nil)
 	if err != nil {
