@@ -3,10 +3,12 @@ package braintree
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/xml"
 	"errors"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"time"
 )
@@ -20,7 +22,29 @@ const (
 
 const defaultTimeout = time.Second * 60
 
-var defaultClient = &http.Client{Timeout: defaultTimeout}
+var (
+	// defaultTransport uses the same configuration as http.DefaultTransport
+	// with the addition of the minimum requirement for TLS 1.2
+	defaultTransport = &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig: &tls.Config{
+			MinVersion: tls.VersionTLS12,
+		},
+	}
+	defaultClient = &http.Client{
+		Timeout:   defaultTimeout,
+		Transport: defaultTransport,
+	}
+)
 
 // New creates a Braintree with API Keys.
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
