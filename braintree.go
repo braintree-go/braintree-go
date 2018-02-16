@@ -23,9 +23,8 @@ const (
 const defaultTimeout = time.Second * 60
 
 var (
-	// defaultTransport uses the very same configuration as
-	// http.DefaultTransport with the addition of the minimum requirement
-	// for TLS 1.2
+	// defaultTransport uses the same configuration as http.DefaultTransport
+	// with the addition of the minimum requirement for TLS 1.2
 	defaultTransport = &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
