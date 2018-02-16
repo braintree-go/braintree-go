@@ -1,3 +1,9 @@
+## Unreleased
+
+BACKWARDS INCOMPATIBILITES:
+
+* Drop support for versions of TLS prior to TLS 1.2.
+
 ## 0.17.0 (January 5th, 2018)
 
 IMPROVEMENTS:
