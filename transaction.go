@@ -214,7 +214,7 @@ func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.St
 
 type TransactionSearchResult struct {
 	XMLName string `xml:"search-results"`
-	// CurrentPageNumbwer is not in the XML response but added manually for backward compatability
+	// CurrentPageNumber is not in the XML response but added manually for backward compatability.
 	CurrentPageNumber int
 	// PageSize indicates the page size for subsequent calls to get transaction detail. There can be more items in the Ids struct than indicated by PageSize.
 	PageSize int `xml:"page-size"`

@@ -154,7 +154,7 @@ func (g *TransactionGateway) Find(ctx context.Context, id string) (*Transaction,
 }
 
 // Search finds all transactions matching the search query.
-// Per https://developers.braintreepayments.com/reference/general/searching/search-results/java a max of 20,000 results can be returned.
+// Per https://developers.braintreepayments.com/reference/general/searching/search-results a max of 20,000 results can be returned.
 func (g *TransactionGateway) Search(ctx context.Context, query *SearchQuery) (*TransactionSearchResult, error) {
 	// Get the ids of all transactions that match the search criteria.
 	resp, err := g.execute(ctx, "POST", "transactions/advanced_search_ids", query)
