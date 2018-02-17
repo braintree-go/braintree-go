@@ -14,7 +14,7 @@ func TestCreditCard(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &Customer{})
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,7 +74,7 @@ func TestCreditCardFailedAutoVerification(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &Customer{})
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -100,7 +100,7 @@ func TestCreditCardForceNotVerified(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &Customer{})
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -125,7 +125,7 @@ func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -170,7 +170,7 @@ func TestFindCreditCard(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -224,7 +224,7 @@ func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -245,7 +245,7 @@ func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}

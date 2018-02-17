@@ -57,10 +57,10 @@ func main() {
 		}
 		// You can later search for the user by his ID
 		// customer, err := bt.Customer().Find("CustomerID")
-		customer, err := bt.Customer().Create(ctx, &braintree.Customer{
+		customer, err := bt.Customer().Create(ctx, &braintree.CustomerRequest{
 			// You can leave it empty, but, if you've got a user system, I recommend using the user's ID as the client ID
 			// Or, createa a row for Braintree's customer ID
-			Id: "<CustomerID>",
+			ID: "<CustomerID>",
 		})
 		if err != nil {
 			log.Fatal(err)

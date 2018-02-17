@@ -17,7 +17,7 @@ func TestSubscriptionSimple(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +92,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,7 +206,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -320,7 +320,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -440,7 +440,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -558,7 +558,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -681,7 +681,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -804,7 +804,7 @@ func TestSubscriptionModifications(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -945,7 +945,7 @@ func TestSubscriptionTransactions(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
