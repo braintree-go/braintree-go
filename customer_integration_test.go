@@ -297,3 +297,138 @@ func TestCustomerPaymentMethodNonce(t *testing.T) {
 		t.Fatalf("Customer %#v has %#v payment method(s), want 1 payment method", customerFound, len(customer.PaymentMethods()))
 	}
 }
+
+func TestCustomerAddresses(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &Customer{
+		FirstName: "Jenna",
+		LastName:  "Smith",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if customer.Id == "" {
+		t.Fatal("invalid customer id")
+	}
+
+	addrs := []*Address{
+		&Address{
+			CustomerId:         customer.Id,
+			FirstName:          "Jenna",
+			LastName:           "Smith",
+			Company:            "Braintree",
+			StreetAddress:      "1 E Main St",
+			ExtendedAddress:    "Suite 403",
+			Locality:           "Chicago",
+			Region:             "Illinois",
+			PostalCode:         "60622",
+			CountryCodeAlpha2:  "US",
+			CountryCodeAlpha3:  "USA",
+			CountryCodeNumeric: "840",
+			CountryName:        "United States of America",
+		},
+		&Address{
+			CustomerId:         customer.Id,
+			FirstName:          "Bob",
+			LastName:           "Rob",
+			Company:            "Paypal",
+			StreetAddress:      "1 W Main St",
+			ExtendedAddress:    "Suite 402",
+			Locality:           "Boston",
+			Region:             "Massachusetts",
+			PostalCode:         "02140",
+			CountryCodeAlpha2:  "US",
+			CountryCodeAlpha3:  "USA",
+			CountryCodeNumeric: "840",
+			CountryName:        "United States of America",
+		},
+	}
+
+	for _, addr := range addrs {
+		_, err = testGateway.Address().Create(ctx, addr)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	customerWithAddrs, err := testGateway.Customer().Find(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if customerWithAddrs.Addresses == nil || len(customerWithAddrs.Addresses.Address) != 2 {
+		t.Fatal("wrong number of addresses returned")
+	}
+
+	for _, vaultAddr := range customerWithAddrs.Addresses.Address {
+		if vaultAddr.Id == "" {
+			t.Fatal("generated id is empty")
+		}
+
+		var sentAddr *Address
+		for _, addr := range addrs {
+			if addr.PostalCode == vaultAddr.PostalCode {
+				sentAddr = addr
+				break
+			}
+		}
+
+		if sentAddr == nil {
+			t.Fatal("did not return sent address")
+		}
+
+		t.Logf("%+v\n", vaultAddr)
+		t.Logf("%+v\n", sentAddr)
+
+		if vaultAddr.CustomerId != customer.Id {
+			t.Fatal("customer ids do not match")
+		}
+		if vaultAddr.FirstName != sentAddr.FirstName {
+			t.Fatal("first names do not match")
+		}
+		if vaultAddr.LastName != sentAddr.LastName {
+			t.Fatal("last names do not match")
+		}
+		if vaultAddr.Company != sentAddr.Company {
+			t.Fatal("companies do not match")
+		}
+		if vaultAddr.StreetAddress != sentAddr.StreetAddress {
+			t.Fatal("street addresses do not match")
+		}
+		if vaultAddr.ExtendedAddress != sentAddr.ExtendedAddress {
+			t.Fatal("extended addresses do not match")
+		}
+		if vaultAddr.Locality != sentAddr.Locality {
+			t.Fatal("localities do not match")
+		}
+		if vaultAddr.Region != sentAddr.Region {
+			t.Fatal("regions do not match")
+		}
+		if vaultAddr.CountryCodeAlpha2 != sentAddr.CountryCodeAlpha2 {
+			t.Fatal("country alpha2 codes do not match")
+		}
+		if vaultAddr.CountryCodeAlpha3 != sentAddr.CountryCodeAlpha3 {
+			t.Fatal("country alpha3 codes do not match")
+		}
+		if vaultAddr.CountryCodeNumeric != sentAddr.CountryCodeNumeric {
+			t.Fatal("country numeric codes do not match")
+		}
+		if vaultAddr.CountryName != sentAddr.CountryName {
+			t.Fatal("country names do not match")
+		}
+		if vaultAddr.CreatedAt == nil {
+			t.Fatal("generated created at is empty")
+		}
+		if vaultAddr.UpdatedAt == nil {
+			t.Fatal("generated updated at is empty")
+		}
+	}
+
+	err = testGateway.Customer().Delete(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
