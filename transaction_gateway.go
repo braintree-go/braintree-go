@@ -153,52 +153,94 @@ func (g *TransactionGateway) Find(ctx context.Context, id string) (*Transaction,
 	return nil, &invalidResponseError{resp}
 }
 
-// Search finds all transactions matching the search query.
-// Per https://developers.braintreepayments.com/reference/general/searching/search-results a max of 20,000 results can be returned.
+// Search finds transactions matching the search query, returning the first
+// page of results. Use SearchNext to get subsequent pages.
 func (g *TransactionGateway) Search(ctx context.Context, query *SearchQuery) (*TransactionSearchResult, error) {
-	// Get the ids of all transactions that match the search criteria.
+	searchResult, err := g.fetchTransactionIDs(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	pageSize := searchResult.PageSize
+	ids := searchResult.Ids.Item
+
+	endOffset := pageSize
+	if endOffset > len(ids) {
+		endOffset = len(ids)
+	}
+
+	firstPageQuery := query.shallowCopy()
+	firstPageQuery.AddMultiField("ids").Items = ids[:endOffset]
+	firstPageTransactions, err := g.fetchTransactions(ctx, firstPageQuery)
+
+	firstPageResult := &TransactionSearchResult{
+		TotalItems:        len(ids),
+		TotalIDs:          ids,
+		CurrentPageNumber: 1,
+		PageSize:          pageSize,
+		Transactions:      firstPageTransactions,
+		searchQuery:       query,
+	}
+
+	return firstPageResult, err
+}
+
+// SearchNext finds the next page of transactions matching the search query.
+// Use Search to start a search and get the first page of results.
+// Returns a nil result and nil error when no more results are available.
+func (g *TransactionGateway) SearchNext(ctx context.Context, result *TransactionSearchResult) (*TransactionSearchResult, error) {
+	startOffset := result.CurrentPageNumber * result.PageSize
+	endOffset := startOffset + result.PageSize
+	if endOffset > len(result.TotalIDs) {
+		endOffset = len(result.TotalIDs)
+	}
+	if startOffset >= endOffset {
+		return nil, nil
+	}
+
+	nextPageQuery := result.searchQuery.shallowCopy()
+	nextPageQuery.AddMultiField("ids").Items = result.TotalIDs[startOffset:endOffset]
+	nextPageTransactions, err := g.fetchTransactions(ctx, nextPageQuery)
+
+	nextPageResult := &TransactionSearchResult{
+		TotalItems:        result.TotalItems,
+		TotalIDs:          result.TotalIDs,
+		CurrentPageNumber: result.CurrentPageNumber + 1,
+		PageSize:          result.PageSize,
+		Transactions:      nextPageTransactions,
+		searchQuery:       result.searchQuery,
+	}
+
+	return nextPageResult, err
+}
+
+func (g *TransactionGateway) fetchTransactionIDs(ctx context.Context, query *SearchQuery) (*searchResults, error) {
 	resp, err := g.execute(ctx, "POST", "transactions/advanced_search_ids", query)
 	if err != nil {
 		return nil, err
 	}
-	v := new(TransactionSearchResult)
-	err = xml.Unmarshal(resp.Body, v)
+	var v searchResults
+	err = xml.Unmarshal(resp.Body, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	// Get transaction details and add them to the TransactionSearchResult. Only v.PageSize transactions can be fetched at one time.
-	totalItems := len(v.Ids.Item)
-	txs, err := fetchTransactions(ctx, g, query, v.Ids.Item, totalItems, v.PageSize)
-	if err != nil {
-		return nil, err
-	}
-	v.Transactions = txs
-
-	// Add data for backward compatibility. CurrnetPageNumber is pretty meaningless though.
-	v.CurrentPageNumber = 1
-	v.TotalItems = totalItems
-
-	return v, err
+	return &v, err
 }
 
-func fetchTransactions(ctx context.Context, g executer, query *SearchQuery, txIds []string, totalItems int, pageSize int) ([]*Transaction, error) {
-	txs := make([]*Transaction, 0)
-	ids := query.AddMultiField("ids")
-	for i := 0; i < totalItems; i += pageSize {
-		ids.Items = txIds[i:min(i+pageSize, totalItems)]
-		res, fetchError := fetchTransactionPage(ctx, g, query)
-		if fetchError != nil {
-			return nil, fetchError
-		}
-		for _, tx := range res.Transactions {
-			txs = append(txs, tx)
-		}
+func (g *TransactionGateway) fetchTransactions(ctx context.Context, query *SearchQuery) ([]*Transaction, error) {
+	resp, err := g.execute(ctx, "POST", "transactions/advanced_search", query)
+	if err != nil {
+		return nil, err
 	}
-	if len(txs) != totalItems {
-		return nil, fmt.Errorf("Unexpected number of transactions. Got %v, want %v.", len(txs), totalItems)
+	var v struct {
+		XMLName      string         `xml:"credit-card-transactions"`
+		Transactions []*Transaction `xml:"transaction"`
 	}
-	return txs, nil
+	err = xml.Unmarshal(resp.Body, &v)
+	if err != nil {
+		return nil, err
+	}
+	return v.Transactions, err
 }
 
 type testOperationPerformedInProductionError struct {
@@ -207,39 +249,4 @@ type testOperationPerformedInProductionError struct {
 
 func (e *testOperationPerformedInProductionError) Error() string {
 	return fmt.Sprint("Operation not allowed in production environment")
-}
-
-// FetchTransactionPage returns a page of transactions including details for a given query.
-func fetchTransactionPage(ctx context.Context, g executer, query *SearchQuery) (*transactionDetailSearchResult, error) {
-	resp, err := g.execute(ctx, "POST", "transactions/advanced_search", query)
-	if err != nil {
-		return nil, err
-	}
-	v := new(transactionDetailSearchResult)
-	err = xml.Unmarshal(resp.Body, v)
-	if err != nil {
-		return nil, err
-	}
-	return v, err
-}
-
-func min(a, b int) int {
-	if a <= b {
-		return a
-	}
-	return b
-}
-
-// TransactionDetailSearchResult is used to fetch a page of transactions with all details.
-type transactionDetailSearchResult struct {
-	XMLName           string         `xml:"credit-card-transactions"`
-	CurrentPageNumber int            `xml:"current-page-number"`
-	PageSize          int            `xml:"page-size"`
-	TotalItems        int            `xml:"total-items"`
-	Transactions      []*Transaction `xml:"transaction"`
-}
-
-// Executer provides an execute method.
-type executer interface {
-	execute(ctx context.Context, method, path string, xmlObj interface{}) (*Response, error)
 }

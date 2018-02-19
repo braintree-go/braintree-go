@@ -10,9 +10,9 @@ type SearchQuery struct {
 	Fields  []interface{}
 }
 
-type SearchResults struct {
+type searchResults struct {
 	XMLName  string `xml:"search-results"`
-	PageSize string `xml:"page-size"`
+	PageSize int    `xml:"page-size"`
 	Ids      struct {
 		Item []string `xml:"item"`
 	} `xml:"ids"`
@@ -111,4 +111,11 @@ func (s *SearchQuery) AddMultiField(field string) *MultiField {
 	}
 	s.Fields = append(s.Fields, f)
 	return f
+}
+
+func (s *SearchQuery) shallowCopy() *SearchQuery {
+	return &SearchQuery{
+		XMLName: s.XMLName,
+		Fields:  s.Fields[:len(s.Fields):len(s.Fields)],
+	}
 }

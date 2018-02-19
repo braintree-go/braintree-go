@@ -144,7 +144,7 @@ func TestSearchResultUnmarshal(t *testing.T) {
   </ids>
 </search-results>`
 
-	var v SearchResults
+	var v searchResults
 	err := xml.Unmarshal([]byte(xmls), &v)
 	if err != nil {
 		t.Fatal(err)

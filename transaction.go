@@ -213,19 +213,14 @@ func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.St
 }
 
 type TransactionSearchResult struct {
-	XMLName string `xml:"search-results"`
-	// CurrentPageNumber is not in the XML response but added manually for backward compatability.
-	CurrentPageNumber int
-	// PageSize indicates the page size for subsequent calls to get transaction detail. There can be more items in the Ids struct than indicated by PageSize.
-	PageSize int `xml:"page-size"`
-	// TotalItems is not in the XML response but added manually for backward compatability
 	TotalItems int
-	// Transactions is not in the XML response, but added in manually.
-	Transactions []*Transaction
-	// Per https://developers.braintreepayments.com/reference/general/searching/search-results/java only 20,000 ids can be returned.
-	Ids struct {
-		Item []string `xml:"item"`
-	} `xml:"ids"`
+	TotalIDs   []string
+
+	CurrentPageNumber int
+	PageSize          int
+	Transactions      []*Transaction
+
+	searchQuery *SearchQuery
 }
 
 type RiskData struct {

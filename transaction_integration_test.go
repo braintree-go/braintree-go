@@ -132,48 +132,70 @@ func TestTransactionSearchPagination(t *testing.T) {
 	ctx := context.Background()
 
 	txg := testGateway.Transaction()
-	createTx := func(amount *Decimal, customerName string) error {
-		_, err := txg.Create(ctx, &TransactionRequest{
+
+	const transactionCount = 51
+	transactionIDs := map[string]bool{}
+	prefix := "PaginationTest-" + testhelpers.RandomString()
+	for i := 0; i < transactionCount; i++ {
+		unique := testhelpers.RandomString()
+		tx, err := txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
-			Amount: amount,
+			Amount: randomAmount(),
 			Customer: &Customer{
-				FirstName: customerName,
+				FirstName: prefix + unique,
 			},
 			CreditCard: &CreditCard{
 				Number:         testCreditCards["visa"].Number,
 				ExpirationDate: "05/14",
 			},
 		})
-		return err
-	}
-
-	const pageSize = 50
-	prefix := "PaginationTest-" + testhelpers.RandomString()
-	for i := 0; i < pageSize+1; i++ {
-		unique := testhelpers.RandomString()
-		if err := createTx(randomAmount(), prefix+unique); err != nil {
+		if err != nil {
 			t.Fatal(err)
 		}
+		transactionIDs[tx.Id] = true
 	}
 
-	query := new(SearchQuery)
-	f := query.AddTextField("customer-first-name")
-	f.StartsWith = prefix
+	t.Logf("transactionIDs = %v", transactionIDs)
 
-	result, err := txg.Search(ctx, query)
+	query := new(SearchQuery)
+	query.AddTextField("customer-first-name").StartsWith = prefix
+
+	results, err := txg.Search(ctx, query)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if result.TotalItems != pageSize+1 {
-		t.Fatalf("result.TotalItems = %v, want %v", result.TotalItems, pageSize+1)
+	t.Logf("results.TotalItems = %v", results.TotalItems)
+	t.Logf("results.TotalIDs = %v", results.TotalIDs)
+	t.Logf("results.PageSize = %v", results.PageSize)
+
+	if results.TotalItems != transactionCount {
+		t.Fatalf("results.TotalItems = %v, want %v", results.TotalItems, transactionCount)
 	}
 
-	for i := 0; i < pageSize+1; i++ {
-		tx := result.Transactions[i]
-		if firstName := tx.Customer.FirstName; !strings.HasPrefix(firstName, prefix) {
-			t.Fatalf("tx.Customer.FirstName = %q, want prefix of %q", firstName, prefix)
+	for {
+		for _, tx := range results.Transactions {
+			if firstName := tx.Customer.FirstName; !strings.HasPrefix(firstName, prefix) {
+				t.Fatalf("tx.Customer.FirstName = %q, want prefix of %q", firstName, prefix)
+			}
+			if transactionIDs[tx.Id] {
+				delete(transactionIDs, tx.Id)
+			} else {
+				t.Fatalf("tx.Id = %q, not expected", tx.Id)
+			}
 		}
+
+		results, err = txg.SearchNext(ctx, results)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if results == nil {
+			break
+		}
+	}
+
+	if len(transactionIDs) > 0 {
+		t.Fatalf("transactions not returned = %v", transactionIDs)
 	}
 }
 
@@ -221,7 +243,6 @@ func TestTransactionSearchTime(t *testing.T) {
 		}
 
 		if result.TotalItems != 1 {
-			t.Log(result.TotalItems)
 			t.Fatal(result.Transactions)
 		}
 
