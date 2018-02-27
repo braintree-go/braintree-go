@@ -616,6 +616,33 @@ func TestTransactionRiskDataFields(t *testing.T) {
 	}
 }
 
+func TestTransactionSkipAdvancedFraudChecks(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	tx := &TransactionRequest{
+		Type:               "sale",
+		Amount:             randomAmount(),
+		PaymentMethodNonce: FakeNonceTransactable,
+		RiskData: &RiskDataRequest{
+			CustomerBrowser: "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/540.0 (KHTML,like Gecko) Chrome/9.1.0.0 Safari/540.0",
+			CustomerIP:      "127.0.0.1",
+		},
+		Options: &TransactionOptions{
+			SkipAdvancedFraudChecking: true,
+		},
+	}
+
+	tx2, err := testGateway.Transaction().Create(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx2.RiskData != nil {
+		t.Fatal("expected tx2.RiskData to be empty")
+	}
+}
+
 func TestAllTransactionFields(t *testing.T) {
 	t.Parallel()
 
