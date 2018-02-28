@@ -303,7 +303,7 @@ func TestCustomerAddresses(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
 		FirstName: "Jenna",
 		LastName:  "Smith",
 	})
@@ -314,9 +314,8 @@ func TestCustomerAddresses(t *testing.T) {
 		t.Fatal("invalid customer id")
 	}
 
-	addrs := []*Address{
-		&Address{
-			CustomerId:         customer.Id,
+	addrReqs := []*AddressRequest{
+		&AddressRequest{
 			FirstName:          "Jenna",
 			LastName:           "Smith",
 			Company:            "Braintree",
@@ -330,8 +329,7 @@ func TestCustomerAddresses(t *testing.T) {
 			CountryCodeNumeric: "840",
 			CountryName:        "United States of America",
 		},
-		&Address{
-			CustomerId:         customer.Id,
+		&AddressRequest{
 			FirstName:          "Bob",
 			LastName:           "Rob",
 			Company:            "Paypal",
@@ -347,8 +345,8 @@ func TestCustomerAddresses(t *testing.T) {
 		},
 	}
 
-	for _, addr := range addrs {
-		_, err = testGateway.Address().Create(ctx, addr)
+	for _, addrReq := range addrReqs {
+		_, err = testGateway.Address().Create(ctx, customer.Id, addrReq)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -363,67 +361,67 @@ func TestCustomerAddresses(t *testing.T) {
 		t.Fatal("wrong number of addresses returned")
 	}
 
-	for _, vaultAddr := range customerWithAddrs.Addresses.Address {
-		if vaultAddr.Id == "" {
+	for _, addr := range customerWithAddrs.Addresses.Address {
+		if addr.Id == "" {
 			t.Fatal("generated id is empty")
 		}
 
-		var sentAddr *Address
-		for _, addr := range addrs {
-			if addr.PostalCode == vaultAddr.PostalCode {
-				sentAddr = addr
+		var addrReq *AddressRequest
+		for _, ar := range addrReqs {
+			if ar.PostalCode == addr.PostalCode {
+				addrReq = ar
 				break
 			}
 		}
 
-		if sentAddr == nil {
+		if addrReq == nil {
 			t.Fatal("did not return sent address")
 		}
 
-		t.Logf("%+v\n", vaultAddr)
-		t.Logf("%+v\n", sentAddr)
+		t.Logf("%+v\n", addr)
+		t.Logf("%+v\n", addrReq)
 
-		if vaultAddr.CustomerId != customer.Id {
-			t.Fatal("customer ids do not match")
+		if addr.CustomerId != customer.Id {
+			t.Errorf("got customer id %s, want %s", addr.CustomerId, customer.Id)
 		}
-		if vaultAddr.FirstName != sentAddr.FirstName {
-			t.Fatal("first names do not match")
+		if addr.FirstName != addrReq.FirstName {
+			t.Errorf("got first name %s, want %s", addr.FirstName, addrReq.FirstName)
 		}
-		if vaultAddr.LastName != sentAddr.LastName {
-			t.Fatal("last names do not match")
+		if addr.LastName != addrReq.LastName {
+			t.Errorf("got last name %s, want %s", addr.LastName, addrReq.LastName)
 		}
-		if vaultAddr.Company != sentAddr.Company {
-			t.Fatal("companies do not match")
+		if addr.Company != addrReq.Company {
+			t.Errorf("got company %s, want %s", addr.Company, addrReq.Company)
 		}
-		if vaultAddr.StreetAddress != sentAddr.StreetAddress {
-			t.Fatal("street addresses do not match")
+		if addr.StreetAddress != addrReq.StreetAddress {
+			t.Errorf("got street address %s, want %s", addr.StreetAddress, addrReq.StreetAddress)
 		}
-		if vaultAddr.ExtendedAddress != sentAddr.ExtendedAddress {
-			t.Fatal("extended addresses do not match")
+		if addr.ExtendedAddress != addrReq.ExtendedAddress {
+			t.Errorf("got extended address %s, want %s", addr.ExtendedAddress, addrReq.ExtendedAddress)
 		}
-		if vaultAddr.Locality != sentAddr.Locality {
-			t.Fatal("localities do not match")
+		if addr.Locality != addrReq.Locality {
+			t.Errorf("got locality %s, want %s", addr.Locality, addrReq.Locality)
 		}
-		if vaultAddr.Region != sentAddr.Region {
-			t.Fatal("regions do not match")
+		if addr.Region != addrReq.Region {
+			t.Errorf("got region %s, want %s", addr.Region, addrReq.Region)
 		}
-		if vaultAddr.CountryCodeAlpha2 != sentAddr.CountryCodeAlpha2 {
-			t.Fatal("country alpha2 codes do not match")
+		if addr.CountryCodeAlpha2 != addrReq.CountryCodeAlpha2 {
+			t.Errorf("got country code alpha 2 %s, want %s", addr.CountryCodeAlpha2, addrReq.CountryCodeAlpha2)
 		}
-		if vaultAddr.CountryCodeAlpha3 != sentAddr.CountryCodeAlpha3 {
-			t.Fatal("country alpha3 codes do not match")
+		if addr.CountryCodeAlpha3 != addrReq.CountryCodeAlpha3 {
+			t.Errorf("got country code alpha 3 %s, want %s", addr.CountryCodeAlpha3, addrReq.CountryCodeAlpha3)
 		}
-		if vaultAddr.CountryCodeNumeric != sentAddr.CountryCodeNumeric {
-			t.Fatal("country numeric codes do not match")
+		if addr.CountryCodeNumeric != addrReq.CountryCodeNumeric {
+			t.Errorf("got country code numeric %s, want %s", addr.CountryCodeNumeric, addrReq.CountryCodeNumeric)
 		}
-		if vaultAddr.CountryName != sentAddr.CountryName {
-			t.Fatal("country names do not match")
+		if addr.CountryName != addrReq.CountryName {
+			t.Errorf("got country name %s, want %s", addr.CountryName, addrReq.CountryName)
 		}
-		if vaultAddr.CreatedAt == nil {
-			t.Fatal("generated created at is empty")
+		if addr.CreatedAt == nil {
+			t.Error("got created at nil, want a value")
 		}
-		if vaultAddr.UpdatedAt == nil {
-			t.Fatal("generated updated at is empty")
+		if addr.UpdatedAt == nil {
+			t.Error("got updated at nil, want a value")
 		}
 	}
 
