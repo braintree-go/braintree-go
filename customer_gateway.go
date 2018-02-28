@@ -11,7 +11,7 @@ type CustomerGateway struct {
 
 // Create creates a new customer from the passed in customer object.
 // If no Id is set, Braintree will assign one.
-func (g *CustomerGateway) Create(ctx context.Context, c *Customer) (*Customer, error) {
+func (g *CustomerGateway) Create(ctx context.Context, c *CustomerRequest) (*Customer, error) {
 	resp, err := g.execute(ctx, "POST", "customers", c)
 	if err != nil {
 		return nil, err
@@ -25,8 +25,8 @@ func (g *CustomerGateway) Create(ctx context.Context, c *Customer) (*Customer, e
 
 // Update updates any field that is set in the passed customer object.
 // The Id field is mandatory.
-func (g *CustomerGateway) Update(ctx context.Context, c *Customer) (*Customer, error) {
-	resp, err := g.execute(ctx, "PUT", "customers/"+c.Id, c)
+func (g *CustomerGateway) Update(ctx context.Context, c *CustomerRequest) (*Customer, error) {
+	resp, err := g.execute(ctx, "PUT", "customers/"+c.ID, c)
 	if err != nil {
 		return nil, err
 	}

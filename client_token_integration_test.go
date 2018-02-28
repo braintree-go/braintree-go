@@ -28,7 +28,7 @@ func TestClientTokenWithCustomer(t *testing.T) {
 
 	ctx := context.Background()
 
-	customerRequest := &Customer{FirstName: "Lionel"}
+	customerRequest := &CustomerRequest{FirstName: "Lionel"}
 
 	customer, err := testGateway.Customer().Create(ctx, customerRequest)
 	if err != nil {

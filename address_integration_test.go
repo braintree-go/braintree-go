@@ -12,7 +12,7 @@ func TestAddress(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
 		FirstName: "Jenna",
 		LastName:  "Smith",
 	})
@@ -23,8 +23,7 @@ func TestAddress(t *testing.T) {
 		t.Fatal("invalid customer id")
 	}
 
-	addr := &Address{
-		CustomerId:         customer.Id,
+	addr := &AddressRequest{
 		FirstName:          "Jenna",
 		LastName:           "Smith",
 		Company:            "Braintree",
@@ -39,7 +38,7 @@ func TestAddress(t *testing.T) {
 		CountryName:        "United States of America",
 	}
 
-	addr2, err := testGateway.Address().Create(ctx, addr)
+	addr2, err := testGateway.Address().Create(ctx, customer.Id, addr)
 	if err != nil {
 		t.Fatal(err)
 	}

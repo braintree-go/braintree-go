@@ -17,7 +17,7 @@ func TestCustomer(t *testing.T) {
 
 	ctx := context.Background()
 
-	oc := &Customer{
+	oc := &CustomerRequest{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
 		Company:   "Braintree",
@@ -64,8 +64,8 @@ func TestCustomer(t *testing.T) {
 	// Update
 	unique := testhelpers.RandomString()
 	newFirstName := "John" + unique
-	c2, err := testGateway.Customer().Update(ctx, &Customer{
-		Id:        customer.Id,
+	c2, err := testGateway.Customer().Update(ctx, &CustomerRequest{
+		ID:        customer.Id,
 		FirstName: newFirstName,
 	})
 
@@ -136,7 +136,7 @@ func TestCustomerWithCustomFields(t *testing.T) {
 		"custom_field_1": "custom value",
 	}
 
-	c := &Customer{
+	c := &CustomerRequest{
 		CustomFields: customFields,
 	}
 
@@ -164,7 +164,7 @@ func TestCustomerPaymentMethods(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -204,7 +204,7 @@ func TestCustomerDefaultPaymentMethod(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -239,7 +239,7 @@ func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -283,7 +283,7 @@ func TestCustomerPaymentMethodNonce(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{PaymentMethodNonce: FakeNonceTransactable})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{PaymentMethodNonce: FakeNonceTransactable})
 	if err != nil {
 		t.Fatal(err)
 	}

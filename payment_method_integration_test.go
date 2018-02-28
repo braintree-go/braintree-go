@@ -17,7 +17,7 @@ func TestPaymentMethod(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &Customer{})
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -114,7 +114,7 @@ func TestPaymentMethodFailedAutoVerification(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &Customer{})
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -140,7 +140,7 @@ func TestPaymentMethodForceNotVerified(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &Customer{})
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}

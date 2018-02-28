@@ -87,7 +87,7 @@ type TransactionRequest struct {
 	MerchantAccountId   string                    `xml:"merchant-account-id,omitempty"`
 	PlanId              string                    `xml:"plan-id,omitempty"`
 	CreditCard          *CreditCard               `xml:"credit-card,omitempty"`
-	Customer            *Customer                 `xml:"customer,omitempty"`
+	Customer            *CustomerRequest          `xml:"customer,omitempty"`
 	BillingAddress      *Address                  `xml:"billing,omitempty"`
 	ShippingAddress     *Address                  `xml:"shipping,omitempty"`
 	TaxAmount           *Decimal                  `xml:"tax-amount,omitempty"`
@@ -155,6 +155,7 @@ type TransactionOptions struct {
 	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
 	HoldInEscrow                     bool                             `xml:"hold-in-escrow,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
+	SkipAdvancedFraudChecking        bool                             `xml:"skip_advanced_fraud_checking,omitempty"`
 }
 
 type TransactionOptionsPaypalRequest struct {
