@@ -82,7 +82,7 @@ func TestTransactionSearch(t *testing.T) {
 		_, err := txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
 			Amount: amount,
-			Customer: &Customer{
+			Customer: &CustomerRequest{
 				FirstName: customerName,
 			},
 			CreditCard: &CreditCard{
@@ -133,7 +133,7 @@ func TestTransactionSearchTime(t *testing.T) {
 		_, err := txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
 			Amount: amount,
-			Customer: &Customer{
+			Customer: &CustomerRequest{
 				FirstName: customerName,
 			},
 			CreditCard: &CreditCard{
@@ -530,7 +530,7 @@ func TestTransactionPaypalFields(t *testing.T) {
 	subData := make(map[string]string)
 	subData["faz"] = "bar"
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -660,7 +660,7 @@ func TestAllTransactionFields(t *testing.T) {
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
-		Customer: &Customer{
+		Customer: &CustomerRequest{
 			FirstName: "Lionel",
 		},
 		BillingAddress: &Address{
@@ -744,7 +744,7 @@ func TestAllTransactionFields(t *testing.T) {
 		t.Fatalf("expected CreditCard.Token to be equal, but %s was not %s", tx2.CreditCard.Token, tx.CreditCard.Token)
 	}
 	if tx2.Customer.Id == "" {
-		t.Fatalf("expected Customer.Id to be equal, but %s was not %s", tx2.Customer.Id, tx.Customer.Id)
+		t.Fatalf("expected Customer.Id to be equal, but %s was not %s", tx2.Customer.Id, tx.Customer.ID)
 	}
 	if tx2.Status != TransactionStatusSubmittedForSettlement {
 		t.Fatalf("expected tx2.Status to be %s, but got %s", TransactionStatusSubmittedForSettlement, tx2.Status)
@@ -808,7 +808,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &Customer{
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
 		CreditCard: &CreditCard{
 			Number:         testCreditCards["discover"].Number,
 			ExpirationDate: "05/14",

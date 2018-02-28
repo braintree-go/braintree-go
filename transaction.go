@@ -87,7 +87,7 @@ type TransactionRequest struct {
 	MerchantAccountId   string                    `xml:"merchant-account-id,omitempty"`
 	PlanId              string                    `xml:"plan-id,omitempty"`
 	CreditCard          *CreditCard               `xml:"credit-card,omitempty"`
-	Customer            *Customer                 `xml:"customer,omitempty"`
+	Customer            *CustomerRequest          `xml:"customer,omitempty"`
 	BillingAddress      *Address                  `xml:"billing,omitempty"`
 	ShippingAddress     *Address                  `xml:"shipping,omitempty"`
 	TaxAmount           *Decimal                  `xml:"tax-amount,omitempty"`
