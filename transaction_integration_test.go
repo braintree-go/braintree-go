@@ -83,7 +83,7 @@ func TestTransactionSearchIDs(t *testing.T) {
 		return txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
 			Amount: amount,
-			Customer: &Customer{
+			Customer: &CustomerRequest{
 				FirstName: customerName,
 			},
 			CreditCard: &CreditCard{
@@ -193,7 +193,7 @@ func TestTransactionSearchPagination(t *testing.T) {
 		tx, err := txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
 			Amount: randomAmount(),
-			Customer: &Customer{
+			Customer: &CustomerRequest{
 				FirstName: prefix + unique,
 			},
 			CreditCard: &CreditCard{
