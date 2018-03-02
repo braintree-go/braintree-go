@@ -132,31 +132,3 @@ func TestSearchXMLEncode(t *testing.T) {
 		t.Fatalf("got %#v, want %#v", xmls, expect)
 	}
 }
-
-func TestSearchResultUnmarshal(t *testing.T) {
-	t.Parallel()
-
-	xmls := `<search-results>
-  <page-size type="integer">50</page-size>
-  <ids type="array">
-      <item>k658ww</item>
-      <item>fd2h96</item>
-  </ids>
-</search-results>`
-
-	var v searchResults
-	err := xml.Unmarshal([]byte(xmls), &v)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if len(v.Ids.Item) != 2 {
-		t.Fatal(v.Ids)
-	}
-	if x := v.Ids.Item[0]; x != "k658ww" {
-		t.Fatal(x)
-	}
-	if x := v.Ids.Item[1]; x != "fd2h96" {
-		t.Fatal(x)
-	}
-}
