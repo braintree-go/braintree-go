@@ -73,6 +73,58 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	}
 }
 
+func TestTransactionSearchIDs(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	txg := testGateway.Transaction()
+	createTx := func(amount *Decimal, customerName string) (*Transaction, error) {
+		return txg.Create(ctx, &TransactionRequest{
+			Type:   "sale",
+			Amount: amount,
+			Customer: &Customer{
+				FirstName: customerName,
+			},
+			CreditCard: &CreditCard{
+				Number:         testCreditCards["visa"].Number,
+				ExpirationDate: "05/14",
+			},
+		})
+	}
+
+	unique := testhelpers.RandomString()
+
+	name0 := "Erik-" + unique
+	tx1, err := createTx(randomAmount(), name0)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	name1 := "Lionel-" + unique
+	_, err = createTx(randomAmount(), name1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	query := new(SearchQuery)
+	f := query.AddTextField("customer-first-name")
+	f.Is = name0
+
+	result, err := txg.SearchIDs(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(result.IDs) != 1 {
+		t.Fatal(result.IDs)
+	}
+
+	if tx1.Id != result.IDs[0] {
+		t.Fatal(result)
+	}
+}
+
 func TestTransactionSearch(t *testing.T) {
 	t.Parallel()
 

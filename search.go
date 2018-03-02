@@ -20,12 +20,9 @@ func (s *SearchQuery) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	return e.EncodeElement(&x, start)
 }
 
-type searchResults struct {
-	XMLName  string `xml:"search-results"`
-	PageSize int    `xml:"page-size"`
-	Ids      struct {
-		Item []string `xml:"item"`
-	} `xml:"ids"`
+type SearchResult struct {
+	PageSize int
+	IDs      []string
 }
 
 type TextField struct {

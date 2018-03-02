@@ -153,16 +153,41 @@ func (g *TransactionGateway) Find(ctx context.Context, id string) (*Transaction,
 	return nil, &invalidResponseError{resp}
 }
 
+// SearchIDs finds transactions matching the search query, returning the IDs
+// only. Use Search and SearchNext to get pages of transactions.
+func (g *TransactionGateway) SearchIDs(ctx context.Context, query *SearchQuery) (*SearchResult, error) {
+	resp, err := g.execute(ctx, "POST", "transactions/advanced_search_ids", query)
+	if err != nil {
+		return nil, err
+	}
+
+	var searchResult struct {
+		PageSize int `xml:"page-size"`
+		Ids      struct {
+			Item []string `xml:"item"`
+		} `xml:"ids"`
+	}
+	err = xml.Unmarshal(resp.Body, &searchResult)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SearchResult{
+		PageSize: searchResult.PageSize,
+		IDs:      searchResult.Ids.Item,
+	}, nil
+}
+
 // Search finds transactions matching the search query, returning the first
 // page of results. Use SearchNext to get subsequent pages.
 func (g *TransactionGateway) Search(ctx context.Context, query *SearchQuery) (*TransactionSearchResult, error) {
-	searchResult, err := g.fetchTransactionIDs(ctx, query)
+	searchResult, err := g.SearchIDs(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 
 	pageSize := searchResult.PageSize
-	ids := searchResult.Ids.Item
+	ids := searchResult.IDs
 
 	endOffset := pageSize
 	if endOffset > len(ids) {
@@ -212,19 +237,6 @@ func (g *TransactionGateway) SearchNext(ctx context.Context, result *Transaction
 	}
 
 	return nextPageResult, err
-}
-
-func (g *TransactionGateway) fetchTransactionIDs(ctx context.Context, query *SearchQuery) (*searchResults, error) {
-	resp, err := g.execute(ctx, "POST", "transactions/advanced_search_ids", query)
-	if err != nil {
-		return nil, err
-	}
-	var v searchResults
-	err = xml.Unmarshal(resp.Body, &v)
-	if err != nil {
-		return nil, err
-	}
-	return &v, err
 }
 
 func (g *TransactionGateway) fetchTransactions(ctx context.Context, query *SearchQuery) ([]*Transaction, error) {
