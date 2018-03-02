@@ -297,3 +297,136 @@ func TestCustomerPaymentMethodNonce(t *testing.T) {
 		t.Fatalf("Customer %#v has %#v payment method(s), want 1 payment method", customerFound, len(customer.PaymentMethods()))
 	}
 }
+
+func TestCustomerAddresses(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
+		FirstName: "Jenna",
+		LastName:  "Smith",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if customer.Id == "" {
+		t.Fatal("invalid customer id")
+	}
+
+	addrReqs := []*AddressRequest{
+		&AddressRequest{
+			FirstName:          "Jenna",
+			LastName:           "Smith",
+			Company:            "Braintree",
+			StreetAddress:      "1 E Main St",
+			ExtendedAddress:    "Suite 403",
+			Locality:           "Chicago",
+			Region:             "Illinois",
+			PostalCode:         "60622",
+			CountryCodeAlpha2:  "US",
+			CountryCodeAlpha3:  "USA",
+			CountryCodeNumeric: "840",
+			CountryName:        "United States of America",
+		},
+		&AddressRequest{
+			FirstName:          "Bob",
+			LastName:           "Rob",
+			Company:            "Paypal",
+			StreetAddress:      "1 W Main St",
+			ExtendedAddress:    "Suite 402",
+			Locality:           "Boston",
+			Region:             "Massachusetts",
+			PostalCode:         "02140",
+			CountryCodeAlpha2:  "US",
+			CountryCodeAlpha3:  "USA",
+			CountryCodeNumeric: "840",
+			CountryName:        "United States of America",
+		},
+	}
+
+	for _, addrReq := range addrReqs {
+		_, err = testGateway.Address().Create(ctx, customer.Id, addrReq)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	customerWithAddrs, err := testGateway.Customer().Find(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if customerWithAddrs.Addresses == nil || len(customerWithAddrs.Addresses.Address) != 2 {
+		t.Fatal("wrong number of addresses returned")
+	}
+
+	for _, addr := range customerWithAddrs.Addresses.Address {
+		if addr.Id == "" {
+			t.Fatal("generated id is empty")
+		}
+
+		var addrReq *AddressRequest
+		for _, ar := range addrReqs {
+			if ar.PostalCode == addr.PostalCode {
+				addrReq = ar
+				break
+			}
+		}
+
+		if addrReq == nil {
+			t.Fatal("did not return sent address")
+		}
+
+		t.Logf("%+v\n", addr)
+		t.Logf("%+v\n", addrReq)
+
+		if addr.CustomerId != customer.Id {
+			t.Errorf("got customer id %s, want %s", addr.CustomerId, customer.Id)
+		}
+		if addr.FirstName != addrReq.FirstName {
+			t.Errorf("got first name %s, want %s", addr.FirstName, addrReq.FirstName)
+		}
+		if addr.LastName != addrReq.LastName {
+			t.Errorf("got last name %s, want %s", addr.LastName, addrReq.LastName)
+		}
+		if addr.Company != addrReq.Company {
+			t.Errorf("got company %s, want %s", addr.Company, addrReq.Company)
+		}
+		if addr.StreetAddress != addrReq.StreetAddress {
+			t.Errorf("got street address %s, want %s", addr.StreetAddress, addrReq.StreetAddress)
+		}
+		if addr.ExtendedAddress != addrReq.ExtendedAddress {
+			t.Errorf("got extended address %s, want %s", addr.ExtendedAddress, addrReq.ExtendedAddress)
+		}
+		if addr.Locality != addrReq.Locality {
+			t.Errorf("got locality %s, want %s", addr.Locality, addrReq.Locality)
+		}
+		if addr.Region != addrReq.Region {
+			t.Errorf("got region %s, want %s", addr.Region, addrReq.Region)
+		}
+		if addr.CountryCodeAlpha2 != addrReq.CountryCodeAlpha2 {
+			t.Errorf("got country code alpha 2 %s, want %s", addr.CountryCodeAlpha2, addrReq.CountryCodeAlpha2)
+		}
+		if addr.CountryCodeAlpha3 != addrReq.CountryCodeAlpha3 {
+			t.Errorf("got country code alpha 3 %s, want %s", addr.CountryCodeAlpha3, addrReq.CountryCodeAlpha3)
+		}
+		if addr.CountryCodeNumeric != addrReq.CountryCodeNumeric {
+			t.Errorf("got country code numeric %s, want %s", addr.CountryCodeNumeric, addrReq.CountryCodeNumeric)
+		}
+		if addr.CountryName != addrReq.CountryName {
+			t.Errorf("got country name %s, want %s", addr.CountryName, addrReq.CountryName)
+		}
+		if addr.CreatedAt == nil {
+			t.Error("got created at nil, want a value")
+		}
+		if addr.UpdatedAt == nil {
+			t.Error("got updated at nil, want a value")
+		}
+	}
+
+	err = testGateway.Customer().Delete(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+}

@@ -22,6 +22,7 @@ type Customer struct {
 	AndroidPayCards    *AndroidPayCards          `xml:"android-pay-cards"`
 	ApplePayCards      *ApplePayCards            `xml:"apple-pay-cards"`
 	PaymentMethodNonce string                    `xml:"payment-method-nonce"`
+	Addresses          *Addresses                `xml:"addresses"`
 }
 
 // PaymentMethods returns a slice of all PaymentMethods this customer has
