@@ -2,7 +2,6 @@ package braintree
 
 import (
 	"context"
-	"encoding/xml"
 )
 
 type AddressGateway struct {
@@ -10,13 +9,8 @@ type AddressGateway struct {
 }
 
 // Create creates a new address for the specified customer id.
-func (g *AddressGateway) Create(ctx context.Context, a *Address) (*Address, error) {
-	// Copy address so that field sanitation won't affect original
-	var cp Address = *a
-	cp.CustomerId = ""
-	cp.XMLName = xml.Name{Local: "address"}
-
-	resp, err := g.execute(ctx, "POST", "customers/"+a.CustomerId+"/addresses", &cp)
+func (g *AddressGateway) Create(ctx context.Context, customerID string, a *AddressRequest) (*Address, error) {
+	resp, err := g.execute(ctx, "POST", "customers/"+customerID+"/addresses", &a)
 	if err != nil {
 		return nil, err
 	}
@@ -38,4 +32,17 @@ func (g *AddressGateway) Delete(ctx context.Context, customerId, addrId string) 
 		return nil
 	}
 	return &invalidResponseError{resp}
+}
+
+// Updates an address for the specified id and customer id.
+func (g *AddressGateway) Update(ctx context.Context, customerID, addrID string, a *AddressRequest) (*Address, error) {
+	resp, err := g.execute(ctx, "PUT", "customers/"+customerID+"/addresses/"+addrID, a)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.address()
+	}
+	return nil, &invalidResponseError{resp}
 }
