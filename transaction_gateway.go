@@ -204,7 +204,6 @@ func (g *TransactionGateway) Search(ctx context.Context, query *SearchQuery) (*T
 		CurrentPageNumber: 1,
 		PageSize:          pageSize,
 		Transactions:      firstPageTransactions,
-		searchQuery:       query,
 	}
 
 	return firstPageResult, err
@@ -213,27 +212,26 @@ func (g *TransactionGateway) Search(ctx context.Context, query *SearchQuery) (*T
 // SearchNext finds the next page of transactions matching the search query.
 // Use Search to start a search and get the first page of results.
 // Returns a nil result and nil error when no more results are available.
-func (g *TransactionGateway) SearchNext(ctx context.Context, result *TransactionSearchResult) (*TransactionSearchResult, error) {
-	startOffset := result.CurrentPageNumber * result.PageSize
-	endOffset := startOffset + result.PageSize
-	if endOffset > len(result.TotalIDs) {
-		endOffset = len(result.TotalIDs)
+func (g *TransactionGateway) SearchNext(ctx context.Context, query *SearchQuery, prevResult *TransactionSearchResult) (*TransactionSearchResult, error) {
+	startOffset := prevResult.CurrentPageNumber * prevResult.PageSize
+	endOffset := startOffset + prevResult.PageSize
+	if endOffset > len(prevResult.TotalIDs) {
+		endOffset = len(prevResult.TotalIDs)
 	}
 	if startOffset >= endOffset {
 		return nil, nil
 	}
 
-	nextPageQuery := result.searchQuery.shallowCopy()
-	nextPageQuery.AddMultiField("ids").Items = result.TotalIDs[startOffset:endOffset]
+	nextPageQuery := query.shallowCopy()
+	nextPageQuery.AddMultiField("ids").Items = prevResult.TotalIDs[startOffset:endOffset]
 	nextPageTransactions, err := g.fetchTransactions(ctx, nextPageQuery)
 
 	nextPageResult := &TransactionSearchResult{
-		TotalItems:        result.TotalItems,
-		TotalIDs:          result.TotalIDs,
-		CurrentPageNumber: result.CurrentPageNumber + 1,
-		PageSize:          result.PageSize,
+		TotalItems:        prevResult.TotalItems,
+		TotalIDs:          prevResult.TotalIDs,
+		CurrentPageNumber: prevResult.CurrentPageNumber + 1,
+		PageSize:          prevResult.PageSize,
 		Transactions:      nextPageTransactions,
-		searchQuery:       result.searchQuery,
 	}
 
 	return nextPageResult, err

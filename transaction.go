@@ -220,8 +220,6 @@ type TransactionSearchResult struct {
 	CurrentPageNumber int
 	PageSize          int
 	Transactions      []*Transaction
-
-	searchQuery *SearchQuery
 }
 
 type RiskData struct {

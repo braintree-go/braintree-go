@@ -237,7 +237,7 @@ func TestTransactionSearchPagination(t *testing.T) {
 			}
 		}
 
-		results, err = txg.SearchNext(ctx, results)
+		results, err = txg.SearchNext(ctx, query, results)
 		if err != nil {
 			t.Fatal(err)
 		}
