@@ -1,12 +1,18 @@
-## Unreleased
+## 0.18.0 (March 2nd, 2018)
 
 BACKWARDS INCOMPATIBILITES:
 
-* Drop support for versions of TLS prior to TLS 1.2.
+* Require TLS 1.2 on outgoing connections.
+* Replace Address with AddressRequest for creating Addresses.
+* Replace Customer with CustomerRequest for creating and updating Customers.
 
 IMPROVEMENTS:
 
+* Add SearchIDs to TransactionGateway.
+* Add SearchNext to TransactionGateway.
 * Add SkipAdvancedFraudChecking to TransactionOptions.
+* Add Update to AddressGateway.
+* Add Addresses to Customer.
 
 ## 0.17.0 (January 5th, 2018)
 
