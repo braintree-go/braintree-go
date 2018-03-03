@@ -214,11 +214,12 @@ func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.St
 }
 
 type TransactionSearchResult struct {
-	XMLName           string         `xml:"credit-card-transactions"`
-	CurrentPageNumber int            `xml:"current-page-number"`
-	PageSize          int            `xml:"page-size"`
-	TotalItems        int            `xml:"total-items"`
-	Transactions      []*Transaction `xml:"transaction"`
+	TotalItems int
+	TotalIDs   []string
+
+	CurrentPageNumber int
+	PageSize          int
+	Transactions      []*Transaction
 }
 
 type RiskData struct {
