@@ -36,11 +36,13 @@ const (
 	ThreeDSecureStatusAuthSignatureVerificationFailed      = "authenticate_signature_verification_failed"
 	ThreeDSecureStatusAuthSuccessful                       = "authenticate_successful"
 	ThreeDSecureStatusAuthAttemptSuccessful                = "authenticate_attempt_successful"
-	ThreeDSecureStatusAuthFailed                           = "authenticate_attempt_successful"
+	ThreeDSecureStatusAuthFailed                           = "authenticate_failed"
 	ThreeDSecureStatusAuthUnableToAuthenticate             = "authenticate_unable_to_authenticate"
 	ThreeDSecureStatusAuthError                            = "authenticate_error"
 )
 
+// Enrollment values can be found here:
+// https://developers.braintreepayments.com/reference/response/transaction/php#three_d_secure_info.enrolled
 const (
 	ThreeDSecureEnrollementYes            = "Y"
 	ThreeDSecureEnrollementNo             = "N"
@@ -172,8 +174,8 @@ type Transactions struct {
 	Transaction []*Transaction `xml:"transaction"`
 }
 
-type Transaction3DS struct {
-	Required bool `xml:"required,omitempty"`
+type TransactionOptionsThreeDSecure struct {
+	Required bool `xml:"required"`
 }
 
 type TransactionOptions struct {
@@ -184,7 +186,7 @@ type TransactionOptions struct {
 	HoldInEscrow                     bool                             `xml:"hold-in-escrow,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
 	SkipAdvancedFraudChecking        bool                             `xml:"skip_advanced_fraud_checking,omitempty"`
-	ThreeDSecure                     *Transaction3DS                  `xml:"three-d-secure,omitempty`
+	ThreeDSecure                     *TransactionOptionsThreeDSecure  `xml:"three-d-secure,omitempty"`
 }
 
 type TransactionOptionsPaypalRequest struct {
