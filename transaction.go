@@ -51,6 +51,15 @@ const (
 	ThreeDSecureEnrollementRequestFailure = "E"
 )
 
+// RiskData possible values
+// https://developers.braintreepayments.com/guides/advanced-fraud-tools/server-side/java#response-handling
+const (
+	RiskDataNotEvaluated = "Not Evaluated"
+	RiskDataApprove      = "Approve"
+	RiskDataReview       = "Review"
+	RiskDataDecline      = "Decline"
+)
+
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id"`
