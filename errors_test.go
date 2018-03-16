@@ -1,3 +1,5 @@
+// +build unit
+
 package braintree
 
 import (
@@ -66,6 +68,8 @@ var errorXML = []byte(`<?xml version="1.0" encoding="UTF-8"?>
 </api-error-response>`)
 
 func TestErrorsUnmarshalEverything(t *testing.T) {
+	t.Parallel()
+
 	apiErrors := &BraintreeError{}
 	err := xml.Unmarshal(errorXML, apiErrors)
 	if err != nil {
@@ -80,6 +84,8 @@ func TestErrorsUnmarshalEverything(t *testing.T) {
 }
 
 func TestAccessors(t *testing.T) {
+	t.Parallel()
+
 	apiErrors := &BraintreeError{}
 	err := xml.Unmarshal(errorXML, apiErrors)
 	if err != nil {

@@ -1,8 +1,12 @@
 package braintree
 
-import "time"
+import (
+	"encoding/xml"
+	"time"
+)
 
 type CreditCard struct {
+	XMLName                   xml.Name           `xml:"credit-card"`
 	CustomerId                string             `xml:"customer-id,omitempty"`
 	Token                     string             `xml:"token,omitempty"`
 	PaymentMethodNonce        string             `xml:"payment-method-nonce,omitempty"`
@@ -41,13 +45,40 @@ type CreditCards struct {
 	CreditCard []*CreditCard `xml:"credit-card"`
 }
 
+func (cards *CreditCards) PaymentMethods() []PaymentMethod {
+	if cards == nil {
+		return nil
+	}
+	var paymentMethods []PaymentMethod
+	for _, cc := range cards.CreditCard {
+		paymentMethods = append(paymentMethods, cc)
+	}
+	return paymentMethods
+}
+
 type CreditCardOptions struct {
-	VerifyCard                    bool   `xml:"verify-card,omitempty"`
+	VerifyCard                    *bool  `xml:"verify-card,omitempty"`
 	VenmoSDKSession               string `xml:"venmo-sdk-session,omitempty"`
 	MakeDefault                   bool   `xml:"make-default,omitempty"`
 	FailOnDuplicatePaymentMethod  bool   `xml:"fail-on-duplicate-payment-method,omitempty"`
 	VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
 	UpdateExistingToken           string `xml:"update-existing-token,omitempty"`
+}
+
+func (card *CreditCard) GetCustomerId() string {
+	return card.CustomerId
+}
+
+func (card *CreditCard) GetToken() string {
+	return card.Token
+}
+
+func (card *CreditCard) IsDefault() bool {
+	return card.Default
+}
+
+func (card *CreditCard) GetImageURL() string {
+	return card.ImageURL
 }
 
 // AllSubscriptions returns all subscriptions for this card, or nil if none present.

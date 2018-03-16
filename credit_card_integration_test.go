@@ -1,23 +1,32 @@
+// +build integration
+
 package braintree
 
 import (
+	"context"
 	"testing"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 func TestCreditCard(t *testing.T) {
-	cust, err := testGateway.Customer().Create(&Customer{})
+	t.Parallel()
+
+	ctx := context.Background()
+
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	g := testGateway.CreditCard()
-	card, err := g.Create(&CreditCard{
+	card, err := g.Create(ctx, &CreditCard{
 		CustomerId:     cust.Id,
 		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
-			VerifyCard: true,
+			VerifyCard: testhelpers.BoolPtr(true),
 		},
 	})
 	if err != nil {
@@ -31,13 +40,13 @@ func TestCreditCard(t *testing.T) {
 	}
 
 	// Update
-	card2, err := g.Update(&CreditCard{
+	card2, err := g.Update(ctx, &CreditCard{
 		Token:          card.Token,
 		Number:         testCreditCards["mastercard"].Number,
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
-			VerifyCard: true,
+			VerifyCard: testhelpers.BoolPtr(true),
 		},
 	})
 	if err != nil {
@@ -54,18 +63,73 @@ func TestCreditCard(t *testing.T) {
 	}
 
 	// Delete
-	err = g.Delete(card2)
+	err = g.Delete(ctx, card2)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
-	customer, err := testGateway.Customer().Create(&Customer{})
+func TestCreditCardFailedAutoVerification(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(&CreditCard{
+
+	g := testGateway.CreditCard()
+	card, err := g.Create(ctx, &CreditCard{
+		CustomerId:         cust.Id,
+		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+	})
+	if err == nil {
+		t.Fatal("Got no error, want error")
+	}
+	if g, w := err.(*BraintreeError).ErrorMessage, "Do Not Honor"; g != w {
+		t.Fatalf("Got error %q, want error %q", g, w)
+	}
+
+	t.Logf("%#v\n", err)
+	t.Logf("%#v\n", card)
+}
+
+func TestCreditCardForceNotVerified(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	g := testGateway.CreditCard()
+	card, err := g.Create(ctx, &CreditCard{
+		CustomerId:         cust.Id,
+		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+		Options: &CreditCardOptions{
+			VerifyCard: testhelpers.BoolPtr(false),
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%#v\n", card)
+}
+
+func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:      customer.Id,
 		Number:          testCreditCards["visa"].Number,
 		ExpirationMonth: "05",
@@ -82,7 +146,11 @@ func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
 }
 
 func TestCreateCreditCardInvalidInput(t *testing.T) {
-	card, err := testGateway.CreditCard().Create(&CreditCard{
+	t.Parallel()
+
+	ctx := context.Background()
+
+	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
 	})
@@ -98,17 +166,21 @@ func TestCreateCreditCardInvalidInput(t *testing.T) {
 }
 
 func TestFindCreditCard(t *testing.T) {
-	customer, err := testGateway.Customer().Create(&Customer{})
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(&CreditCard{
+	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
-			VerifyCard: true,
+			VerifyCard: testhelpers.BoolPtr(true),
 		},
 	})
 
@@ -121,7 +193,7 @@ func TestFindCreditCard(t *testing.T) {
 		t.Fatal("invalid token")
 	}
 
-	card2, err := testGateway.CreditCard().Find(card.Token)
+	card2, err := testGateway.CreditCard().Find(ctx, card.Token)
 
 	t.Log(card2)
 
@@ -134,7 +206,11 @@ func TestFindCreditCard(t *testing.T) {
 }
 
 func TestFindCreditCardBadData(t *testing.T) {
-	card, err := testGateway.CreditCard().Find("invalid_token")
+	t.Parallel()
+
+	ctx := context.Background()
+
+	card, err := testGateway.CreditCard().Find(ctx, "invalid_token")
 
 	t.Log(card)
 
@@ -144,11 +220,15 @@ func TestFindCreditCardBadData(t *testing.T) {
 }
 
 func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
-	customer, err := testGateway.Customer().Create(&Customer{})
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(&CreditCard{
+	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:                customer.Id,
 		VenmoSDKPaymentMethodCode: "stub-" + testCreditCards["visa"].Number,
 	})
@@ -161,11 +241,15 @@ func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
 }
 
 func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
-	customer, err := testGateway.Customer().Create(&Customer{})
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(&CreditCard{
+	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCreditCards["visa"].Number,
 		ExpirationDate: "05/14",

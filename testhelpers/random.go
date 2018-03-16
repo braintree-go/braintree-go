@@ -10,9 +10,15 @@ import (
 func RandomInt() int64 {
 	var n int64
 	b := make([]byte, 8)
-	rand.Read(b)
+	_, err := rand.Read(b)
+	if err != nil {
+		panic(err)
+	}
 	buf := bytes.NewBuffer(b)
-	binary.Read(buf, binary.LittleEndian, &n)
+	err = binary.Read(buf, binary.LittleEndian, &n)
+	if err != nil {
+		panic(err)
+	}
 	return n
 }
 

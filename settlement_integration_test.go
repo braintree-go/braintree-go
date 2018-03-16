@@ -1,90 +1,68 @@
+// +build integration
+
 package braintree
 
 import (
-	"fmt"
-	"reflect"
-	"strings"
+	"context"
 	"testing"
-	"time"
-)
-
-const (
-	cardToUse = "Discover"
 )
 
 func TestSettlementBatch(t *testing.T) {
-	// Get current batch summary
-	y, m, d := time.Now().Date()
-	date := fmt.Sprintf("%d-%d-%d", y, m, d)
-	batchSummary, err := testGateway.Settlement().Generate(&Settlement{Date: date})
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log(batchSummary)
+	t.Parallel()
 
-	// Get the card types
-	cardTypes := []string{}
-	for _, record := range batchSummary.Records.Type {
-		cardTypes = append(cardTypes, record.CardType)
-	}
+	ctx := context.Background()
 
-	// Create a new transaction to add 12.34 to the summary
-	tx, err := testGateway.Transaction().Create(&Transaction{
-		Type:   "sale",
-		Amount: NewDecimal(1234, 2),
-		CreditCard: &CreditCard{
-			Number:         testCreditCards[strings.ToLower(cardToUse)].Number,
-			ExpirationDate: "05/14",
-		},
+	// Create a new transaction
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:               "sale",
+		Amount:             NewDecimal(1000, 2),
+		PaymentMethodNonce: FakeNonceTransactableJCB,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(tx)
-	if tx.Id == "" {
-		t.Fatal("Received invalid ID on new transaction")
-	}
-	if tx.Status != "authorized" {
+	t.Logf("transaction : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status)
+	if tx.Status != TransactionStatusAuthorized {
 		t.Fatal(tx.Status)
 	}
 
 	// Submit for settlement
-	ten := NewDecimal(1234, 2)
-	tx2, err := testGateway.Transaction().SubmitForSettlement(tx.Id, ten)
+	tx, err = testGateway.Transaction().SubmitForSettlement(ctx, tx.Id, tx.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(tx2)
-	if x := tx2.Status; x != "submitted_for_settlement" {
+	t.Logf("transaction : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status)
+	if x := tx.Status; x != TransactionStatusSubmittedForSettlement {
 		t.Fatal(x)
-	}
-	if amount := tx2.Amount; amount.Cmp(ten) != 0 {
-		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
 	}
 
 	// Settle
-	tx3, err := testGateway.Transaction().Settle(tx.Id)
-	t.Log(tx3)
+	tx, err = testGateway.Testing().Settle(ctx, tx.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if x := tx3.Status; x != "settled" {
+	t.Logf("transaction : %s : %s : %s : %s : %s\n", tx.MerchantAccountId, tx.Id, tx.CreditCard.CardType, tx.Status, tx.SettlementBatchId)
+	if x := tx.Status; x != TransactionStatusSettled {
 		t.Fatal(x)
 	}
 
 	// Generate Settlement Batch Summary which will include new transaction
-	batchSummary, err = testGateway.Settlement().Generate(&Settlement{Date: date})
+	date := tx.SettlementBatchId[:10]
+	t.Logf("summary     : %s\n", date)
+	summary, err := testGateway.Settlement().Generate(ctx, &Settlement{Date: date})
 	if err != nil {
-		t.Fatal(fmt.Sprintf("Unable to get settlement batch: err is %s", err.Error()))
+		t.Fatalf("unable to get settlement batch: %s", err)
 	}
-	t.Log(batchSummary)
 
-	// Since these tests are run concurrently, we will not test the amount  only the card types.
-	foundTypes := []string{}
-	for _, record := range batchSummary.Records.Type {
-		foundTypes = append(foundTypes, record.CardType)
+	var found bool
+	for _, r := range summary.Records.Type {
+		t.Logf("record      : %s : %22s : %4d : %6s : %8s\n", r.MerchantAccountId, r.CardType, r.Count, r.Kind, r.AmountSettled)
+		if r.MerchantAccountId == tx.MerchantAccountId && r.CardType == tx.CreditCard.CardType && r.Count > 0 && r.Kind == "sale" {
+			found = true
+		}
 	}
-	if !reflect.DeepEqual(cardTypes, foundTypes) {
-		t.Fatal(fmt.Sprintf("Expected card types: %s, got: %s", cardTypes, foundTypes))
+
+	if !found {
+		t.Fatalf("Transaction %s created but no record in the settlement batch for it's merchant account and card type.", tx.Id)
 	}
 }

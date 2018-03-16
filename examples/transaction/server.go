@@ -16,8 +16,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 
@@ -31,10 +33,15 @@ type BraintreeJS struct {
 func showForm(w http.ResponseWriter, r *http.Request) {
 	config := BraintreeJS{Key: "'" + template.HTML(os.Getenv("BRAINTREE_CSE_KEY")) + "'"}
 	t := template.Must(template.ParseFiles("form.html"))
-	t.Execute(w, config)
+	err := t.Execute(w, config)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
 }
 
 func createTransaction(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
 	bt := braintree.New(
 		braintree.Sandbox,
 		os.Getenv("BRAINTREE_MERCH_ID"),
@@ -42,7 +49,7 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 		os.Getenv("BRAINTREE_PRIV_KEY"),
 	)
 
-	tx := &braintree.Transaction{
+	tx := &braintree.TransactionRequest{
 		Type:   "sale",
 		Amount: braintree.NewDecimal(10000, 2),
 		CreditCard: &braintree.CreditCard{
@@ -53,7 +60,7 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	_, err := bt.Transaction().Create(tx)
+	_, err := bt.Transaction().Create(ctx, tx)
 
 	if err == nil {
 		fmt.Fprintf(w, "<h1>Success!</h1>")
@@ -65,5 +72,8 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", showForm)
 	http.HandleFunc("/create_transaction", createTransaction)
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

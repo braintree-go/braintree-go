@@ -1,11 +1,13 @@
 package braintree
 
+import "context"
+
 type CreditCardGateway struct {
 	*Braintree
 }
 
-func (g *CreditCardGateway) Create(card *CreditCard) (*CreditCard, error) {
-	resp, err := g.execute("POST", "payment_methods", card)
+func (g *CreditCardGateway) Create(ctx context.Context, card *CreditCard) (*CreditCard, error) {
+	resp, err := g.execute(ctx, "POST", "payment_methods", card)
 	if err != nil {
 		return nil, err
 	}
@@ -16,8 +18,8 @@ func (g *CreditCardGateway) Create(card *CreditCard) (*CreditCard, error) {
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *CreditCardGateway) Update(card *CreditCard) (*CreditCard, error) {
-	resp, err := g.execute("PUT", "payment_methods/"+card.Token, card)
+func (g *CreditCardGateway) Update(ctx context.Context, card *CreditCard) (*CreditCard, error) {
+	resp, err := g.execute(ctx, "PUT", "payment_methods/"+card.Token, card)
 	if err != nil {
 		return nil, err
 	}
@@ -28,8 +30,8 @@ func (g *CreditCardGateway) Update(card *CreditCard) (*CreditCard, error) {
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *CreditCardGateway) Find(token string) (*CreditCard, error) {
-	resp, err := g.execute("GET", "payment_methods/"+token, nil)
+func (g *CreditCardGateway) Find(ctx context.Context, token string) (*CreditCard, error) {
+	resp, err := g.execute(ctx, "GET", "payment_methods/"+token, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -40,8 +42,8 @@ func (g *CreditCardGateway) Find(token string) (*CreditCard, error) {
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *CreditCardGateway) Delete(card *CreditCard) error {
-	resp, err := g.execute("DELETE", "payment_methods/"+card.Token, nil)
+func (g *CreditCardGateway) Delete(ctx context.Context, card *CreditCard) error {
+	resp, err := g.execute(ctx, "DELETE", "payment_methods/"+card.Token, nil)
 	if err != nil {
 		return err
 	}

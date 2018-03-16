@@ -1,9 +1,18 @@
+// +build integration
+
 package braintree
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestAddress(t *testing.T) {
-	customer, err := testGateway.Customer().Create(&Customer{
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
 		FirstName: "Jenna",
 		LastName:  "Smith",
 	})
@@ -14,8 +23,7 @@ func TestAddress(t *testing.T) {
 		t.Fatal("invalid customer id")
 	}
 
-	addr := &Address{
-		CustomerId:         customer.Id,
+	addr := &AddressRequest{
 		FirstName:          "Jenna",
 		LastName:           "Smith",
 		Company:            "Braintree",
@@ -30,65 +38,91 @@ func TestAddress(t *testing.T) {
 		CountryName:        "United States of America",
 	}
 
-	addr2, err := testGateway.Address().Create(addr)
+	addr2, err := testGateway.Address().Create(ctx, customer.Id, addr)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Logf("%+v\n", addr)
 	t.Logf("%+v\n", addr2)
+	validateAddr(t, addr2, addr, customer)
 
-	if addr2.Id == "" {
-		t.Fatal("generated id is empty")
+	addr3 := &AddressRequest{
+		FirstName:          "Al",
+		LastName:           "Fredidandes",
+		Company:            "Paypal",
+		StreetAddress:      "1 W Main St",
+		ExtendedAddress:    "Suite 402",
+		Locality:           "Montreal",
+		Region:             "Quebec",
+		PostalCode:         "H1A",
+		CountryCodeAlpha2:  "CA",
+		CountryCodeAlpha3:  "CAN",
+		CountryCodeNumeric: "124",
+		CountryName:        "Canada",
 	}
-	if addr2.CustomerId != customer.Id {
-		t.Fatal("customer ids do not match")
-	}
-	if addr2.FirstName != addr.FirstName {
-		t.Fatal("first names do not match")
-	}
-	if addr2.LastName != addr.LastName {
-		t.Fatal("last names do not match")
-	}
-	if addr2.Company != addr.Company {
-		t.Fatal("companies do not match")
-	}
-	if addr2.StreetAddress != addr.StreetAddress {
-		t.Fatal("street addresses do not match")
-	}
-	if addr2.ExtendedAddress != addr.ExtendedAddress {
-		t.Fatal("extended addresses do not match")
-	}
-	if addr2.Locality != addr.Locality {
-		t.Fatal("localities do not match")
-	}
-	if addr2.Region != addr.Region {
-		t.Fatal("regions do not match")
-	}
-	if addr2.PostalCode != addr.PostalCode {
-		t.Fatal("postal codes do not match")
-	}
-	if addr2.CountryCodeAlpha2 != addr.CountryCodeAlpha2 {
-		t.Fatal("country alpha2 codes do not match")
-	}
-	if addr2.CountryCodeAlpha3 != addr.CountryCodeAlpha3 {
-		t.Fatal("country alpha3 codes do not match")
-	}
-	if addr2.CountryCodeNumeric != addr.CountryCodeNumeric {
-		t.Fatal("country numeric codes do not match")
-	}
-	if addr2.CountryName != addr.CountryName {
-		t.Fatal("country names do not match")
-	}
-	if addr2.CreatedAt == nil {
-		t.Fatal("generated created at is empty")
-	}
-	if addr2.UpdatedAt == nil {
-		t.Fatal("generated updated at is empty")
-	}
-
-	err = testGateway.Address().Delete(customer.Id, addr2.Id)
+	addr4, err := testGateway.Address().Update(ctx, customer.Id, addr2.Id, addr3)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	t.Logf("%+v\n", addr3)
+	t.Logf("%+v\n", addr4)
+	validateAddr(t, addr4, addr3, customer)
+
+	err = testGateway.Address().Delete(ctx, customer.Id, addr2.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func validateAddr(t *testing.T, addr *Address, addrRequest *AddressRequest, customer *Customer) {
+	if addr.Id == "" {
+		t.Fatal("generated id is empty")
+	}
+	if addr.CustomerId != customer.Id {
+		t.Fatal("customer ids do not match")
+	}
+	if addr.FirstName != addrRequest.FirstName {
+		t.Fatal("first names do not match")
+	}
+	if addr.LastName != addrRequest.LastName {
+		t.Fatal("last names do not match")
+	}
+	if addr.Company != addrRequest.Company {
+		t.Fatal("companies do not match")
+	}
+	if addr.StreetAddress != addrRequest.StreetAddress {
+		t.Fatal("street addresses do not match")
+	}
+	if addr.ExtendedAddress != addrRequest.ExtendedAddress {
+		t.Fatal("extended addresses do not match")
+	}
+	if addr.Locality != addrRequest.Locality {
+		t.Fatal("localities do not match")
+	}
+	if addr.Region != addrRequest.Region {
+		t.Fatal("regions do not match")
+	}
+	if addr.PostalCode != addrRequest.PostalCode {
+		t.Fatal("postal codes do not match")
+	}
+	if addr.CountryCodeAlpha2 != addrRequest.CountryCodeAlpha2 {
+		t.Fatal("country alpha2 codes do not match")
+	}
+	if addr.CountryCodeAlpha3 != addrRequest.CountryCodeAlpha3 {
+		t.Fatal("country alpha3 codes do not match")
+	}
+	if addr.CountryCodeNumeric != addrRequest.CountryCodeNumeric {
+		t.Fatal("country numeric codes do not match")
+	}
+	if addr.CountryName != addrRequest.CountryName {
+		t.Fatal("country names do not match")
+	}
+	if addr.CreatedAt == nil {
+		t.Fatal("generated created at is empty")
+	}
+	if addr.UpdatedAt == nil {
+		t.Fatal("generated updated at is empty")
 	}
 }

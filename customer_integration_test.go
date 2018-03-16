@@ -1,6 +1,11 @@
+// +build integration
+
 package braintree
 
 import (
+	"context"
+	"net/http"
+	"reflect"
 	"testing"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
@@ -8,7 +13,11 @@ import (
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
 func TestCustomer(t *testing.T) {
-	oc := &Customer{
+	t.Parallel()
+
+	ctx := context.Background()
+
+	oc := &CustomerRequest{
 		FirstName: "Lionel",
 		LastName:  "Barrow",
 		Company:   "Braintree",
@@ -21,13 +30,13 @@ func TestCustomer(t *testing.T) {
 			ExpirationDate: "05/14",
 			CVV:            "200",
 			Options: &CreditCardOptions{
-				VerifyCard: true,
+				VerifyCard: testhelpers.BoolPtr(true),
 			},
 		},
 	}
 
 	// Create with errors
-	_, err := testGateway.Customer().Create(oc)
+	_, err := testGateway.Customer().Create(ctx, oc)
 	if err == nil {
 		t.Fatal("Did not receive error when creating invalid customer")
 	}
@@ -35,7 +44,7 @@ func TestCustomer(t *testing.T) {
 	// Create
 	oc.CreditCard.CVV = ""
 	oc.CreditCard.Options = nil
-	customer, err := testGateway.Customer().Create(oc)
+	customer, err := testGateway.Customer().Create(ctx, oc)
 
 	t.Log(customer)
 
@@ -55,8 +64,8 @@ func TestCustomer(t *testing.T) {
 	// Update
 	unique := testhelpers.RandomString()
 	newFirstName := "John" + unique
-	c2, err := testGateway.Customer().Update(&Customer{
-		Id:        customer.Id,
+	c2, err := testGateway.Customer().Update(ctx, &CustomerRequest{
+		ID:        customer.Id,
 		FirstName: newFirstName,
 	})
 
@@ -70,7 +79,7 @@ func TestCustomer(t *testing.T) {
 	}
 
 	// Find
-	c3, err := testGateway.Customer().Find(customer.Id)
+	c3, err := testGateway.Customer().Find(ctx, customer.Id)
 
 	t.Log(c3)
 
@@ -85,7 +94,7 @@ func TestCustomer(t *testing.T) {
 	query := new(SearchQuery)
 	f := query.AddTextField("first-name")
 	f.Is = newFirstName
-	searchResult, err := testGateway.Customer().Search(query)
+	searchResult, err := testGateway.Customer().Search(ctx, query)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,20 +106,327 @@ func TestCustomer(t *testing.T) {
 	}
 
 	// Delete
-	err = testGateway.Customer().Delete(customer.Id)
+	err = testGateway.Customer().Delete(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Test customer 404
-	c4, err := testGateway.Customer().Find(customer.Id)
+	c4, err := testGateway.Customer().Find(ctx, customer.Id)
 	if err == nil {
 		t.Fatal("should return 404")
 	}
 	if err.Error() != "Not Found (404)" {
 		t.Fatal(err)
 	}
+	if apiErr, ok := err.(APIError); !(ok && apiErr.StatusCode() == http.StatusNotFound) {
+		t.Fatal(err)
+	}
 	if c4 != nil {
 		t.Fatal(c4)
+	}
+}
+
+func TestCustomerWithCustomFields(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customFields := map[string]string{
+		"custom_field_1": "custom value",
+	}
+
+	c := &CustomerRequest{
+		CustomFields: customFields,
+	}
+
+	customer, err := testGateway.Customer().Create(ctx, c)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(customer.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
+	}
+
+	customer, err = testGateway.Customer().Find(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if x := map[string]string(customer.CustomFields); !reflect.DeepEqual(x, customFields) {
+		t.Fatalf("Returned custom fields doesn't match input, got %q, want %q", x, customFields)
+	}
+}
+
+func TestCustomerPaymentMethods(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	paymentMethod1, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod2, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expectedPaymentMethods := []PaymentMethod{
+		paymentMethod2,
+		paymentMethod1,
+	}
+
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(customerFound.PaymentMethods(), expectedPaymentMethods) {
+		t.Fatalf("Got Customer %#v PaymentMethods %#v, want %#v", customerFound, customerFound.PaymentMethods(), expectedPaymentMethods)
+	}
+}
+
+func TestCustomerDefaultPaymentMethod(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defaultPaymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(customerFound.DefaultPaymentMethod(), defaultPaymentMethod) {
+		t.Fatalf("Got Customer %#v DefaultPaymentMethod %#v, want %#v", customerFound, customerFound.DefaultPaymentMethod(), defaultPaymentMethod)
+	}
+}
+
+func TestCustomerDefaultPaymentMethodManuallySet(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod2, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNoncePayPalBillingAgreement,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paypalAccount, err := testGateway.PayPalAccount().Update(ctx, &PayPalAccount{
+		Token: paymentMethod2.GetToken(),
+		Options: &PayPalAccountOptions{
+			MakeDefault: true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(customerFound.DefaultPaymentMethod(), paypalAccount) {
+		t.Fatalf("Got Customer %#v DefaultPaymentMethod %#v, want %#v", customerFound, customerFound.DefaultPaymentMethod(), paypalAccount)
+	}
+}
+
+func TestCustomerPaymentMethodNonce(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{PaymentMethodNonce: FakeNonceTransactable})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(customer.PaymentMethods()) != 1 {
+		t.Fatalf("Customer %#v has %#v payment method(s), want 1 payment method", customerFound, len(customer.PaymentMethods()))
+	}
+}
+
+func TestCustomerAddresses(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
+		FirstName: "Jenna",
+		LastName:  "Smith",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if customer.Id == "" {
+		t.Fatal("invalid customer id")
+	}
+
+	addrReqs := []*AddressRequest{
+		&AddressRequest{
+			FirstName:          "Jenna",
+			LastName:           "Smith",
+			Company:            "Braintree",
+			StreetAddress:      "1 E Main St",
+			ExtendedAddress:    "Suite 403",
+			Locality:           "Chicago",
+			Region:             "Illinois",
+			PostalCode:         "60622",
+			CountryCodeAlpha2:  "US",
+			CountryCodeAlpha3:  "USA",
+			CountryCodeNumeric: "840",
+			CountryName:        "United States of America",
+		},
+		&AddressRequest{
+			FirstName:          "Bob",
+			LastName:           "Rob",
+			Company:            "Paypal",
+			StreetAddress:      "1 W Main St",
+			ExtendedAddress:    "Suite 402",
+			Locality:           "Boston",
+			Region:             "Massachusetts",
+			PostalCode:         "02140",
+			CountryCodeAlpha2:  "US",
+			CountryCodeAlpha3:  "USA",
+			CountryCodeNumeric: "840",
+			CountryName:        "United States of America",
+		},
+	}
+
+	for _, addrReq := range addrReqs {
+		_, err = testGateway.Address().Create(ctx, customer.Id, addrReq)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	customerWithAddrs, err := testGateway.Customer().Find(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if customerWithAddrs.Addresses == nil || len(customerWithAddrs.Addresses.Address) != 2 {
+		t.Fatal("wrong number of addresses returned")
+	}
+
+	for _, addr := range customerWithAddrs.Addresses.Address {
+		if addr.Id == "" {
+			t.Fatal("generated id is empty")
+		}
+
+		var addrReq *AddressRequest
+		for _, ar := range addrReqs {
+			if ar.PostalCode == addr.PostalCode {
+				addrReq = ar
+				break
+			}
+		}
+
+		if addrReq == nil {
+			t.Fatal("did not return sent address")
+		}
+
+		t.Logf("%+v\n", addr)
+		t.Logf("%+v\n", addrReq)
+
+		if addr.CustomerId != customer.Id {
+			t.Errorf("got customer id %s, want %s", addr.CustomerId, customer.Id)
+		}
+		if addr.FirstName != addrReq.FirstName {
+			t.Errorf("got first name %s, want %s", addr.FirstName, addrReq.FirstName)
+		}
+		if addr.LastName != addrReq.LastName {
+			t.Errorf("got last name %s, want %s", addr.LastName, addrReq.LastName)
+		}
+		if addr.Company != addrReq.Company {
+			t.Errorf("got company %s, want %s", addr.Company, addrReq.Company)
+		}
+		if addr.StreetAddress != addrReq.StreetAddress {
+			t.Errorf("got street address %s, want %s", addr.StreetAddress, addrReq.StreetAddress)
+		}
+		if addr.ExtendedAddress != addrReq.ExtendedAddress {
+			t.Errorf("got extended address %s, want %s", addr.ExtendedAddress, addrReq.ExtendedAddress)
+		}
+		if addr.Locality != addrReq.Locality {
+			t.Errorf("got locality %s, want %s", addr.Locality, addrReq.Locality)
+		}
+		if addr.Region != addrReq.Region {
+			t.Errorf("got region %s, want %s", addr.Region, addrReq.Region)
+		}
+		if addr.CountryCodeAlpha2 != addrReq.CountryCodeAlpha2 {
+			t.Errorf("got country code alpha 2 %s, want %s", addr.CountryCodeAlpha2, addrReq.CountryCodeAlpha2)
+		}
+		if addr.CountryCodeAlpha3 != addrReq.CountryCodeAlpha3 {
+			t.Errorf("got country code alpha 3 %s, want %s", addr.CountryCodeAlpha3, addrReq.CountryCodeAlpha3)
+		}
+		if addr.CountryCodeNumeric != addrReq.CountryCodeNumeric {
+			t.Errorf("got country code numeric %s, want %s", addr.CountryCodeNumeric, addrReq.CountryCodeNumeric)
+		}
+		if addr.CountryName != addrReq.CountryName {
+			t.Errorf("got country name %s, want %s", addr.CountryName, addrReq.CountryName)
+		}
+		if addr.CreatedAt == nil {
+			t.Error("got created at nil, want a value")
+		}
+		if addr.UpdatedAt == nil {
+			t.Error("got updated at nil, want a value")
+		}
+	}
+
+	err = testGateway.Customer().Delete(ctx, customer.Id)
+	if err != nil {
+		t.Fatal(err)
 	}
 }

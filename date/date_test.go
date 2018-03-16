@@ -1,3 +1,5 @@
+// +build unit
+
 package date
 
 import (
@@ -7,6 +9,8 @@ import (
 )
 
 func TestDateUnmarshalXML(t *testing.T) {
+	t.Parallel()
+
 	date := &Date{}
 
 	dateXML := []byte(`<?xml version="1.0" encoding="UTF-8"?><foo>2014-02-09</foo></xml>`)
@@ -20,6 +24,8 @@ func TestDateUnmarshalXML(t *testing.T) {
 }
 
 func TestDateMarshalXML(t *testing.T) {
+	t.Parallel()
+
 	date := &Date{Time: time.Date(2014, 2, 9, 0, 0, 0, 0, time.Local)}
 	expected := `<Date>2014-02-09</Date>`
 

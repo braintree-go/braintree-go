@@ -4,7 +4,7 @@ type Record struct {
 	XMLName           string   `xml:"record"`
 	CardType          string   `xml:"card-type"`
 	Count             int      `xml:"count"`
-	MerchantAccountId string   `xml:"merchant-account_id"`
+	MerchantAccountId string   `xml:"merchant-account-id"`
 	Kind              string   `xml:"kind"`
 	AmountSettled     *Decimal `xml:"amount-settled"`
 }
