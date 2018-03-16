@@ -757,6 +757,9 @@ func TestTransactionSkipAdvancedFraudChecks(t *testing.T) {
 		},
 		Options: &TransactionOptions{
 			SkipAdvancedFraudChecking: true,
+			ThreeDSecure: &TransactionOptionsThreeDSecure{
+				Required: false,
+			},
 		},
 	}
 
@@ -765,7 +768,16 @@ func TestTransactionSkipAdvancedFraudChecks(t *testing.T) {
 		t.Fatal(err)
 	}
 	if tx2.RiskData != nil {
-		t.Fatal("expected tx2.RiskData to be empty")
+		// https://developers.braintreepayments.com/guides/advanced-fraud-tools/server-side/java#response-handling
+		// quote: We return the risk data on all credit card transactions
+		// thus I expect we will receive a risk data struct
+		// but this struct should tell us the risk as NOT been evaluated...
+		// quote: The possible values of the risk decision are Not Evaluated, Approve, Review, and Decline
+		if tx2.RiskData.Decision != "Not Evaluated" {
+			t.Fatalf("expected tx2.RiskData.Decision to be \"Not Evaluated\", got %q", tx2.RiskData.Decision)
+		}
+	} else {
+		t.Fatal("expected tx2.RiskData to be set with Decision field to 'Not Evaluated' but was nil")
 	}
 }
 
