@@ -757,9 +757,6 @@ func TestTransactionSkipAdvancedFraudChecks(t *testing.T) {
 		},
 		Options: &TransactionOptions{
 			SkipAdvancedFraudChecking: true,
-			ThreeDSecure: &TransactionOptionsThreeDSecure{
-				Required: false,
-			},
 		},
 	}
 
