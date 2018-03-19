@@ -9,7 +9,7 @@ type PaymentMethodNonceGateway struct {
 }
 
 func (g *PaymentMethodNonceGateway) Find(ctx context.Context, nonce *Nonce) (*Nonce, error) {
-	resp, err := g.executeVersion(ctx, "GET", g.MerchantURL()+"/payment_method_nonces/"+nonce.Nonce, nil, apiVersion4)
+	resp, err := g.executeVersion(ctx, "GET", "/payment_method_nonces/"+nonce.Nonce, nil, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -21,12 +21,12 @@ func (g *PaymentMethodNonceGateway) Find(ctx context.Context, nonce *Nonce) (*No
 }
 
 func (g *PaymentMethodNonceGateway) Create(ctx context.Context, token string) (*Nonce, error) {
-	resp, err := g.executeVersion(ctx, "POST", g.MerchantURL()+"/payment_methods/"+token+"/nonces", nil, apiVersion4)
+	resp, err := g.executeVersion(ctx, "POST", "/payment_methods/"+token+"/nonces", nil, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
 	switch resp.StatusCode {
-	case 200:
+	case 201:
 		return resp.nonce()
 	}
 	return nil, &invalidResponseError{resp}

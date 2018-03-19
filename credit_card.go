@@ -7,7 +7,10 @@ import (
 
 // Nonce is returned from a payment method nonce request
 type Nonce struct {
-	Nonce string `xml:"payment_method_nonce"`
+	XMLName     xml.Name `xml:"payment-method-nonce"`
+	Type        string   `xml:"type"`
+	Nonce       string   `xml:"nonce"`
+	Description string   `xml:"description"`
 }
 
 type CreditCard struct {

@@ -12,7 +12,10 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 
 	amount := NewDecimal(1007, 2)
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
+		FirstName: "Clyde",
+		LastName: "Barrow",
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -21,7 +24,7 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 		CustomerId:      customer.Id,
 		Number:          testCreditCards["visa_3ds_succeed_auth"].Number,
 		ExpirationYear:  "2020",
-		ExpirationMonth: "12",
+		ExpirationMonth: "01",
 	}
 	fullCC, err := testGateway.PaymentMethod().CreditCard().Create(ctx, &cc)
 	if err != nil {
@@ -37,6 +40,7 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 		Type:               "sale",
 		Amount:             amount,
 		PaymentMethodNonce: nonce.Nonce,
+
 		Options: &TransactionOptions{
 			ThreeDSecure: &TransactionOptionsThreeDSecure{
 				Required: true,
