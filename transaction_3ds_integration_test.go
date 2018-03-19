@@ -45,6 +45,7 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 	// sandbox environment that would be already 3DSecure validated
 	// but at the moment we have NO possiblity to obtain such a nonce in an
 	// integration testing scenario
+	// TODO: wait for support to give us a valid nonce for 3DS
 
 	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
@@ -113,6 +114,17 @@ func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// the nonce we have is not yet validated through 3D Secure...
+	// At the moment this nonce can only be sent back to the client code
+	// and validated using: threeDSecure.verifyCard()
+	// https://developers.braintreepayments.com/guides/3d-secure/client-side/javascript/v3#verify-a-vaulted-credit-card
+	// this is not possible as is...
+	// I have asked support if we could have specially crafted nonces in the
+	// sandbox environment that would be already 3DSecure validated
+	// but at the moment we have NO possiblity to obtain such a nonce in an
+	// integration testing scenario
+	// TODO: wait for support to give us a valid nonce for 3DS
 
 	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
