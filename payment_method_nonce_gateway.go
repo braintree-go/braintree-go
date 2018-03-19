@@ -9,7 +9,7 @@ type PaymentMethodNonceGateway struct {
 }
 
 func (g *PaymentMethodNonceGateway) Find(ctx context.Context, nonce *Nonce) (*Nonce, error) {
-	resp, err := g.executeVersion(ctx, "GET", g.MerchantURL()+ "/payment_method_nonces/"+nonce.Nonce, nil, apiVersion4)
+	resp, err := g.executeVersion(ctx, "GET", g.MerchantURL()+"/payment_method_nonces/"+nonce.Nonce, nil, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
