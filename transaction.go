@@ -39,6 +39,7 @@ type Transaction struct {
 	MerchantAccountId            string                    `xml:"merchant-account-id"`
 	PlanId                       string                    `xml:"plan-id"`
 	SubscriptionId               string                    `xml:"subscription-id"`
+	BillingPeriod                *BillingPeriod            `xml:"subscription"`
 	CreditCard                   *CreditCard               `xml:"credit-card"`
 	Customer                     *Customer                 `xml:"customer"`
 	BillingAddress               *Address                  `xml:"billing"`
@@ -143,6 +144,11 @@ type TransactionRequest struct {
 //   </descriptor>
 //   <recurring type="boolean">true</recurring>
 // </transaction>
+
+type BillingPeriod struct {
+	StartDate string `xml:"billing-period-start-date,omitempty"`
+	EndDate   string `xml:"billing-period-end-date,omitempty"`
+}
 
 type Transactions struct {
 	Transaction []*Transaction `xml:"transaction"`
