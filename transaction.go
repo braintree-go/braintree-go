@@ -103,6 +103,19 @@ type TransactionRequest struct {
 	PurchaseOrderNumber string                    `xml:"purchase-order-number,omitempty"`
 }
 
+func (t *Transaction) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	type typeWithNoFunctions Transaction
+	if err := d.DecodeElement((*typeWithNoFunctions)(t), &start); err != nil {
+		return err
+	}
+	if t.SubscriptionDetails != nil &&
+		t.SubscriptionDetails.BillingPeriodStartDate == "" &&
+		t.SubscriptionDetails.BillingPeriodEndDate == "" {
+		t.SubscriptionDetails = nil
+	}
+	return nil
+}
+
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
 //
 // <transaction>
