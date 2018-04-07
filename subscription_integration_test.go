@@ -999,10 +999,10 @@ func TestSubscriptionTransactions(t *testing.T) {
 	if x := sub2.Transactions.Transaction[0].SubscriptionId; x != sub.Id {
 		t.Fatal(x)
 	}
-	if x := sub2.Transactions.Transaction[0].Subscription.BillingPeriodStartDate; x != sub.BillingPeriodStartDate {
+	if x := sub2.Transactions.Transaction[0].SubscriptionDetails.BillingPeriodStartDate; x != sub.BillingPeriodStartDate {
 		t.Fatal(x)
 	}
-	if x := sub2.Transactions.Transaction[0].Subscription.BillingPeriodEndDate; x != sub.BillingPeriodEndDate {
+	if x := sub2.Transactions.Transaction[0].SubscriptionDetails.BillingPeriodEndDate; x != sub.BillingPeriodEndDate {
 		t.Fatal(x)
 	}
 

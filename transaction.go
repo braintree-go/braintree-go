@@ -39,7 +39,7 @@ type Transaction struct {
 	MerchantAccountId            string                    `xml:"merchant-account-id"`
 	PlanId                       string                    `xml:"plan-id"`
 	SubscriptionId               string                    `xml:"subscription-id"`
-	Subscription                 *Subscription             `xml:"subscription"`
+	SubscriptionDetails          *SubscriptionDetails      `xml:"subscription"`
 	CreditCard                   *CreditCard               `xml:"credit-card"`
 	Customer                     *Customer                 `xml:"customer"`
 	BillingAddress               *Address                  `xml:"billing"`
@@ -231,4 +231,9 @@ type RiskData struct {
 type RiskDataRequest struct {
 	CustomerBrowser string `xml:"customer-browser"`
 	CustomerIP      string `xml:"customer-ip"`
+}
+
+type SubscriptionDetails struct {
+	BillingPeriodStartDate string `xml:"billing-period-start-date"`
+	BillingPeriodEndDate   string `xml:"billing-period-end-date"`
 }
