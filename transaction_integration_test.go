@@ -896,6 +896,9 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.PurchaseOrderNumber != tx.PurchaseOrderNumber {
 		t.Fatalf("expected PurchaseOrderNumber to be %s, but got %s", tx.PurchaseOrderNumber, tx2.PurchaseOrderNumber)
 	}
+	if tx2.SubscriptionDetails != nil {
+		t.Fatalf("expected Subscription to be not nil, but got %#v", tx2.SubscriptionDetails)
+	}
 }
 
 // This test will only pass on Travis. See TESTING.md for more details.
