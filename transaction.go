@@ -7,7 +7,10 @@ import (
 	"github.com/lionelbarrow/braintree-go/customfields"
 )
 
-type TransactionStatus string
+type (
+	TransactionStatus string
+	TransactionSource string
+)
 
 const (
 	TransactionStatusAuthorizationExpired   TransactionStatus = "authorization_expired"
@@ -24,6 +27,11 @@ const (
 	TransactionStatusSubmittedForSettlement TransactionStatus = "submitted_for_settlement"
 	TransactionStatusVoided                 TransactionStatus = "voided"
 	TransactionStatusUnrecognized           TransactionStatus = "unrecognized"
+
+	TransactionSourceRecurringFirst TransactionSource = "recurring_first"
+	TransactionSourceRecurring      TransactionSource = "recurring"
+	TransactionMoto                 TransactionSource = "moto"
+	TransctionMerchant              TransactionSource = "merchant"
 )
 
 type Transaction struct {
@@ -101,6 +109,8 @@ type TransactionRequest struct {
 	Channel             string                    `xml:"channel,omitempty"`
 	CustomFields        customfields.CustomFields `xml:"custom-fields,omitempty"`
 	PurchaseOrderNumber string                    `xml:"purchase-order-number,omitempty"`
+	TransactionSource   TransactionSource         `xml:"transaction-source,omitempty"`
+	Recurring           bool                      `xml:"recurring,omitempty"`
 }
 
 func (t *Transaction) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
