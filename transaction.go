@@ -9,6 +9,7 @@ import (
 
 type (
 	TransactionStatus string
+
 	TransactionSource string
 )
 
@@ -30,8 +31,8 @@ const (
 
 	TransactionSourceRecurringFirst TransactionSource = "recurring_first"
 	TransactionSourceRecurring      TransactionSource = "recurring"
-	TransactionMoto                 TransactionSource = "moto"
-	TransctionMerchant              TransactionSource = "merchant"
+	TransactionSourceMOTO           TransactionSource = "moto"
+	TransactionSourceMerchant       TransactionSource = "merchant"
 )
 
 type Transaction struct {
