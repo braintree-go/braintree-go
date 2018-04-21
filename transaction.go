@@ -7,11 +7,7 @@ import (
 	"github.com/lionelbarrow/braintree-go/customfields"
 )
 
-type (
-	TransactionStatus string
-
-	TransactionSource string
-)
+type TransactionStatus string
 
 const (
 	TransactionStatusAuthorizationExpired   TransactionStatus = "authorization_expired"
@@ -28,7 +24,11 @@ const (
 	TransactionStatusSubmittedForSettlement TransactionStatus = "submitted_for_settlement"
 	TransactionStatusVoided                 TransactionStatus = "voided"
 	TransactionStatusUnrecognized           TransactionStatus = "unrecognized"
+)
 
+type TransactionSource string
+
+const (
 	TransactionSourceRecurringFirst TransactionSource = "recurring_first"
 	TransactionSourceRecurring      TransactionSource = "recurring"
 	TransactionSourceMOTO           TransactionSource = "moto"
