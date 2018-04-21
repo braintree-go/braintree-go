@@ -111,7 +111,6 @@ type TransactionRequest struct {
 	CustomFields        customfields.CustomFields `xml:"custom-fields,omitempty"`
 	PurchaseOrderNumber string                    `xml:"purchase-order-number,omitempty"`
 	TransactionSource   TransactionSource         `xml:"transaction-source,omitempty"`
-	Recurring           bool                      `xml:"recurring,omitempty"`
 }
 
 func (t *Transaction) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
