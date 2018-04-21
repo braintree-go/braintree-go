@@ -26,6 +26,15 @@ const (
 	TransactionStatusUnrecognized           TransactionStatus = "unrecognized"
 )
 
+type TransactionSource string
+
+const (
+	TransactionSourceRecurringFirst TransactionSource = "recurring_first"
+	TransactionSourceRecurring      TransactionSource = "recurring"
+	TransactionSourceMOTO           TransactionSource = "moto"
+	TransactionSourceMerchant       TransactionSource = "merchant"
+)
+
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id"`
@@ -101,6 +110,7 @@ type TransactionRequest struct {
 	Channel             string                    `xml:"channel,omitempty"`
 	CustomFields        customfields.CustomFields `xml:"custom-fields,omitempty"`
 	PurchaseOrderNumber string                    `xml:"purchase-order-number,omitempty"`
+	TransactionSource   TransactionSource         `xml:"transaction-source,omitempty"`
 }
 
 func (t *Transaction) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {

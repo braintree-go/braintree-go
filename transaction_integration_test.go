@@ -786,6 +786,7 @@ func TestAllTransactionFields(t *testing.T) {
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
+		TransactionSource: TransactionSourceMOTO,
 		Customer: &CustomerRequest{
 			FirstName: "Lionel",
 		},
