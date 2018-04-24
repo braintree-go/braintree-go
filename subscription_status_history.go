@@ -4,15 +4,15 @@ import (
 	"time"
 )
 
-// StatusHistory contains information about the last 50 timestamps where
-// something changed about the subscription.
-type StatusHistory struct {
-	StatusEvents []StatusEvent `xml:"status-event"`
+// SubscriptionStatusHistory contains information about the last 50
+// timestamps where something changed about the subscription.
+type SubscriptionStatusHistory struct {
+	StatusEvents []SubscriptionStatusEvent `xml:"status-event"`
 }
 
-// StatusEvent contains information about what and when something
-// changed about the subscription.
-type StatusEvent struct {
+// SubscriptionStatusEvent contains information about what and when
+// something changed about the subscription.
+type SubscriptionStatusEvent struct {
 	Timestamp          time.Time `xml:"timestamp"`
 	Balance            *Decimal  `xml:"balance"`
 	Price              *Decimal  `xml:"price"`
