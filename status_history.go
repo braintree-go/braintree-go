@@ -17,5 +17,8 @@ type StatusEvent struct {
 	Balance            *Decimal  `xml:"balance"`
 	Price              *Decimal  `xml:"price"`
 	Status             string    `xml:"status"`
+	CurrencyISOCode    string    `xml:"currency-iso-code"`
+	User               string    `xml:"user"`
+	PlanID             string    `xml:"plan-id"`
 	SubscriptionSource string    `xml:"subscription-source"`
 }
