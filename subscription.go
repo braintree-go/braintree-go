@@ -43,7 +43,7 @@ type Subscription struct {
 	TrialPeriod             bool                      `xml:"trial-period"`
 	Transactions            *Transactions             `xml:"transactions"`
 	Options                 *SubscriptionOptions      `xml:"options"`
-	StatusHistory           []SubscriptionStatusEvent `xml:"status-history>status-event"`
+	StatusEvents            []SubscriptionStatusEvent `xml:"status-history>status-event"`
 	Descriptor              *Descriptor               `xml:"descriptor"`
 	AddOns                  *AddOnList                `xml:"add-ons"`
 	Discounts               *DiscountList             `xml:"discounts"`
