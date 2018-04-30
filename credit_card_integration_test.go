@@ -235,8 +235,8 @@ func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !card.VenmoSDK {
-		t.Fatal("venmo card not marked")
+	if card.VenmoSDK {
+		t.Fatal("venmo card marked")
 	}
 }
 
@@ -260,7 +260,7 @@ func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !card.VenmoSDK {
-		t.Fatal("venmo card not marked")
+	if card.VenmoSDK {
+		t.Fatal("venmo card marked")
 	}
 }
