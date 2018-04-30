@@ -1,6 +1,9 @@
 package braintree
 
-import "context"
+import (
+	"context"
+	"encoding/xml"
+)
 
 type SubscriptionGateway struct {
 	*Braintree
@@ -52,4 +55,34 @@ func (g *SubscriptionGateway) Cancel(ctx context.Context, subId string) (*Subscr
 		return resp.subscription()
 	}
 	return nil, &invalidResponseError{resp}
+}
+
+// RetryCharge retries to charge for a subscription. The amount has to
+// be > 0.
+func (g *SubscriptionGateway) RetryCharge(ctx context.Context, subId string, amount Decimal) error {
+	txInput := &struct {
+		XMLName        xml.Name
+		Amount         Decimal            `xml:"amount"`
+		Options        TransactionOptions `xml:"options"`
+		SubscriptionID string             `xml:"subscription-id"`
+		Type           string             `xml:"type"`
+	}{
+		XMLName: xml.Name{Local: "transaction"},
+		Amount:  amount,
+		Options: TransactionOptions{
+			SubmitForSettlement: true,
+		},
+		SubscriptionID: subId,
+		Type:           "sale",
+	}
+
+	resp, err := g.execute(ctx, "POST", "transactions", txInput)
+	if err != nil {
+		return err
+	}
+	switch resp.StatusCode {
+	case 201:
+		return nil
+	}
+	return &invalidResponseError{resp}
 }

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
+	"github.com/stretchr/testify/assert"
 )
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
@@ -1010,5 +1011,28 @@ func TestSubscriptionTransactions(t *testing.T) {
 	_, err = g.Cancel(ctx, sub2.Id)
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+// In order to run this test you have to create a test subscription
+// that has a status of "Past Due". You can get such a subscription
+// by creating one with a trial period of one day and a price of 2000
+// USD (this amount will fail in the sandbox environment). After the
+// trial expires, the subscription will have the desired "Past Due"
+// status. Then you can try to charge an amount lower than 2000 which
+// then should work when we retry the charge.
+func TestSubscriptionRetryCharge(t *testing.T) {
+	t.Skip("Needs manual setup")
+	t.Parallel()
+
+	ctx := context.Background()
+
+	someAmount := NewDecimal(1000, 2)
+	err := testGateway.Subscription().RetryCharge(ctx, "nonExisting1223", *someAmount)
+	assert.Equal(t, "Subscription ID is invalid.", err.Error())
+
+	err = testGateway.Subscription().RetryCharge(ctx, "replaceWithIDofTestPastDueSubscription", *someAmount)
+	if err != nil {
+		t.Fatalf("RetryCharge returned error: %s", err)
 	}
 }
