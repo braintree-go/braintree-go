@@ -52,19 +52,18 @@ func TestSubscriptionSimple(t *testing.T) {
 	}
 	wantBalance := NewDecimal(0, 2)
 	wantPrice := NewDecimal(1000, 2)
-	for _, event := range sub.StatusEvents {
-		if event.Status != SubscriptionStatusActive {
-			t.Fatalf("expected status of status history event to be active, was %s", event.Status)
-		}
-		if event.CurrencyISOCode != "USD" {
-			t.Fatalf("expected currency iso code of status history event to be USD, was %s", event.CurrencyISOCode)
-		}
-		if event.Balance.Cmp(wantBalance) != 0 {
-			t.Fatalf("expected balance of status history event to be 0, was %s", event.Balance)
-		}
-		if event.Price.Cmp(wantPrice) != 0 {
-			t.Fatalf("expected price of status history event to be 10, was %s", event.Price)
-		}
+	event := sub.StatusEvents[0]
+	if event.Status != SubscriptionStatusActive {
+		t.Fatalf("expected status of status history event to be active, was %s", event.Status)
+	}
+	if event.CurrencyISOCode != "USD" {
+		t.Fatalf("expected currency iso code of status history event to be USD, was %s", event.CurrencyISOCode)
+	}
+	if event.Balance.Cmp(wantBalance) != 0 {
+		t.Fatalf("expected balance of status history event to be 0, was %s", event.Balance)
+	}
+	if event.Price.Cmp(wantPrice) != 0 {
+		t.Fatalf("expected price of status history event to be 10, was %s", event.Price)
 	}
 
 	// Update
