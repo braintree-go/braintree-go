@@ -1025,14 +1025,28 @@ func TestSubscriptionRetryCharge(t *testing.T) {
 	t.Parallel()
 
 	ctx := context.Background()
-
-	someAmount := NewDecimal(1000, 2)
-	err := testGateway.Subscription().RetryCharge(ctx, "nonExisting1223", *someAmount)
+	reqInvalidID := SubscriptionTransactionRequest{
+		SubscriptionID: "nonExisting1223",
+		Amount:         NewDecimal(1000, 2),
+		Options: TransactionOptions{
+			SubmitForSettlement: true,
+		},
+		Type: "sale",
+	}
+	err := testGateway.Subscription().RetryCharge(ctx, &reqInvalidID)
 	if err.Error() != "Subscription ID is invalid." {
-		t.Errorf("RetryCharge returned wrong error. Want: 'Subscription ID is invalid.' Got: %s", err)
+		t.Errorf("RetryCharge returned wrong error. Want: 'Subscription ID is invalid.' Got: %q", err)
 	}
 
-	err = testGateway.Subscription().RetryCharge(ctx, "replaceWithIDofTestPastDueSubscription", *someAmount)
+	req := SubscriptionTransactionRequest{
+		SubscriptionID: "replaceWithIDofTestPastDueSubscription",
+		Amount:         NewDecimal(1000, 2),
+		Options: TransactionOptions{
+			SubmitForSettlement: true,
+		},
+		Type: "sale",
+	}
+	err = testGateway.Subscription().RetryCharge(ctx, &req)
 	if err != nil {
 		t.Fatalf("RetryCharge returned error: %s", err)
 	}

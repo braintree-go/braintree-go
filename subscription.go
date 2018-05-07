@@ -1,5 +1,7 @@
 package braintree
 
+import "encoding/xml"
+
 type SubscriptionStatus string
 
 const (
@@ -80,4 +82,14 @@ type SubscriptionOptions struct {
 	ReplaceAllAddOnsAndDiscounts         bool `xml:"replace-all-add-ons-and-discounts,omitempty"`
 	RevertSubscriptionOnProrationFailure bool `xml:"revert-subscription-on-proration-failure,omitempty"`
 	StartImmediately                     bool `xml:"start-immediately,omitempty"`
+}
+
+// SubscriptionTransactionRequest is used to retry a charge on a PastDue
+// Subscription.
+type SubscriptionTransactionRequest struct {
+	XMLName        xml.Name           `xml:"transaction"`
+	Amount         *Decimal           `xml:"amount"`
+	Options        TransactionOptions `xml:"options"`
+	SubscriptionID string             `xml:"subscription-id"`
+	Type           string             `xml:"type"`
 }
