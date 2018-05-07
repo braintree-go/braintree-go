@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
-	"github.com/stretchr/testify/assert"
 )
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
@@ -1029,7 +1028,9 @@ func TestSubscriptionRetryCharge(t *testing.T) {
 
 	someAmount := NewDecimal(1000, 2)
 	err := testGateway.Subscription().RetryCharge(ctx, "nonExisting1223", *someAmount)
-	assert.Equal(t, "Subscription ID is invalid.", err.Error())
+	if err.Error() != "Subscription ID is invalid." {
+		t.Errorf("RetryCharge returned wrong error. Want: 'Subscription ID is invalid.' Got: %s", err)
+	}
 
 	err = testGateway.Subscription().RetryCharge(ctx, "replaceWithIDofTestPastDueSubscription", *someAmount)
 	if err != nil {
