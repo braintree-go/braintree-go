@@ -61,14 +61,13 @@ func (g *SubscriptionGateway) Cancel(ctx context.Context, subId string) (*Subscr
 // be > 0.
 func (g *SubscriptionGateway) RetryCharge(ctx context.Context, subId string, amount Decimal) error {
 	txInput := &struct {
-		XMLName        xml.Name
+		XMLName        xml.Name           `xml:"transaction"`
 		Amount         Decimal            `xml:"amount"`
 		Options        TransactionOptions `xml:"options"`
 		SubscriptionID string             `xml:"subscription-id"`
 		Type           string             `xml:"type"`
 	}{
-		XMLName: xml.Name{Local: "transaction"},
-		Amount:  amount,
+		Amount: amount,
 		Options: TransactionOptions{
 			SubmitForSettlement: true,
 		},
