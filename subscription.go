@@ -84,12 +84,29 @@ type SubscriptionOptions struct {
 	StartImmediately                     bool `xml:"start-immediately,omitempty"`
 }
 
-// SubscriptionTransactionRequest is used to retry a charge on a PastDue
-// Subscription.
 type SubscriptionTransactionRequest struct {
-	XMLName        xml.Name           `xml:"transaction"`
-	Amount         *Decimal           `xml:"amount"`
-	Options        TransactionOptions `xml:"options"`
-	SubscriptionID string             `xml:"subscription-id"`
-	Type           string             `xml:"type"`
+	Amount         *Decimal
+	SubscriptionID string
+	Options        *SubscriptionTransactionOptionsRequest
+}
+
+func (s *SubscriptionTransactionRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	x := struct {
+		XMLName        xml.Name                               `xml:"transaction"`
+		Type           string                                 `xml:"type"`
+		SubscriptionID string                                 `xml:"subscription-id"`
+		Amount         *Decimal                               `xml:"amount,omitempty"`
+		Options        *SubscriptionTransactionOptionsRequest `xml:"options,omitempty"`
+	}{
+		Type:           "sale",
+		SubscriptionID: s.SubscriptionID,
+		Amount:         s.Amount,
+		Options:        s.Options,
+	}
+
+	return e.Encode(x)
+}
+
+type SubscriptionTransactionOptionsRequest struct {
+	SubmitForSettlement bool `xml:"submit-for-settlement"`
 }

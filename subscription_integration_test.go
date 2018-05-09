@@ -1013,41 +1013,84 @@ func TestSubscriptionTransactions(t *testing.T) {
 	}
 }
 
-// In order to run this test you have to create a test subscription
-// that has a status of "Past Due". You can get such a subscription
-// by creating one with a trial period of one day and a price of 2000
-// USD (this amount will fail in the sandbox environment). After the
-// trial expires, the subscription will have the desired "Past Due"
-// status. Then you can try to charge an amount lower than 2000 which
-// then should work when we retry the charge.
+// It is not possible to successfully retry a charge without manually creating
+// a subcription with a card that will fail, waiting a day for it to be billed
+// and fail which will cause the subscription to enter the PastDue status. This
+// test instead attempts to retry a charge that is not PastDue and ensures the
+// only errors returned is the status.
+// Ref: https://developers.braintreepayments.com/guides/recurring-billing/overview#past-due
 func TestSubscriptionRetryCharge(t *testing.T) {
-	t.Skip("Needs manual setup")
 	t.Parallel()
 
 	ctx := context.Background()
-	reqInvalidID := SubscriptionTransactionRequest{
-		SubscriptionID: "nonExisting1223",
-		Amount:         NewDecimal(1000, 2),
-		Options: TransactionOptions{
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("customer", customer)
+
+	verifyCard := false
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+		Options: &PaymentMethodRequestOptions{
+			VerifyCard: &verifyCard,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("payment method", paymentMethod)
+
+	g := testGateway.Subscription()
+
+	// Create Subscription
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+		MerchantAccountId:  testMerchantAccountId,
+		Price:              NewDecimal(100, 2),
+		Options: &SubscriptionOptions{
+			StartImmediately: true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("sub1", sub1)
+
+	// Retry Charge
+	err = testGateway.Subscription().RetryCharge(ctx, &SubscriptionTransactionRequest{
+		SubscriptionID: sub1.Id,
+		Amount:         NewDecimal(0, 2),
+		Options: &SubscriptionTransactionOptionsRequest{
 			SubmitForSettlement: true,
 		},
-		Type: "sale",
-	}
-	err := testGateway.Subscription().RetryCharge(ctx, &reqInvalidID)
-	if err.Error() != "Subscription ID is invalid." {
-		t.Errorf("RetryCharge returned wrong error. Want: 'Subscription ID is invalid.' Got: %q", err)
+	})
+	if err != nil {
+		if err, ok := err.(*BraintreeError); ok {
+			t.Log(err)
+			fieldErrors := err.All()
+			if g, w := len(fieldErrors), 1; g != w {
+				t.Fatalf("got %d field errors, want %d", g, w)
+			}
+			if g, w := fieldErrors[0].Code, "91531"; g != w {
+				t.Errorf("got error code %q, want %q", g, w)
+			}
+			if g, w := fieldErrors[0].Message, "Subscription status must be Past Due in order to retry."; g != w {
+				t.Errorf("got error message %q, want %q", g, w)
+			}
+		} else {
+			t.Fatal(err)
+		}
+	} else {
+		t.Errorf("Retry charge did not error, want error indicating Subscription status must be Past Due in order to retry.")
 	}
 
-	req := SubscriptionTransactionRequest{
-		SubscriptionID: "replaceWithIDofTestPastDueSubscription",
-		Amount:         NewDecimal(1000, 2),
-		Options: TransactionOptions{
-			SubmitForSettlement: true,
-		},
-		Type: "sale",
-	}
-	err = testGateway.Subscription().RetryCharge(ctx, &req)
+	// Cancel
+	_, err = g.Cancel(ctx, sub1.Id)
 	if err != nil {
-		t.Fatalf("RetryCharge returned error: %s", err)
+		t.Fatal(err)
 	}
 }
