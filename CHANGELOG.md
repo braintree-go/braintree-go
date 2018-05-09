@@ -1,3 +1,9 @@
+## 0.19.0 (Unreleased)
+
+BACKWARDS INCOMPATIBILITES:
+
+* Rewrite error handling and interfaces. See #222 for details.
+
 ## 0.18.0 (March 2nd, 2018)
 
 BACKWARDS INCOMPATIBILITES:
