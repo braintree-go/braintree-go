@@ -1059,6 +1059,12 @@ func TestSubscriptionRetryCharge(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log("sub1", sub1)
+	defer func() {
+		_, err = g.Cancel(ctx, sub1.Id)
+		if err != nil {
+			t.Error(err)
+		}
+	}()
 
 	// Retry Charge
 	err = testGateway.Subscription().RetryCharge(ctx, &SubscriptionTransactionRequest{
@@ -1068,29 +1074,23 @@ func TestSubscriptionRetryCharge(t *testing.T) {
 			SubmitForSettlement: true,
 		},
 	})
-	if err != nil {
-		if err, ok := err.(*BraintreeError); ok {
-			t.Log(err)
-			fieldErrors := err.All()
-			if g, w := len(fieldErrors), 1; g != w {
-				t.Fatalf("got %d field errors, want %d", g, w)
-			}
-			if g, w := fieldErrors[0].Code, "91531"; g != w {
-				t.Errorf("got error code %q, want %q", g, w)
-			}
-			if g, w := fieldErrors[0].Message, "Subscription status must be Past Due in order to retry."; g != w {
-				t.Errorf("got error message %q, want %q", g, w)
-			}
-		} else {
-			t.Fatal(err)
-		}
-	} else {
-		t.Errorf("Retry charge did not error, want error indicating Subscription status must be Past Due in order to retry.")
+	if err == nil {
+		t.Fatalf("Retry charge did not error, want error indicating Subscription status must be Past Due in order to retry.")
 	}
-
-	// Cancel
-	_, err = g.Cancel(ctx, sub1.Id)
-	if err != nil {
+	apiErr, ok := err.(*BraintreeError)
+	if !ok {
 		t.Fatal(err)
+	}
+	fieldErrs := apiErr.All()
+	if len(fieldErrs) != 1 {
+		t.Fatalf("got %d field errors, want 1, field errors: %#v", len(fieldErrs), fieldErrs)
+	}
+	wantFieldErr := FieldError{
+		Code:      "91531",
+		Attribute: "base",
+		Message:   "Subscription status must be Past Due in order to retry.",
+	}
+	if fieldErrs[0] != wantFieldErr {
+		t.Errorf("got field error %#v, want %#v", fieldErrs[0], wantFieldErr)
 	}
 }
