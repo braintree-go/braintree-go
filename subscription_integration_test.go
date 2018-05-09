@@ -1063,7 +1063,7 @@ func TestSubscriptionRetryCharge(t *testing.T) {
 	// Retry Charge
 	err = testGateway.Subscription().RetryCharge(ctx, &SubscriptionTransactionRequest{
 		SubscriptionID: sub1.Id,
-		Amount:         NewDecimal(0, 2),
+		Amount:         NewDecimal(10, 2),
 		Options: &SubscriptionTransactionOptionsRequest{
 			SubmitForSettlement: true,
 		},
