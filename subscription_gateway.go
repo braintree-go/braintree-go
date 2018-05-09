@@ -1,8 +1,6 @@
 package braintree
 
-import (
-	"context"
-)
+import "context"
 
 type SubscriptionGateway struct {
 	*Braintree
