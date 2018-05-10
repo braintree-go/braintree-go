@@ -1,5 +1,7 @@
 package braintree
 
+import "encoding/xml"
+
 type SubscriptionStatus string
 
 const (
@@ -81,4 +83,31 @@ type SubscriptionOptions struct {
 	ReplaceAllAddOnsAndDiscounts         bool `xml:"replace-all-add-ons-and-discounts,omitempty"`
 	RevertSubscriptionOnProrationFailure bool `xml:"revert-subscription-on-proration-failure,omitempty"`
 	StartImmediately                     bool `xml:"start-immediately,omitempty"`
+}
+
+type SubscriptionTransactionRequest struct {
+	Amount         *Decimal
+	SubscriptionID string
+	Options        *SubscriptionTransactionOptionsRequest
+}
+
+func (s *SubscriptionTransactionRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	x := struct {
+		XMLName        xml.Name                               `xml:"transaction"`
+		Type           string                                 `xml:"type"`
+		SubscriptionID string                                 `xml:"subscription-id"`
+		Amount         *Decimal                               `xml:"amount,omitempty"`
+		Options        *SubscriptionTransactionOptionsRequest `xml:"options,omitempty"`
+	}{
+		Type:           "sale",
+		SubscriptionID: s.SubscriptionID,
+		Amount:         s.Amount,
+		Options:        s.Options,
+	}
+
+	return e.Encode(x)
+}
+
+type SubscriptionTransactionOptionsRequest struct {
+	SubmitForSettlement bool `xml:"submit-for-settlement"`
 }
