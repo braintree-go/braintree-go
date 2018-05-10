@@ -47,6 +47,24 @@ func TestSubscriptionSimple(t *testing.T) {
 	if sub.Id == "" {
 		t.Fatal("invalid subscription id")
 	}
+	if len(sub.StatusEvents) != 1 {
+		t.Fatalf("expected one status event, got %d", len(sub.StatusEvents))
+	}
+	wantBalance := NewDecimal(0, 2)
+	wantPrice := NewDecimal(1000, 2)
+	event := sub.StatusEvents[0]
+	if event.Status != SubscriptionStatusActive {
+		t.Fatalf("expected status of status history event to be active, was %s", event.Status)
+	}
+	if event.CurrencyISOCode != "USD" {
+		t.Fatalf("expected currency iso code of status history event to be USD, was %s", event.CurrencyISOCode)
+	}
+	if event.Balance.Cmp(wantBalance) != 0 {
+		t.Fatalf("expected balance of status history event to be 0, was %s", event.Balance)
+	}
+	if event.Price.Cmp(wantPrice) != 0 {
+		t.Fatalf("expected price of status history event to be 10, was %s", event.Price)
+	}
 
 	// Update
 	sub2, err := g.Update(ctx, &SubscriptionRequest{
@@ -69,6 +87,23 @@ func TestSubscriptionSimple(t *testing.T) {
 	}
 	if x := sub2.PlanId; x != "test_plan_2" {
 		t.Fatal(x)
+	}
+	if len(sub2.StatusEvents) != 2 {
+		t.Fatalf("expected two status events, got %d", len(sub2.StatusEvents))
+	}
+	for _, event := range sub2.StatusEvents {
+		if event.Status != SubscriptionStatusActive {
+			t.Fatalf("expected status of status history event to be active, was %s", event.Status)
+		}
+		if event.CurrencyISOCode != "USD" {
+			t.Fatalf("expected currency iso code of status history event to be USD, was %s", event.CurrencyISOCode)
+		}
+		if event.Balance.Cmp(wantBalance) != 0 {
+			t.Fatalf("expected balance of status history event to be 0, was %s", event.Balance)
+		}
+		if event.Price.Cmp(wantPrice) != 0 {
+			t.Fatalf("expected price of status history event to be 10, was %s", event.Price)
+		}
 	}
 
 	// Find
