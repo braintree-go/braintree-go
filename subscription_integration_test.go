@@ -1112,20 +1112,20 @@ func TestSubscriptionRetryCharge(t *testing.T) {
 	if err == nil {
 		t.Fatalf("Retry charge did not error, want error indicating Subscription status must be Past Due in order to retry.")
 	}
-	apiErr, ok := err.(*BraintreeError)
+	btErr, ok := err.(*BraintreeError)
 	if !ok {
 		t.Fatal(err)
 	}
-	fieldErrs := apiErr.All()
-	if len(fieldErrs) != 1 {
-		t.Fatalf("got %d field errors, want 1, field errors: %#v", len(fieldErrs), fieldErrs)
+	validationErrs := btErr.All()
+	if len(validationErrs) != 1 {
+		t.Fatalf("got %d validation errors, want 1, validation errors: %#v", len(validationErrs), validationErrs)
 	}
-	wantFieldErr := FieldError{
+	wantValidationErr := ValidationError{
 		Code:      "91531",
-		Attribute: "base",
+		Attribute: "Base",
 		Message:   "Subscription status must be Past Due in order to retry.",
 	}
-	if fieldErrs[0] != wantFieldErr {
-		t.Errorf("got field error %#v, want %#v", fieldErrs[0], wantFieldErr)
+	if validationErrs[0] != wantValidationErr {
+		t.Errorf("got validation error %#v, want %#v", validationErrs[0], wantValidationErr)
 	}
 }
