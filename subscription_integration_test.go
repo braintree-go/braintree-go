@@ -1129,3 +1129,50 @@ func TestSubscriptionRetryCharge(t *testing.T) {
 		t.Errorf("got validation error %#v, want %#v", validationErrs[0], wantValidationErr)
 	}
 }
+
+func TestSubscriptionSearchIDs(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	g := testGateway.Subscription()
+
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+	})
+	sub2, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+	})
+
+	query := &SearchQuery{}
+	f := query.AddTimeField("created-at")
+	f.Max = time.Now()
+	f.Min = time.Now().AddDate(0, 0, -1)
+	result, err := g.SearchIDs(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(result.IDs) < 2 {
+		t.Errorf("expected length of result.IDs to be greater than 2, got %v", len(result.IDs))
+	}
+	if !contains(result.IDs, sub1.Id) {
+		t.Errorf("expected result.IDs to include %v", sub1.Id)
+	}
+	if !testhelpers.contains(result.IDs, sub1.Id) {
+		t.Errorf("expected result.IDs to include %v", sub2.Id)
+	}
+}

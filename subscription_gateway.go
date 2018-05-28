@@ -1,6 +1,9 @@
 package braintree
 
-import "context"
+import (
+	"context"
+	"encoding/xml"
+)
 
 type SubscriptionGateway struct {
 	*Braintree
@@ -68,4 +71,29 @@ func (g *SubscriptionGateway) RetryCharge(ctx context.Context, txReq *Subscripti
 		return nil
 	}
 	return &invalidResponseError{resp}
+}
+
+// SearchIDs finds subscriptions matching the search query, returning the IDs
+// only. Use Search and SearchNext to get pages of subscriptions.
+func (g *SubscriptionGateway) SearchIDs(ctx context.Context, query *SearchQuery) (*SearchResult, error) {
+	resp, err := g.execute(ctx, "POST", "subscriptions/advanced_search_ids", query)
+	if err != nil {
+		return nil, err
+	}
+
+	var searchResult struct {
+		PageSize int `xml:"page-size"`
+		Ids      struct {
+			Item []string `xml:"item"`
+		} `xml:"ids"`
+	}
+	err = xml.Unmarshal(resp.Body, &searchResult)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SearchResult{
+		PageSize: searchResult.PageSize,
+		IDs:      searchResult.Ids.Item,
+	}, nil
 }
