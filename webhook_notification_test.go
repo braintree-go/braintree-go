@@ -249,3 +249,99 @@ func TestWebhookParseDisbursementException(t *testing.T) {
 	}
 
 }
+
+func TestWebhookParseDispute(t *testing.T) {
+	t.Parallel()
+
+	webhookGateway := testGateway.WebhookNotification()
+	apiKey := testGateway.credentials.(apiKey)
+	hmacer := newHmacer(apiKey.publicKey, apiKey.privateKey)
+
+	payload := base64.StdEncoding.EncodeToString([]byte(`
+        <notification>
+            <timestamp type="datetime">2014-04-06T10:32:28+00:00</timestamp>
+            <kind>dispute_opened</kind>
+            <subject>
+                <dispute>
+                    <id>123456</id>
+                    <amount>100.00</amount>
+                    <amount-disputed>100.00</amount-disputed>
+                    <amount-won>95.00</amount-won>
+                    <case-number>CASE-12345</case-number>
+                    <created-at type="datetime">2017-06-16T20:44:41Z</created-at>
+                    <currency-iso-code>USD</currency-iso-code>
+                    <forwarded-comments>Forwarded comments</forwarded-comments>
+                    <kind>chargeback</kind>
+                    <merchant-account-id>abc123</merchant-account-id>
+                    <reason>fraud</reason>
+                    <reason-code>83</reason-code>
+                    <reason-description>Reason code 83 description</reason-description>
+                    <received-date type="date">2016-02-15</received-date>
+                    <reference-number>123456</reference-number>
+                    <reply-by-date type="date">2016-02-22</reply-by-date>
+                    <status>open</status>
+                    <updated-at type="datetime">2013-04-10T10:50:39Z</updated-at>
+                    <original-dispute-id>original_dispute_id</original-dispute-id>
+                    <status-history type="array">
+                        <status-history>
+                            <status>open</status>
+                            <timestamp type="datetime">2013-04-10T10:50:39Z</timestamp>
+                            <effective-date type="date">2013-04-10</effective-date>
+                        </status-history>
+                    </status-history>
+                    <evidence type="array">
+                        <evidence>
+                            <created-at type="datetime">2013-04-11T10:50:39Z</created-at>
+                            <id>evidence1</id>
+                            <url>url_of_file_evidence</url>
+                        </evidence>
+                        <evidence>
+                            <created-at type="datetime">2013-04-11T10:50:39Z</created-at>
+                            <id>evidence2</id>
+                            <comment>text evidence</comment>
+                            <sent-to-processor-at type="date">2009-04-11</sent-to-processor-at>
+                        </evidence>
+                    </evidence>
+                    <transaction>
+                        <id>123456</id>
+                        <amount>100.00</amount>
+                        <created-at>2017-06-21T20:44:41Z</created-at>
+                        <order-id nil="true"/>
+                        <purchase-order-number nil="true"/>
+                        <payment-instrument-subtype>Visa</payment-instrument-subtype>
+                    </transaction>
+                    <date-opened type="date">2014-03-28</date-opened>
+                    <date-won type="date">2014-04-05</date-won>
+                </dispute>
+            </subject>
+        </notification>`))
+	hmacedPayload, err := hmacer.hmac(payload)
+	if err != nil {
+		t.Fatal(err)
+	}
+	signature := hmacer.publicKey + "|" + hmacedPayload
+
+	notification, err := webhookGateway.Parse(signature, payload)
+
+	if err != nil {
+		t.Fatal(err)
+	} else if notification.Kind != DisputeOpenedWebhook {
+		t.Fatal("Incorrect Notification kind, expected dispute got", notification.Kind)
+	} else if notification.Dispute() == nil {
+		t.Fatal("Notification should have a dispute")
+	} else if notification.Dispute().Kind != DisputeKindChargeback {
+		t.Errorf("Incorrect dispute kind, expected %s got %s", DisputeKindChargeback, notification.Dispute().Kind)
+	} else if notification.Dispute().Reason != DisputeReasonFraud {
+		t.Errorf("Incorrect dispute reason, expected %s got %s", DisputeReasonFraud, notification.Dispute().Reason)
+	} else if notification.Dispute().Status != DisputeStatusOpen {
+		t.Errorf("Incorrect dispute status, expected %s got %s", DisputeStatusOpen, notification.Dispute().Reason)
+	} else if notification.Dispute().Id != "123456" {
+		t.Errorf("Incorrect dispute id, expected 123456 got %s", notification.Dispute().Id)
+	} else if len(notification.Dispute().StatusHistory) != 1 {
+		t.Error("Dispute should have one status history entry")
+	} else if len(notification.Dispute().Evidence) != 2 {
+		t.Error("Dispute should have two evidence entries")
+	} else if notification.Dispute().Transaction == nil {
+		t.Error("Dispute shoud have transaction details")
+	}
+}

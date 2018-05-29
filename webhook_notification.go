@@ -54,6 +54,14 @@ func (n *WebhookNotification) Disbursement() *Disbursement {
 	}
 }
 
+func (n *WebhookNotification) Dispute() *Dispute {
+	if n.Subject.Dispute != nil {
+		return n.Subject.Dispute
+	} else {
+		return nil
+	}
+}
+
 type webhookSubject struct {
 	XMLName          xml.Name         `xml:"subject"`
 	APIErrorResponse *BraintreeError  `xml:"api-error-response,omitempty"`
@@ -61,6 +69,7 @@ type webhookSubject struct {
 	Subscription     *Subscription    `xml:",omitempty"`
 	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty"`
 	Transaction      *Transaction     `xml:",omitempty"`
+	Dispute          *Dispute         `xml:"dispute,omitempty"`
 
 	// Remaining Fields:
 	// partner_merchant
