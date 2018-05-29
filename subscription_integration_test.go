@@ -1169,10 +1169,10 @@ func TestSubscriptionSearchIDs(t *testing.T) {
 	if len(result.IDs) < 2 {
 		t.Errorf("expected length of result.IDs to be greater than 2, got %v", len(result.IDs))
 	}
-	if !contains(result.IDs, sub1.Id) {
+	if !testhelpers.Contains(result.IDs, sub1.Id) {
 		t.Errorf("expected result.IDs to include %v", sub1.Id)
 	}
-	if !testhelpers.contains(result.IDs, sub1.Id) {
+	if !testhelpers.Contains(result.IDs, sub1.Id) {
 		t.Errorf("expected result.IDs to include %v", sub2.Id)
 	}
 }
