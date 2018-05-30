@@ -60,6 +60,15 @@ const (
 	RiskDataDecline      = "Decline"
 )
 
+type TransactionSource string
+
+const (
+	TransactionSourceRecurringFirst TransactionSource = "recurring_first"
+	TransactionSourceRecurring      TransactionSource = "recurring"
+	TransactionSourceMOTO           TransactionSource = "moto"
+	TransactionSourceMerchant       TransactionSource = "merchant"
+)
+
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id"`
@@ -73,6 +82,7 @@ type Transaction struct {
 	MerchantAccountId            string                    `xml:"merchant-account-id"`
 	PlanId                       string                    `xml:"plan-id"`
 	SubscriptionId               string                    `xml:"subscription-id"`
+	SubscriptionDetails          *SubscriptionDetails      `xml:"subscription"`
 	CreditCard                   *CreditCard               `xml:"credit-card"`
 	Customer                     *Customer                 `xml:"customer"`
 	BillingAddress               *Address                  `xml:"billing"`
@@ -135,6 +145,20 @@ type TransactionRequest struct {
 	Channel             string                    `xml:"channel,omitempty"`
 	CustomFields        customfields.CustomFields `xml:"custom-fields,omitempty"`
 	PurchaseOrderNumber string                    `xml:"purchase-order-number,omitempty"`
+	TransactionSource   TransactionSource         `xml:"transaction-source,omitempty"`
+}
+
+func (t *Transaction) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	type typeWithNoFunctions Transaction
+	if err := d.DecodeElement((*typeWithNoFunctions)(t), &start); err != nil {
+		return err
+	}
+	if t.SubscriptionDetails != nil &&
+		t.SubscriptionDetails.BillingPeriodStartDate == "" &&
+		t.SubscriptionDetails.BillingPeriodEndDate == "" {
+		t.SubscriptionDetails = nil
+	}
+	return nil
 }
 
 // TODO: not all transaction fields are implemented yet, here are the missing fields (add on demand)
@@ -277,4 +301,9 @@ type ThreeDSecureInfo struct {
 	LiabilityShiftPossible bool   `xml:"liability-shift-possible"`
 	LiabilityShifted       bool   `xml:"liability-shifted"`
 	Status                 string `xml:"status"`
+}
+
+type SubscriptionDetails struct {
+	BillingPeriodStartDate string `xml:"billing-period-start-date"`
+	BillingPeriodEndDate   string `xml:"billing-period-end-date"`
 }
