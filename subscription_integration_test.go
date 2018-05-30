@@ -1047,3 +1047,85 @@ func TestSubscriptionTransactions(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// It is not possible to successfully retry a charge without manually creating
+// a subcription with a card that will fail, waiting a day for it to be billed
+// and fail which will cause the subscription to enter the PastDue status. This
+// test instead attempts to retry a charge that is not PastDue and ensures the
+// only errors returned is the status.
+// Ref: https://developers.braintreepayments.com/guides/recurring-billing/overview#past-due
+func TestSubscriptionRetryCharge(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("customer", customer)
+
+	verifyCard := false
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+		Options: &PaymentMethodRequestOptions{
+			VerifyCard: &verifyCard,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("payment method", paymentMethod)
+
+	g := testGateway.Subscription()
+
+	// Create Subscription
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+		MerchantAccountId:  testMerchantAccountId,
+		Price:              NewDecimal(100, 2),
+		Options: &SubscriptionOptions{
+			StartImmediately: true,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("sub1", sub1)
+	defer func() {
+		_, err = g.Cancel(ctx, sub1.Id)
+		if err != nil {
+			t.Error(err)
+		}
+	}()
+
+	// Retry Charge
+	err = testGateway.Subscription().RetryCharge(ctx, &SubscriptionTransactionRequest{
+		SubscriptionID: sub1.Id,
+		Amount:         NewDecimal(10, 2),
+		Options: &SubscriptionTransactionOptionsRequest{
+			SubmitForSettlement: true,
+		},
+	})
+	if err == nil {
+		t.Fatalf("Retry charge did not error, want error indicating Subscription status must be Past Due in order to retry.")
+	}
+	btErr, ok := err.(*BraintreeError)
+	if !ok {
+		t.Fatal(err)
+	}
+	validationErrs := btErr.All()
+	if len(validationErrs) != 1 {
+		t.Fatalf("got %d validation errors, want 1, validation errors: %#v", len(validationErrs), validationErrs)
+	}
+	wantValidationErr := ValidationError{
+		Code:      "91531",
+		Attribute: "Base",
+		Message:   "Subscription status must be Past Due in order to retry.",
+	}
+	if validationErrs[0] != wantValidationErr {
+		t.Errorf("got validation error %#v, want %#v", validationErrs[0], wantValidationErr)
+	}
+}

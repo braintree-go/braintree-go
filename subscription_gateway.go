@@ -53,3 +53,19 @@ func (g *SubscriptionGateway) Cancel(ctx context.Context, subId string) (*Subscr
 	}
 	return nil, &invalidResponseError{resp}
 }
+
+// RetryCharge retries to charge for a Subscription. All options,
+// including the Subscription ID, are to be provided by the
+// SubscriptionTransactionRequest passed as an argument. Note that the
+// Amount has to be > 0.
+func (g *SubscriptionGateway) RetryCharge(ctx context.Context, txReq *SubscriptionTransactionRequest) error {
+	resp, err := g.execute(ctx, "POST", "transactions", txReq)
+	if err != nil {
+		return err
+	}
+	switch resp.StatusCode {
+	case 201:
+		return nil
+	}
+	return &invalidResponseError{resp}
+}

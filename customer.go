@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"github.com/lionelbarrow/braintree-go/customfields"
+	"time"
 )
 
 type Customer struct {
@@ -23,6 +24,8 @@ type Customer struct {
 	ApplePayCards      *ApplePayCards            `xml:"apple-pay-cards"`
 	PaymentMethodNonce string                    `xml:"payment-method-nonce"`
 	Addresses          *Addresses                `xml:"addresses"`
+	CreatedAt          *time.Time                `xml:"created-at"`
+	UpdatedAt          *time.Time                `xml:"updated-at"`
 }
 
 // PaymentMethods returns a slice of all PaymentMethods this customer has
