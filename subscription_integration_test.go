@@ -1156,11 +1156,18 @@ func TestSubscriptionSearchIDs(t *testing.T) {
 		PaymentMethodToken: paymentMethod.GetToken(),
 		PlanId:             "test_plan",
 	})
+	sub3, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan_2",
+	})
 
 	query := &SearchQuery{}
-	f := query.AddTimeField("created-at")
-	f.Max = time.Now()
-	f.Min = time.Now().AddDate(0, 0, -1)
+	f1 := query.AddTimeField("created-at")
+	f1.Max = time.Now()
+	f1.Min = time.Now().AddDate(0, 0, -1)
+	f2 := query.AddTextField("plan-id")
+	f2.Is = "test_plan"
+
 	result, err := g.SearchIDs(ctx, query)
 	if err != nil {
 		t.Fatal(err)
@@ -1174,5 +1181,8 @@ func TestSubscriptionSearchIDs(t *testing.T) {
 	}
 	if !testhelpers.Contains(result.IDs, sub1.Id) {
 		t.Errorf("expected result.IDs to include %v", sub2.Id)
+	}
+	if testhelpers.Contains(result.IDs, sub3.Id) {
+		t.Errorf("expected result.Ids to not include %v", sub3.Id)
 	}
 }
