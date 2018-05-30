@@ -97,3 +97,78 @@ func (g *SubscriptionGateway) SearchIDs(ctx context.Context, query *SearchQuery)
 		IDs:      searchResult.Ids.Item,
 	}, nil
 }
+
+// Search finds subscriptions matching the search query, returning the first
+// page of results. Use SearchNext to get subsequent pages.
+func (g *SubscriptionGateway) Search(ctx context.Context, query *SearchQuery) (*SubscriptionSearchResult, error) {
+	searchResult, err := g.SearchIDs(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	pageSize := searchResult.PageSize
+	ids := searchResult.IDs
+
+	endOffset := pageSize
+	if endOffset > len(ids) {
+		endOffset = len(ids)
+	}
+
+	firstPageQuery := query.shallowCopy()
+	firstPageQuery.AddMultiField("ids").Items = ids[:endOffset]
+	firstPageSubscriptions, err := g.fetchSubscriptions(ctx, firstPageQuery)
+
+	firstPageResult := &SubscriptionSearchResult{
+		TotalItems:        len(ids),
+		TotalIDs:          ids,
+		CurrentPageNumber: 1,
+		PageSize:          pageSize,
+		Subscriptions:     firstPageSubscriptions,
+	}
+
+	return firstPageResult, err
+}
+
+// SearchNext finds the next page of Subscriptions matching the search query.
+// Use Search to start a search and get the first page of results.
+// Returns a nil result and nil error when no more results are available.
+func (g *SubscriptionGateway) SearchNext(ctx context.Context, query *SearchQuery, prevResult *SubscriptionSearchResult) (*SubscriptionSearchResult, error) {
+	startOffset := prevResult.CurrentPageNumber * prevResult.PageSize
+	endOffset := startOffset + prevResult.PageSize
+	if endOffset > len(prevResult.TotalIDs) {
+		endOffset = len(prevResult.TotalIDs)
+	}
+	if startOffset >= endOffset {
+		return nil, nil
+	}
+
+	nextPageQuery := query.shallowCopy()
+	nextPageQuery.AddMultiField("ids").Items = prevResult.TotalIDs[startOffset:endOffset]
+	nextPageSubscriptions, err := g.fetchSubscriptions(ctx, nextPageQuery)
+
+	nextPageResult := &SubscriptionSearchResult{
+		TotalItems:        prevResult.TotalItems,
+		TotalIDs:          prevResult.TotalIDs,
+		CurrentPageNumber: prevResult.CurrentPageNumber + 1,
+		PageSize:          prevResult.PageSize,
+		Subscriptions:     nextPageSubscriptions,
+	}
+
+	return nextPageResult, err
+}
+
+func (g *SubscriptionGateway) fetchSubscriptions(ctx context.Context, query *SearchQuery) ([]*Subscription, error) {
+	resp, err := g.execute(ctx, "POST", "subscriptions/advanced_search", query)
+	if err != nil {
+		return nil, err
+	}
+	var v struct {
+		XMLName       string          `xml:"subscriptions"`
+		Subscriptions []*Subscription `xml:"subscription"`
+	}
+	err = xml.Unmarshal(resp.Body, &v)
+	if err != nil {
+		return nil, err
+	}
+	return v.Subscriptions, err
+}
