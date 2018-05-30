@@ -63,9 +63,9 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 	_, err := bt.Transaction().Create(ctx, tx)
 
 	if err == nil {
-		fmt.Fprintf(w, "<h1>Success!</h1>")
+		_, _ = fmt.Fprintf(w, "<h1>Success!</h1>")
 	} else {
-		fmt.Fprintf(w, "<h1>Something went wrong: "+err.Error()+"</h1>")
+		_, _ = fmt.Fprintf(w, "<h1>Something went wrong: "+err.Error()+"</h1>")
 	}
 }
 
