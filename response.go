@@ -44,6 +44,14 @@ func (r *Response) transaction() (*Transaction, error) {
 	return &b, nil
 }
 
+func (r *Response) transactionLineItems() (TransactionLineItems, error) {
+	var b TransactionLineItems
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func (r *Response) paymentMethod() (PaymentMethod, error) {
 	entityName, err := r.entityName()
 	if err != nil {

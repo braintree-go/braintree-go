@@ -166,6 +166,10 @@ func (g *Braintree) Transaction() *TransactionGateway {
 	return &TransactionGateway{g}
 }
 
+func (g *Braintree) TransactionLineItem() *TransactionLineItemGateway {
+	return &TransactionLineItemGateway{g}
+}
+
 func (g *Braintree) Testing() *TestingGateway {
 	return &TestingGateway{g}
 }
