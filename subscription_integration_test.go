@@ -1244,3 +1244,74 @@ func TestSubscriptionSearch(t *testing.T) {
 		t.Errorf("expected subscription ids to not contain %v", sub1.Id)
 	}
 }
+
+func TestSubscriptionSearchPagination(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	g := testGateway.Subscription()
+
+	const subscriptionCount = 51
+	expectedIDs := map[string]bool{}
+	for i := 0; i < subscriptionCount; i++ {
+		sub, err := g.Create(ctx, &SubscriptionRequest{
+			PaymentMethodToken: paymentMethod.GetToken(),
+			PlanId:             "test_plan_2",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	t.Logf("expectedIDs = %v", expectedIDs)
+
+	query := &SearchQuery{}
+	f1 := query.AddTimeField("created-at")
+	f1.Max = time.Now()
+	f1.Min = time.Now().AddDate(0, 0, -1)
+	f2 := query.AddTextField("plan-id")
+	f2.Is = "test_plan_2"
+
+	result, err := g.Search(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("results.TotalItems = %v", results.TotalItems)
+	t.Logf("results.TotalIDs = %v", results.TotalIDs)
+	t.Logf("results.PageSize = %v", results.PageSize)
+
+	if result.TotalItems < subscriptionCount {
+		t.Fatalf("results.TotalItems = %v, want it to be more than %v", results.TotalItems, subscriptionCount)
+	}
+
+	for {
+		for _, sub := range results.Subscriptions {
+			if expectedIDs[sub.Id] {
+				delete(expectedIDs, sub.Id)
+			}
+		}
+
+		results, err = txg.SearchNext(ctx, query, results)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if results == nil {
+			break
+		}
+	}
+
+	if len(subscriptionIDs) > 0 {
+		t.Fatalf("subscriptions not returned = %v", subscriptionIDs)
+	}
+}
