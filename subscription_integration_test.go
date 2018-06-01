@@ -1302,7 +1302,7 @@ func TestSubscriptionSearchPagination(t *testing.T) {
 			}
 		}
 
-		result, err = txg.SearchNext(ctx, query, result)
+		result, err = g.SearchNext(ctx, query, result)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -1311,7 +1311,7 @@ func TestSubscriptionSearchPagination(t *testing.T) {
 		}
 	}
 
-	if len(subscriptionIDs) > 0 {
-		t.Fatalf("subscriptions not returned = %v", subscriptionIDs)
+	if len(expectedIDs) > 0 {
+		t.Fatalf("subscriptions not returned = %v", expectedIDs)
 	}
 }
