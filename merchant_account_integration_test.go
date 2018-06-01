@@ -10,18 +10,15 @@ import (
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
-var acctId string
-
 func TestMerchantAccountCreate(t *testing.T) {
 	t.Parallel()
 
 	ctx := context.Background()
 
-	acctId = testhelpers.RandomString()
 	acct := MerchantAccount{
 		MasterMerchantAccountId: testMerchantAccountId,
 		TOSAccepted:             true,
-		Id:                      acctId,
+		Id:                      testhelpers.RandomString(),
 		Individual: &MerchantAccountPerson{
 			FirstName:   "Kayle",
 			LastName:    "Gishen",
@@ -69,37 +66,4 @@ func TestMerchantAccountCreate(t *testing.T) {
 		t.Fatal("ids do not match")
 	}
 
-}
-
-func TestMerchantAccountTransaction(t *testing.T) {
-	ctx := context.Background()
-
-	if acctId == "" {
-		TestMerchantAccountCreate(t)
-	}
-
-	amount := NewDecimal(int64(randomAmount().Scale+500), 2)
-
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
-		Type:   "sale",
-		Amount: amount,
-		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
-			ExpirationDate: "05/14",
-		},
-		ServiceFeeAmount:  NewDecimal(500, 2),
-		MerchantAccountId: acctId,
-	})
-
-	t.Log(tx)
-
-	if err != nil {
-		t.Fatal(err)
-	}
-	if tx.Id == "" {
-		t.Fatal("Received invalid ID on new transaction")
-	}
-	if tx.Status != TransactionStatusAuthorized {
-		t.Fatal(tx.Status)
-	}
 }
