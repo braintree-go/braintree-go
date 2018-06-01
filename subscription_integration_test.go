@@ -1272,6 +1272,7 @@ func TestSubscriptionSearchPagination(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		expectedIDs[sub.Id] = true
 	}
 
 	t.Logf("expectedIDs = %v", expectedIDs)
