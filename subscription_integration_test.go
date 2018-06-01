@@ -1287,26 +1287,26 @@ func TestSubscriptionSearchPagination(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("results.TotalItems = %v", results.TotalItems)
-	t.Logf("results.TotalIDs = %v", results.TotalIDs)
-	t.Logf("results.PageSize = %v", results.PageSize)
+	t.Logf("result.TotalItems = %v", result.TotalItems)
+	t.Logf("result.TotalIDs = %v", result.TotalIDs)
+	t.Logf("result.PageSize = %v", result.PageSize)
 
 	if result.TotalItems < subscriptionCount {
-		t.Fatalf("results.TotalItems = %v, want it to be more than %v", results.TotalItems, subscriptionCount)
+		t.Fatalf("result.TotalItems = %v, want it to be more than %v", result.TotalItems, subscriptionCount)
 	}
 
 	for {
-		for _, sub := range results.Subscriptions {
+		for _, sub := range result.Subscriptions {
 			if expectedIDs[sub.Id] {
 				delete(expectedIDs, sub.Id)
 			}
 		}
 
-		results, err = txg.SearchNext(ctx, query, results)
+		result, err = txg.SearchNext(ctx, query, result)
 		if err != nil {
 			t.Fatal(err)
 		}
-		if results == nil {
+		if result == nil {
 			break
 		}
 	}
