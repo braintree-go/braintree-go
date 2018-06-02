@@ -925,6 +925,9 @@ func TestSubscriptionModifications(t *testing.T) {
 	if x := sub2.Discounts.Discounts[0].NumberOfBillingCycles; x != 2 {
 		t.Fatalf("got %v number of billing cycles on discount, want 2 billing cycles", x)
 	}
+	if x := sub2.Discounts.Discounts[0].CurrentBillingCycle; x != 0 {
+		t.Fatalf("got current billing cycle of %d on discount, want 0", x)
+	}
 
 	// Update AddOn
 	sub3, err := g.Update(ctx, &SubscriptionRequest{

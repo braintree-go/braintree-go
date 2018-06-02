@@ -8,6 +8,7 @@ IMPROVEMENTS:
 
 * Add TransactionLineItemGateway, TransactionLineItem, TransactionLineItemRequest.
 * Add LineItems to TransactionRequest.
+* Add CurrentBillingCycle to Modification.
 
 ## 0.18.0 (March 2nd, 2018)
 
