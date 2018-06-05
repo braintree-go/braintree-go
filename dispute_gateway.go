@@ -43,7 +43,7 @@ type DisputeGateway struct {
 
 type DisputeFileEvidenceRequest struct {
 	XMLName    xml.Name         `xml:"evidence"`
-	DocumentId string           `xml:"document-id"`
+	DocumentId string           `xml:"document-upload-id"`
 	Category   EvidenceCategory `xml:"category,omitempty"`
 }
 
