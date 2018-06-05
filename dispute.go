@@ -3,17 +3,16 @@ package braintree
 import "time"
 
 type DisputeKind string
-type DisputeReason string
-type DisputeStatus string
 
 const (
-
-	// Dispute kinds
 	DisputeKindChargeback     DisputeKind = "chargeback"
 	DisputeKindPreArbitration DisputeKind = "pre_arbitration"
 	DisputeKindRetrieval      DisputeKind = "retrieval"
+)
 
-	// Dispute reasons
+type DisputeReason string
+
+const (
 	DisputeReasonCancelledRecurringTransaction DisputeReason = "cancelled_recurring_transaction"
 	DisputeReasonCreditNotProcessed            DisputeReason = "credit_not_processed"
 	DisputeReasonDuplicate                     DisputeReason = "duplicate"
@@ -24,8 +23,11 @@ const (
 	DisputeReasonProductNotReceived            DisputeReason = "product_not_received"
 	DisputeReasonProductUnsatisfactory         DisputeReason = "product_unsatisfactory"
 	DisputeReasonTransactionAmountDiffers      DisputeReason = "transaction_amount_differs"
+)
 
-	// Dispute statuses
+type DisputeStatus string
+
+const (
 	DisputeStatusAccepted DisputeStatus = "accepted"
 	DisputeStatusDisputed DisputeStatus = "disputed"
 	DisputeStatusExpired  DisputeStatus = "expired"
