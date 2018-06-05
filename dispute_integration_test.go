@@ -52,13 +52,13 @@ func TestProcessAndFinalizeDispute(t *testing.T) {
 		t.Errorf("expected AmountDisputed to be %s, was %s", disputedTransaction.Amount, dispute.AmountDisputed)
 	}
 
-	foundDispute, err := testGateway.Dispute().Find(ctx, dispute.Id)
+	foundDispute, err := testGateway.Dispute().Find(ctx, dispute.ID)
 
 	if foundDispute.AmountDisputed.Cmp(dispute.AmountDisputed) != 0 {
 		t.Fatalf("disputes with the same id should have equal amounts")
 	}
 
-	textEvidence, err := testGateway.Dispute().AddTextEvidence(ctx, dispute.Id, &DisputeTextEvidenceRequest{
+	textEvidence, err := testGateway.Dispute().AddTextEvidence(ctx, dispute.ID, &DisputeTextEvidenceRequest{
 		Content:  "some-id",
 		Category: EvidenceCategoryDeviceName,
 	})
@@ -67,11 +67,11 @@ func TestProcessAndFinalizeDispute(t *testing.T) {
 		t.Fatalf("failed to add text evidence: %v", err)
 	}
 
-	if textEvidence.Id == "" {
+	if textEvidence.ID == "" {
 		t.Fatal("text evidence can not have empty id")
 	}
 
-	fileEvidence, err := testGateway.Dispute().AddFileEvidence(ctx, dispute.Id, &DisputeFileEvidenceRequest{
+	fileEvidence, err := testGateway.Dispute().AddFileEvidence(ctx, dispute.ID, &DisputeFileEvidenceRequest{
 		Category:   EvidenceCategoryGeographicalLocation,
 		DocumentId: "Saint-Petersburg",
 	})
@@ -80,23 +80,23 @@ func TestProcessAndFinalizeDispute(t *testing.T) {
 		t.Fatalf("failed to add file evidence: %v", err)
 	}
 
-	if fileEvidence.Id == "" {
+	if fileEvidence.ID == "" {
 		t.Fatal("file evidence can not have empty id")
 	}
 
-	err = testGateway.Dispute().RemoveEvidence(ctx, dispute.Id, textEvidence.Id)
+	err = testGateway.Dispute().RemoveEvidence(ctx, dispute.ID, textEvidence.ID)
 
 	if err != nil {
 		t.Fatal("failed to remove evidence")
 	}
 
-	finalizedDispute, err := testGateway.Dispute().Finalize(ctx, dispute.Id)
+	finalizedDispute, err := testGateway.Dispute().Finalize(ctx, dispute.ID)
 
 	if err != nil {
 		t.Fatal("failed to finalize dispute")
 	}
 
-	if finalizedDispute.Id != dispute.Id {
+	if finalizedDispute.ID != dispute.ID {
 		t.Fatal("dispute id should remain the same when finalized")
 	}
 
@@ -129,7 +129,7 @@ func TestAcceptDispute(t *testing.T) {
 
 	dispute := disputes[0]
 
-	err = testGateway.Dispute().Accept(ctx, dispute.Id)
+	err = testGateway.Dispute().Accept(ctx, dispute.ID)
 
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)

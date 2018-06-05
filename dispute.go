@@ -44,7 +44,7 @@ type Dispute struct {
 	CreatedAt         *time.Time                   `xml:"created-at"`
 	CurrencyISOCode   string                       `xml:"currency-iso-code"`
 	Evidence          []*DisputeEvidence           `xml:"evidence>evidence"`
-	Id                string                       `xml:"id"`
+	ID                string                       `xml:"id"`
 	Kind              DisputeKind                  `xml:"kind"`
 	MerchantAccountId string                       `xml:"merchant-account-id"`
 	OriginalDisputeId string                       `xml:"original-dispute-id"`

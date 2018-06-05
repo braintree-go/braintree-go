@@ -335,8 +335,8 @@ func TestWebhookParseDispute(t *testing.T) {
 		t.Errorf("Incorrect dispute reason, expected %s got %s", DisputeReasonFraud, notification.Dispute().Reason)
 	} else if notification.Dispute().Status != DisputeStatusOpen {
 		t.Errorf("Incorrect dispute status, expected %s got %s", DisputeStatusOpen, notification.Dispute().Reason)
-	} else if notification.Dispute().Id != "123456" {
-		t.Errorf("Incorrect dispute id, expected 456 got %s", notification.Dispute().Id)
+	} else if notification.Dispute().ID != "123456" {
+		t.Errorf("Incorrect dispute id, expected 456 got %s", notification.Dispute().ID)
 	} else if len(notification.Dispute().StatusHistory) != 1 {
 		t.Error("Dispute should have one status history entry")
 	} else if len(notification.Dispute().Evidence) != 2 {
