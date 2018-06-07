@@ -71,33 +71,16 @@ func TestProcessAndFinalizeDispute(t *testing.T) {
 		t.Fatal("text evidence can not have empty id")
 	}
 
-	fileEvidence, err := testGateway.Dispute().AddFileEvidence(ctx, dispute.ID, &DisputeFileEvidenceRequest{
-		Category:   EvidenceCategoryGeographicalLocation,
-		DocumentId: "Saint-Petersburg",
-	})
-
-	if err != nil {
-		t.Fatalf("failed to add file evidence: %v", err)
-	}
-
-	if fileEvidence.ID == "" {
-		t.Fatal("file evidence can not have empty id")
-	}
-
 	err = testGateway.Dispute().RemoveEvidence(ctx, dispute.ID, textEvidence.ID)
 
 	if err != nil {
-		t.Fatal("failed to remove evidence")
+		t.Fatalf("failed to remove evidence: %v", err)
 	}
 
-	finalizedDispute, err := testGateway.Dispute().Finalize(ctx, dispute.ID)
+	err = testGateway.Dispute().Finalize(ctx, dispute.ID)
 
 	if err != nil {
-		t.Fatal("failed to finalize dispute")
-	}
-
-	if finalizedDispute.ID != dispute.ID {
-		t.Fatal("dispute id should remain the same when finalized")
+		t.Fatalf("failed to finalize dispute: %v", err)
 	}
 
 }
@@ -107,6 +90,7 @@ func TestAcceptDispute(t *testing.T) {
 
 	ctx := context.Background()
 
+	disputedTransaction.Amount = NewDecimal(100, 2)
 	tx, err := testGateway.Transaction().Create(ctx, &disputedTransaction)
 
 	if err != nil {
@@ -132,7 +116,6 @@ func TestAcceptDispute(t *testing.T) {
 	err = testGateway.Dispute().Accept(ctx, dispute.ID)
 
 	if err != nil {
-		t.Fatalf("failed to finalize dispute: %v", err)
+		t.Fatalf("failed to accept dispute: %v", err)
 	}
-
 }

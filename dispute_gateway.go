@@ -53,18 +53,6 @@ type DisputeTextEvidenceRequest struct {
 	Category EvidenceCategory `xml:"category,omitempty"`
 }
 
-func (g *DisputeGateway) AddFileEvidence(ctx context.Context, disputeId string, fileEvidenceRequest *DisputeFileEvidenceRequest) (*DisputeEvidence, error) {
-	resp, err := g.executeVersion(ctx, "POST", "disputes/"+disputeId+"/evidence", fileEvidenceRequest, apiVersion4)
-	if err != nil {
-		return nil, err
-	}
-	switch resp.StatusCode {
-	case 200:
-		return resp.disputeEvidence()
-	}
-	return nil, &invalidResponseError{resp}
-}
-
 func (g *DisputeGateway) AddTextEvidence(ctx context.Context, disputeId string, textEvidenceRequest *DisputeTextEvidenceRequest) (*DisputeEvidence, error) {
 	resp, err := g.executeVersion(ctx, "POST", "disputes/"+disputeId+"/evidence", textEvidenceRequest, apiVersion4)
 	if err != nil {
@@ -101,16 +89,16 @@ func (g *DisputeGateway) Accept(ctx context.Context, disputeId string) error {
 	return &invalidResponseError{resp}
 }
 
-func (g *DisputeGateway) Finalize(ctx context.Context, disputeId string) (*Dispute, error) {
+func (g *DisputeGateway) Finalize(ctx context.Context, disputeId string) error {
 	resp, err := g.executeVersion(ctx, "PUT", "disputes/"+disputeId+"/finalize", nil, apiVersion4)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	switch resp.StatusCode {
 	case 200:
-		return resp.dispute()
+		return nil
 	}
-	return nil, &invalidResponseError{resp}
+	return &invalidResponseError{resp}
 }
 
 func (g *DisputeGateway) RemoveEvidence(ctx context.Context, disputeId string, evidenceId string) error {
