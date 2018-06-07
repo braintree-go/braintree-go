@@ -10,6 +10,7 @@ type CustomerGateway struct {
 }
 
 // Create creates a new customer from the passed in customer object.
+// You can create a customer by itself, with a payment method, or with a credit card with a billing address.
 // If no Id is set, Braintree will assign one.
 func (g *CustomerGateway) Create(ctx context.Context, c *CustomerRequest) (*Customer, error) {
 	resp, err := g.execute(ctx, "POST", "customers", c)
@@ -50,6 +51,7 @@ func (g *CustomerGateway) Find(ctx context.Context, id string) (*Customer, error
 	return nil, &invalidResponseError{resp}
 }
 
+// Search searches for customers matching the search query
 func (g *CustomerGateway) Search(ctx context.Context, query *SearchQuery) (*CustomerSearchResult, error) {
 	resp, err := g.execute(ctx, "POST", "customers/advanced_search", query)
 	if err != nil {

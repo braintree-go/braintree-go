@@ -6,6 +6,7 @@ type CreditCardGateway struct {
 	*Braintree
 }
 
+// Create creates a new credit card record on Braintree
 func (g *CreditCardGateway) Create(ctx context.Context, card *CreditCard) (*CreditCard, error) {
 	resp, err := g.execute(ctx, "POST", "payment_methods", card)
 	if err != nil {
@@ -18,6 +19,7 @@ func (g *CreditCardGateway) Create(ctx context.Context, card *CreditCard) (*Cred
 	return nil, &invalidResponseError{resp}
 }
 
+// Update updates a credit card on braintree
 func (g *CreditCardGateway) Update(ctx context.Context, card *CreditCard) (*CreditCard, error) {
 	resp, err := g.execute(ctx, "PUT", "payment_methods/"+card.Token, card)
 	if err != nil {
@@ -30,6 +32,7 @@ func (g *CreditCardGateway) Update(ctx context.Context, card *CreditCard) (*Cred
 	return nil, &invalidResponseError{resp}
 }
 
+// Find finds a credit card by specified token
 func (g *CreditCardGateway) Find(ctx context.Context, token string) (*CreditCard, error) {
 	resp, err := g.execute(ctx, "GET", "payment_methods/"+token, nil)
 	if err != nil {
@@ -42,6 +45,7 @@ func (g *CreditCardGateway) Find(ctx context.Context, token string) (*CreditCard
 	return nil, &invalidResponseError{resp}
 }
 
+// Delete deletes a credit card record on braintree
 func (g *CreditCardGateway) Delete(ctx context.Context, card *CreditCard) error {
 	resp, err := g.execute(ctx, "DELETE", "payment_methods/"+card.Token, nil)
 	if err != nil {
