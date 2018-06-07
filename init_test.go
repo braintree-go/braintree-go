@@ -8,8 +8,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"testing"
 	"time"
 
+	"github.com/dnaeon/go-vcr/recorder"
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
@@ -76,11 +78,23 @@ func testSubMerchantAccount() string {
 	return merchantAccount.Id
 }
 
-func init() {
+func TestMain(m *testing.M) {
 	logEnabled := flag.Bool("log", false, "enables logging")
 	flag.Parse()
 
 	if *logEnabled {
 		testGateway.Logger = log.New(os.Stderr, "", 0)
 	}
+
+	r, err := recorder.New("testdata/vcr")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	testGateway.HttpClient.Transport = r
+
+	exitCode := m.Run()
+	r.Stop()
+
+	os.Exit(exitCode)
 }
