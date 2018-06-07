@@ -46,17 +46,17 @@ var (
 	}
 )
 
-// New creates a Braintree with API Keys.
+// New creates a Braintree client with API Keys.
 func New(env Environment, merchId, pubKey, privKey string) *Braintree {
 	return NewWithHttpClient(env, merchId, pubKey, privKey, defaultClient)
 }
 
-// NewWithHttpClient creates a Braintree with API Keys and a HTTP Client.
+// NewWithHttpClient creates a Braintree client with API Keys and a HTTP Client.
 func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string, client *http.Client) *Braintree {
 	return &Braintree{credentials: newAPIKey(env, merchantId, publicKey, privateKey), HttpClient: client}
 }
 
-// New creates a Braintree with an Access Token.
+// NewWithAccessToken creates a Braintree with an Access Token.
 //
 // Note: When using an access token, webhooks are unsupported and the
 // WebhookNotification() function will panic.
@@ -75,14 +75,17 @@ type Braintree struct {
 	HttpClient  *http.Client
 }
 
+// Environment returns the current environment
 func (g *Braintree) Environment() Environment {
 	return g.credentials.Environment()
 }
 
+// MerchantID returns the current merchant id
 func (g *Braintree) MerchantID() string {
 	return g.credentials.MerchantID()
 }
 
+// MerchantURL returns the current merchant's URL
 func (g *Braintree) MerchantURL() string {
 	return g.Environment().BaseURL() + "/merchants/" + g.MerchantID()
 }
