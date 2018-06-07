@@ -34,7 +34,7 @@ func (g *AddressGateway) Delete(ctx context.Context, customerId, addrId string) 
 	return &invalidResponseError{resp}
 }
 
-// Update updates an address for the specified id and customer id.
+// Update updates an address for the address id and customer id.
 func (g *AddressGateway) Update(ctx context.Context, customerID, addrID string, a *AddressRequest) (*Address, error) {
 	resp, err := g.execute(ctx, "PUT", "customers/"+customerID+"/addresses/"+addrID, a)
 	if err != nil {

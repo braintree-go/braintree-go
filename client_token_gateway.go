@@ -11,14 +11,14 @@ type ClientTokenGateway struct {
 	*Braintree
 }
 
-// Generate generates a new client token
+// Generate generates a new client token.
 func (g *ClientTokenGateway) Generate(ctx context.Context) (string, error) {
 	return g.generate(ctx, &ClientTokenRequest{
 		Version: clientTokenVersion,
 	})
 }
 
-// GenerateWithCustomer generates a new client token for the specified customer id
+// GenerateWithCustomer generates a new client token for the customer id.
 func (g *ClientTokenGateway) GenerateWithCustomer(ctx context.Context, customerId string) (string, error) {
 	return g.generate(ctx, &ClientTokenRequest{
 		Version:    clientTokenVersion,

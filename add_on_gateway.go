@@ -6,7 +6,7 @@ type AddOnGateway struct {
 	*Braintree
 }
 
-// All gets all addons from the gateway
+// All gets all addons.
 func (g *AddOnGateway) All(ctx context.Context) ([]AddOn, error) {
 	resp, err := g.execute(ctx, "GET", "add_ons", nil)
 	if err != nil {
