@@ -113,8 +113,9 @@ type SubscriptionTransactionOptionsRequest struct {
 }
 
 type SubscriptionSearchResult struct {
-	TotalItems        int
-	TotalIDs          []string
+	TotalItems int
+	TotalIDs   []string
+
 	CurrentPageNumber int
 	PageSize          int
 	Subscriptions     []*Subscription
