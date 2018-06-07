@@ -40,8 +40,8 @@ func TestContains(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := Contains(tt.list, tt.s); got != tt.want {
-				t.Fatalf("Contains() => got %v, want %v", got, tt.want)
+			if got := StringSliceContains(tt.list, tt.s); got != tt.want {
+				t.Fatalf("StringSliceContains() => got %v, want %v", got, tt.want)
 			}
 		})
 	}

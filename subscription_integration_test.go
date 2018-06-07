@@ -1173,13 +1173,13 @@ func TestSubscriptionSearchIDs(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if !testhelpers.Contains(result.IDs, sub1.Id) {
+	if !testhelpers.StringSliceContains(result.IDs, sub1.Id) {
 		t.Errorf("expected result.IDs to include %v", sub1.Id)
 	}
-	if !testhelpers.Contains(result.IDs, sub2.Id) {
+	if !testhelpers.StringSliceContains(result.IDs, sub2.Id) {
 		t.Errorf("expected result.IDs to include %v", sub2.Id)
 	}
-	if testhelpers.Contains(result.IDs, sub3.Id) {
+	if testhelpers.StringSliceContains(result.IDs, sub3.Id) {
 		t.Errorf("expected result.Ids to not include %v", sub3.Id)
 	}
 }
@@ -1228,13 +1228,13 @@ func TestSubscriptionSearch(t *testing.T) {
 	if result.CurrentPageNumber != 1 {
 		t.Errorf("expected page number to be 1, got %v", result.CurrentPageNumber)
 	}
-	if !testhelpers.Contains(result.TotalIDs, sub1.Id) {
+	if !testhelpers.StringSliceContains(result.TotalIDs, sub1.Id) {
 		t.Errorf("expected subscription ids to contain %v", sub1.Id)
 	}
-	if !testhelpers.Contains(result.TotalIDs, sub2.Id) {
+	if !testhelpers.StringSliceContains(result.TotalIDs, sub2.Id) {
 		t.Errorf("expected subscription ids to contain %v", sub2.Id)
 	}
-	if testhelpers.Contains(result.TotalIDs, sub3.Id) {
+	if testhelpers.StringSliceContains(result.TotalIDs, sub3.Id) {
 		t.Errorf("expected subscription ids to not contain %v", sub3.Id)
 	}
 }
