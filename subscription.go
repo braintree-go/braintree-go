@@ -111,3 +111,12 @@ func (s *SubscriptionTransactionRequest) MarshalXML(e *xml.Encoder, start xml.St
 type SubscriptionTransactionOptionsRequest struct {
 	SubmitForSettlement bool `xml:"submit-for-settlement"`
 }
+
+type SubscriptionSearchResult struct {
+	TotalItems int
+	TotalIDs   []string
+
+	CurrentPageNumber int
+	PageSize          int
+	Subscriptions     []*Subscription
+}

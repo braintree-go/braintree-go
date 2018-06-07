@@ -1132,3 +1132,184 @@ func TestSubscriptionRetryCharge(t *testing.T) {
 		t.Errorf("got validation error %#v, want %#v", validationErrs[0], wantValidationErr)
 	}
 }
+
+func TestSubscriptionSearchIDs(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	g := testGateway.Subscription()
+
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+	})
+	sub2, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+	})
+	sub3, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan_2",
+	})
+
+	query := &SearchQuery{}
+	f1 := query.AddTimeField("created-at")
+	f1.Max = time.Now()
+	f1.Min = time.Now().AddDate(0, 0, -1)
+	f2 := query.AddTextField("plan-id")
+	f2.Is = "test_plan"
+
+	result, err := g.SearchIDs(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !testhelpers.StringSliceContains(result.IDs, sub1.Id) {
+		t.Errorf("expected result.IDs to include %v", sub1.Id)
+	}
+	if !testhelpers.StringSliceContains(result.IDs, sub2.Id) {
+		t.Errorf("expected result.IDs to include %v", sub2.Id)
+	}
+	if testhelpers.StringSliceContains(result.IDs, sub3.Id) {
+		t.Errorf("expected result.Ids to not include %v", sub3.Id)
+	}
+}
+
+func TestSubscriptionSearch(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	g := testGateway.Subscription()
+
+	sub1, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+	})
+	sub2, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan",
+	})
+	sub3, err := g.Create(ctx, &SubscriptionRequest{
+		PaymentMethodToken: paymentMethod.GetToken(),
+		PlanId:             "test_plan_2",
+	})
+
+	query := &SearchQuery{}
+	f1 := query.AddTimeField("created-at")
+	f1.Max = time.Now()
+	f1.Min = time.Now().AddDate(0, 0, -1)
+	f2 := query.AddTextField("plan-id")
+	f2.Is = "test_plan"
+
+	result, err := g.Search(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if result.CurrentPageNumber != 1 {
+		t.Errorf("expected page number to be 1, got %v", result.CurrentPageNumber)
+	}
+	if !testhelpers.StringSliceContains(result.TotalIDs, sub1.Id) {
+		t.Errorf("expected subscription ids to contain %v", sub1.Id)
+	}
+	if !testhelpers.StringSliceContains(result.TotalIDs, sub2.Id) {
+		t.Errorf("expected subscription ids to contain %v", sub2.Id)
+	}
+	if testhelpers.StringSliceContains(result.TotalIDs, sub3.Id) {
+		t.Errorf("expected subscription ids to not contain %v", sub3.Id)
+	}
+}
+
+func TestSubscriptionSearchPagination(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	g := testGateway.Subscription()
+
+	const subscriptionCount = 51
+	expectedIDs := map[string]bool{}
+	for i := 0; i < subscriptionCount; i++ {
+		sub, err := g.Create(ctx, &SubscriptionRequest{
+			PaymentMethodToken: paymentMethod.GetToken(),
+			PlanId:             "test_plan_2",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		expectedIDs[sub.Id] = true
+	}
+
+	t.Logf("expectedIDs = %v", expectedIDs)
+
+	query := &SearchQuery{}
+	f1 := query.AddTimeField("created-at")
+	f1.Max = time.Now()
+	f1.Min = time.Now().AddDate(0, 0, -1)
+	f2 := query.AddTextField("plan-id")
+	f2.Is = "test_plan_2"
+
+	result, err := g.Search(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("result.TotalItems = %v", result.TotalItems)
+	t.Logf("result.TotalIDs = %v", result.TotalIDs)
+	t.Logf("result.PageSize = %v", result.PageSize)
+
+	if result.TotalItems < subscriptionCount {
+		t.Errorf("result.TotalItems = %v, want it to be more than %v", result.TotalItems, subscriptionCount)
+	}
+
+	for {
+		for _, sub := range result.Subscriptions {
+			if expectedIDs[sub.Id] {
+				delete(expectedIDs, sub.Id)
+			}
+		}
+
+		result, err = g.SearchNext(ctx, query, result)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if result == nil {
+			break
+		}
+	}
+
+	if len(expectedIDs) > 0 {
+		t.Fatalf("subscriptions not returned = %v", expectedIDs)
+	}
+}
