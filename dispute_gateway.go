@@ -9,8 +9,8 @@ type DisputeGateway struct {
 	*Braintree
 }
 
-func (g *DisputeGateway) AddTextEvidence(ctx context.Context, disputeId string, textEvidenceRequest *DisputeTextEvidenceRequest) (*DisputeEvidence, error) {
-	resp, err := g.executeVersion(ctx, "POST", "disputes/"+disputeId+"/evidence", textEvidenceRequest, apiVersion4)
+func (g *DisputeGateway) AddTextEvidence(ctx context.Context, disputeID string, textEvidenceRequest *DisputeTextEvidenceRequest) (*DisputeEvidence, error) {
+	resp, err := g.executeVersion(ctx, "POST", "disputes/"+disputeID+"/evidence", textEvidenceRequest, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -21,8 +21,8 @@ func (g *DisputeGateway) AddTextEvidence(ctx context.Context, disputeId string, 
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *DisputeGateway) Find(ctx context.Context, disputeId string) (*Dispute, error) {
-	resp, err := g.executeVersion(ctx, "GET", "disputes/"+disputeId, nil, apiVersion4)
+func (g *DisputeGateway) Find(ctx context.Context, disputeID string) (*Dispute, error) {
+	resp, err := g.executeVersion(ctx, "GET", "disputes/"+disputeID, nil, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -33,8 +33,8 @@ func (g *DisputeGateway) Find(ctx context.Context, disputeId string) (*Dispute, 
 	return nil, &invalidResponseError{resp}
 }
 
-func (g *DisputeGateway) Accept(ctx context.Context, disputeId string) error {
-	resp, err := g.executeVersion(ctx, "PUT", "disputes/"+disputeId+"/accept", nil, apiVersion4)
+func (g *DisputeGateway) Accept(ctx context.Context, disputeID string) error {
+	resp, err := g.executeVersion(ctx, "PUT", "disputes/"+disputeID+"/accept", nil, apiVersion4)
 	if err != nil {
 		return nil
 	}
@@ -45,8 +45,8 @@ func (g *DisputeGateway) Accept(ctx context.Context, disputeId string) error {
 	return &invalidResponseError{resp}
 }
 
-func (g *DisputeGateway) Finalize(ctx context.Context, disputeId string) error {
-	resp, err := g.executeVersion(ctx, "PUT", "disputes/"+disputeId+"/finalize", nil, apiVersion4)
+func (g *DisputeGateway) Finalize(ctx context.Context, disputeID string) error {
+	resp, err := g.executeVersion(ctx, "PUT", "disputes/"+disputeID+"/finalize", nil, apiVersion4)
 	if err != nil {
 		return err
 	}
@@ -57,8 +57,8 @@ func (g *DisputeGateway) Finalize(ctx context.Context, disputeId string) error {
 	return &invalidResponseError{resp}
 }
 
-func (g *DisputeGateway) RemoveEvidence(ctx context.Context, disputeId string, evidenceId string) error {
-	resp, err := g.executeVersion(ctx, "DELETE", "disputes/"+disputeId+"/evidence/"+evidenceId, nil, apiVersion4)
+func (g *DisputeGateway) RemoveEvidence(ctx context.Context, disputeID string, evidenceId string) error {
+	resp, err := g.executeVersion(ctx, "DELETE", "disputes/"+disputeID+"/evidence/"+evidenceId, nil, apiVersion4)
 	if err != nil {
 		return err
 	}
