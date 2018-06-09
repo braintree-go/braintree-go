@@ -198,7 +198,7 @@ func TestDisputeTextEvidenceWinning(t *testing.T) {
 		t.Fatalf("failed to finalize dispute: %v", err)
 	}
 
-	time.Sleep(20 * time.Second)
+	time.Sleep(60 * time.Second)
 
 	dispute, err = testGateway.Dispute().Find(ctx, dispute.ID)
 	if err != nil {
@@ -257,7 +257,7 @@ func TestDisputeTextEvidenceLosing(t *testing.T) {
 		t.Fatalf("failed to finalize dispute: %v", err)
 	}
 
-	time.Sleep(20 * time.Second)
+	time.Sleep(60 * time.Second)
 
 	dispute, err = testGateway.Dispute().Find(ctx, dispute.ID)
 	if err != nil {
