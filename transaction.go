@@ -84,6 +84,7 @@ type Transaction struct {
 	CVVResponseCode              CVVResponseCode           `xml:"cvv-response-code"`
 	GatewayRejectionReason       GatewayRejectionReason    `xml:"gateway-rejection-reason"`
 	PurchaseOrderNumber          string                    `xml:"purchase-order-number"`
+	Disputes                     []*Dispute                `xml:"disputes>dispute"`
 }
 
 type TransactionRequest struct {

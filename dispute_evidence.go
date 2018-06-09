@@ -49,7 +49,8 @@ type DisputeEvidence struct {
 }
 
 type DisputeTextEvidenceRequest struct {
-	XMLName  xml.Name                `xml:"evidence"`
-	Content  string                  `xml:"comments"`
-	Category DisputeEvidenceCategory `xml:"category,omitempty"`
+	XMLName        xml.Name                `xml:"evidence"`
+	Content        string                  `xml:"comments"`
+	Category       DisputeEvidenceCategory `xml:"category,omitempty"`
+	SequenceNumber string                  `xml:"sequence-number,omitempty"`
 }
