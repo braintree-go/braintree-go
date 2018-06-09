@@ -9,6 +9,8 @@ IMPROVEMENTS:
 * Add TransactionLineItemGateway, TransactionLineItem, TransactionLineItemRequest.
 * Add LineItems to TransactionRequest.
 * Add CurrentBillingCycle to Modification.
+* Add DisputeGateway, Dispute, DisputeEvidence, DisputeTextEvidenceRequest, and related types.
+* Add Disputes to Transaction
 
 ## 0.18.0 (March 2nd, 2018)
 
