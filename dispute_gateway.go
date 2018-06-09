@@ -5,52 +5,8 @@ import (
 	"encoding/xml"
 )
 
-type EvidenceCategory string
-
-const (
-	EvidenceCategoryDeviceId                                   EvidenceCategory = "DEVICE_ID"
-	EvidenceCategoryDeviceName                                 EvidenceCategory = "DEVICE_NAME"
-	EvidenceCategoryPriorDigitalGoodsTransactionArn            EvidenceCategory = "PRIOR_DIGITAL_GOODS_TRANSACTION_ARN"
-	EvidenceCategoryPriorDigitalGoodsTransactionDateTime       EvidenceCategory = "PRIOR_DIGITAL_GOODS_TRANSACTION_DATE_TIME"
-	EvidenceCategoryDownloadDateTime                           EvidenceCategory = "DOWNLOAD_DATE_TIME"
-	EvidenceCategoryGeographicalLocation                       EvidenceCategory = "GEOGRAPHICAL_LOCATION"
-	EvidenceCategoryLegitPaymentsForSameMerchandise            EvidenceCategory = "LEGIT_PAYMENTS_FOR_SAME_MERCHANDISE"
-	EvidenceCategoryMerchantWebsiteOrAppAccess                 EvidenceCategory = "MERCHANT_WEBSITE_OR_APP_ACCESS"
-	EvidenceCategoryPriorNonDisputedTransactionArn             EvidenceCategory = "PRIOR_NON_DISPUTED_TRANSACTION_ARN"
-	EvidenceCategoryPriorNonDisputedTransactionDateTime        EvidenceCategory = "PRIOR_NON_DISPUTED_TRANSACTION_DATE_TIME"
-	EvidenceCategoryPriorNonDisputedTransactionEmailAddress    EvidenceCategory = "PRIOR_NON_DISPUTED_TRANSACTION_EMAIL_ADDRESS"
-	EvidenceCategoryPriorNonDisputedTransactionIpAddress       EvidenceCategory = "PRIOR_NON_DISPUTED_TRANSACTION_IP_ADDRESS"
-	EvidenceCategoryPriorNonDisputedTransactionPhoneNumber     EvidenceCategory = "PRIOR_NON_DISPUTED_TRANSACTION_PHONE_NUMBER"
-	EvidenceCategoryPriorNonDisputedTransactionPhysicalAddress EvidenceCategory = "PRIOR_NON_DISPUTED_TRANSACTION_PHYSICAL_ADDRESS"
-	EvidenceCategoryProfileSetupOrAppAccess                    EvidenceCategory = "PROFILE_SETUP_OR_APP_ACCESS"
-	EvidenceCategoryProofOfAuthorizedSigner                    EvidenceCategory = "PROOF_OF_AUTHORIZED_SIGNER"
-	EvidenceCategoryProofOfDeliveryEmpAddress                  EvidenceCategory = "PROOF_OF_DELIVERY_EMP_ADDRESS"
-	EvidenceCategoryProofOfDelivery                            EvidenceCategory = "PROOF_OF_DELIVERY"
-	EvidenceCategoryProofOfPossessionOrUsage                   EvidenceCategory = "PROOF_OF_POSSESSION_OR_USAGE"
-	EvidenceCategoryPurchaserEmailAddress                      EvidenceCategory = "PURCHASER_EMAIL_ADDRESS"
-	EvidenceCategoryPurchaserIpAddress                         EvidenceCategory = "PURCHASER_IP_ADDRESS"
-	EvidenceCategoryPurchaserName                              EvidenceCategory = "PURCHASER_NAME"
-	EvidenceCategoryRecurringTransactionArn                    EvidenceCategory = "RECURRING_TRANSACTION_ARN"
-	EvidenceCategoryRecurringTransactionDateTime               EvidenceCategory = "RECURRING_TRANSACTION_DATE_TIME"
-	EvidenceCategorySignedDeliveryForm                         EvidenceCategory = "SIGNED_DELIVERY_FORM"
-	EvidenceCategorySignedOrderForm                            EvidenceCategory = "SIGNED_ORDER_FORM"
-	EvidenceCategoryTicketProof                                EvidenceCategory = "TICKET_PROOF"
-)
-
 type DisputeGateway struct {
 	*Braintree
-}
-
-type DisputeFileEvidenceRequest struct {
-	XMLName    xml.Name         `xml:"evidence"`
-	DocumentId string           `xml:"document-upload-id"`
-	Category   EvidenceCategory `xml:"category,omitempty"`
-}
-
-type DisputeTextEvidenceRequest struct {
-	XMLName  xml.Name         `xml:"evidence"`
-	Content  string           `xml:"comments"`
-	Category EvidenceCategory `xml:"category,omitempty"`
 }
 
 func (g *DisputeGateway) AddTextEvidence(ctx context.Context, disputeId string, textEvidenceRequest *DisputeTextEvidenceRequest) (*DisputeEvidence, error) {
