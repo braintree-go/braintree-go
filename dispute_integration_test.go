@@ -130,7 +130,7 @@ func TestDisputeTextEvidence(t *testing.T) {
 
 	textEvidence, err := testGateway.Dispute().AddTextEvidence(ctx, dispute.ID, &DisputeTextEvidenceRequest{
 		Content:  "some evidence",
-		Category: EvidenceCategoryDeviceName,
+		Category: DisputeEvidenceCategoryDeviceName,
 	})
 	if err != nil {
 		t.Fatalf("failed to add text evidence: %v", err)
