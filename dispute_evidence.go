@@ -46,12 +46,6 @@ const (
 	EvidenceCategoryTicketProof                                DisputeEvidenceCategory = "TICKET_PROOF"
 )
 
-type DisputeFileEvidenceRequest struct {
-	XMLName    xml.Name                `xml:"evidence"`
-	DocumentId string                  `xml:"document-upload-id"`
-	Category   DisputeEvidenceCategory `xml:"category,omitempty"`
-}
-
 type DisputeTextEvidenceRequest struct {
 	XMLName  xml.Name                `xml:"evidence"`
 	Content  string                  `xml:"comments"`
