@@ -220,6 +220,10 @@ func (g *Braintree) Discount() *DiscountGateway {
 	return &DiscountGateway{g}
 }
 
+func (g *Braintree) Dispute() *DisputeGateway {
+	return &DisputeGateway{g}
+}
+
 func (g *Braintree) WebhookNotification() *WebhookNotificationGateway {
 	if apiKey, ok := g.credentials.(apiKey); !ok {
 		panic(errors.New("WebhookNotifications can only be used with Braintree Credentials that are API Keys."))
