@@ -8,5 +8,5 @@ type DisputeEvidence struct {
 	CreatedAt         *time.Time `xml:"created-at"`
 	ID                string     `xml:"id"`
 	SentToProcessorAt string     `xml:"sent-to-processor-at"`
-	Url               string     `xml:"url"`
+	URL               string     `xml:"url"`
 }
