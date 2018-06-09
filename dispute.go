@@ -59,12 +59,3 @@ type Dispute struct {
 	Transaction       *DisputeTransactionDetails   `xml:"transaction"`
 	UpdatedAt         *time.Time                   `xml:"updated-at"`
 }
-
-type DisputeSearchResult struct {
-	TotalItems int
-	TotalIDs   []string
-
-	CurrentPageNumber int
-	PageSize          int
-	Disputes          []*Dispute
-}
