@@ -46,8 +46,8 @@ type Dispute struct {
 	Evidence          []*DisputeEvidence           `xml:"evidence>evidence"`
 	ID                string                       `xml:"id"`
 	Kind              DisputeKind                  `xml:"kind"`
-	MerchantAccountId string                       `xml:"merchant-account-id"`
-	OriginalDisputeId string                       `xml:"original-dispute-id"`
+	MerchantAccountID string                       `xml:"merchant-account-id"`
+	OriginalDisputeID string                       `xml:"original-dispute-id"`
 	ProcessorComments string                       `xml:"processor-comments"`
 	Reason            DisputeReason                `xml:"reason"`
 	ReturnCode        string                       `xml:"return-code"`
