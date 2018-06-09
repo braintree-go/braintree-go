@@ -56,6 +56,16 @@ type Dispute struct {
 	ReplyByDate       string                       `xml:"reply-by-date"`
 	Status            DisputeStatus                `xml:"status"`
 	StatusHistory     []*DisputeStatusHistoryEvent `xml:"status-history>status-history"`
-	Transaction       *DisputeTransactionDetails   `xml:"transaction"`
+	Transaction       *DisputeTransaction          `xml:"transaction"`
 	UpdatedAt         *time.Time                   `xml:"updated-at"`
+}
+
+type DisputeTransaction struct {
+	XMLName                  string     `xml:"transaction"`
+	Amount                   *Decimal   `xml:"amount"`
+	CreatedAt                *time.Time `xml:"created-at"`
+	ID                       string     `xml:"id"`
+	OrderID                  string     `xml:"order-id"`
+	PaymentInstrumentSubtype string     `xml:"payment-instrument-subtype"`
+	PurchaseOrderNumber      string     `xml:"purchase-order-number"`
 }
