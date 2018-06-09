@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func TestFinalizeDispute(t *testing.T) {
+func TestDisputeFinalize(t *testing.T) {
 	t.Parallel()
 
 	ctx := context.Background()
@@ -47,6 +47,53 @@ func TestFinalizeDispute(t *testing.T) {
 
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)
+	}
+}
+
+func TestDisputeAccept(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(100, 2),
+		CreditCard: &CreditCard{
+			Number:         "4023898493988028",
+			ExpirationDate: "12/" + time.Now().Format("2006"),
+		},
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+		},
+	})
+
+	if err != nil {
+		t.Fatalf("failed to create disputed transaction: %v", err)
+	}
+
+	tx, err = testGateway.Transaction().Find(ctx, tx.Id)
+	if err != nil {
+		t.Fatalf("failed to find disputed transaction: %v", err)
+	}
+
+	if len(tx.Disputes) != 1 {
+		t.Fatalf("transaction has %d disputes, want 1", len(tx.Disputes))
+	}
+
+	dispute := tx.Disputes[0]
+
+	err = testGateway.Dispute().Accept(ctx, dispute.ID)
+	if err != nil {
+		t.Fatalf("failed to accept dispute: %v", err)
+	}
+
+	dispute, err = testGateway.Dispute().Find(ctx, dispute.ID)
+	if err != nil {
+		t.Fatalf("failed to find dispute: %v", err)
+	}
+
+	if dispute.Status != DisputeStatusAccepted {
+		t.Fatalf("got Dispute Status %q, want %q", dispute.Status, DisputeStatusAccepted)
 	}
 }
 
@@ -219,52 +266,5 @@ func TestDisputeTextEvidenceLosing(t *testing.T) {
 
 	if dispute.Status != DisputeStatusLost {
 		t.Fatalf("got Dispute Status %q, want %q", dispute.Status, DisputeStatusLost)
-	}
-}
-
-func TestAcceptDispute(t *testing.T) {
-	t.Parallel()
-
-	ctx := context.Background()
-
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
-		Type:   "sale",
-		Amount: NewDecimal(100, 2),
-		CreditCard: &CreditCard{
-			Number:         "4023898493988028",
-			ExpirationDate: "12/" + time.Now().Format("2006"),
-		},
-		Options: &TransactionOptions{
-			SubmitForSettlement: true,
-		},
-	})
-
-	if err != nil {
-		t.Fatalf("failed to create disputed transaction: %v", err)
-	}
-
-	tx, err = testGateway.Transaction().Find(ctx, tx.Id)
-	if err != nil {
-		t.Fatalf("failed to find disputed transaction: %v", err)
-	}
-
-	if len(tx.Disputes) != 1 {
-		t.Fatalf("transaction has %d disputes, want 1", len(tx.Disputes))
-	}
-
-	dispute := tx.Disputes[0]
-
-	err = testGateway.Dispute().Accept(ctx, dispute.ID)
-	if err != nil {
-		t.Fatalf("failed to accept dispute: %v", err)
-	}
-
-	dispute, err = testGateway.Dispute().Find(ctx, dispute.ID)
-	if err != nil {
-		t.Fatalf("failed to find dispute: %v", err)
-	}
-
-	if dispute.Status != DisputeStatusAccepted {
-		t.Fatalf("got Dispute Status %q, want %q", dispute.Status, DisputeStatusAccepted)
 	}
 }
