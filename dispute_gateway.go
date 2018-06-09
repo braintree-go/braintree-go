@@ -2,7 +2,6 @@ package braintree
 
 import (
 	"context"
-	"encoding/xml"
 )
 
 type DisputeGateway struct {
@@ -67,20 +66,4 @@ func (g *DisputeGateway) RemoveEvidence(ctx context.Context, disputeID string, e
 		return nil
 	}
 	return &invalidResponseError{resp}
-}
-
-func (g *DisputeGateway) Search(ctx context.Context, query *SearchQuery) ([]*Dispute, error) {
-	resp, err := g.executeVersion(ctx, "POST", "disputes/advanced_search", query, apiVersion4)
-	if err != nil {
-		return nil, err
-	}
-	var v struct {
-		XMLName  string     `xml:"disputes"`
-		Disputes []*Dispute `xml:"dispute"`
-	}
-	err = xml.Unmarshal(resp.Body, &v)
-	if err != nil {
-		return nil, err
-	}
-	return v.Disputes, err
 }
