@@ -4,6 +4,7 @@ package braintree
 
 import (
 	"context"
+	"crypto/rand"
 	"fmt"
 	"testing"
 	"time"
@@ -67,8 +68,11 @@ func TestSubscriptionSimple(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(ctx, &SubscriptionRequest{
-		Id:     sub.Id,
+	b := make([]byte, 16)
+	rand.Read(b)
+	newId := fmt.Sprintf("%X", b[:])
+	sub2, err := g.Update(ctx, sub.Id, &SubscriptionRequest{
+		Id:     newId,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
 			ProrateCharges:                       true,
@@ -82,8 +86,8 @@ func TestSubscriptionSimple(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if sub2.Id != sub.Id {
-		t.Fatal(sub2.Id)
+	if sub2.Id != newId {
+		t.Fatalf("expected subscription ID to change to %s but is %s", newId, sub2.Id)
 	}
 	if x := sub2.PlanId; x != "test_plan_2" {
 		t.Fatal(x)
@@ -107,7 +111,7 @@ func TestSubscriptionSimple(t *testing.T) {
 	}
 
 	// Find
-	sub3, err := g.Find(ctx, sub.Id)
+	sub3, err := g.Find(ctx, sub2.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -195,8 +199,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(ctx, &SubscriptionRequest{
-		Id:     sub1.Id,
+	sub2, err := g.Update(ctx, sub1.Id, &SubscriptionRequest{
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
 			ProrateCharges:                       true,
@@ -309,7 +312,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonthNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(ctx, &SubscriptionRequest{
+	sub2, err := g.Update(ctx, sub1.Id, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -429,7 +432,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(ctx, &SubscriptionRequest{
+	sub2, err := g.Update(ctx, sub1.Id, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -547,7 +550,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDateNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(ctx, &SubscriptionRequest{
+	sub2, err := g.Update(ctx, sub1.Id, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -673,7 +676,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(ctx, &SubscriptionRequest{
+	sub2, err := g.Update(ctx, sub1.Id, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -796,7 +799,7 @@ func TestSubscriptionAllFieldsWithTrialPeriodNeverExpires(t *testing.T) {
 	}
 
 	// Update
-	sub2, err := g.Update(ctx, &SubscriptionRequest{
+	sub2, err := g.Update(ctx, sub1.Id, &SubscriptionRequest{
 		Id:     sub1.Id,
 		PlanId: "test_plan_2",
 		Options: &SubscriptionOptions{
@@ -871,7 +874,7 @@ func TestSubscriptionModifications(t *testing.T) {
 	}
 
 	// Add AddOn
-	sub2, err := g.Update(ctx, &SubscriptionRequest{
+	sub2, err := g.Update(ctx, sub.Id, &SubscriptionRequest{
 		Id: sub.Id,
 		AddOns: &ModificationsRequest{
 			Add: []AddModificationRequest{
@@ -930,7 +933,7 @@ func TestSubscriptionModifications(t *testing.T) {
 	}
 
 	// Update AddOn
-	sub3, err := g.Update(ctx, &SubscriptionRequest{
+	sub3, err := g.Update(ctx, sub.Id, &SubscriptionRequest{
 		Id: sub.Id,
 		AddOns: &ModificationsRequest{
 			Update: []UpdateModificationRequest{
