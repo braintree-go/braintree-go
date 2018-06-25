@@ -60,6 +60,12 @@ func TestCustomer(t *testing.T) {
 	if card := customer.DefaultCreditCard(); card.Token == "" {
 		t.Fatal("invalid token")
 	}
+	if customer.CreatedAt == nil {
+		t.Fatal("generated created at is empty")
+	}
+	if customer.UpdatedAt == nil {
+		t.Fatal("generated updated at is empty")
+	}
 
 	// Update
 	unique := testhelpers.RandomString()

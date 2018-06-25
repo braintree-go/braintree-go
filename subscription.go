@@ -1,5 +1,7 @@
 package braintree
 
+import "encoding/xml"
+
 type SubscriptionStatus string
 
 const (
@@ -17,35 +19,36 @@ const (
 )
 
 type Subscription struct {
-	XMLName                 string               `xml:"subscription"`
-	Id                      string               `xml:"id"`
-	Balance                 *Decimal             `xml:"balance"`
-	BillingDayOfMonth       string               `xml:"billing-day-of-month"`
-	BillingPeriodEndDate    string               `xml:"billing-period-end-date"`
-	BillingPeriodStartDate  string               `xml:"billing-period-start-date"`
-	CurrentBillingCycle     string               `xml:"current-billing-cycle"`
-	DaysPastDue             string               `xml:"days-past-due"`
-	FailureCount            string               `xml:"failure-count"`
-	FirstBillingDate        string               `xml:"first-billing-date"`
-	MerchantAccountId       string               `xml:"merchant-account-id"`
-	NeverExpires            bool                 `xml:"never-expires"`
-	NextBillAmount          *Decimal             `xml:"next-bill-amount"`
-	NextBillingPeriodAmount *Decimal             `xml:"next-billing-period-amount"`
-	NextBillingDate         string               `xml:"next-billing-date"`
-	NumberOfBillingCycles   *int                 `xml:"number-of-billing-cycles"`
-	PaidThroughDate         string               `xml:"paid-through-date"`
-	PaymentMethodToken      string               `xml:"payment-method-token"`
-	PlanId                  string               `xml:"plan-id"`
-	Price                   *Decimal             `xml:"price"`
-	Status                  SubscriptionStatus   `xml:"status"`
-	TrialDuration           string               `xml:"trial-duration"`
-	TrialDurationUnit       string               `xml:"trial-duration-unit"`
-	TrialPeriod             bool                 `xml:"trial-period"`
-	Transactions            *Transactions        `xml:"transactions"`
-	Options                 *SubscriptionOptions `xml:"options"`
-	Descriptor              *Descriptor          `xml:"descriptor"`
-	AddOns                  *AddOnList           `xml:"add-ons"`
-	Discounts               *DiscountList        `xml:"discounts"`
+	XMLName                 string                     `xml:"subscription"`
+	Id                      string                     `xml:"id"`
+	Balance                 *Decimal                   `xml:"balance"`
+	BillingDayOfMonth       string                     `xml:"billing-day-of-month"`
+	BillingPeriodEndDate    string                     `xml:"billing-period-end-date"`
+	BillingPeriodStartDate  string                     `xml:"billing-period-start-date"`
+	CurrentBillingCycle     string                     `xml:"current-billing-cycle"`
+	DaysPastDue             string                     `xml:"days-past-due"`
+	FailureCount            string                     `xml:"failure-count"`
+	FirstBillingDate        string                     `xml:"first-billing-date"`
+	MerchantAccountId       string                     `xml:"merchant-account-id"`
+	NeverExpires            bool                       `xml:"never-expires"`
+	NextBillAmount          *Decimal                   `xml:"next-bill-amount"`
+	NextBillingPeriodAmount *Decimal                   `xml:"next-billing-period-amount"`
+	NextBillingDate         string                     `xml:"next-billing-date"`
+	NumberOfBillingCycles   *int                       `xml:"number-of-billing-cycles"`
+	PaidThroughDate         string                     `xml:"paid-through-date"`
+	PaymentMethodToken      string                     `xml:"payment-method-token"`
+	PlanId                  string                     `xml:"plan-id"`
+	Price                   *Decimal                   `xml:"price"`
+	Status                  SubscriptionStatus         `xml:"status"`
+	TrialDuration           string                     `xml:"trial-duration"`
+	TrialDurationUnit       string                     `xml:"trial-duration-unit"`
+	TrialPeriod             bool                       `xml:"trial-period"`
+	Transactions            *Transactions              `xml:"transactions"`
+	Options                 *SubscriptionOptions       `xml:"options"`
+	StatusEvents            []*SubscriptionStatusEvent `xml:"status-history>status-event"`
+	Descriptor              *Descriptor                `xml:"descriptor"`
+	AddOns                  *AddOnList                 `xml:"add-ons"`
+	Discounts               *DiscountList              `xml:"discounts"`
 }
 
 type SubscriptionRequest struct {
@@ -80,4 +83,40 @@ type SubscriptionOptions struct {
 	ReplaceAllAddOnsAndDiscounts         bool `xml:"replace-all-add-ons-and-discounts,omitempty"`
 	RevertSubscriptionOnProrationFailure bool `xml:"revert-subscription-on-proration-failure,omitempty"`
 	StartImmediately                     bool `xml:"start-immediately,omitempty"`
+}
+
+type SubscriptionTransactionRequest struct {
+	Amount         *Decimal
+	SubscriptionID string
+	Options        *SubscriptionTransactionOptionsRequest
+}
+
+func (s *SubscriptionTransactionRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	x := struct {
+		XMLName        xml.Name                               `xml:"transaction"`
+		Type           string                                 `xml:"type"`
+		SubscriptionID string                                 `xml:"subscription-id"`
+		Amount         *Decimal                               `xml:"amount,omitempty"`
+		Options        *SubscriptionTransactionOptionsRequest `xml:"options,omitempty"`
+	}{
+		Type:           "sale",
+		SubscriptionID: s.SubscriptionID,
+		Amount:         s.Amount,
+		Options:        s.Options,
+	}
+
+	return e.Encode(x)
+}
+
+type SubscriptionTransactionOptionsRequest struct {
+	SubmitForSettlement bool `xml:"submit-for-settlement"`
+}
+
+type SubscriptionSearchResult struct {
+	TotalItems int
+	TotalIDs   []string
+
+	CurrentPageNumber int
+	PageSize          int
+	Subscriptions     []*Subscription
 }

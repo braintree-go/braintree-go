@@ -786,6 +786,7 @@ func TestAllTransactionFields(t *testing.T) {
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
+		TransactionSource: TransactionSourceMOTO,
 		Customer: &CustomerRequest{
 			FirstName: "Lionel",
 		},
@@ -895,6 +896,9 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 	if tx2.PurchaseOrderNumber != tx.PurchaseOrderNumber {
 		t.Fatalf("expected PurchaseOrderNumber to be %s, but got %s", tx.PurchaseOrderNumber, tx2.PurchaseOrderNumber)
+	}
+	if tx2.SubscriptionDetails != nil {
+		t.Fatalf("expected Subscription to be not nil, but got %#v", tx2.SubscriptionDetails)
 	}
 }
 
@@ -1259,7 +1263,7 @@ func TestEscrowHoldOnCreateOnMasterMerchant(t *testing.T) {
 	if err == nil {
 		t.Fatal("Transaction Sale got no error, want error")
 	}
-	errors := err.(*BraintreeError).Errors.TransactionErrors.For("Base").On("base")
+	errors := err.(*BraintreeError).For("Transaction").On("Base")
 	if len(errors) != 1 {
 		t.Fatalf("Transaction Sale got %d errors, want 1 error", len(errors))
 	}
@@ -1318,7 +1322,7 @@ func TestEscrowHoldAfterSaleOnMasterMerchant(t *testing.T) {
 	if err == nil {
 		t.Fatal("Transaction HoldInEscrow got no error, want error")
 	}
-	errors := err.(*BraintreeError).Errors.TransactionErrors.For("Base").On("base")
+	errors := err.(*BraintreeError).For("Transaction").On("Base")
 	if len(errors) != 1 {
 		t.Fatalf("Transaction HoldInEscrow got %d errors, want 1 error", len(errors))
 	}
@@ -1387,7 +1391,7 @@ func TestEscrowReleaseNotEscrowed(t *testing.T) {
 	if err == nil {
 		t.Fatal("Transaction ReleaseFromEscrow got no error, want error")
 	}
-	errors := err.(*BraintreeError).Errors.TransactionErrors.For("Base").On("base")
+	errors := err.(*BraintreeError).For("Transaction").On("Base")
 	if len(errors) != 1 {
 		t.Fatalf("Transaction ReleaseFromEscrow got %d errors, want 1 error", len(errors))
 	}
@@ -1463,7 +1467,7 @@ func TestEscrowCancelReleaseNotPending(t *testing.T) {
 	if err == nil {
 		t.Fatal("Transaction Cancel Release got no error, want error")
 	}
-	errors := err.(*BraintreeError).Errors.TransactionErrors.For("Base").On("base")
+	errors := err.(*BraintreeError).For("Transaction").On("Base")
 	if len(errors) != 1 {
 		t.Fatalf("Transaction Cancel Release got %d errors, want 1 error", len(errors))
 	}
