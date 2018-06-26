@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
+	"time"
 )
 
 func TestCreditCard(t *testing.T) {
@@ -262,5 +263,102 @@ func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
 	}
 	if card.VenmoSDK {
 		t.Fatal("venmo card marked")
+	}
+}
+
+func TestGetExpiredCards(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
+		ExpirationDate: "05/18",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
+		ExpirationDate: "07/20",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expiredCards, err := testGateway.CreditCard().Expired(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	isCard1Expired := false
+	isCard2Expired := false
+	for _, card := range expiredCards {
+		if card.Token == card1.Token {
+			isCard1Expired = true
+		}
+		if card.Token == card2.Token {
+			isCard2Expired = true
+		}
+	}
+
+	if !isCard1Expired || isCard2Expired {
+		t.Fatal("Fail")
+	}
+}
+
+func TestGetExpiringBetweenCards(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
+		ExpirationDate: "05/18",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
+		ExpirationDate: "07/20",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fromTime := time.Unix(1524740667, 0) // 04/18
+	toTime := time.Unix(1530011067, 0)   // 06/18
+
+	expiredCards, err := testGateway.CreditCard().ExpiringBetween(ctx, fromTime, toTime)
+	if err != nil {
+		t.Fatal(err)
+	}
+	isCard1Expired := false
+	isCard2Expired := false
+	for _, card := range expiredCards {
+		if card.Token == card1.Token {
+			isCard1Expired = true
+		}
+		if card.Token == card2.Token {
+			isCard2Expired = true
+		}
+	}
+
+	if !isCard1Expired || isCard2Expired {
+		t.Fatal("Fail")
 	}
 }
