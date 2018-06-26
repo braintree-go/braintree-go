@@ -1,6 +1,11 @@
 package braintree
 
-import "context"
+import (
+	"context"
+	"fmt"
+	"time"
+	"encoding/xml"
+)
 
 type CreditCardGateway struct {
 	*Braintree
@@ -56,4 +61,31 @@ func (g *CreditCardGateway) Delete(ctx context.Context, card *CreditCard) error 
 		return nil
 	}
 	return &invalidResponseError{resp}
+}
+
+//  ExpiringBetween Find list of credit card that expire between the specified dates
+func (g *CreditCardGateway) ExpiringBetween(ctx context.Context, fromDate, toDate time.Time) ([]*CreditCard, error) {
+	path := fmt.Sprintf("/payment_methods/all/expiring?start=%s&end=%s",
+		fromDate.Format("012006"),
+		toDate.Format("012006"))
+	resp, err := g.execute(ctx, "POST", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	type searchResult struct {
+		XMLName           xml.Name      `xml:"payment-methods"`
+		CurrentPageNumber int64         `xml:"current-page-number"`
+		PageSize          int64         `xml:"page-size"`
+		TotalItems        int64         `xml:"total-items"`
+		CreditCards       []*CreditCard `xml:"credit-card"`
+	}
+
+	cc := &searchResult{}
+	err = xml.Unmarshal(resp.Body, &cc)
+	if err != nil {
+		return nil, err
+	}
+
+	return cc.CreditCards, nil
 }
