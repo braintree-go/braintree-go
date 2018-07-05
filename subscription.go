@@ -53,6 +53,7 @@ type Subscription struct {
 	AddOns                  *AddOnList                 `xml:"add-ons"`
 	Discounts               *DiscountList              `xml:"discounts"`
 	CreatedAt               *time.Time                 `xml:"created-at,omitempty"`
+	UpdatedAt               *time.Time                 `xml:"updated-at,omitempty"`
 }
 
 type SubscriptionRequest struct {
