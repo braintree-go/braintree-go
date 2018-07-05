@@ -197,6 +197,12 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 	if x := sub1.Descriptor.URL; x != "example.com" {
 		t.Fatalf("got descriptor url %#v, want example.com", x)
 	}
+	if sub1.CreatedAt == nil {
+		t.Fatal("expected createdAt to not be nil")
+	}
+	if sub1.UpdatedAt == nil {
+		t.Fatal("expected updatedAt to not be nil")
+	}
 
 	// Update
 	sub2, err := g.Update(ctx, sub1.Id, &SubscriptionRequest{
