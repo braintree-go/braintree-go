@@ -1,6 +1,9 @@
 package braintree
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"time"
+)
 
 type SubscriptionStatus string
 
@@ -49,6 +52,7 @@ type Subscription struct {
 	Descriptor              *Descriptor                `xml:"descriptor"`
 	AddOns                  *AddOnList                 `xml:"add-ons"`
 	Discounts               *DiscountList              `xml:"discounts"`
+	CreatedAt               *time.Time                 `xml:"created-at,omitempty"`
 }
 
 type SubscriptionRequest struct {
