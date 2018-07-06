@@ -4,7 +4,6 @@ package braintree
 
 import (
 	"context"
-	"log"
 	"strconv"
 	"testing"
 
@@ -266,64 +265,6 @@ func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
 	}
 	if card.VenmoSDK {
 		t.Fatal("venmo card marked")
-	}
-}
-
-func TestGetExpiredCards(t *testing.T) {
-	now := time.Now()
-
-	t.Parallel()
-
-	ctx := context.Background()
-
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
-		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "01/" + strconv.Itoa(now.Year()-2),
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log("card1", card1.Token)
-
-	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
-		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "12/" + strconv.Itoa(now.Year()+2),
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log("card2", card2.Token)
-
-	expiredCards := map[string]bool{}
-	results, err := testGateway.CreditCard().Expired(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	for {
-		t.Logf("Iterating page %d (page size: %d, total items: %d)", results.CurrentPageNumber, results.PageSize, results.TotalItems)
-		log.Printf("Iterating page %d (page size: %d, total items: %d)", results.CurrentPageNumber, results.PageSize, results.TotalItems)
-		for _, card := range results.CreditCards {
-			expiredCards[card.Token] = true
-		}
-		results, err = testGateway.CreditCard().ExpiredNext(ctx, results)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if results == nil {
-			break
-		}
-	}
-	if !expiredCards[card1.Token] {
-		t.Fatalf("expiredCards does not contain card1 (%s), it should be expired: %+v", card1.Token, expiredCards)
-	}
-	if expiredCards[card2.Token] {
-		t.Fatalf("expiredCards contains card2 (%s), it shouldn't be expired: %+v", card2.Token, expiredCards)
 	}
 }
 
