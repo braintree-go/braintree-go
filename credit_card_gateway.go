@@ -63,31 +63,6 @@ func (g *CreditCardGateway) Delete(ctx context.Context, card *CreditCard) error 
 	return &invalidResponseError{resp}
 }
 
-// ExpiredIDs finds IDs of credit cards that have expired, returning the IDs
-// only. Use Expired and ExpiredNext to get pages of credit cards.
-func (g *CreditCardGateway) ExpiredIDs(ctx context.Context) (*SearchResult, error) {
-	resp, err := g.execute(ctx, "POST", "/payment_methods/all/expired_ids", nil)
-	if err != nil {
-		return nil, err
-	}
-
-	var searchResult struct {
-		PageSize int `xml:"page-size"`
-		Ids      struct {
-			Item []string `xml:"item"`
-		} `xml:"ids"`
-	}
-	err = xml.Unmarshal(resp.Body, &searchResult)
-	if err != nil {
-		return nil, err
-	}
-
-	return &SearchResult{
-		PageSize: searchResult.PageSize,
-		IDs:      searchResult.Ids.Item,
-	}, nil
-}
-
 // ExpiringBetweenIDs finds IDs of credit cards that expire between the
 // specified dates, returning the IDs only. Use ExpiringBetween and
 // ExpiringBetweenNext to get pages of credit cards.
