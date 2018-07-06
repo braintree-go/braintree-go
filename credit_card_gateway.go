@@ -72,7 +72,7 @@ func (g *CreditCardGateway) Expired(ctx context.Context) ([]*CreditCard, error) 
 
 	var searchResult struct {
 		PageSize int `xml:"page-size"`
-		Ids struct {
+		Ids      struct {
 			Item []string `xml:"item"`
 		} `xml:"ids"`
 	}
@@ -126,7 +126,7 @@ func (g *CreditCardGateway) ExpiringBetween(ctx context.Context, fromDate, toDat
 
 	var searchResult struct {
 		PageSize int `xml:"page-size"`
-		Ids struct {
+		Ids      struct {
 			Item []string `xml:"item"`
 		} `xml:"ids"`
 	}
