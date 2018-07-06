@@ -6,8 +6,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lionelbarrow/braintree-go/testhelpers"
 	"time"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 func TestCreditCard(t *testing.T) {
