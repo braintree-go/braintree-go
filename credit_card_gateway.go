@@ -63,7 +63,7 @@ func (g *CreditCardGateway) Delete(ctx context.Context, card *CreditCard) error 
 	return &invalidResponseError{resp}
 }
 
-//  Expired Find list of expired credit cards
+//  Expired finds expired credit cards
 func (g *CreditCardGateway) Expired(ctx context.Context) ([]*CreditCard, error) {
 	resp, err := g.execute(ctx, "POST", "/payment_methods/all/expired_ids", nil)
 	if err != nil {
