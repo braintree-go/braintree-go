@@ -21,8 +21,9 @@ func (s *SearchQuery) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 }
 
 type SearchResult struct {
-	PageSize int
-	IDs      []string
+	PageSize  int
+	PageCount int
+	IDs       []string
 }
 
 type TextField struct {

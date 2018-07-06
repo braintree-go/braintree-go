@@ -1196,6 +1196,77 @@ func TestSubscriptionSearchIDs(t *testing.T) {
 	}
 }
 
+func TestSubscriptionSearchPage(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+		CustomerId:         customer.Id,
+		PaymentMethodNonce: FakeNonceTransactable,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	g := testGateway.Subscription()
+
+	const subscriptionCount = 51
+	expectedIDs := map[string]bool{}
+	for i := 0; i < subscriptionCount; i++ {
+		sub, err := g.Create(ctx, &SubscriptionRequest{
+			PaymentMethodToken: paymentMethod.GetToken(),
+			PlanId:             "test_plan_2",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		expectedIDs[sub.Id] = true
+	}
+
+	t.Logf("expectedIDs = %v", expectedIDs)
+
+	query := &SearchQuery{}
+	f1 := query.AddTimeField("created-at")
+	f1.Max = time.Now()
+	f1.Min = time.Now().AddDate(0, 0, -1)
+	f2 := query.AddTextField("plan-id")
+	f2.Is = "test_plan_2"
+
+	results, err := g.SearchIDs(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("result.PageSize = %v", results.PageSize)
+	t.Logf("result.PageCount = %v", results.PageCount)
+	t.Logf("result.IDs = %d %v", len(results.IDs), results.IDs)
+
+	if len(results.IDs) < subscriptionCount {
+		t.Errorf("result.IDs = %v, want it to be more than %v", len(results.IDs), subscriptionCount)
+	}
+
+	for page := 0; page <= results.PageCount; page++ {
+		results, err := g.SearchPage(ctx, query, results, page)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if results == nil {
+			break
+		}
+		for _, sub := range results.Subscriptions {
+			if expectedIDs[sub.Id] {
+				delete(expectedIDs, sub.Id)
+			}
+		}
+	}
+
+	if len(expectedIDs) > 0 {
+		t.Fatalf("subscriptions not returned = %v", expectedIDs)
+	}
+}
+
 func TestSubscriptionSearch(t *testing.T) {
 	t.Parallel()
 	ctx := context.Background()
