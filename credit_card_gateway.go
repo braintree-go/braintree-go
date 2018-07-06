@@ -2,9 +2,9 @@ package braintree
 
 import (
 	"context"
+	"encoding/xml"
 	"fmt"
 	"time"
-	"encoding/xml"
 )
 
 type CreditCardGateway struct {
