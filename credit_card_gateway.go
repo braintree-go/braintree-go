@@ -3,7 +3,7 @@ package braintree
 import (
 	"context"
 	"encoding/xml"
-	"fmt"
+	"net/url"
 	"time"
 )
 
@@ -63,8 +63,9 @@ func (g *CreditCardGateway) Delete(ctx context.Context, card *CreditCard) error 
 	return &invalidResponseError{resp}
 }
 
-//  Expired finds expired credit cards
-func (g *CreditCardGateway) Expired(ctx context.Context) ([]*CreditCard, error) {
+// ExpiredIDs finds IDs of credit cards that have expired, returning the IDs
+// only. Use Expired and ExpiredNext to get pages of credit cards.
+func (g *CreditCardGateway) ExpiredIDs(ctx context.Context) (*SearchResult, error) {
 	resp, err := g.execute(ctx, "POST", "/payment_methods/all/expired_ids", nil)
 	if err != nil {
 		return nil, err
@@ -81,45 +82,97 @@ func (g *CreditCardGateway) Expired(ctx context.Context) ([]*CreditCard, error) 
 		return nil, err
 	}
 
-	searchQuery := &SearchQuery{}
-	multiField := searchQuery.AddMultiField("ids")
-	for _, item := range searchResult.Ids.Item {
-		multiField.Items = append(multiField.Items, item)
-	}
-
-	return g.fetchExpired(ctx, searchQuery)
+	return &SearchResult{
+		PageSize: searchResult.PageSize,
+		IDs:      searchResult.Ids.Item,
+	}, nil
 }
 
-// fetchExpired --
+// Expired finds credit cards that have expired, returning the first
+// page of results. Use ExpiredNext to get subsequent pages.
+func (g *CreditCardGateway) Expired(ctx context.Context) (*CreditCardSearchResult, error) {
+	searchResult, err := g.ExpiredIDs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageSize := searchResult.PageSize
+	ids := searchResult.IDs
+
+	endOffset := pageSize
+	if endOffset > len(ids) {
+		endOffset = len(ids)
+	}
+
+	firstPageQuery := &SearchQuery{}
+	firstPageQuery.AddMultiField("ids").Items = ids[:endOffset]
+	firstPageCreditCards, err := g.fetchExpired(ctx, firstPageQuery)
+
+	firstPageResult := &CreditCardSearchResult{
+		TotalItems:        len(ids),
+		TotalIDs:          ids,
+		CurrentPageNumber: 1,
+		PageSize:          pageSize,
+		CreditCards:       firstPageCreditCards,
+	}
+
+	return firstPageResult, err
+}
+
+// ExpiredNext finds the next page of credit cards that have expired.
+// Use Expired to start and get the first page of results.
+// Returns a nil result and nil error when no more results are available.
+func (g *CreditCardGateway) ExpiredNext(ctx context.Context, prevResult *CreditCardSearchResult) (*CreditCardSearchResult, error) {
+	startOffset := prevResult.CurrentPageNumber * prevResult.PageSize
+	endOffset := startOffset + prevResult.PageSize
+	if endOffset > len(prevResult.TotalIDs) {
+		endOffset = len(prevResult.TotalIDs)
+	}
+	if startOffset >= endOffset {
+		return nil, nil
+	}
+
+	nextPageQuery := &SearchQuery{}
+	nextPageQuery.AddMultiField("ids").Items = prevResult.TotalIDs[startOffset:endOffset]
+	nextPageCreditCard, err := g.fetchExpired(ctx, nextPageQuery)
+
+	nextPageResult := &CreditCardSearchResult{
+		TotalItems:        prevResult.TotalItems,
+		TotalIDs:          prevResult.TotalIDs,
+		CurrentPageNumber: prevResult.CurrentPageNumber + 1,
+		PageSize:          prevResult.PageSize,
+		CreditCards:       nextPageCreditCard,
+	}
+
+	return nextPageResult, err
+}
+
 func (g *CreditCardGateway) fetchExpired(ctx context.Context, query *SearchQuery) ([]*CreditCard, error) {
 	resp, err := g.execute(ctx, "POST", "/payment_methods/all/expired", query)
 	if err != nil {
 		return nil, err
 	}
 
-	type searchResult struct {
-		XMLName           xml.Name      `xml:"payment-methods"`
-		CurrentPageNumber int64         `xml:"current-page-number"`
-		PageSize          int64         `xml:"page-size"`
-		TotalItems        int64         `xml:"total-items"`
-		CreditCards       []*CreditCard `xml:"credit-card"`
+	var v struct {
+		CreditCards []*CreditCard `xml:"credit-card"`
 	}
 
-	cc := &searchResult{}
-	err = xml.Unmarshal(resp.Body, &cc)
+	err = xml.Unmarshal(resp.Body, &v)
 	if err != nil {
 		return nil, err
 	}
 
-	return cc.CreditCards, nil
+	return v.CreditCards, nil
 }
 
-//  ExpiringBetween Find list of credit card that expire between the specified dates
-func (g *CreditCardGateway) ExpiringBetween(ctx context.Context, fromDate, toDate time.Time) ([]*CreditCard, error) {
-	path := fmt.Sprintf("/payment_methods/all/expiring_ids?start=%s&end=%s",
-		fromDate.UTC().Format("012006"),
-		toDate.UTC().Format("012006"))
-	resp, err := g.execute(ctx, "POST", path, nil)
+// ExpiringBetweenIDs finds IDs of credit cards that expire between the
+// specified dates, returning the IDs only. Use ExpiringBetween and
+// ExpiringBetweenNext to get pages of credit cards.
+func (g *CreditCardGateway) ExpiringBetweenIDs(ctx context.Context, fromDate, toDate time.Time) (*SearchResult, error) {
+	qs := url.Values{}
+	qs.Set("start", fromDate.UTC().Format("012006"))
+	qs.Set("end", toDate.UTC().Format("012006"))
+	resp, err := g.execute(ctx, "POST", "/payment_methods/all/expiring_ids?"+qs.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -135,38 +188,90 @@ func (g *CreditCardGateway) ExpiringBetween(ctx context.Context, fromDate, toDat
 		return nil, err
 	}
 
-	searchQuery := &SearchQuery{}
-	multiField := searchQuery.AddMultiField("ids")
-	for _, item := range searchResult.Ids.Item {
-		multiField.Items = append(multiField.Items, item)
-	}
-
-	return g.fetchExpiringCreditCards(ctx, searchQuery, fromDate, toDate)
+	return &SearchResult{
+		PageSize: searchResult.PageSize,
+		IDs:      searchResult.Ids.Item,
+	}, nil
 }
 
-// fetchExpiringCreditCards --
-func (g *CreditCardGateway) fetchExpiringCreditCards(ctx context.Context, query *SearchQuery, fromDate, toDate time.Time) ([]*CreditCard, error) {
-	path := fmt.Sprintf("/payment_methods/all/expiring?start=%s&end=%s",
-		fromDate.UTC().Format("012006"),
-		toDate.UTC().Format("012006"))
-	resp, err := g.execute(ctx, "POST", path, query)
+// ExpiringBetween finds credit cards that expire between the specified dates,
+// returning the first page of results. Use ExpiringBetweenNext to get
+// subsequent pages.
+func (g *CreditCardGateway) ExpiringBetween(ctx context.Context, fromDate, toDate time.Time) (*CreditCardSearchResult, error) {
+	searchResult, err := g.ExpiringBetweenIDs(ctx, fromDate, toDate)
 	if err != nil {
 		return nil, err
 	}
 
-	type searchResult struct {
-		XMLName           xml.Name      `xml:"payment-methods"`
-		CurrentPageNumber int64         `xml:"current-page-number"`
-		PageSize          int64         `xml:"page-size"`
-		TotalItems        int64         `xml:"total-items"`
-		CreditCards       []*CreditCard `xml:"credit-card"`
+	pageSize := searchResult.PageSize
+	ids := searchResult.IDs
+
+	endOffset := pageSize
+	if endOffset > len(ids) {
+		endOffset = len(ids)
 	}
 
-	cc := &searchResult{}
-	err = xml.Unmarshal(resp.Body, &cc)
+	firstPageQuery := &SearchQuery{}
+	firstPageQuery.AddMultiField("ids").Items = ids[:endOffset]
+	firstPageCreditCards, err := g.fetchExpiringBetween(ctx, firstPageQuery, fromDate, toDate)
+
+	firstPageResult := &CreditCardSearchResult{
+		TotalItems:        len(ids),
+		TotalIDs:          ids,
+		CurrentPageNumber: 1,
+		PageSize:          pageSize,
+		CreditCards:       firstPageCreditCards,
+	}
+
+	return firstPageResult, err
+}
+
+// ExpiringBetweenNext finds the next page of credit cards that expire between
+// the specified dates. Use ExpiringBetween to start and get the first page of
+// results. Returns a nil result and nil error when no more results are
+// available.
+func (g *CreditCardGateway) ExpiringBetweenNext(ctx context.Context, fromDate, toDate time.Time, prevResult *CreditCardSearchResult) (*CreditCardSearchResult, error) {
+	startOffset := prevResult.CurrentPageNumber * prevResult.PageSize
+	endOffset := startOffset + prevResult.PageSize
+	if endOffset > len(prevResult.TotalIDs) {
+		endOffset = len(prevResult.TotalIDs)
+	}
+	if startOffset >= endOffset {
+		return nil, nil
+	}
+
+	nextPageQuery := &SearchQuery{}
+	nextPageQuery.AddMultiField("ids").Items = prevResult.TotalIDs[startOffset:endOffset]
+	nextPageCreditCard, err := g.fetchExpiringBetween(ctx, nextPageQuery, fromDate, toDate)
+
+	nextPageResult := &CreditCardSearchResult{
+		TotalItems:        prevResult.TotalItems,
+		TotalIDs:          prevResult.TotalIDs,
+		CurrentPageNumber: prevResult.CurrentPageNumber + 1,
+		PageSize:          prevResult.PageSize,
+		CreditCards:       nextPageCreditCard,
+	}
+
+	return nextPageResult, err
+}
+
+func (g *CreditCardGateway) fetchExpiringBetween(ctx context.Context, query *SearchQuery, fromDate, toDate time.Time) ([]*CreditCard, error) {
+	qs := url.Values{}
+	qs.Set("start", fromDate.UTC().Format("012006"))
+	qs.Set("end", toDate.UTC().Format("012006"))
+	resp, err := g.execute(ctx, "POST", "/payment_methods/all/expiring?"+qs.Encode(), query)
 	if err != nil {
 		return nil, err
 	}
 
-	return cc.CreditCards, nil
+	var v struct {
+		CreditCards []*CreditCard `xml:"credit-card"`
+	}
+
+	err = xml.Unmarshal(resp.Body, &v)
+	if err != nil {
+		return nil, err
+	}
+
+	return v.CreditCards, nil
 }
