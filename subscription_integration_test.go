@@ -1251,7 +1251,7 @@ func TestSubscriptionSearch(t *testing.T) {
 	}
 }
 
-func TestSubscriptionSearchPagination(t *testing.T) {
+func TestSubscriptionSearchNext(t *testing.T) {
 	t.Parallel()
 
 	ctx := context.Background()
