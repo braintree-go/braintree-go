@@ -4,7 +4,6 @@ package braintree
 
 import (
 	"context"
-	"strconv"
 	"testing"
 
 	"time"
@@ -282,7 +281,7 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "01/" + strconv.Itoa(now.Year()-2),
+		ExpirationDate: now.AddDate(0, -2, 0).Format("01/2006"),
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -292,7 +291,7 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "12/" + strconv.Itoa(now.Year()),
+		ExpirationDate: now.Format("01/2006"),
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -302,15 +301,15 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	card3, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "01/" + strconv.Itoa(now.Year()+2),
+		ExpirationDate: now.AddDate(0, 2, 0).Format("01/2006"),
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Log("card3", card3.Token)
 
-	fromDate := now.AddDate(-1, 0, 0)
-	toDate := now.AddDate(1, 0, 0)
+	fromDate := now.AddDate(0, -1, 0)
+	toDate := now.AddDate(0, 1, 0)
 
 	expiringCards := map[string]bool{}
 	results, err := testGateway.CreditCard().ExpiringBetween(ctx, fromDate, toDate)
@@ -331,12 +330,12 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 		}
 	}
 	if expiringCards[card1.Token] {
-		t.Fatalf("expiringCards contains card1 (%s), it shouldn't be expired", card1.Token)
+		t.Fatalf("expiringCards contains card1 (%s), it shouldn't be returned in expiring cards results", card1.Token)
 	}
 	if !expiringCards[card2.Token] {
-		t.Fatalf("expiringCards does not contain card2 (%s), it should be expired", card2.Token)
+		t.Fatalf("expiringCards does not contain card2 (%s), it should be returned in expiring cards results", card2.Token)
 	}
 	if expiringCards[card3.Token] {
-		t.Fatalf("expiringCards contains card3 (%s), it shouldn't be expired", card3.Token)
+		t.Fatalf("expiringCards contains card3 (%s), it shouldn't be returned in expiring cards results", card3.Token)
 	}
 }
