@@ -26,6 +26,40 @@ const (
 	TransactionStatusUnrecognized           TransactionStatus = "unrecognized"
 )
 
+const (
+	ThreeDSecureStatusUnsupportedCard                      = "unsupported_card"
+	ThreeDSecureStatusLookupError                          = "lookup_error"
+	ThreeDSecureStatusLookupEnrolled                       = "lookup_enrolled"
+	ThreeDSecureStatusLookupNotEnrolled                    = "lookup_not_enrolled"
+	ThreeDSecureStatusAuthSuccessfulIssuerNotParticipating = "authenticate_successful_issuer_not_participating"
+	ThreeDSecureStatusAuthUnavailable                      = "authentication_unavailable"
+	ThreeDSecureStatusAuthSignatureVerificationFailed      = "authenticate_signature_verification_failed"
+	ThreeDSecureStatusAuthSuccessful                       = "authenticate_successful"
+	ThreeDSecureStatusAuthAttemptSuccessful                = "authenticate_attempt_successful"
+	ThreeDSecureStatusAuthFailed                           = "authenticate_failed"
+	ThreeDSecureStatusAuthUnableToAuthenticate             = "authenticate_unable_to_authenticate"
+	ThreeDSecureStatusAuthError                            = "authenticate_error"
+)
+
+// Enrollment values can be found here:
+// https://developers.braintreepayments.com/reference/response/transaction/php#three_d_secure_info.enrolled
+const (
+	ThreeDSecureEnrollementYes            = "Y"
+	ThreeDSecureEnrollementNo             = "N"
+	ThreeDSecureEnrollementUnavailable    = "U"
+	ThreeDSecureEnrollementBypass         = "B"
+	ThreeDSecureEnrollementRequestFailure = "E"
+)
+
+// RiskData possible values
+// https://developers.braintreepayments.com/guides/advanced-fraud-tools/server-side/java#response-handling
+const (
+	RiskDataNotEvaluated = "Not Evaluated"
+	RiskDataApprove      = "Approve"
+	RiskDataReview       = "Review"
+	RiskDataDecline      = "Decline"
+)
+
 type TransactionSource string
 
 const (
@@ -69,6 +103,7 @@ type Transaction struct {
 	SettlementBatchId            string                    `xml:"settlement-batch-id"`
 	EscrowStatus                 EscrowStatus              `xml:"escrow-status"`
 	PaymentInstrumentType        string                    `xml:"payment-instrument-type"`
+	ThreeDSecureInfo             *ThreeDSecureInfo         `xml:"three-d-secure-info,omitempty"`
 	PayPalDetails                *PayPalDetails            `xml:"paypal"`
 	VenmoAccountDetails          *VenmoAccountDetails      `xml:"venmo-account"`
 	AndroidPayDetails            *AndroidPayDetails        `xml:"android-pay-card"`
@@ -174,6 +209,10 @@ type Transactions struct {
 	Transaction []*Transaction `xml:"transaction"`
 }
 
+type TransactionOptionsThreeDSecure struct {
+	Required bool `xml:"required"`
+}
+
 type TransactionOptions struct {
 	SubmitForSettlement              bool                             `xml:"submit-for-settlement,omitempty"`
 	StoreInVault                     bool                             `xml:"store-in-vault,omitempty"`
@@ -182,6 +221,7 @@ type TransactionOptions struct {
 	HoldInEscrow                     bool                             `xml:"hold-in-escrow,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
 	SkipAdvancedFraudChecking        bool                             `xml:"skip_advanced_fraud_checking,omitempty"`
+	ThreeDSecure                     *TransactionOptionsThreeDSecure  `xml:"three-d-secure,omitempty"`
 }
 
 type TransactionOptionsPaypalRequest struct {
@@ -256,6 +296,13 @@ type RiskData struct {
 type RiskDataRequest struct {
 	CustomerBrowser string `xml:"customer-browser"`
 	CustomerIP      string `xml:"customer-ip"`
+}
+
+type ThreeDSecureInfo struct {
+	Enrolled               string `xml:"enrolled"`
+	LiabilityShiftPossible bool   `xml:"liability-shift-possible"`
+	LiabilityShifted       bool   `xml:"liability-shifted"`
+	Status                 string `xml:"status"`
 }
 
 type SubscriptionDetails struct {
