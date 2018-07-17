@@ -876,8 +876,8 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Status != TransactionStatusSubmittedForSettlement {
 		t.Fatalf("expected tx2.Status to be %s, but got %s", TransactionStatusSubmittedForSettlement, tx2.Status)
 	}
-	if tx2.PaymentInstrumentType != "credit_card" {
-		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", "credit_card", tx2.PaymentInstrumentType)
+	if tx2.PaymentInstrumentType != PaymentInstrumentTypeCreditCard {
+		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", PaymentInstrumentTypeCreditCard, tx2.PaymentInstrumentType)
 	}
 	if tx2.AdditionalProcessorResponse != "" {
 		t.Fatalf("expected tx2.AdditionalProcessorResponse to be empty, but got %s", tx2.AdditionalProcessorResponse)
