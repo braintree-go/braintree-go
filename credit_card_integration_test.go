@@ -6,8 +6,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lionelbarrow/braintree-go/testhelpers"
 	"time"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 func TestCreditCard(t *testing.T) {
@@ -266,54 +267,9 @@ func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
 	}
 }
 
-func TestGetExpiredCards(t *testing.T) {
-	t.Parallel()
-
-	ctx := context.Background()
-
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
-		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "05/18",
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
-		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "07/20",
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	expiredCards, err := testGateway.CreditCard().Expired(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	isCard1Expired := false
-	isCard2Expired := false
-	for _, card := range expiredCards {
-		if card.Token == card1.Token {
-			isCard1Expired = true
-		}
-		if card.Token == card2.Token {
-			isCard2Expired = true
-		}
-	}
-
-	if !isCard1Expired || isCard2Expired {
-		t.Fatal("Fail")
-	}
-}
-
 func TestGetExpiringBetweenCards(t *testing.T) {
+	now := time.Now()
+
 	t.Parallel()
 
 	ctx := context.Background()
@@ -325,40 +281,61 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "05/18",
+		ExpirationDate: now.AddDate(0, -2, 0).Format("01/2006"),
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Log("card1", card1.Token)
 
 	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCreditCards["visa"].Number,
-		ExpirationDate: "07/20",
+		ExpirationDate: now.Format("01/2006"),
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Log("card2", card2.Token)
 
-	fromTime := time.Unix(1524740667, 0) // 04/18
-	toTime := time.Unix(1530011067, 0)   // 06/18
-
-	expiredCards, err := testGateway.CreditCard().ExpiringBetween(ctx, fromTime, toTime)
+	card3, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
+		ExpirationDate: now.AddDate(0, 2, 0).Format("01/2006"),
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	isCard1Expired := false
-	isCard2Expired := false
-	for _, card := range expiredCards {
-		if card.Token == card1.Token {
-			isCard1Expired = true
+	t.Log("card3", card3.Token)
+
+	fromDate := now.AddDate(0, -1, 0)
+	toDate := now.AddDate(0, 1, 0)
+
+	expiringCards := map[string]bool{}
+	results, err := testGateway.CreditCard().ExpiringBetween(ctx, fromDate, toDate)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for {
+		t.Logf("Iterating page %d (page size: %d, total items: %d)", results.CurrentPageNumber, results.PageSize, results.TotalItems)
+		for _, card := range results.CreditCards {
+			expiringCards[card.Token] = true
 		}
-		if card.Token == card2.Token {
-			isCard2Expired = true
+		results, err = testGateway.CreditCard().ExpiringBetweenNext(ctx, fromDate, toDate, results)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if results == nil {
+			break
 		}
 	}
-
-	if !isCard1Expired || isCard2Expired {
-		t.Fatal("Fail")
+	if expiringCards[card1.Token] {
+		t.Fatalf("expiringCards contains card1 (%s), it shouldn't be returned in expiring cards results", card1.Token)
+	}
+	if !expiringCards[card2.Token] {
+		t.Fatalf("expiringCards does not contain card2 (%s), it should be returned in expiring cards results", card2.Token)
+	}
+	if expiringCards[card3.Token] {
+		t.Fatalf("expiringCards contains card3 (%s), it shouldn't be returned in expiring cards results", card3.Token)
 	}
 }

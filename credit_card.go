@@ -100,3 +100,12 @@ func (card *CreditCard) AllSubscriptions() []*Subscription {
 	}
 	return nil
 }
+
+type CreditCardSearchResult struct {
+	TotalItems int
+	TotalIDs   []string
+
+	CurrentPageNumber int
+	PageSize          int
+	CreditCards       []*CreditCard
+}
