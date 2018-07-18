@@ -178,7 +178,7 @@ func TestTransactionSearch(t *testing.T) {
 	}
 }
 
-func TestTransactionSearchPagination(t *testing.T) {
+func TestTransactionSearchNext(t *testing.T) {
 	t.Parallel()
 
 	ctx := context.Background()
