@@ -4,6 +4,7 @@ package braintree
 
 import (
 	"context"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"reflect"
@@ -172,13 +173,10 @@ func TestTransactionSearchPage(t *testing.T) {
 		t.Fatalf("results.IDs = %v, want %v", len(results.IDs), transactionCount)
 	}
 
-	for page := 0; page <= results.PageCount; page++ {
+	for page := 1; page <= results.PageCount; page++ {
 		results, err := txg.SearchPage(ctx, query, results, page)
 		if err != nil {
 			t.Fatal(err)
-		}
-		if results == nil {
-			break
 		}
 		for _, tx := range results.Transactions {
 			if firstName := tx.Customer.FirstName; !strings.HasPrefix(firstName, prefix) {
@@ -194,6 +192,18 @@ func TestTransactionSearchPage(t *testing.T) {
 
 	if len(transactionIDs) > 0 {
 		t.Fatalf("transactions not returned = %v", transactionIDs)
+	}
+
+	_, err = txg.SearchPage(ctx, query, results, 0)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), "page 0 out of bounds") {
+		t.Errorf("requesting page 0 should result in out of bounds error, but got %#v", err)
+	}
+
+	_, err = txg.SearchPage(ctx, query, results, results.PageCount+1)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf("page %d out of bounds", results.PageCount+1)) {
+		t.Errorf("requesting page %d should result in out of bounds error, but got %v", results.PageCount+1, err)
 	}
 }
 

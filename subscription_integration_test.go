@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/rand"
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -1247,13 +1248,10 @@ func TestSubscriptionSearchPage(t *testing.T) {
 		t.Errorf("result.IDs = %v, want it to be more than %v", len(results.IDs), subscriptionCount)
 	}
 
-	for page := 0; page <= results.PageCount; page++ {
+	for page := 1; page <= results.PageCount; page++ {
 		results, err := g.SearchPage(ctx, query, results, page)
 		if err != nil {
 			t.Fatal(err)
-		}
-		if results == nil {
-			break
 		}
 		for _, sub := range results.Subscriptions {
 			if expectedIDs[sub.Id] {
@@ -1264,6 +1262,18 @@ func TestSubscriptionSearchPage(t *testing.T) {
 
 	if len(expectedIDs) > 0 {
 		t.Fatalf("subscriptions not returned = %v", expectedIDs)
+	}
+
+	_, err = g.SearchPage(ctx, query, results, 0)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), "page 0 out of bounds") {
+		t.Errorf("requesting page 0 should result in out of bounds error, but got %#v", err)
+	}
+
+	_, err = g.SearchPage(ctx, query, results, results.PageCount+1)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf("page %d out of bounds", results.PageCount+1)) {
+		t.Errorf("requesting page %d should result in out of bounds error, but got %v", results.PageCount+1, err)
 	}
 }
 
