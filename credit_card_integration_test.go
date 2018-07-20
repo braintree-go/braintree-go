@@ -4,7 +4,11 @@ package braintree
 
 import (
 	"context"
+	"fmt"
+	"strings"
 	"testing"
+
+	"time"
 
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
@@ -262,5 +266,87 @@ func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
 	}
 	if card.VenmoSDK {
 		t.Fatal("venmo card marked")
+	}
+}
+
+func TestGetExpiringBetweenCards(t *testing.T) {
+	now := time.Now()
+
+	t.Parallel()
+
+	ctx := context.Background()
+
+	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
+		ExpirationDate: now.AddDate(0, -2, 0).Format("01/2006"),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("card1", card1.Token)
+
+	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
+		ExpirationDate: now.Format("01/2006"),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("card2", card2.Token)
+
+	card3, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+		CustomerId:     customer.Id,
+		Number:         testCreditCards["visa"].Number,
+		ExpirationDate: now.AddDate(0, 2, 0).Format("01/2006"),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("card3", card3.Token)
+
+	fromDate := now.AddDate(0, -1, 0)
+	toDate := now.AddDate(0, 1, 0)
+
+	expiringCards := map[string]bool{}
+	results, err := testGateway.CreditCard().ExpiringBetweenIDs(ctx, fromDate, toDate)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for page := 1; page <= results.PageCount; page++ {
+		results, err := testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, page)
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Logf("Iterating page %d (page size: %d, total items: %d)", results.CurrentPageNumber, results.PageSize, results.TotalItems)
+		for _, card := range results.CreditCards {
+			expiringCards[card.Token] = true
+		}
+	}
+	if expiringCards[card1.Token] {
+		t.Fatalf("expiringCards contains card1 (%s), it shouldn't be returned in expiring cards results", card1.Token)
+	}
+	if !expiringCards[card2.Token] {
+		t.Fatalf("expiringCards does not contain card2 (%s), it should be returned in expiring cards results", card2.Token)
+	}
+	if expiringCards[card3.Token] {
+		t.Fatalf("expiringCards contains card3 (%s), it shouldn't be returned in expiring cards results", card3.Token)
+	}
+
+	_, err = testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, 0)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), "page 0 out of bounds") {
+		t.Errorf("requesting page 0 should result in out of bounds error, but got %#v", err)
+	}
+
+	_, err = testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, results.PageCount+1)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf("page %d out of bounds", results.PageCount+1)) {
+		t.Errorf("requesting page %d should result in out of bounds error, but got %v", results.PageCount+1, err)
 	}
 }
