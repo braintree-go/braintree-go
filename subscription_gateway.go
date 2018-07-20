@@ -100,7 +100,8 @@ func (g *SubscriptionGateway) SearchIDs(ctx context.Context, query *SearchQuery)
 }
 
 // SearchPage gets the page of subscriptions matching the search query.
-// Use Search to start a search and use it's result object to get pages.
+// Use SearchIDs to start a search and get a list of IDs, and use its result
+// object to get pages.
 // Page numbers start at 1.
 // Returns a nil result and nil error when no more results are available.
 func (g *SubscriptionGateway) SearchPage(ctx context.Context, query *SearchQuery, searchResult *SearchResult, page int) (*SubscriptionSearchResult, error) {

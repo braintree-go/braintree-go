@@ -179,8 +179,10 @@ func (g *TransactionGateway) SearchIDs(ctx context.Context, query *SearchQuery) 
 	}, nil
 }
 
-// SearchPage gets the page of transactions matching the search query.
-// Use Search to start a search and use it's result object to get pages.
+// SearchPage gets the page of transactions matching the search
+// query.
+// Use SearchIDs to start a search and get a list of IDs, use its
+// result object to get pages.
 // Page numbers start at 1.
 // Returns a nil result and nil error when no more results are available.
 func (g *TransactionGateway) SearchPage(ctx context.Context, query *SearchQuery, searchResult *SearchResult, page int) (*TransactionSearchResult, error) {
