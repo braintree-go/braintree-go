@@ -93,7 +93,8 @@ func (g *CreditCardGateway) ExpiringBetweenIDs(ctx context.Context, fromDate, to
 	}, nil
 }
 
-// ExpiringBetweenPage gets the page of credit cards matching the search query.
+// ExpiringBetweenPage gets the page of credit cards that expire between the
+// specified dates.
 // Use ExpiringBetweenIDs to start a search and get a list of IDs, and use it's
 // result object to get pages.
 // Page numbers start at 1.
