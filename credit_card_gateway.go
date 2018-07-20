@@ -3,6 +3,7 @@ package braintree
 import (
 	"context"
 	"encoding/xml"
+	"fmt"
 	"net/url"
 	"time"
 )
@@ -100,13 +101,13 @@ func (g *CreditCardGateway) ExpiringBetweenIDs(ctx context.Context, fromDate, to
 // Page numbers start at 1.
 // Returns a nil result and nil error when no more results are available.
 func (g *CreditCardGateway) ExpiringBetweenPage(ctx context.Context, fromDate, toDate time.Time, searchResult *SearchResult, page int) (*CreditCardSearchResult, error) {
+	if page < 1 || page > searchResult.PageCount {
+		return nil, fmt.Errorf("page %d out of bounds, page numbers start at 1 and page count is %d", page, searchResult.PageCount)
+	}
 	startOffset := (page - 1) * searchResult.PageSize
 	endOffset := startOffset + searchResult.PageSize
 	if endOffset > len(searchResult.IDs) {
 		endOffset = len(searchResult.IDs)
-	}
-	if startOffset >= endOffset {
-		return nil, nil
 	}
 
 	pageQuery := &SearchQuery{}

@@ -4,6 +4,8 @@ package braintree
 
 import (
 	"context"
+	"fmt"
+	"strings"
 	"testing"
 
 	"time"
@@ -321,9 +323,6 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if results == nil {
-			break
-		}
 		t.Logf("Iterating page %d (page size: %d, total items: %d)", results.CurrentPageNumber, results.PageSize, results.TotalItems)
 		for _, card := range results.CreditCards {
 			expiringCards[card.Token] = true
@@ -337,5 +336,17 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	}
 	if expiringCards[card3.Token] {
 		t.Fatalf("expiringCards contains card3 (%s), it shouldn't be returned in expiring cards results", card3.Token)
+	}
+
+	_, err = testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, 0)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), "page 0 out of bounds") {
+		t.Errorf("requesting page 0 should result in out of bounds error, but got %#v", err)
+	}
+
+	_, err = testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, results.PageCount+1)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf("page %d out of bounds", results.PageCount+1)) {
+		t.Errorf("requesting page %d should result in out of bounds error, but got %v", results.PageCount+1, err)
 	}
 }
