@@ -809,6 +809,7 @@ func TestAllTransactionFields(t *testing.T) {
 		Options: &TransactionOptions{
 			SubmitForSettlement:              true,
 			StoreInVault:                     true,
+			StoreInVaultOnSuccess:            true,
 			AddBillingAddressToPaymentMethod: true,
 			StoreShippingAddressInVault:      true,
 		},
@@ -1476,5 +1477,126 @@ func TestEscrowCancelReleaseNotPending(t *testing.T) {
 	}
 	if g, w := errors[0].Message, "Release can only be cancelled if the transaction is submitted for release."; g != w {
 		t.Errorf("Transaction Cancel Release got error message %s, want %s", g, w)
+	}
+}
+
+func TestTransactionStoreInVault(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		request *TransactionRequest
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantToken bool
+	}{
+		{
+			"StoreInVault with success",
+			args{&TransactionRequest{
+				Type:               "sale",
+				Amount:             NewDecimal(6500, 2),
+				PaymentMethodNonce: FakeNonceVisaCheckoutVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement: true,
+					StoreInVault:        true,
+				},
+			}},
+			true,
+		},
+		{
+			"StoreInVault with failure",
+			args{&TransactionRequest{
+				Type: "sale",
+				// This amount should make the transaction to be declined
+				Amount: NewDecimal(200100, 2),
+				// This declined nonce is not working in the sandbox
+				PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement: true,
+					StoreInVault:        true,
+				},
+			}},
+			true,
+		},
+		{
+			"No StoreInVault",
+			args{&TransactionRequest{
+				Type:               "sale",
+				Amount:             NewDecimal(6500, 2),
+				PaymentMethodNonce: FakeNonceVisaCheckoutVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement: true,
+				},
+			}},
+			false,
+		},
+		{
+			"StoreInVaultOnSuccess with success",
+			args{&TransactionRequest{
+				Type:               "sale",
+				Amount:             NewDecimal(6500, 2),
+				PaymentMethodNonce: FakeNonceVisaCheckoutVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement:   true,
+					StoreInVaultOnSuccess: true,
+				},
+			}},
+			true,
+		},
+		{
+			"StoreInVaultOnSuccess with failure",
+			args{&TransactionRequest{
+				Type: "sale",
+				// This amount should make the transaction to be declined
+				Amount: NewDecimal(200100, 2),
+				// This declined nonce is not working in the sandbox
+				PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement:   true,
+					StoreInVaultOnSuccess: true,
+				},
+			}},
+			false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			txn, err := testGateway.Transaction().Create(context.Background(), tt.args.request)
+
+			if err != nil && err.Error() != "Insufficient Funds" {
+				t.Fatal(err)
+			}
+
+			// Casting transaction from error in order to get the created token
+			// in the next checks
+			if err != nil && txn == nil {
+				txn = err.(*BraintreeError).Transaction
+				if txn.Status != TransactionStatusProcessorDeclined {
+					t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusProcessorDeclined)
+				}
+			}
+
+			if tt.wantToken &&
+				(txn.CreditCard == nil || (txn.CreditCard != nil && txn.CreditCard.Token == "")) {
+				t.Error("Success Transaction should create token if StoreInVaultOnSuccess equals true")
+			}
+
+			if !tt.wantToken && (txn.CreditCard != nil && txn.CreditCard.Token != "") {
+				t.Error("Success Transaction should NOT create token if StoreInVaultOnSuccess equals false")
+			}
+		})
 	}
 }
