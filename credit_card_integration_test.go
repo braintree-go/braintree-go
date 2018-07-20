@@ -312,21 +312,21 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	toDate := now.AddDate(0, 1, 0)
 
 	expiringCards := map[string]bool{}
-	results, err := testGateway.CreditCard().ExpiringBetween(ctx, fromDate, toDate)
+	results, err := testGateway.CreditCard().ExpiringBetweenIDs(ctx, fromDate, toDate)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for {
-		t.Logf("Iterating page %d (page size: %d, total items: %d)", results.CurrentPageNumber, results.PageSize, results.TotalItems)
-		for _, card := range results.CreditCards {
-			expiringCards[card.Token] = true
-		}
-		results, err = testGateway.CreditCard().ExpiringBetweenNext(ctx, fromDate, toDate, results)
+	for page := 1; page <= results.PageCount; page++ {
+		results, err := testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, page)
 		if err != nil {
 			t.Fatal(err)
 		}
 		if results == nil {
 			break
+		}
+		t.Logf("Iterating page %d (page size: %d, total items: %d)", results.CurrentPageNumber, results.PageSize, results.TotalItems)
+		for _, card := range results.CreditCards {
+			expiringCards[card.Token] = true
 		}
 	}
 	if expiringCards[card1.Token] {
