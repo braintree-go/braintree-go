@@ -125,6 +125,78 @@ func TestTransactionSearchIDs(t *testing.T) {
 	}
 }
 
+func TestTransactionSearchPage(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	txg := testGateway.Transaction()
+
+	const transactionCount = 51
+	transactionIDs := map[string]bool{}
+	prefix := "PaginationTest-" + testhelpers.RandomString()
+	for i := 0; i < transactionCount; i++ {
+		unique := testhelpers.RandomString()
+		tx, err := txg.Create(ctx, &TransactionRequest{
+			Type:   "sale",
+			Amount: randomAmount(),
+			Customer: &CustomerRequest{
+				FirstName: prefix + unique,
+			},
+			CreditCard: &CreditCard{
+				Number:         testCreditCards["visa"].Number,
+				ExpirationDate: "05/14",
+			},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		transactionIDs[tx.Id] = true
+	}
+
+	t.Logf("transactionIDs = %v", transactionIDs)
+
+	query := new(SearchQuery)
+	query.AddTextField("customer-first-name").StartsWith = prefix
+
+	results, err := txg.SearchIDs(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("results.PageSize = %v", results.PageSize)
+	t.Logf("results.PageCount = %v", results.PageCount)
+	t.Logf("results.IDs = %d %v", len(results.IDs), results.IDs)
+
+	if len(results.IDs) != transactionCount {
+		t.Fatalf("results.IDs = %v, want %v", len(results.IDs), transactionCount)
+	}
+
+	for page := 0; page <= results.PageCount; page++ {
+		results, err := txg.SearchPage(ctx, query, results, page)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if results == nil {
+			break
+		}
+		for _, tx := range results.Transactions {
+			if firstName := tx.Customer.FirstName; !strings.HasPrefix(firstName, prefix) {
+				t.Fatalf("tx.Customer.FirstName = %q, want prefix of %q", firstName, prefix)
+			}
+			if transactionIDs[tx.Id] {
+				delete(transactionIDs, tx.Id)
+			} else {
+				t.Fatalf("tx.Id = %q, not expected", tx.Id)
+			}
+		}
+	}
+
+	if len(transactionIDs) > 0 {
+		t.Fatalf("transactions not returned = %v", transactionIDs)
+	}
+}
+
 func TestTransactionSearch(t *testing.T) {
 	t.Parallel()
 

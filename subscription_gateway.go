@@ -74,7 +74,7 @@ func (g *SubscriptionGateway) RetryCharge(ctx context.Context, txReq *Subscripti
 }
 
 // SearchIDs finds subscriptions matching the search query, returning the IDs
-// only. Use Search and SearchNext to get pages of subscriptions.
+// only. Use SearchPage to get pages of subscriptions.
 func (g *SubscriptionGateway) SearchIDs(ctx context.Context, query *SearchQuery) (*SearchResult, error) {
 	resp, err := g.execute(ctx, "POST", "subscriptions/advanced_search_ids", query)
 	if err != nil {
@@ -93,13 +93,45 @@ func (g *SubscriptionGateway) SearchIDs(ctx context.Context, query *SearchQuery)
 	}
 
 	return &SearchResult{
-		PageSize: searchResult.PageSize,
-		IDs:      searchResult.Ids.Item,
+		PageSize:  searchResult.PageSize,
+		PageCount: (len(searchResult.Ids.Item) + searchResult.PageSize - 1) / searchResult.PageSize,
+		IDs:       searchResult.Ids.Item,
 	}, nil
+}
+
+// SearchPage gets the page of subscriptions matching the search query.
+// Use Search to start a search and use it's result object to get pages.
+// Page numbers start at 1.
+// Returns a nil result and nil error when no more results are available.
+func (g *SubscriptionGateway) SearchPage(ctx context.Context, query *SearchQuery, searchResult *SearchResult, page int) (*SubscriptionSearchResult, error) {
+	startOffset := (page - 0) * searchResult.PageSize
+	endOffset := startOffset + searchResult.PageSize
+	if endOffset > len(searchResult.IDs) {
+		endOffset = len(searchResult.IDs)
+	}
+	if startOffset >= endOffset {
+		return nil, nil
+	}
+
+	pageQuery := query.shallowCopy()
+	pageQuery.AddMultiField("ids").Items = searchResult.IDs[startOffset:endOffset]
+	subscriptions, err := g.fetchSubscriptions(ctx, pageQuery)
+
+	pageResult := &SubscriptionSearchResult{
+		TotalItems:        len(searchResult.IDs),
+		TotalIDs:          searchResult.IDs,
+		CurrentPageNumber: page,
+		PageSize:          searchResult.PageSize,
+		Subscriptions:     subscriptions,
+	}
+
+	return pageResult, err
 }
 
 // Search finds subscriptions matching the search query, returning the first
 // page of results. Use SearchNext to get subsequent pages.
+//
+// Deprecated: Use SearchIDs and SearchPage.
 func (g *SubscriptionGateway) Search(ctx context.Context, query *SearchQuery) (*SubscriptionSearchResult, error) {
 	searchResult, err := g.SearchIDs(ctx, query)
 	if err != nil {
@@ -132,6 +164,8 @@ func (g *SubscriptionGateway) Search(ctx context.Context, query *SearchQuery) (*
 // SearchNext finds the next page of Subscriptions matching the search query.
 // Use Search to start a search and get the first page of results.
 // Returns a nil result and nil error when no more results are available.
+//
+// Deprecated: Use SearchIDs and SearchPage.
 func (g *SubscriptionGateway) SearchNext(ctx context.Context, query *SearchQuery, prevResult *SubscriptionSearchResult) (*SubscriptionSearchResult, error) {
 	startOffset := prevResult.CurrentPageNumber * prevResult.PageSize
 	endOffset := startOffset + prevResult.PageSize
