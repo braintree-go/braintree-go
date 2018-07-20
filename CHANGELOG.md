@@ -1,8 +1,28 @@
-## 0.19.0 (Unreleased)
+## 0.19.0 (June 8th, 2018)
 
 BACKWARDS INCOMPATIBILITES:
 
 * Rewrite error handling and interfaces. See #222 for details.
+
+IMPROVEMENTS:
+
+* Add TransactionLineItemGateway, TransactionLineItem, TransactionLineItemRequest, and add LineItems to TransactionRequest.
+* Add DisputeGateway, Dispute, DisputeEvidence, DisputeTextEvidenceRequest, related types, and add Disputes to Transaction.
+* Add support for validation errors on all fields. See #222 for details.
+* Add RetryCharge to SubscriptionGateway.
+* Add TransactionSource to TransactionRequest.
+* Add CurrentBillingCycle to Modification.
+* Add SubscriptionDetails to Transaction.
+* Add StatusEvents to Subscription.
+* Add SearchIDs, Search, and SearchNext to SubscriptionGateway.
+* Add CreatedAt and UpdatedAt to Customer.
+* Add comments to some exported functions, constants, and types.
+
+INTERNAL:
+
+* Fix VenmoSDK tests.
+* Fix errcheck checks.
+* Other minor test fixes.
 
 ## 0.18.0 (March 2nd, 2018)
 

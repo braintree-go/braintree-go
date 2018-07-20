@@ -1,6 +1,9 @@
 package braintree
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"time"
+)
 
 type SubscriptionStatus string
 
@@ -49,6 +52,8 @@ type Subscription struct {
 	Descriptor              *Descriptor                `xml:"descriptor"`
 	AddOns                  *AddOnList                 `xml:"add-ons"`
 	Discounts               *DiscountList              `xml:"discounts"`
+	CreatedAt               *time.Time                 `xml:"created-at,omitempty"`
+	UpdatedAt               *time.Time                 `xml:"updated-at,omitempty"`
 }
 
 type SubscriptionRequest struct {
@@ -110,4 +115,13 @@ func (s *SubscriptionTransactionRequest) MarshalXML(e *xml.Encoder, start xml.St
 
 type SubscriptionTransactionOptionsRequest struct {
 	SubmitForSettlement bool `xml:"submit-for-settlement"`
+}
+
+type SubscriptionSearchResult struct {
+	TotalItems int
+	TotalIDs   []string
+
+	CurrentPageNumber int
+	PageSize          int
+	Subscriptions     []*Subscription
 }

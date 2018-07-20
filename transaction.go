@@ -69,6 +69,18 @@ const (
 	TransactionSourceMerchant       TransactionSource = "merchant"
 )
 
+type PaymentInstrumentType string
+
+const (
+	PaymentInstrumentTypeAndroidPayCard   PaymentInstrumentType = "android_pay_card"
+	PaymentInstrumentTypeApplePayCard     PaymentInstrumentType = "apple_pay_card"
+	PaymentInstrumentTypeCreditCard       PaymentInstrumentType = "credit_card"
+	PaymentInstrumentTypeMasterpassCard   PaymentInstrumentType = "masterpass_card"
+	PaymentInstrumentTypePaypalAccount    PaymentInstrumentType = "paypal_account"
+	PaymentInstrumentTypeVenmoAccount     PaymentInstrumentType = "venmo_account"
+	PaymentInstrumentTypeVisaCheckoutCard PaymentInstrumentType = "visa_checkout_card"
+)
+
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id"`
@@ -102,7 +114,7 @@ type Transaction struct {
 	ProcessorAuthorizationCode   string                    `xml:"processor-authorization-code"`
 	SettlementBatchId            string                    `xml:"settlement-batch-id"`
 	EscrowStatus                 EscrowStatus              `xml:"escrow-status"`
-	PaymentInstrumentType        string                    `xml:"payment-instrument-type"`
+	PaymentInstrumentType        PaymentInstrumentType     `xml:"payment-instrument-type"`
 	ThreeDSecureInfo             *ThreeDSecureInfo         `xml:"three-d-secure-info,omitempty"`
 	PayPalDetails                *PayPalDetails            `xml:"paypal"`
 	VenmoAccountDetails          *VenmoAccountDetails      `xml:"venmo-account"`
@@ -119,33 +131,35 @@ type Transaction struct {
 	CVVResponseCode              CVVResponseCode           `xml:"cvv-response-code"`
 	GatewayRejectionReason       GatewayRejectionReason    `xml:"gateway-rejection-reason"`
 	PurchaseOrderNumber          string                    `xml:"purchase-order-number"`
+	Disputes                     []*Dispute                `xml:"disputes>dispute"`
 }
 
 type TransactionRequest struct {
-	XMLName             string                    `xml:"transaction"`
-	CustomerID          string                    `xml:"customer-id,omitempty"`
-	Type                string                    `xml:"type,omitempty"`
-	Amount              *Decimal                  `xml:"amount"`
-	OrderId             string                    `xml:"order-id,omitempty"`
-	PaymentMethodToken  string                    `xml:"payment-method-token,omitempty"`
-	PaymentMethodNonce  string                    `xml:"payment-method-nonce,omitempty"`
-	MerchantAccountId   string                    `xml:"merchant-account-id,omitempty"`
-	PlanId              string                    `xml:"plan-id,omitempty"`
-	CreditCard          *CreditCard               `xml:"credit-card,omitempty"`
-	Customer            *CustomerRequest          `xml:"customer,omitempty"`
-	BillingAddress      *Address                  `xml:"billing,omitempty"`
-	ShippingAddress     *Address                  `xml:"shipping,omitempty"`
-	TaxAmount           *Decimal                  `xml:"tax-amount,omitempty"`
-	TaxExempt           bool                      `xml:"tax-exempt,omitempty"`
-	DeviceData          string                    `xml:"device-data,omitempty"`
-	Options             *TransactionOptions       `xml:"options,omitempty"`
-	ServiceFeeAmount    *Decimal                  `xml:"service-fee-amount,attr,omitempty"`
-	RiskData            *RiskDataRequest          `xml:"risk-data,omitempty"`
-	Descriptor          *Descriptor               `xml:"descriptor,omitempty"`
-	Channel             string                    `xml:"channel,omitempty"`
-	CustomFields        customfields.CustomFields `xml:"custom-fields,omitempty"`
-	PurchaseOrderNumber string                    `xml:"purchase-order-number,omitempty"`
-	TransactionSource   TransactionSource         `xml:"transaction-source,omitempty"`
+	XMLName             string                      `xml:"transaction"`
+	CustomerID          string                      `xml:"customer-id,omitempty"`
+	Type                string                      `xml:"type,omitempty"`
+	Amount              *Decimal                    `xml:"amount"`
+	OrderId             string                      `xml:"order-id,omitempty"`
+	PaymentMethodToken  string                      `xml:"payment-method-token,omitempty"`
+	PaymentMethodNonce  string                      `xml:"payment-method-nonce,omitempty"`
+	MerchantAccountId   string                      `xml:"merchant-account-id,omitempty"`
+	PlanId              string                      `xml:"plan-id,omitempty"`
+	CreditCard          *CreditCard                 `xml:"credit-card,omitempty"`
+	Customer            *CustomerRequest            `xml:"customer,omitempty"`
+	BillingAddress      *Address                    `xml:"billing,omitempty"`
+	ShippingAddress     *Address                    `xml:"shipping,omitempty"`
+	TaxAmount           *Decimal                    `xml:"tax-amount,omitempty"`
+	TaxExempt           bool                        `xml:"tax-exempt,omitempty"`
+	DeviceData          string                      `xml:"device-data,omitempty"`
+	Options             *TransactionOptions         `xml:"options,omitempty"`
+	ServiceFeeAmount    *Decimal                    `xml:"service-fee-amount,attr,omitempty"`
+	RiskData            *RiskDataRequest            `xml:"risk-data,omitempty"`
+	Descriptor          *Descriptor                 `xml:"descriptor,omitempty"`
+	Channel             string                      `xml:"channel,omitempty"`
+	CustomFields        customfields.CustomFields   `xml:"custom-fields,omitempty"`
+	PurchaseOrderNumber string                      `xml:"purchase-order-number,omitempty"`
+	TransactionSource   TransactionSource           `xml:"transaction-source,omitempty"`
+	LineItems           TransactionLineItemRequests `xml:"line-items,omitempty"`
 }
 
 func (t *Transaction) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
@@ -214,6 +228,7 @@ type TransactionOptionsThreeDSecure struct {
 type TransactionOptions struct {
 	SubmitForSettlement              bool                             `xml:"submit-for-settlement,omitempty"`
 	StoreInVault                     bool                             `xml:"store-in-vault,omitempty"`
+	StoreInVaultOnSuccess            bool                             `xml:"store-in-vault-on-success,omitempty"`
 	AddBillingAddressToPaymentMethod bool                             `xml:"add-billing-address-to-payment-method,omitempty"`
 	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
 	HoldInEscrow                     bool                             `xml:"hold-in-escrow,omitempty"`

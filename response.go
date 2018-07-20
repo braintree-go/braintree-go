@@ -44,6 +44,14 @@ func (r *Response) transaction() (*Transaction, error) {
 	return &b, nil
 }
 
+func (r *Response) transactionLineItems() (TransactionLineItems, error) {
+	var b TransactionLineItems
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func (r *Response) paymentMethod() (PaymentMethod, error) {
 	entityName, err := r.entityName()
 	if err != nil {
@@ -160,6 +168,22 @@ func (r *Response) discounts() ([]Discount, error) {
 		return nil, err
 	}
 	return b.Discounts, nil
+}
+
+func (r *Response) dispute() (*Dispute, error) {
+	var b Dispute
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+func (r *Response) disputeEvidence() (*DisputeEvidence, error) {
+	var b DisputeEvidence
+	if err := xml.Unmarshal(r.Body, &b); err != nil {
+		return nil, err
+	}
+	return &b, nil
 }
 
 func (r *Response) unpackBody() error {

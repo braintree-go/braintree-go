@@ -153,8 +153,8 @@ func (g *TransactionGateway) Find(ctx context.Context, id string) (*Transaction,
 	return nil, &invalidResponseError{resp}
 }
 
-// SearchIDs finds transactions matching the search query, returning the IDs
-// only. Use Search and SearchNext to get pages of transactions.
+// SearchIDs finds transactions matching the search query, returning the IDs only.
+// Use SearchPage to get pages of transactions.
 func (g *TransactionGateway) SearchIDs(ctx context.Context, query *SearchQuery) (*SearchResult, error) {
 	resp, err := g.execute(ctx, "POST", "transactions/advanced_search_ids", query)
 	if err != nil {
@@ -173,13 +173,47 @@ func (g *TransactionGateway) SearchIDs(ctx context.Context, query *SearchQuery) 
 	}
 
 	return &SearchResult{
-		PageSize: searchResult.PageSize,
-		IDs:      searchResult.Ids.Item,
+		PageSize:  searchResult.PageSize,
+		PageCount: (len(searchResult.Ids.Item) + searchResult.PageSize - 1) / searchResult.PageSize,
+		IDs:       searchResult.Ids.Item,
 	}, nil
+}
+
+// SearchPage gets the page of transactions matching the search
+// query.
+// Use SearchIDs to start a search and get a list of IDs, use its
+// result object to get pages.
+// Page numbers start at 1.
+// Returns a nil result and nil error when no more results are available.
+func (g *TransactionGateway) SearchPage(ctx context.Context, query *SearchQuery, searchResult *SearchResult, page int) (*TransactionSearchResult, error) {
+	if page < 1 || page > searchResult.PageCount {
+		return nil, fmt.Errorf("page %d out of bounds, page numbers start at 1 and page count is %d", page, searchResult.PageCount)
+	}
+	startOffset := (page - 1) * searchResult.PageSize
+	endOffset := startOffset + searchResult.PageSize
+	if endOffset > len(searchResult.IDs) {
+		endOffset = len(searchResult.IDs)
+	}
+
+	pageQuery := query.shallowCopy()
+	pageQuery.AddMultiField("ids").Items = searchResult.IDs[startOffset:endOffset]
+	transactions, err := g.fetchTransactions(ctx, pageQuery)
+
+	pageResult := &TransactionSearchResult{
+		TotalItems:        len(searchResult.IDs),
+		TotalIDs:          searchResult.IDs,
+		CurrentPageNumber: page,
+		PageSize:          searchResult.PageSize,
+		Transactions:      transactions,
+	}
+
+	return pageResult, err
 }
 
 // Search finds transactions matching the search query, returning the first
 // page of results. Use SearchNext to get subsequent pages.
+//
+// Deprecated: Use SearchIDs and SearchPage.
 func (g *TransactionGateway) Search(ctx context.Context, query *SearchQuery) (*TransactionSearchResult, error) {
 	searchResult, err := g.SearchIDs(ctx, query)
 	if err != nil {
@@ -212,6 +246,8 @@ func (g *TransactionGateway) Search(ctx context.Context, query *SearchQuery) (*T
 // SearchNext finds the next page of transactions matching the search query.
 // Use Search to start a search and get the first page of results.
 // Returns a nil result and nil error when no more results are available.
+//
+// Deprecated: Use SearchIDs and SearchPage.
 func (g *TransactionGateway) SearchNext(ctx context.Context, query *SearchQuery, prevResult *TransactionSearchResult) (*TransactionSearchResult, error) {
 	startOffset := prevResult.CurrentPageNumber * prevResult.PageSize
 	endOffset := startOffset + prevResult.PageSize
