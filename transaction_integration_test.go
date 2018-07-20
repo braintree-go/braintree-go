@@ -125,6 +125,78 @@ func TestTransactionSearchIDs(t *testing.T) {
 	}
 }
 
+func TestTransactionSearchPage(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	txg := testGateway.Transaction()
+
+	const transactionCount = 51
+	transactionIDs := map[string]bool{}
+	prefix := "PaginationTest-" + testhelpers.RandomString()
+	for i := 0; i < transactionCount; i++ {
+		unique := testhelpers.RandomString()
+		tx, err := txg.Create(ctx, &TransactionRequest{
+			Type:   "sale",
+			Amount: randomAmount(),
+			Customer: &CustomerRequest{
+				FirstName: prefix + unique,
+			},
+			CreditCard: &CreditCard{
+				Number:         testCreditCards["visa"].Number,
+				ExpirationDate: "05/14",
+			},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		transactionIDs[tx.Id] = true
+	}
+
+	t.Logf("transactionIDs = %v", transactionIDs)
+
+	query := new(SearchQuery)
+	query.AddTextField("customer-first-name").StartsWith = prefix
+
+	results, err := txg.SearchIDs(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("results.PageSize = %v", results.PageSize)
+	t.Logf("results.PageCount = %v", results.PageCount)
+	t.Logf("results.IDs = %d %v", len(results.IDs), results.IDs)
+
+	if len(results.IDs) != transactionCount {
+		t.Fatalf("results.IDs = %v, want %v", len(results.IDs), transactionCount)
+	}
+
+	for page := 0; page <= results.PageCount; page++ {
+		results, err := txg.SearchPage(ctx, query, results, page)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if results == nil {
+			break
+		}
+		for _, tx := range results.Transactions {
+			if firstName := tx.Customer.FirstName; !strings.HasPrefix(firstName, prefix) {
+				t.Fatalf("tx.Customer.FirstName = %q, want prefix of %q", firstName, prefix)
+			}
+			if transactionIDs[tx.Id] {
+				delete(transactionIDs, tx.Id)
+			} else {
+				t.Fatalf("tx.Id = %q, not expected", tx.Id)
+			}
+		}
+	}
+
+	if len(transactionIDs) > 0 {
+		t.Fatalf("transactions not returned = %v", transactionIDs)
+	}
+}
+
 func TestTransactionSearch(t *testing.T) {
 	t.Parallel()
 
@@ -809,6 +881,7 @@ func TestAllTransactionFields(t *testing.T) {
 		Options: &TransactionOptions{
 			SubmitForSettlement:              true,
 			StoreInVault:                     true,
+			StoreInVaultOnSuccess:            true,
 			AddBillingAddressToPaymentMethod: true,
 			StoreShippingAddressInVault:      true,
 		},
@@ -876,8 +949,8 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.Status != TransactionStatusSubmittedForSettlement {
 		t.Fatalf("expected tx2.Status to be %s, but got %s", TransactionStatusSubmittedForSettlement, tx2.Status)
 	}
-	if tx2.PaymentInstrumentType != "credit_card" {
-		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", "credit_card", tx2.PaymentInstrumentType)
+	if tx2.PaymentInstrumentType != PaymentInstrumentTypeCreditCard {
+		t.Fatalf("expected tx2.PaymentInstrumentType to be %s, but got %s", PaymentInstrumentTypeCreditCard, tx2.PaymentInstrumentType)
 	}
 	if tx2.AdditionalProcessorResponse != "" {
 		t.Fatalf("expected tx2.AdditionalProcessorResponse to be empty, but got %s", tx2.AdditionalProcessorResponse)
@@ -1476,5 +1549,126 @@ func TestEscrowCancelReleaseNotPending(t *testing.T) {
 	}
 	if g, w := errors[0].Message, "Release can only be cancelled if the transaction is submitted for release."; g != w {
 		t.Errorf("Transaction Cancel Release got error message %s, want %s", g, w)
+	}
+}
+
+func TestTransactionStoreInVault(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		request *TransactionRequest
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantToken bool
+	}{
+		{
+			"StoreInVault with success",
+			args{&TransactionRequest{
+				Type:               "sale",
+				Amount:             NewDecimal(6500, 2),
+				PaymentMethodNonce: FakeNonceVisaCheckoutVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement: true,
+					StoreInVault:        true,
+				},
+			}},
+			true,
+		},
+		{
+			"StoreInVault with failure",
+			args{&TransactionRequest{
+				Type: "sale",
+				// This amount should make the transaction to be declined
+				Amount: NewDecimal(200100, 2),
+				// This declined nonce is not working in the sandbox
+				PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement: true,
+					StoreInVault:        true,
+				},
+			}},
+			true,
+		},
+		{
+			"No StoreInVault",
+			args{&TransactionRequest{
+				Type:               "sale",
+				Amount:             NewDecimal(6500, 2),
+				PaymentMethodNonce: FakeNonceVisaCheckoutVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement: true,
+				},
+			}},
+			false,
+		},
+		{
+			"StoreInVaultOnSuccess with success",
+			args{&TransactionRequest{
+				Type:               "sale",
+				Amount:             NewDecimal(6500, 2),
+				PaymentMethodNonce: FakeNonceVisaCheckoutVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement:   true,
+					StoreInVaultOnSuccess: true,
+				},
+			}},
+			true,
+		},
+		{
+			"StoreInVaultOnSuccess with failure",
+			args{&TransactionRequest{
+				Type: "sale",
+				// This amount should make the transaction to be declined
+				Amount: NewDecimal(200100, 2),
+				// This declined nonce is not working in the sandbox
+				PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
+				MerchantAccountId:  testSubMerchantAccount(),
+				ServiceFeeAmount:   NewDecimal(1000, 2),
+				Options: &TransactionOptions{
+					SubmitForSettlement:   true,
+					StoreInVaultOnSuccess: true,
+				},
+			}},
+			false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			txn, err := testGateway.Transaction().Create(context.Background(), tt.args.request)
+
+			if err != nil && err.Error() != "Insufficient Funds" {
+				t.Fatal(err)
+			}
+
+			// Casting transaction from error in order to get the created token
+			// in the next checks
+			if err != nil && txn == nil {
+				txn = err.(*BraintreeError).Transaction
+				if txn.Status != TransactionStatusProcessorDeclined {
+					t.Fatalf("Got status %q, want %q", txn.Status, TransactionStatusProcessorDeclined)
+				}
+			}
+
+			if tt.wantToken &&
+				(txn.CreditCard == nil || (txn.CreditCard != nil && txn.CreditCard.Token == "")) {
+				t.Error("Success Transaction should create token if StoreInVaultOnSuccess equals true")
+			}
+
+			if !tt.wantToken && (txn.CreditCard != nil && txn.CreditCard.Token != "") {
+				t.Error("Success Transaction should NOT create token if StoreInVaultOnSuccess equals false")
+			}
+		})
 	}
 }

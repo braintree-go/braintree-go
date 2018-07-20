@@ -179,9 +179,9 @@ func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if txn.PaymentInstrumentType != "credit_card" {
+	if txn.PaymentInstrumentType != PaymentInstrumentTypeCreditCard {
 		t.Fatalf("Returned payment instrument doesn't match input, expected %q, got %q",
-			"credit_card", txn.PaymentInstrumentType)
+			PaymentInstrumentTypeCreditCard, txn.PaymentInstrumentType)
 	}
 	if txn.CreditCard.CardType != "Discover" {
 		t.Fatalf("Returned credit card detail doesn't match input, expected %q, got %q",
