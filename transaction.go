@@ -35,6 +35,18 @@ const (
 	TransactionSourceMerchant       TransactionSource = "merchant"
 )
 
+type PaymentInstrumentType string
+
+const (
+	PaymentInstrumentTypeAndroidPayCard   PaymentInstrumentType = "android_pay_card"
+	PaymentInstrumentTypeApplePayCard     PaymentInstrumentType = "apple_pay_card"
+	PaymentInstrumentTypeCreditCard       PaymentInstrumentType = "credit_card"
+	PaymentInstrumentTypeMasterpassCard   PaymentInstrumentType = "masterpass_card"
+	PaymentInstrumentTypePaypalAccount    PaymentInstrumentType = "paypal_account"
+	PaymentInstrumentTypeVenmoAccount     PaymentInstrumentType = "venmo_account"
+	PaymentInstrumentTypeVisaCheckoutCard PaymentInstrumentType = "visa_checkout_card"
+)
+
 type Transaction struct {
 	XMLName                      string                    `xml:"transaction"`
 	Id                           string                    `xml:"id"`
@@ -68,7 +80,7 @@ type Transaction struct {
 	ProcessorAuthorizationCode   string                    `xml:"processor-authorization-code"`
 	SettlementBatchId            string                    `xml:"settlement-batch-id"`
 	EscrowStatus                 EscrowStatus              `xml:"escrow-status"`
-	PaymentInstrumentType        string                    `xml:"payment-instrument-type"`
+	PaymentInstrumentType        PaymentInstrumentType     `xml:"payment-instrument-type"`
 	PayPalDetails                *PayPalDetails            `xml:"paypal"`
 	VenmoAccountDetails          *VenmoAccountDetails      `xml:"venmo-account"`
 	AndroidPayDetails            *AndroidPayDetails        `xml:"android-pay-card"`
