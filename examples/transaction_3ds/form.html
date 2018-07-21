@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sample Payment Form</title>
+    <script src="https://js.braintreegateway.com/web/dropin/1.11.0/js/dropin.min.js"></script>
+    <style>
+    body {
+      font-family: sans-serif;
+    }
+    table th, table td {
+      text-align: left;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Sample Braintree Go Payment Form</h1>
+    <div id="dropin-container"></div>
+    <button id="submit-button">Pay</button>
+    <div>
+      <p>
+      <table>
+        <tr>
+          <th>Test Card Number</th>
+          <th></th>
+        </tr>
+        <tr>
+          <td>4000000000000002</td>
+          <td>Visa and will pass 3DS authentication</td>
+        </tr>
+        <tr>
+          <td>4000000000000028</td>
+          <td>Visa and will fail 3DS authentication</td>
+        </tr>
+        <tr>
+          <td>5200000000000007</td>
+          <td>Mastercard and will pass 3DS authentication</td>
+        </tr>
+        <tr>
+          <td>5200000000000023</td>
+          <td>Mastercard and will fail 3DS authentication</td>
+        </tr>
+      </table>
+      </p>
+      <p>
+      <table>
+        <tr>
+          <th>Test card numbers sourced from:</th>
+        </tr>
+        <tr>
+          <td>https://developers.braintreepayments.com/guides/3d-secure/testing-go-live</td>
+        </tr>
+        <tr>
+          <td>https://developers.braintreepayments.com/files/Centinel.IntegrationGuide.ConsumerAuthentication_TestCases_v1_18_0_20160823.pdf</td>
+        </tr>
+      </table>
+      </p>
+    </div>
+    <script>
+    var button = document.querySelector('#submit-button');
+    
+    braintree.dropin.create({
+      authorization: '{{.ClientToken}}',
+      container: '#dropin-container',
+      threeDSecure: {
+        amount: '10.00',
+      },
+    }, function (createErr, instance) {
+      button.addEventListener('click', function () {
+        instance.requestPaymentMethod(function (err, payload) {
+          if (err) {
+            throw err;
+          }
+          window.location.href = "/create_transaction?nonce=" + payload.nonce;
+        });
+      });
+    });
+    </script>
+  </body>
+</html>

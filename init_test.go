@@ -17,14 +17,6 @@ const (
 	testCardVisa       = "4111111111111111"
 	testCardMastercard = "5555555555554444"
 	testCardDiscover   = "6011111111111117"
-
-	// 3DS test card numbers are from the Sentinel Integration Guide PDF from:
-	// https://developers.braintreepayments.com/guides/3d-secure/testing-go-live
-	// https://developers.braintreepayments.com/files/Centinel.IntegrationGuide.ConsumerAuthentication_TestCases_v1_18_0_20160823.pdf
-	testCardVisaThreeDSecureSucceedAuthentication       = "4000000000000002"
-	testCardVisaThreeDSecureFailAuthentication          = "4000000000000028"
-	testCardMastercardThreeDSecureSucceedAuthentication = "5200000000000007"
-	testCardMastercardThreeDSecureFailAuthentication    = "5200000000000023"
 )
 
 var testGateway = New(
