@@ -22,9 +22,9 @@ const (
 	// https://developers.braintreepayments.com/guides/3d-secure/testing-go-live
 	// https://developers.braintreepayments.com/files/Centinel.IntegrationGuide.ConsumerAuthentication_TestCases_v1_18_0_20160823.pdf
 	testCardVisaThreeDSecureSucceedAuthentication       = "4000000000000002"
-	testCardVisaThreeDSecureSucceedAuthentication       = "4000000000000028"
+	testCardVisaThreeDSecureFailAuthentication          = "4000000000000028"
 	testCardMastercardThreeDSecureSucceedAuthentication = "5200000000000007"
-	testCardMastercardThreeDSecureSucceedAuthentication = "5200000000000023"
+	testCardMastercardThreeDSecureFailAuthentication    = "5200000000000023"
 )
 
 var testGateway = New(
