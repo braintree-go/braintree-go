@@ -19,7 +19,7 @@ func TestTransaction3DSRequiredGatewayRejected(t *testing.T) {
 
 	cc, err := testGateway.PaymentMethod().CreditCard().Create(ctx, &CreditCard{
 		CustomerId:      customer.Id,
-		Number:          testCardVisaThreeDSecureSucceedAuthentication,
+		Number:          testCardVisa,
 		ExpirationYear:  "2020",
 		ExpirationMonth: "01",
 	})
