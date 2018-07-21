@@ -53,7 +53,7 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 		PaymentMethodNonce: nonce.Nonce,
 
 		Options: &TransactionOptions{
-			ThreeDSecure: &TransactionOptionsThreeDSecure{
+			ThreeDSecure: &TransactionOptionsThreeDSecureRequest{
 				Required: true,
 			},
 		},
@@ -131,7 +131,7 @@ func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 		Amount:             amount,
 		PaymentMethodNonce: nonce.Nonce,
 		Options: &TransactionOptions{
-			ThreeDSecure: &TransactionOptionsThreeDSecure{
+			ThreeDSecure: &TransactionOptionsThreeDSecureRequest{
 				Required: true,
 			},
 		},

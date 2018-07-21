@@ -188,15 +188,15 @@ type Transactions struct {
 }
 
 type TransactionOptions struct {
-	SubmitForSettlement              bool                             `xml:"submit-for-settlement,omitempty"`
-	StoreInVault                     bool                             `xml:"store-in-vault,omitempty"`
-	StoreInVaultOnSuccess            bool                             `xml:"store-in-vault-on-success,omitempty"`
-	AddBillingAddressToPaymentMethod bool                             `xml:"add-billing-address-to-payment-method,omitempty"`
-	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
-	HoldInEscrow                     bool                             `xml:"hold-in-escrow,omitempty"`
-	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
-	SkipAdvancedFraudChecking        bool                             `xml:"skip_advanced_fraud_checking,omitempty"`
-	ThreeDSecure                     *TransactionOptionsThreeDSecure  `xml:"three-d-secure,omitempty"`
+	SubmitForSettlement              bool                                   `xml:"submit-for-settlement,omitempty"`
+	StoreInVault                     bool                                   `xml:"store-in-vault,omitempty"`
+	StoreInVaultOnSuccess            bool                                   `xml:"store-in-vault-on-success,omitempty"`
+	AddBillingAddressToPaymentMethod bool                                   `xml:"add-billing-address-to-payment-method,omitempty"`
+	StoreShippingAddressInVault      bool                                   `xml:"store-shipping-address-in-vault,omitempty"`
+	HoldInEscrow                     bool                                   `xml:"hold-in-escrow,omitempty"`
+	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest       `xml:"paypal,omitempty"`
+	SkipAdvancedFraudChecking        bool                                   `xml:"skip_advanced_fraud_checking,omitempty"`
+	ThreeDSecure                     *TransactionOptionsThreeDSecureRequest `xml:"three-d-secure,omitempty"`
 }
 
 type TransactionOptionsPaypalRequest struct {
@@ -254,7 +254,7 @@ func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.St
 	return nil
 }
 
-type TransactionOptionsThreeDSecure struct {
+type TransactionOptionsThreeDSecureRequest struct {
 	Required bool `xml:"required"`
 }
 
