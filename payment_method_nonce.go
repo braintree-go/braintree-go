@@ -1,10 +1,13 @@
 package braintree
 
-import "encoding/xml"
-
 type PaymentMethodNonce struct {
-	XMLName     xml.Name `xml:"payment-method-nonce"`
-	Type        string   `xml:"type"`
-	Nonce       string   `xml:"nonce"`
-	Description string   `xml:"description"`
+	Type             string                     `xml:"type"`
+	Nonce            string                     `xml:"nonce"`
+	Details          *PaymentMethodNonceDetails `xml:"details"`
+	ThreeDSecureInfo *ThreeDSecureInfo          `xml:"three-d-secure-info"`
+}
+
+type PaymentMethodNonceDetails struct {
+	CardType string `xml:"card-type"`
+	LastTwo  string `xml:"last-two"`
 }
