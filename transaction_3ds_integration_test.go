@@ -8,6 +8,8 @@ import (
 )
 
 func TestTransaction3DSRequiredGatewayRejected(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 
 	amount := NewDecimal(1007, 2)
