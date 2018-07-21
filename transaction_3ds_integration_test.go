@@ -1,4 +1,4 @@
-// +build threeds
+// +build integration
 
 package braintree
 
@@ -7,89 +7,7 @@ import (
 	"testing"
 )
 
-func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
-	ctx := context.Background()
-
-	amount := NewDecimal(1007, 2)
-
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
-		FirstName: "Clyde",
-		LastName:  "Barrow",
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	cc := CreditCard{
-		CustomerId:      customer.Id,
-		Number:          testCardVisaThreeDSecureSucceedAuthentication,
-		ExpirationYear:  "2020",
-		ExpirationMonth: "01",
-	}
-	fullCC, err := testGateway.PaymentMethod().CreditCard().Create(ctx, &cc)
-	if err != nil {
-		t.Fatal(err)
-	}
-	token := fullCC.GetToken()
-	nonce, err := testGateway.PaymentMethodNonce().Create(ctx, token)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// the nonce we have is not yet validated through 3D Secure...
-	// At the moment this nonce can only be sent back to the client code
-	// and validated using: threeDSecure.verifyCard()
-	// https://developers.braintreepayments.com/guides/3d-secure/client-side/javascript/v3#verify-a-vaulted-credit-card
-	// this is not possible as is...
-	// I have asked support if we could have specially crafted nonces in the
-	// sandbox environment that would be already 3DSecure validated
-	// but at the moment we have NO possiblity to obtain such a nonce in an
-	// integration testing scenario
-	// TODO: wait for support to give us a valid nonce for 3DS
-
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
-		Type:               "sale",
-		Amount:             amount,
-		PaymentMethodNonce: nonce.Nonce,
-
-		Options: &TransactionOptions{
-			ThreeDSecure: &TransactionOptionsThreeDSecureRequest{
-				Required: true,
-			},
-		},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if txn.ThreeDSecureInfo.Enrolled != "Y" {
-		t.Fatalf("Card should be enrolled")
-	}
-	if txn.ThreeDSecureInfo.LiabilityShifted {
-		t.Fatalf("Liability should have been shifted")
-	}
-	if txn.ThreeDSecureInfo.Status == ThreeDSecureStatusAuthAttemptSuccessful {
-		t.Fatalf("Status should have been %s, was %s",
-			ThreeDSecureStatusAuthAttemptSuccessful,
-			txn.ThreeDSecureInfo.Status)
-	}
-
-	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if txn.Status != "settled" {
-		t.Fatal(txn.Status)
-	}
-}
-
-func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
+func TestTransaction3DSRequiredGatewayRejected(t *testing.T) {
 	ctx := context.Background()
 
 	amount := NewDecimal(1007, 2)
@@ -99,70 +17,39 @@ func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cc := CreditCard{
+	cc, err := testGateway.PaymentMethod().CreditCard().Create(ctx, &CreditCard{
 		CustomerId:      customer.Id,
 		Number:          testCardVisaThreeDSecureSucceedAuthentication,
 		ExpirationYear:  "2020",
-		ExpirationMonth: "12",
-	}
-	fullCC, err := testGateway.PaymentMethod().CreditCard().Create(ctx, &cc)
-	if err != nil {
-		t.Fatal(err)
-	}
-	token := fullCC.GetToken()
-	nonce, err := testGateway.PaymentMethodNonce().Create(ctx, token)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// the nonce we have is not yet validated through 3D Secure...
-	// At the moment this nonce can only be sent back to the client code
-	// and validated using: threeDSecure.verifyCard()
-	// https://developers.braintreepayments.com/guides/3d-secure/client-side/javascript/v3#verify-a-vaulted-credit-card
-	// this is not possible as is...
-	// I have asked support if we could have specially crafted nonces in the
-	// sandbox environment that would be already 3DSecure validated
-	// but at the moment we have NO possiblity to obtain such a nonce in an
-	// integration testing scenario
-	// TODO: wait for support to give us a valid nonce for 3DS
-
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
-		Type:               "sale",
-		Amount:             amount,
-		PaymentMethodNonce: nonce.Nonce,
-		Options: &TransactionOptions{
-			ThreeDSecure: &TransactionOptionsThreeDSecureRequest{
-				Required: true,
-			},
-		},
+		ExpirationMonth: "01",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if txn.ThreeDSecureInfo.Enrolled != "Y" {
-		t.Fatalf("Card should be enrolled")
-	}
-	if txn.ThreeDSecureInfo.LiabilityShifted {
-		t.Fatalf("Liability should NOT have been shifted")
-	}
-	if txn.ThreeDSecureInfo.Status == ThreeDSecureStatusAuthFailed {
-		t.Fatalf("Status should have been %s, was %s",
-			ThreeDSecureStatusAuthFailed,
-			txn.ThreeDSecureInfo.Status)
-	}
-
-	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
+	nonce, err := testGateway.PaymentMethodNonce().Create(ctx, cc.Token)
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
-	if err != nil {
-		t.Fatal(err)
+	if nonce.ThreeDSecureInfo != nil {
+		t.Fatalf("Nonce 3DS Info present when card was non-3DS")
 	}
 
-	if txn.Status != "settled" {
-		t.Fatal(txn.Status)
+	_, err = testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:               "sale",
+		Amount:             amount,
+		PaymentMethodNonce: nonce.Nonce,
+		Options: &TransactionOptions{
+			ThreeDSecure: &TransactionOptionsThreeDSecureRequest{Required: true},
+		},
+	})
+	if err == nil {
+		t.Fatal("Did not receive error when creating transaction requiring 3DS with non-3DS nonce")
+	}
+	if err.Error() != "Gateway Rejected: three_d_secure" {
+		t.Fatal(err)
+	}
+	if err.(*BraintreeError).Transaction.ThreeDSecureInfo != nil {
+		t.Fatalf("Transaction 3DS Info present when nonce for transaction was non-3DS")
 	}
 }
