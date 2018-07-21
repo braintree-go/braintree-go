@@ -22,7 +22,7 @@ func TestTransaction3DSCreateTransactionAndSettleSuccess(t *testing.T) {
 
 	cc := CreditCard{
 		CustomerId:      customer.Id,
-		Number:          testCreditCards["visa_3ds_succeed_auth"].Number,
+		Number:          testCardVisaThreeDSecureSucceedAuthentication,
 		ExpirationYear:  "2020",
 		ExpirationMonth: "01",
 	}
@@ -101,7 +101,7 @@ func TestTransaction3DSCreateTransactionAndSettleFailure(t *testing.T) {
 
 	cc := CreditCard{
 		CustomerId:      customer.Id,
-		Number:          testCreditCards["visa_3ds_succeed_auth"].Number,
+		Number:          testCardVisaThreeDSecureSucceedAuthentication,
 		ExpirationYear:  "2020",
 		ExpirationMonth: "12",
 	}

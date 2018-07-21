@@ -16,7 +16,7 @@ func TestSettleTransaction(t *testing.T) {
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -54,7 +54,7 @@ func TestSettlementConfirmTransaction(t *testing.T) {
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -92,7 +92,7 @@ func TestSettlementDeclinedTransaction(t *testing.T) {
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -130,7 +130,7 @@ func TestSettlementPendingTransaction(t *testing.T) {
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -171,7 +171,7 @@ func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["discover"].Number,
+			Number:         testCardDiscover,
 			ExpirationDate: "05/14",
 		},
 	})

@@ -26,7 +26,7 @@ func TestCustomer(t *testing.T) {
 		Fax:       "614.555.5678",
 		Website:   "http://www.example.com",
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 			CVV:            "200",
 			Options: &CreditCardOptions{

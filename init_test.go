@@ -13,19 +13,19 @@ import (
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
-// testCreditCards are numbers described in the documentation to help test
-// your application
-// the 3ds cards come from the Sentinel PDF that you can download from this
-// page: https://developers.braintreepayments.com/guides/3d-secure/testing-go-live/java
-// at the moment of writing the PDF was this one:
-// https://developers.braintreepayments.com/files/Centinel.IntegrationGuide.ConsumerAuthentication_TestCases_v1_18_0_20160823.pdf
-var testCreditCards = map[string]CreditCard{
-	"visa":                       CreditCard{Number: "4111111111111111"},
-	"mastercard":                 CreditCard{Number: "5555555555554444"},
-	"discover":                   CreditCard{Number: "6011111111111117"},
-	"visa_3ds_succeed_auth":      CreditCard{Number: "4000000000000002"},
-	"mastercard_3ds_failed_auth": CreditCard{Number: "5200000000000023"},
-}
+const (
+	testCardVisa       = "4111111111111111"
+	testCardMastercard = "5555555555554444"
+	testCardDiscover   = "6011111111111117"
+
+	// 3DS test card numbers are from the Sentinel Integration Guide PDF from:
+	// https://developers.braintreepayments.com/guides/3d-secure/testing-go-live
+	// https://developers.braintreepayments.com/files/Centinel.IntegrationGuide.ConsumerAuthentication_TestCases_v1_18_0_20160823.pdf
+	testCardVisaThreeDSecureSucceedAuthentication       = "4000000000000002"
+	testCardVisaThreeDSecureSucceedAuthentication       = "4000000000000028"
+	testCardMastercardThreeDSecureSucceedAuthentication = "5200000000000007"
+	testCardMastercardThreeDSecureSucceedAuthentication = "5200000000000023"
+)
 
 var testGateway = New(
 	Sandbox,
