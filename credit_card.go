@@ -5,14 +5,6 @@ import (
 	"time"
 )
 
-// Nonce is returned from a payment method nonce request
-type Nonce struct {
-	XMLName     xml.Name `xml:"payment-method-nonce"`
-	Type        string   `xml:"type"`
-	Nonce       string   `xml:"nonce"`
-	Description string   `xml:"description"`
-}
-
 type CreditCard struct {
 	XMLName                   xml.Name           `xml:"credit-card"`
 	CustomerId                string             `xml:"customer-id,omitempty"`

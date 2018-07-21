@@ -74,8 +74,8 @@ func (r *Response) paymentMethod() (PaymentMethod, error) {
 	return nil, fmt.Errorf("Unrecognized payment method %#v", entityName)
 }
 
-func (r *Response) nonce() (*Nonce, error) {
-	var n Nonce
+func (r *Response) paymentMethodNonce() (*PaymentMethodNonce, error) {
+	var n PaymentMethodNonce
 	if err := xml.Unmarshal(r.Body, &n); err != nil {
 		return nil, err
 	}
