@@ -9,5 +9,5 @@ type PaymentMethodNonce struct {
 
 type PaymentMethodNonceDetails struct {
 	CardType string `xml:"card-type"`
-	LastTwo  string `xml:"last-two"`
+	Last2    string `xml:"last-two"`
 }

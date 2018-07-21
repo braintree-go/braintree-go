@@ -13,10 +13,56 @@
   </head>
   <body>
     <h1>Sample Braintree Go Payment Result</h1>
+    {{ with .PaymentMethodNonce }}
+    <table>
+      <tr>
+        <th>Payment Method Nonce</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>Nonce:</td>
+        <td>{{.Nonce}}</td>
+      </tr>
+      <tr>
+        <td>Type:</td>
+        <td>{{.Type}}</td>
+      </tr>
+      <tr>
+        <td>Details:</td>
+        <td>{{.Details.CardType}}...{{.Details.Last2}}</td>
+      </tr>
+    </table>
+    {{ with .ThreeDSecureInfo }}
+    <table>
+      <tr>
+        <th>Payment Method Nonce: 3DS Info</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>Status:</td>
+        <td>{{.Status}}</td>
+      </tr>
+      <tr>
+        <td>Enrolled:</td>
+        <td>{{.Enrolled}}</td>
+      </tr>
+      <tr>
+        <td>Liability Shift Possible:</td>
+        <td>{{.LiabilityShiftPossible}}</td>
+      </tr>
+      <tr>
+        <td>Liability Shifted:</td>
+        <td>{{.LiabilityShifted}}</td>
+      </tr>
+    </table>
+    {{ end }}
+    {{ end }}
     {{ with .Error }}
     <table>
       <tr>
-        <td>Error:</td>
+        <th>Transaction Error</th>
+      </tr>
+      <tr>
         <td>{{.}}</td>
       </tr>
     </table>
@@ -35,7 +81,7 @@
     {{ with .ThreeDSecureInfo }}
     <table>
       <tr>
-        <th>3DS Info</th>
+        <th>Transaction: 3DS Info</th>
         <th></th>
       </tr>
       <tr>

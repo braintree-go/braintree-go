@@ -58,10 +58,14 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	bt := getBT()
 
+	nonce := r.FormValue("nonce")
+
+	pmn, _ := bt.PaymentMethodNonce().Find(ctx, nonce)
+
 	tx := &braintree.TransactionRequest{
 		Type:               "sale",
 		Amount:             braintree.NewDecimal(1000, 2),
-		PaymentMethodNonce: r.FormValue("nonce"),
+		PaymentMethodNonce: nonce,
 		Options: &braintree.TransactionOptions{
 			ThreeDSecure: &braintree.TransactionOptionsThreeDSecureRequest{Required: true},
 		},
@@ -71,11 +75,13 @@ func createTransaction(w http.ResponseWriter, r *http.Request) {
 
 	t := template.Must(template.ParseFiles("result.html"))
 	config := struct {
-		Error       error
-		Transaction *braintree.Transaction
+		PaymentMethodNonce *braintree.PaymentMethodNonce
+		Error              error
+		Transaction        *braintree.Transaction
 	}{
-		Error:       err,
-		Transaction: txn,
+		PaymentMethodNonce: pmn,
+		Error:              err,
+		Transaction:        txn,
 	}
 	err = t.Execute(w, config)
 	if err != nil {
