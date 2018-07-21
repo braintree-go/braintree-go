@@ -13,11 +13,11 @@ import (
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
-var testCreditCards = map[string]CreditCard{
-	"visa":       CreditCard{Number: "4111111111111111"},
-	"mastercard": CreditCard{Number: "5555555555554444"},
-	"discover":   CreditCard{Number: "6011111111111117"},
-}
+const (
+	testCardVisa       = "4111111111111111"
+	testCardMastercard = "5555555555554444"
+	testCardDiscover   = "6011111111111117"
+)
 
 var testGateway = New(
 	Sandbox,

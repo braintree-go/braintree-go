@@ -28,7 +28,7 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -88,7 +88,7 @@ func TestTransactionSearchIDs(t *testing.T) {
 				FirstName: customerName,
 			},
 			CreditCard: &CreditCard{
-				Number:         testCreditCards["visa"].Number,
+				Number:         testCardVisa,
 				ExpirationDate: "05/14",
 			},
 		})
@@ -145,7 +145,7 @@ func TestTransactionSearchPage(t *testing.T) {
 				FirstName: prefix + unique,
 			},
 			CreditCard: &CreditCard{
-				Number:         testCreditCards["visa"].Number,
+				Number:         testCardVisa,
 				ExpirationDate: "05/14",
 			},
 		})
@@ -221,7 +221,7 @@ func TestTransactionSearch(t *testing.T) {
 				FirstName: customerName,
 			},
 			CreditCard: &CreditCard{
-				Number:         testCreditCards["visa"].Number,
+				Number:         testCardVisa,
 				ExpirationDate: "05/14",
 			},
 		})
@@ -279,7 +279,7 @@ func TestTransactionSearchNext(t *testing.T) {
 				FirstName: prefix + unique,
 			},
 			CreditCard: &CreditCard{
-				Number:         testCreditCards["visa"].Number,
+				Number:         testCardVisa,
 				ExpirationDate: "05/14",
 			},
 		})
@@ -345,7 +345,7 @@ func TestTransactionSearchTime(t *testing.T) {
 				FirstName: customerName,
 			},
 			CreditCard: &CreditCard{
-				Number:         testCreditCards["visa"].Number,
+				Number:         testCardVisa,
 				ExpirationDate: "05/14",
 			},
 		})
@@ -415,7 +415,7 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(201000, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -475,7 +475,7 @@ func TestTransactionCreatedWhenCVVDoesNotMatch(t *testing.T) {
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 			CVV:            "200", // Should cause CVV does not match response
 		},
@@ -510,7 +510,7 @@ func TestTransactionCreatedWhenAVSBankDoesNotSupport(t *testing.T) {
 		Type:              "sale",
 		Amount:            randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
@@ -555,7 +555,7 @@ func TestTransactionCreatedWhenAVSPostalDoesNotMatch(t *testing.T) {
 		Type:              "sale",
 		Amount:            randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
@@ -600,7 +600,7 @@ func TestTransactionCreatedWhenAVStreetAddressDoesNotMatch(t *testing.T) {
 		Type:              "sale",
 		Amount:            randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
@@ -644,7 +644,7 @@ func TestFindTransaction(t *testing.T) {
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["mastercard"].Number,
+			Number:         testCardMastercard,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -864,7 +864,7 @@ func TestAllTransactionFields(t *testing.T) {
 		Amount:  amount,
 		OrderId: "my_custom_order",
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
@@ -1023,7 +1023,7 @@ func TestTransactionCreateFromPaymentMethodCode(t *testing.T) {
 
 	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["discover"].Number,
+			Number:         testCardDiscover,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -1079,7 +1079,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -1157,7 +1157,7 @@ func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -1310,7 +1310,7 @@ func TestEscrowHoldOnCreate(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(6200, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 		MerchantAccountId: testSubMerchantAccount(),
@@ -1336,7 +1336,7 @@ func TestEscrowHoldOnCreateOnMasterMerchant(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(6301, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 		Options: &TransactionOptions{
@@ -1367,7 +1367,7 @@ func TestEscrowHoldAfterSale(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(6300, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 		MerchantAccountId: testSubMerchantAccount(),
@@ -1394,7 +1394,7 @@ func TestEscrowHoldAfterSaleOnMasterMerchant(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(6301, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -1426,7 +1426,7 @@ func TestEscrowRelease(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(6400, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 		MerchantAccountId: testSubMerchantAccount(),
@@ -1461,7 +1461,7 @@ func TestEscrowReleaseNotEscrowed(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(6401, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 		MerchantAccountId: testSubMerchantAccount(),
@@ -1495,7 +1495,7 @@ func TestEscrowCancelRelease(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(6500, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 		MerchantAccountId: testSubMerchantAccount(),
@@ -1537,7 +1537,7 @@ func TestEscrowCancelReleaseNotPending(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(6501, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 		MerchantAccountId: testSubMerchantAccount(),
