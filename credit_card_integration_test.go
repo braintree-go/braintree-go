@@ -26,7 +26,7 @@ func TestCreditCard(t *testing.T) {
 	g := testGateway.CreditCard()
 	card, err := g.Create(ctx, &CreditCard{
 		CustomerId:     cust.Id,
-		Number:         testCreditCards["visa"].Number,
+		Number:         testCardVisa,
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
@@ -46,7 +46,7 @@ func TestCreditCard(t *testing.T) {
 	// Update
 	card2, err := g.Update(ctx, &CreditCard{
 		Token:          card.Token,
-		Number:         testCreditCards["mastercard"].Number,
+		Number:         testCardMastercard,
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
@@ -135,7 +135,7 @@ func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
 	}
 	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:      customer.Id,
-		Number:          testCreditCards["visa"].Number,
+		Number:          testCardVisa,
 		ExpirationMonth: "05",
 		ExpirationYear:  "2014",
 		CVV:             "100",
@@ -155,7 +155,7 @@ func TestCreateCreditCardInvalidInput(t *testing.T) {
 	ctx := context.Background()
 
 	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
-		Number:         testCreditCards["visa"].Number,
+		Number:         testCardVisa,
 		ExpirationDate: "05/14",
 	})
 
@@ -180,7 +180,7 @@ func TestFindCreditCard(t *testing.T) {
 	}
 	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
+		Number:         testCardVisa,
 		ExpirationDate: "05/14",
 		CVV:            "100",
 		Options: &CreditCardOptions{
@@ -234,7 +234,7 @@ func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
 	}
 	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:                customer.Id,
-		VenmoSDKPaymentMethodCode: "stub-" + testCreditCards["visa"].Number,
+		VenmoSDKPaymentMethodCode: "stub-" + testCardVisa,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -255,7 +255,7 @@ func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
 	}
 	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
+		Number:         testCardVisa,
 		ExpirationDate: "05/14",
 		Options: &CreditCardOptions{
 			VenmoSDKSession: "stub-session",
@@ -282,7 +282,7 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	}
 	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
+		Number:         testCardVisa,
 		ExpirationDate: now.AddDate(0, -2, 0).Format("01/2006"),
 	})
 	if err != nil {
@@ -292,7 +292,7 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 
 	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
+		Number:         testCardVisa,
 		ExpirationDate: now.Format("01/2006"),
 	})
 	if err != nil {
@@ -302,7 +302,7 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 
 	card3, err := testGateway.CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
-		Number:         testCreditCards["visa"].Number,
+		Number:         testCardVisa,
 		ExpirationDate: now.AddDate(0, 2, 0).Format("01/2006"),
 	})
 	if err != nil {

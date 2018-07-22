@@ -1216,10 +1216,13 @@ func TestSubscriptionSearchPage(t *testing.T) {
 
 	const subscriptionCount = 51
 	expectedIDs := map[string]bool{}
+	firstBillingDate := fmt.Sprintf("%d-12-31", time.Now().Year())
 	for i := 0; i < subscriptionCount; i++ {
 		sub, err := g.Create(ctx, &SubscriptionRequest{
-			PaymentMethodToken: paymentMethod.GetToken(),
-			PlanId:             "test_plan_2",
+			PaymentMethodToken:    paymentMethod.GetToken(),
+			PlanId:                "test_plan_2",
+			FirstBillingDate:      firstBillingDate,
+			NumberOfBillingCycles: testhelpers.IntPtr(2),
 		})
 		if err != nil {
 			t.Fatal(err)
@@ -1232,7 +1235,7 @@ func TestSubscriptionSearchPage(t *testing.T) {
 	query := &SearchQuery{}
 	f1 := query.AddTimeField("created-at")
 	f1.Max = time.Now()
-	f1.Min = time.Now().AddDate(0, 0, -1)
+	f1.Min = time.Now().Add(-10 * time.Minute)
 	f2 := query.AddTextField("plan-id")
 	f2.Is = "test_plan_2"
 
@@ -1309,7 +1312,7 @@ func TestSubscriptionSearch(t *testing.T) {
 	query := &SearchQuery{}
 	f1 := query.AddTimeField("created-at")
 	f1.Max = time.Now()
-	f1.Min = time.Now().AddDate(0, 0, -1)
+	f1.Min = time.Now().Add(-10 * time.Minute)
 	f2 := query.AddTextField("plan-id")
 	f2.Is = "test_plan"
 
@@ -1367,7 +1370,7 @@ func TestSubscriptionSearchNext(t *testing.T) {
 	query := &SearchQuery{}
 	f1 := query.AddTimeField("created-at")
 	f1.Max = time.Now()
-	f1.Min = time.Now().AddDate(0, 0, -1)
+	f1.Min = time.Now().Add(-10 * time.Minute)
 	f2 := query.AddTextField("plan-id")
 	f2.Is = "test_plan_2"
 

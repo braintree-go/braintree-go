@@ -16,7 +16,7 @@ func TestTransactionClone(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
@@ -66,7 +66,7 @@ func TestTransactionCloneSubmittedForSettlement(t *testing.T) {
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
-			Number:         testCreditCards["visa"].Number,
+			Number:         testCardVisa,
 			ExpirationDate: "05/14",
 		},
 	})
