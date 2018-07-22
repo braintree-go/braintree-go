@@ -25,11 +25,3 @@ jobs:
     - stage: test
       go: 1.7
       script: make test
-
-    - stage: analysis-is-backward-compatible-with-master
-      go: "1.10"
-      script: make analysis-is-backward-compatible-with-master
-
-  allow_failures:
-    - stage: analysis-is-backward-compatible-with-master
-
