@@ -11,17 +11,25 @@ jobs:
       script: make analysis
 
     - stage: test
+      go: "tip"
+      script: make test
+
+    - stage: test
+      go: "1.11beta2"
+      script: make test
+
+    - stage: test
       go: "1.10"
       script: make test
 
     - stage: test
-      go: 1.9
+      go: "1.9"
       script: make test
 
     - stage: test
-      go: 1.8
+      go: "1.8"
       script: make test
 
     - stage: test
-      go: 1.7
+      go: "1.7"
       script: make test
