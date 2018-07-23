@@ -75,9 +75,10 @@ type CustomerRequest struct {
 }
 
 type CustomerSearchResult struct {
-	XMLName           string      `xml:"customers"`
-	CurrentPageNumber int         `xml:"current-page-number"`
-	PageSize          int         `xml:"page-size"`
-	TotalItems        int         `xml:"total-items"`
-	Customers         []*Customer `xml:"customer"`
+	TotalItems int
+	TotalIDs   []string
+
+	CurrentPageNumber int
+	PageSize          int
+	Customers         []*Customer
 }
