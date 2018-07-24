@@ -77,16 +77,6 @@ func (g *CustomerGateway) SearchIDs(ctx context.Context, query *SearchQuery) (*S
 	}, nil
 }
 
-// Search searches for customers matching the search query.
-func (g *CustomerGateway) Search(ctx context.Context, query *SearchQuery) (*CustomerSearchResult, error) {
-	searchResult, err := g.SearchIDs(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-
-	return g.SearchPage(ctx, query, searchResult, 1)
-}
-
 // SearchPage gets the page of customers matching the search
 // query.
 // Use SearchIDs to start a search and get a list of IDs, use its
@@ -116,6 +106,19 @@ func (g *CustomerGateway) SearchPage(ctx context.Context, query *SearchQuery, se
 	}
 
 	return pageResult, err
+}
+
+// Search finds customers matching the search query, returning the first page
+// of results.
+//
+// Deprecated: Use SearchIDs and SearchPage.
+func (g *CustomerGateway) Search(ctx context.Context, query *SearchQuery) (*CustomerSearchResult, error) {
+	searchResult, err := g.SearchIDs(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return g.SearchPage(ctx, query, searchResult, 1)
 }
 
 func (g *CustomerGateway) fetchCustomers(ctx context.Context, query *SearchQuery) ([]*Customer, error) {
