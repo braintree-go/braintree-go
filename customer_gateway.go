@@ -84,27 +84,7 @@ func (g *CustomerGateway) Search(ctx context.Context, query *SearchQuery) (*Cust
 		return nil, err
 	}
 
-	pageSize := searchResult.PageSize
-	ids := searchResult.IDs
-
-	endOffset := pageSize
-	if endOffset > len(ids) {
-		endOffset = len(ids)
-	}
-
-	firstPageQuery := query.shallowCopy()
-	firstPageQuery.AddMultiField("ids").Items = ids[:endOffset]
-	firstPageCustomers, err := g.fetchCustomers(ctx, firstPageQuery)
-
-	firstPageResult := &CustomerSearchResult{
-		TotalItems:        len(ids),
-		TotalIDs:          ids,
-		CurrentPageNumber: 1,
-		PageSize:          pageSize,
-		Customers:         firstPageCustomers,
-	}
-
-	return firstPageResult, err
+	return g.SearchPage(ctx, query, searchResult, 1)
 }
 
 // SearchPage gets the page of customers matching the search
