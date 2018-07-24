@@ -136,7 +136,7 @@ func TestCustomer(t *testing.T) {
 	}
 }
 
-func TestCustomerSearchNext(t *testing.T) {
+func TestCustomerSearchPage(t *testing.T) {
 	t.Parallel()
 
 	ctx := context.Background()
