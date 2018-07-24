@@ -968,6 +968,7 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.RiskData == nil {
 		t.Fatal("expected tx2.RiskData not to be empty")
 	}
+	t.Logf("RiskData: %+v", tx2.RiskData)
 	switch tx2.RiskData.Decision {
 	case "Not Evaluated":
 		if tx2.RiskData.ID != "" {
