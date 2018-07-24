@@ -8,6 +8,9 @@ import (
 	"reflect"
 	"testing"
 
+	"fmt"
+	"strings"
+
 	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
@@ -131,6 +134,82 @@ func TestCustomer(t *testing.T) {
 	if c4 != nil {
 		t.Fatal(c4)
 	}
+}
+
+func TestCustomerSearch(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	cg := testGateway.Customer()
+
+	const customersCount = 51
+	customerIDs := map[string]bool{}
+	prefix := "PaginationTest-" + testhelpers.RandomString()
+	for i := 0; i < customersCount; i++ {
+		unique := testhelpers.RandomString()
+		tx, err := cg.Create(ctx, &CustomerRequest{
+			FirstName: "John",
+			LastName:  "Smith",
+			Company:   prefix + unique,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		customerIDs[tx.Id] = true
+	}
+
+	t.Logf("customerIDs = %v", customerIDs)
+
+	query := new(SearchQuery)
+	query.AddTextField("company").StartsWith = prefix
+
+	results, err := cg.SearchIDs(ctx, query)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("results.PageSize = %v", results.PageSize)
+	t.Logf("results.PageCount = %v", results.PageCount)
+	t.Logf("results.IDs = %d %v", len(results.IDs), results.IDs)
+
+	if len(results.IDs) != customersCount {
+		t.Fatalf("results.IDs = %v, want %v", len(results.IDs), customersCount)
+	}
+
+	for page := 1; page <= results.PageCount; page++ {
+		results, err := cg.SearchPage(ctx, query, results, page)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, cs := range results.Customers {
+			if company := cs.Company; !strings.HasPrefix(company, prefix) {
+				t.Fatalf("cs.Company = %q, want prefix of %q", company, prefix)
+			}
+			if customerIDs[cs.Id] {
+				delete(customerIDs, cs.Id)
+			} else {
+				t.Fatalf("cs.Id = %q, not expected", cs.Id)
+			}
+		}
+	}
+
+	if len(customerIDs) > 0 {
+		t.Fatalf("customers not returned = %v", customerIDs)
+	}
+
+	_, err = cg.SearchPage(ctx, query, results, 0)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), "page 0 out of bounds") {
+		t.Errorf("requesting page 0 should result in out of bounds error, but got %#v", err)
+	}
+
+	_, err = cg.SearchPage(ctx, query, results, results.PageCount+1)
+	t.Logf("%#v", err)
+	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf("page %d out of bounds", results.PageCount+1)) {
+		t.Errorf("requesting page %d should result in out of bounds error, but got %v", results.PageCount+1, err)
+	}
+
 }
 
 func TestCustomerWithCustomFields(t *testing.T) {
