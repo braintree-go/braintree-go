@@ -968,11 +968,17 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.RiskData == nil {
 		t.Fatal("expected tx2.RiskData not to be empty")
 	}
-	if tx2.RiskData.ID == "" {
-		t.Fatal("expected tx2.RiskData.ID not to be empty")
-	}
-	if tx2.RiskData.Decision != "Approve" {
-		t.Fatalf("expected tx2.RiskData.Decision to be Approve, but got %s", tx2.RiskData.Decision)
+	switch tx2.RiskData.Decision {
+	case "Not Evaluated":
+		if tx2.RiskData.ID != "" {
+			t.Fatalf("expected tx2.RiskData.ID to be empty when Decision is Not Evaluated, but got %q", tx2.RiskData.ID)
+		}
+	case "Approve":
+		if tx2.RiskData.ID == "" {
+			t.Fatalf("expected tx2.RiskData.ID to be non-empty when Decision is Approved, but got %q", tx2.RiskData.ID)
+		}
+	default:
+		t.Fatalf("expected tx2.RiskData.Decision to be Not Evaluated or Approved, but got %s", tx2.RiskData.Decision)
 	}
 	if tx2.Channel != "ChannelA" {
 		t.Fatalf("expected tx2.Channel to be ChannelA, but got %s", tx2.Channel)
