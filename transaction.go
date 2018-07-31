@@ -81,6 +81,7 @@ type Transaction struct {
 	SettlementBatchId            string                    `xml:"settlement-batch-id"`
 	EscrowStatus                 EscrowStatus              `xml:"escrow-status"`
 	PaymentInstrumentType        PaymentInstrumentType     `xml:"payment-instrument-type"`
+	ThreeDSecureInfo             *ThreeDSecureInfo         `xml:"three-d-secure-info,omitempty"`
 	PayPalDetails                *PayPalDetails            `xml:"paypal"`
 	VenmoAccountDetails          *VenmoAccountDetails      `xml:"venmo-account"`
 	AndroidPayDetails            *AndroidPayDetails        `xml:"android-pay-card"`
@@ -187,14 +188,15 @@ type Transactions struct {
 }
 
 type TransactionOptions struct {
-	SubmitForSettlement              bool                             `xml:"submit-for-settlement,omitempty"`
-	StoreInVault                     bool                             `xml:"store-in-vault,omitempty"`
-	StoreInVaultOnSuccess            bool                             `xml:"store-in-vault-on-success,omitempty"`
-	AddBillingAddressToPaymentMethod bool                             `xml:"add-billing-address-to-payment-method,omitempty"`
-	StoreShippingAddressInVault      bool                             `xml:"store-shipping-address-in-vault,omitempty"`
-	HoldInEscrow                     bool                             `xml:"hold-in-escrow,omitempty"`
-	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest `xml:"paypal,omitempty"`
-	SkipAdvancedFraudChecking        bool                             `xml:"skip_advanced_fraud_checking,omitempty"`
+	SubmitForSettlement              bool                                   `xml:"submit-for-settlement,omitempty"`
+	StoreInVault                     bool                                   `xml:"store-in-vault,omitempty"`
+	StoreInVaultOnSuccess            bool                                   `xml:"store-in-vault-on-success,omitempty"`
+	AddBillingAddressToPaymentMethod bool                                   `xml:"add-billing-address-to-payment-method,omitempty"`
+	StoreShippingAddressInVault      bool                                   `xml:"store-shipping-address-in-vault,omitempty"`
+	HoldInEscrow                     bool                                   `xml:"hold-in-escrow,omitempty"`
+	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest       `xml:"paypal,omitempty"`
+	SkipAdvancedFraudChecking        bool                                   `xml:"skip_advanced_fraud_checking,omitempty"`
+	ThreeDSecure                     *TransactionOptionsThreeDSecureRequest `xml:"three-d-secure,omitempty"`
 }
 
 type TransactionOptionsPaypalRequest struct {
@@ -250,6 +252,10 @@ func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.St
 	}
 
 	return nil
+}
+
+type TransactionOptionsThreeDSecureRequest struct {
+	Required bool `xml:"required"`
 }
 
 type TransactionSearchResult struct {
