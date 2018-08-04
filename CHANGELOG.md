@@ -1,3 +1,28 @@
+## 0.20.0 (August 8th, 2018)
+
+BACKWARDS INCOMPATIBILITES:
+
+* Add subscription ID parameter to SubscriptionGateway Update. See #243.
+
+DEPRECATED:
+* TransactionGateway Search and SearchNext functions are deprecated, use SearchIDs and SearchPage instead.
+* SubscriptionGateway Search and SearchNext functions are deprecated, use SearchIDs and SearchPage instead.
+* CustomerGateway Search function is deprecated, use SearchIDs and SearchPage instead.
+
+IMPROVEMENTS:
+
+* Add CreatedAt, UpdatedAt to Subscription.
+* Add StoreInVaultOnSuccess to TransactionOptions.
+* Add PaymentInstrumentType constants to Transaction.
+* Add SearchPage to TransactionGateway, deprecating Search and SearchNext.
+* Add SearchPage to SubscriptionGateway, deprecating Search and SearchNext.
+* Add ExpiringBetweenIDs, ExpiringBetweenPage to CreditCardGateway.
+* Add SearchIDs, SearchPage to CustomerGateway.
+* Add PaymentMethodNonce, PaymentMethodNonceDetails, PaymentMethodNonceGateway.
+* Add 3DS support:
+  * Add ThreeDSecure to TransactionOptions.
+  * Add ThreeDSecureInfo to Transaction.
+
 ## 0.19.0 (June 8th, 2018)
 
 BACKWARDS INCOMPATIBILITES:

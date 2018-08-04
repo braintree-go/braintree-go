@@ -188,6 +188,10 @@ func (g *Braintree) PaymentMethod() *PaymentMethodGateway {
 	return &PaymentMethodGateway{g}
 }
 
+func (g *Braintree) PaymentMethodNonce() *PaymentMethodNonceGateway {
+	return &PaymentMethodNonceGateway{g}
+}
+
 func (g *Braintree) CreditCard() *CreditCardGateway {
 	return &CreditCardGateway{g}
 }

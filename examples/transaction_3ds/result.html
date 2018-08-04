@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sample Payment Result</title>
+    <style>
+    body {
+      font-family: sans-serif;
+    }
+    table th, table td {
+      text-align: left;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Sample Braintree Go Payment Result</h1>
+    {{ with .PaymentMethodNonce }}
+    <table>
+      <tr>
+        <th>Payment Method Nonce</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>Nonce:</td>
+        <td>{{.Nonce}}</td>
+      </tr>
+      <tr>
+        <td>Type:</td>
+        <td>{{.Type}}</td>
+      </tr>
+      <tr>
+        <td>Details:</td>
+        <td>{{.Details.CardType}}...{{.Details.Last2}}</td>
+      </tr>
+    </table>
+    {{ with .ThreeDSecureInfo }}
+    <table>
+      <tr>
+        <th>Payment Method Nonce: 3DS Info</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>Status:</td>
+        <td>{{.Status}}</td>
+      </tr>
+      <tr>
+        <td>Enrolled:</td>
+        <td>{{.Enrolled}}</td>
+      </tr>
+      <tr>
+        <td>Liability Shift Possible:</td>
+        <td>{{.LiabilityShiftPossible}}</td>
+      </tr>
+      <tr>
+        <td>Liability Shifted:</td>
+        <td>{{.LiabilityShifted}}</td>
+      </tr>
+    </table>
+    {{ end }}
+    {{ end }}
+    {{ with .Error }}
+    <table>
+      <tr>
+        <th>Transaction Error</th>
+      </tr>
+      <tr>
+        <td>{{.}}</td>
+      </tr>
+    </table>
+    {{ end }}
+    {{ with .Transaction }}
+    <table>
+      <tr>
+        <th>Transaction Info</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>ID:</td>
+        <td>{{.Id}}</td>
+      </tr>
+    </table>
+    {{ with .ThreeDSecureInfo }}
+    <table>
+      <tr>
+        <th>Transaction: 3DS Info</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>Status:</td>
+        <td>{{.Status}}</td>
+      </tr>
+      <tr>
+        <td>Enrolled:</td>
+        <td>{{.Enrolled}}</td>
+      </tr>
+      <tr>
+        <td>Liability Shift Possible:</td>
+        <td>{{.LiabilityShiftPossible}}</td>
+      </tr>
+      <tr>
+        <td>Liability Shifted:</td>
+        <td>{{.LiabilityShifted}}</td>
+      </tr>
+    </table>
+    {{ end }}
+    {{ end }}
+  </body>
+</html>
