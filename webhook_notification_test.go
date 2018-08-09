@@ -381,6 +381,6 @@ func TestWebhookParseAccountUpdaterDailyReport(t *testing.T) {
 	} else if notification.AccountUpdaterDailyReport().ReportDate != "2016-01-14" {
 		t.Errorf("Incorrect report date, expected 2016-01-14, got %s", notification.AccountUpdaterDailyReport().ReportDate)
 	} else if notification.AccountUpdaterDailyReport().ReportURL != "link-to-csv-report" {
-		t.Errorf("Incorrect report date, expected link-to-csv-report, got %s", notification.AccountUpdaterDailyReport().ReportURL)
+		t.Errorf("Incorrect report url, expected link-to-csv-report, got %s", notification.AccountUpdaterDailyReport().ReportURL)
 	}
 }
