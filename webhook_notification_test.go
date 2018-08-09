@@ -378,9 +378,9 @@ func TestWebhookParseAccountUpdaterDailyReport(t *testing.T) {
 		t.Fatal("Incorrect Notification kind, expected account_updater_daily_report got", notification.Kind)
 	} else if notification.AccountUpdaterDailyReport() == nil {
 		t.Fatal("Notification should have a account updater daily report")
-	} else if len(notification.AccountUpdaterDailyReport().ReportDate) != "2016-01-14" {
+	} else if notification.AccountUpdaterDailyReport().ReportDate != "2016-01-14" {
 		t.Errorf("Incorrect report date, expected 2016-01-14, got %s", notification.AccountUpdaterDailyReport().ReportDate)
-	} else if len(notification.AccountUpdaterDailyReport().ReportURL) != "2016-01-14" {
+	} else if notification.AccountUpdaterDailyReport().ReportURL != "link-to-csv-report" {
 		t.Errorf("Incorrect report date, expected link-to-csv-report, got %s", notification.AccountUpdaterDailyReport().ReportURL)
 	}
 }
