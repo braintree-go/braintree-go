@@ -62,6 +62,14 @@ func (n *WebhookNotification) Dispute() *Dispute {
 	}
 }
 
+func (n *WebhookNotification) AccountUpdaterDailyReport() *AccountUpdaterDailyReport {
+	if n.Subject.AccountUpdaterDailyReport != nil {
+		return n.Subject.AccountUpdaterDailyReport
+	} else {
+		return nil
+	}
+}
+
 type webhookSubject struct {
 	XMLName                   xml.Name                   `xml:"subject"`
 	APIErrorResponse          *BraintreeError            `xml:"api-error-response,omitempty"`
