@@ -345,3 +345,42 @@ func TestWebhookParseDispute(t *testing.T) {
 		t.Error("Dispute shoud have transaction details")
 	}
 }
+
+func TestWebhookParseAccountUpdaterDailyReport(t *testing.T) {
+	t.Parallel()
+
+	webhookGateway := testGateway.WebhookNotification()
+	apiKey := testGateway.credentials.(apiKey)
+	hmacer := newHmacer(apiKey.publicKey, apiKey.privateKey)
+
+	payload := base64.StdEncoding.EncodeToString([]byte(`
+        <notification>
+            <timestamp type="datetime">2014-04-06T10:32:28+00:00</timestamp>
+            <kind>account_updater_daily_report</kind>
+            <subject>
+        		<account-updater-daily-report>
+					<report-date type="date">2016-01-14</report-date>
+					<report-url>link-to-csv-report</report-url>
+				</account-updater-daily-report>
+            </subject>
+        </notification>`))
+	hmacedPayload, err := hmacer.hmac(payload)
+	if err != nil {
+		t.Fatal(err)
+	}
+	signature := hmacer.publicKey + "|" + hmacedPayload
+
+	notification, err := webhookGateway.Parse(signature, payload)
+
+	if err != nil {
+		t.Fatal(err)
+	} else if notification.Kind != AccountUpdaterDailyReportWebhook {
+		t.Fatal("Incorrect Notification kind, expected account_updater_daily_report got", notification.Kind)
+	} else if notification.AccountUpdaterDailyReport() == nil {
+		t.Fatal("Notification should have a account updater daily report")
+	} else if len(notification.AccountUpdaterDailyReport().ReportDate) != "2016-01-14" {
+		t.Errorf("Incorrect report date, expected 2016-01-14, got %s", notification.AccountUpdaterDailyReport().ReportDate)
+	} else if len(notification.AccountUpdaterDailyReport().ReportURL) != "2016-01-14" {
+		t.Errorf("Incorrect report date, expected link-to-csv-report, got %s", notification.AccountUpdaterDailyReport().ReportURL)
+	}
+}
