@@ -63,13 +63,14 @@ func (n *WebhookNotification) Dispute() *Dispute {
 }
 
 type webhookSubject struct {
-	XMLName          xml.Name         `xml:"subject"`
-	APIErrorResponse *BraintreeError  `xml:"api-error-response,omitempty"`
-	Disbursement     *Disbursement    `xml:"disbursement,omitempty"`
-	Subscription     *Subscription    `xml:",omitempty"`
-	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty"`
-	Transaction      *Transaction     `xml:",omitempty"`
-	Dispute          *Dispute         `xml:"dispute,omitempty"`
+	XMLName                   xml.Name                   `xml:"subject"`
+	APIErrorResponse          *BraintreeError            `xml:"api-error-response,omitempty"`
+	Disbursement              *Disbursement              `xml:"disbursement,omitempty"`
+	Subscription              *Subscription              `xml:",omitempty"`
+	MerchantAccount           *MerchantAccount           `xml:"merchant-account,omitempty"`
+	Transaction               *Transaction               `xml:",omitempty"`
+	Dispute                   *Dispute                   `xml:"dispute,omitempty"`
+	AccountUpdaterDailyReport *AccountUpdaterDailyReport `xml:"account-updater-daily-report,omitempty"`
 
 	// Remaining Fields:
 	// partner_merchant
