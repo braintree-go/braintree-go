@@ -15,7 +15,7 @@ jobs:
       script: make test
 
     - stage: test
-      go: "1.11beta3"
+      go: "1.11rc1"
       script: make test
 
     - stage: test
