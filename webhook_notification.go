@@ -62,14 +62,23 @@ func (n *WebhookNotification) Dispute() *Dispute {
 	}
 }
 
+func (n *WebhookNotification) AccountUpdaterDailyReport() *AccountUpdaterDailyReport {
+	if n.Subject.AccountUpdaterDailyReport != nil {
+		return n.Subject.AccountUpdaterDailyReport
+	} else {
+		return nil
+	}
+}
+
 type webhookSubject struct {
-	XMLName          xml.Name         `xml:"subject"`
-	APIErrorResponse *BraintreeError  `xml:"api-error-response,omitempty"`
-	Disbursement     *Disbursement    `xml:"disbursement,omitempty"`
-	Subscription     *Subscription    `xml:",omitempty"`
-	MerchantAccount  *MerchantAccount `xml:"merchant-account,omitempty"`
-	Transaction      *Transaction     `xml:",omitempty"`
-	Dispute          *Dispute         `xml:"dispute,omitempty"`
+	XMLName                   xml.Name                   `xml:"subject"`
+	APIErrorResponse          *BraintreeError            `xml:"api-error-response,omitempty"`
+	Disbursement              *Disbursement              `xml:"disbursement,omitempty"`
+	Subscription              *Subscription              `xml:",omitempty"`
+	MerchantAccount           *MerchantAccount           `xml:"merchant-account,omitempty"`
+	Transaction               *Transaction               `xml:",omitempty"`
+	Dispute                   *Dispute                   `xml:"dispute,omitempty"`
+	AccountUpdaterDailyReport *AccountUpdaterDailyReport `xml:"account-updater-daily-report,omitempty"`
 
 	// Remaining Fields:
 	// partner_merchant
