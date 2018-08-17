@@ -14,13 +14,21 @@ jobs:
       go: "tip"
       script: make test
 
+    - stage: test with modules
+      go: "tip"
+      env:
+        - GO111MODULE=on
+      script: make test
+
     - stage: test
       go: "1.11rc1"
       script: make test
 
     - stage: test with modules
       go: "1.11rc1"
-      script: GO111MODULE=on make test
+      env:
+        - GO111MODULE=on
+      script: make test
 
     - stage: test
       go: "1.10"
