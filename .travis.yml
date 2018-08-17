@@ -18,6 +18,10 @@ jobs:
       go: "1.11rc1"
       script: make test
 
+    - stage: test with modules
+      go: "1.11rc1"
+      script: GO111MODULE=on make test
+
     - stage: test
       go: "1.10"
       script: make test
