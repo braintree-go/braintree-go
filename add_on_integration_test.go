@@ -12,7 +12,7 @@ func TestAddOn(t *testing.T) {
 
 	ctx := context.Background()
 
-	addOns, err := testGateway.AddOn().All(ctx)
+	addOns, err := testGateway(t).AddOn().All(ctx)
 
 	if err != nil {
 		t.Fatal(err)

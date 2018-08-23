@@ -13,7 +13,7 @@ func TestClientToken(t *testing.T) {
 
 	ctx := context.Background()
 
-	g := testGateway.ClientToken()
+	g := testGateway(t).ClientToken()
 	token, err := g.Generate(ctx)
 	if err != nil {
 		t.Fatalf("failed to generate client token: %s", err)
@@ -30,14 +30,14 @@ func TestClientTokenWithCustomer(t *testing.T) {
 
 	customerRequest := &CustomerRequest{FirstName: "Lionel"}
 
-	customer, err := testGateway.Customer().Create(ctx, customerRequest)
+	customer, err := testGateway(t).Customer().Create(ctx, customerRequest)
 	if err != nil {
 		t.Error(err)
 	}
 
 	customerId := customer.Id
 
-	token, err := testGateway.ClientToken().GenerateWithCustomer(ctx, customerId)
+	token, err := testGateway(t).ClientToken().GenerateWithCustomer(ctx, customerId)
 	if err != nil {
 		t.Error(err)
 	} else if len(token) == 0 {

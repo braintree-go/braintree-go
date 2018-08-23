@@ -1,0 +1,146 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <credit-card>
+        <customer-id>147599899</customer-id>
+        <number>4111111111111111</number>
+        <expiration-date>05/14</expiration-date>
+        <options>
+          <venmo-sdk-session>stub-session</venmo-sdk-session>
+        </options>
+      </credit-card>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/payment_methods
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <credit-card>
+        <bin>411111</bin>
+        <card-type>Visa</card-type>
+        <cardholder-name nil="true"/>
+        <commercial>Unknown</commercial>
+        <country-of-issuance>Unknown</country-of-issuance>
+        <created-at type="datetime">2018-08-23T05:35:00Z</created-at>
+        <customer-id>147599899</customer-id>
+        <customer-location>US</customer-location>
+        <debit>Unknown</debit>
+        <default type="boolean">true</default>
+        <durbin-regulated>Unknown</durbin-regulated>
+        <expiration-month>05</expiration-month>
+        <expiration-year>2014</expiration-year>
+        <expired type="boolean">true</expired>
+        <healthcare>Unknown</healthcare>
+        <image-url>https://assets.braintreegateway.com/payment_method_logo/visa.png?environment=sandbox</image-url>
+        <issuing-bank>Unknown</issuing-bank>
+        <last-4>1111</last-4>
+        <payroll>Unknown</payroll>
+        <prepaid>Unknown</prepaid>
+        <product-id>Unknown</product-id>
+        <subscriptions type="array"/>
+        <token>b45d7h</token>
+        <unique-number-identifier>7a2b679d0aa6837a7f29f864b846c981</unique-number-identifier>
+        <updated-at type="datetime">2018-08-23T05:35:00Z</updated-at>
+        <venmo-sdk type="boolean">false</venmo-sdk>
+        <verifications type="array">
+          <verification>
+            <status>verified</status>
+            <cvv-response-code>I</cvv-response-code>
+            <avs-error-response-code nil="true"/>
+            <avs-postal-code-response-code>I</avs-postal-code-response-code>
+            <avs-street-address-response-code>I</avs-street-address-response-code>
+            <gateway-rejection-reason nil="true"/>
+            <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+            <processor-response-code>1000</processor-response-code>
+            <processor-response-text>Approved</processor-response-text>
+            <amount>0.00</amount>
+            <currency-iso-code>USD</currency-iso-code>
+            <id>24eccf6f</id>
+            <billing>
+              <first-name nil="true"/>
+              <last-name nil="true"/>
+              <company nil="true"/>
+              <street-address nil="true"/>
+              <extended-address nil="true"/>
+              <locality nil="true"/>
+              <region nil="true"/>
+              <postal-code nil="true"/>
+              <country-name nil="true"/>
+            </billing>
+            <credit-card>
+              <token>b45d7h</token>
+              <bin>411111</bin>
+              <last-4>1111</last-4>
+              <card-type>Visa</card-type>
+              <expiration-month>05</expiration-month>
+              <expiration-year>2014</expiration-year>
+              <customer-location>US</customer-location>
+              <cardholder-name nil="true"/>
+              <unique-number-identifier>7a2b679d0aa6837a7f29f864b846c981</unique-number-identifier>
+              <prepaid>Unknown</prepaid>
+              <healthcare>Unknown</healthcare>
+              <debit>Unknown</debit>
+              <durbin-regulated>Unknown</durbin-regulated>
+              <commercial>Unknown</commercial>
+              <payroll>Unknown</payroll>
+              <issuing-bank>Unknown</issuing-bank>
+              <country-of-issuance>Unknown</country-of-issuance>
+              <product-id>Unknown</product-id>
+            </credit-card>
+            <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+            <updated-at type="datetime">2018-08-23T05:35:00Z</updated-at>
+            <risk-data>
+              <id>7X8H06HG6N13</id>
+              <decision>Approve</decision>
+              <device-data-captured type="boolean">false</device-data-captured>
+            </risk-data>
+          </verification>
+        </verifications>
+      </credit-card>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:00 GMT
+      Etag:
+      - W/"ccb3841186b2d6d1f2bc234edae1b055"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002499.381-107.3.151.90-6933631
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002499.381-107.3.151.90-6933631
+      X-Runtime:
+      - "0.836641"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""

@@ -1,0 +1,92 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers/568342083
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customer>
+        <id>568342083</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name nil="true"/>
+        <last-name nil="true"/>
+        <company nil="true"/>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+        <android-pay-cards type="array">
+          <android-pay-card>
+            <bin>601111</bin>
+            <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+            <customer-id>568342083</customer-id>
+            <default type="boolean">true</default>
+            <expiration-month>12</expiration-month>
+            <expiration-year>2025</expiration-year>
+            <google-transaction-id>google_transaction_id</google-transaction-id>
+            <image-url>https://assets.braintreegateway.com/payment_method_logo/android_pay_card.png?environment=sandbox</image-url>
+            <source-card-last-4>1111</source-card-last-4>
+            <source-card-type>Discover</source-card-type>
+            <source-description>Discover 1111</source-description>
+            <token>66yb6c</token>
+            <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+            <virtual-card-last-4>1117</virtual-card-last-4>
+            <virtual-card-type>Discover</virtual-card-type>
+            <subscriptions type="array"/>
+          </android-pay-card>
+        </android-pay-cards>
+      </customer>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:59 GMT
+      Etag:
+      - W/"33e41364afdbf77593237da495458f3a"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002499.529-107.3.151.90-2897531
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002499.529-107.3.151.90-2897531
+      X-Runtime:
+      - "0.074923"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

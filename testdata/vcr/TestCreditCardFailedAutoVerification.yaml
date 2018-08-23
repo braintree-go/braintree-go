@@ -1,0 +1,123 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <credit-card>
+        <customer-id>549428696</customer-id>
+        <payment-method-nonce>fake-processor-declined-visa-nonce</payment-method-nonce>
+      </credit-card>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/payment_methods
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <api-error-response>
+        <errors>
+          <errors type="array"/>
+        </errors>
+        <params>
+          <credit-card>
+            <customer-id>549428696</customer-id>
+            <payment-method-nonce>fake-processor-declined-visa-nonce</payment-method-nonce>
+          </credit-card>
+          <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        </params>
+        <message>Do Not Honor</message>
+        <verification>
+          <status>processor_declined</status>
+          <cvv-response-code>M</cvv-response-code>
+          <avs-error-response-code nil="true"/>
+          <avs-postal-code-response-code>M</avs-postal-code-response-code>
+          <avs-street-address-response-code>I</avs-street-address-response-code>
+          <gateway-rejection-reason nil="true"/>
+          <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+          <processor-response-code>2000</processor-response-code>
+          <processor-response-text>Do Not Honor</processor-response-text>
+          <amount>0.00</amount>
+          <currency-iso-code>USD</currency-iso-code>
+          <id>p89e544e</id>
+          <billing>
+            <first-name nil="true"/>
+            <last-name nil="true"/>
+            <company nil="true"/>
+            <street-address nil="true"/>
+            <extended-address nil="true"/>
+            <locality nil="true"/>
+            <region nil="true"/>
+            <postal-code>94107</postal-code>
+            <country-name nil="true"/>
+          </billing>
+          <credit-card>
+            <token nil="true"/>
+            <bin>400011</bin>
+            <last-4>1115</last-4>
+            <card-type>Visa</card-type>
+            <expiration-month>12</expiration-month>
+            <expiration-year>2019</expiration-year>
+            <customer-location>US</customer-location>
+            <cardholder-name nil="true"/>
+            <unique-number-identifier>a879d16edb5b29c79bcf7041326d6ef1</unique-number-identifier>
+            <prepaid>Unknown</prepaid>
+            <healthcare>Unknown</healthcare>
+            <debit>Unknown</debit>
+            <durbin-regulated>Unknown</durbin-regulated>
+            <commercial>Unknown</commercial>
+            <payroll>Unknown</payroll>
+            <issuing-bank>Unknown</issuing-bank>
+            <country-of-issuance>Unknown</country-of-issuance>
+            <product-id>Unknown</product-id>
+          </credit-card>
+          <created-at type="datetime">2018-08-23T05:35:00Z</created-at>
+          <updated-at type="datetime">2018-08-23T05:35:01Z</updated-at>
+          <risk-data>
+            <id>7X8H02Q2JRWM</id>
+            <decision>Approve</decision>
+            <device-data-captured type="boolean">false</device-data-captured>
+          </risk-data>
+        </verification>
+      </api-error-response>
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:01 GMT
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002500.415-107.3.151.90-2897573
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002500.415-107.3.151.90-2897573
+      X-Runtime:
+      - "0.644750"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 422 Unprocessable Entity
+    code: 422
+    duration: ""

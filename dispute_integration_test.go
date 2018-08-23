@@ -13,7 +13,7 @@ func TestDisputeFinalize(t *testing.T) {
 
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(100, 2),
 		CreditCard: &CreditCard{
@@ -28,7 +28,7 @@ func TestDisputeFinalize(t *testing.T) {
 		t.Fatalf("failed to create disputed transaction: %v", err)
 	}
 
-	tx, err = testGateway.Transaction().Find(ctx, tx.Id)
+	tx, err = testGateway(t).Transaction().Find(ctx, tx.Id)
 	if err != nil {
 		t.Fatalf("failed to find disputed transaction: %v", err)
 	}
@@ -43,7 +43,7 @@ func TestDisputeFinalize(t *testing.T) {
 		t.Errorf("got Dispute AmountDisputed %s, want %s", dispute.AmountDisputed, "1.00")
 	}
 
-	err = testGateway.Dispute().Finalize(ctx, dispute.ID)
+	err = testGateway(t).Dispute().Finalize(ctx, dispute.ID)
 
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)
@@ -55,7 +55,7 @@ func TestDisputeAccept(t *testing.T) {
 
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(100, 2),
 		CreditCard: &CreditCard{
@@ -71,7 +71,7 @@ func TestDisputeAccept(t *testing.T) {
 		t.Fatalf("failed to create disputed transaction: %v", err)
 	}
 
-	tx, err = testGateway.Transaction().Find(ctx, tx.Id)
+	tx, err = testGateway(t).Transaction().Find(ctx, tx.Id)
 	if err != nil {
 		t.Fatalf("failed to find disputed transaction: %v", err)
 	}
@@ -82,12 +82,12 @@ func TestDisputeAccept(t *testing.T) {
 
 	dispute := tx.Disputes[0]
 
-	err = testGateway.Dispute().Accept(ctx, dispute.ID)
+	err = testGateway(t).Dispute().Accept(ctx, dispute.ID)
 	if err != nil {
 		t.Fatalf("failed to accept dispute: %v", err)
 	}
 
-	dispute, err = testGateway.Dispute().Find(ctx, dispute.ID)
+	dispute, err = testGateway(t).Dispute().Find(ctx, dispute.ID)
 	if err != nil {
 		t.Fatalf("failed to find dispute: %v", err)
 	}
@@ -102,7 +102,7 @@ func TestDisputeTextEvidence(t *testing.T) {
 
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(100, 2),
 		CreditCard: &CreditCard{
@@ -117,7 +117,7 @@ func TestDisputeTextEvidence(t *testing.T) {
 		t.Fatalf("failed to create disputed transaction: %v", err)
 	}
 
-	tx, err = testGateway.Transaction().Find(ctx, tx.Id)
+	tx, err = testGateway(t).Transaction().Find(ctx, tx.Id)
 	if err != nil {
 		t.Fatalf("failed to find disputed transaction: %v", err)
 	}
@@ -128,7 +128,7 @@ func TestDisputeTextEvidence(t *testing.T) {
 
 	dispute := tx.Disputes[0]
 
-	textEvidence, err := testGateway.Dispute().AddTextEvidence(ctx, dispute.ID, &DisputeTextEvidenceRequest{
+	textEvidence, err := testGateway(t).Dispute().AddTextEvidence(ctx, dispute.ID, &DisputeTextEvidenceRequest{
 		Content:  "some evidence",
 		Category: DisputeEvidenceCategoryDeviceName,
 	})
@@ -140,12 +140,12 @@ func TestDisputeTextEvidence(t *testing.T) {
 		t.Fatal("text evidence can not have empty id")
 	}
 
-	err = testGateway.Dispute().RemoveEvidence(ctx, dispute.ID, textEvidence.ID)
+	err = testGateway(t).Dispute().RemoveEvidence(ctx, dispute.ID, textEvidence.ID)
 	if err != nil {
 		t.Fatalf("failed to remove evidence: %v", err)
 	}
 
-	err = testGateway.Dispute().Finalize(ctx, dispute.ID)
+	err = testGateway(t).Dispute().Finalize(ctx, dispute.ID)
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)
 	}
@@ -156,7 +156,7 @@ func TestDisputeTextEvidenceWinning(t *testing.T) {
 
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(100, 2),
 		CreditCard: &CreditCard{
@@ -171,7 +171,7 @@ func TestDisputeTextEvidenceWinning(t *testing.T) {
 		t.Fatalf("failed to create disputed transaction: %v", err)
 	}
 
-	tx, err = testGateway.Transaction().Find(ctx, tx.Id)
+	tx, err = testGateway(t).Transaction().Find(ctx, tx.Id)
 	if err != nil {
 		t.Fatalf("failed to find disputed transaction: %v", err)
 	}
@@ -182,7 +182,7 @@ func TestDisputeTextEvidenceWinning(t *testing.T) {
 
 	dispute := tx.Disputes[0]
 
-	textEvidence, err := testGateway.Dispute().AddTextEvidence(ctx, dispute.ID, &DisputeTextEvidenceRequest{
+	textEvidence, err := testGateway(t).Dispute().AddTextEvidence(ctx, dispute.ID, &DisputeTextEvidenceRequest{
 		Content: "compelling_evidence",
 	})
 	if err != nil {
@@ -193,14 +193,14 @@ func TestDisputeTextEvidenceWinning(t *testing.T) {
 		t.Fatal("text evidence can not have empty id")
 	}
 
-	err = testGateway.Dispute().Finalize(ctx, dispute.ID)
+	err = testGateway(t).Dispute().Finalize(ctx, dispute.ID)
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)
 	}
 
 	time.Sleep(60 * time.Second)
 
-	dispute, err = testGateway.Dispute().Find(ctx, dispute.ID)
+	dispute, err = testGateway(t).Dispute().Find(ctx, dispute.ID)
 	if err != nil {
 		t.Fatalf("failed to find dispute: %v", err)
 	}
@@ -215,7 +215,7 @@ func TestDisputeTextEvidenceLosing(t *testing.T) {
 
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(100, 2),
 		CreditCard: &CreditCard{
@@ -230,7 +230,7 @@ func TestDisputeTextEvidenceLosing(t *testing.T) {
 		t.Fatalf("failed to create disputed transaction: %v", err)
 	}
 
-	tx, err = testGateway.Transaction().Find(ctx, tx.Id)
+	tx, err = testGateway(t).Transaction().Find(ctx, tx.Id)
 	if err != nil {
 		t.Fatalf("failed to find disputed transaction: %v", err)
 	}
@@ -241,7 +241,7 @@ func TestDisputeTextEvidenceLosing(t *testing.T) {
 
 	dispute := tx.Disputes[0]
 
-	textEvidence, err := testGateway.Dispute().AddTextEvidence(ctx, dispute.ID, &DisputeTextEvidenceRequest{
+	textEvidence, err := testGateway(t).Dispute().AddTextEvidence(ctx, dispute.ID, &DisputeTextEvidenceRequest{
 		Content: "losing_evidence",
 	})
 	if err != nil {
@@ -252,14 +252,14 @@ func TestDisputeTextEvidenceLosing(t *testing.T) {
 		t.Fatal("text evidence can not have empty id")
 	}
 
-	err = testGateway.Dispute().Finalize(ctx, dispute.ID)
+	err = testGateway(t).Dispute().Finalize(ctx, dispute.ID)
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)
 	}
 
 	time.Sleep(60 * time.Second)
 
-	dispute, err = testGateway.Dispute().Find(ctx, dispute.ID)
+	dispute, err = testGateway(t).Dispute().Find(ctx, dispute.ID)
 	if err != nil {
 		t.Fatalf("failed to find dispute: %v", err)
 	}

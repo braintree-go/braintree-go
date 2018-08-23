@@ -1,0 +1,234 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <customer>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389198888902953740731582</company>
+      </customer>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customer>
+        <id>644513871</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389198888902953740731582</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:06Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:06Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:06 GMT
+      Etag:
+      - W/"c65a565c680fbf01daa263feff8cb067"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002506.694-107.3.151.90-2897935
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002506.694-107.3.151.90-2897935
+      X-Runtime:
+      - "0.117362"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <transaction>
+        <type>sale</type>
+        <amount>14.23</amount>
+        <payment-method-nonce>fake-valid-nonce</payment-method-nonce>
+        <line-items type="array">
+          <item>
+            <name>Name #1</name>
+            <description>Description #1</description>
+            <kind>debit</kind>
+            <quantity>1.0232</quantity>
+            <unit-amount>45.1232</unit-amount>
+            <unit-tax-amount>1.23</unit-tax-amount>
+            <total-amount>45.15</total-amount>
+            <tax-amount>4.55</tax-amount>
+            <discount-amount>1.02</discount-amount>
+            <unit-of-measure>gallon</unit-of-measure>
+            <product-code>23434</product-code>
+            <commodity-code>9SAASSD8724</commodity-code>
+            <url>https://example.com/products/23434</url>
+          </item>
+          <item>
+            <name>Name #2</name>
+            <description>Description #2</description>
+            <kind>debit</kind>
+            <quantity>1.0232</quantity>
+            <unit-amount>45.1232</unit-amount>
+            <unit-tax-amount>1.23</unit-tax-amount>
+            <total-amount>2147483648.00</total-amount>
+            <tax-amount>4.55</tax-amount>
+            <discount-amount>1.02</discount-amount>
+            <unit-of-measure>gallon</unit-of-measure>
+            <product-code>23434</product-code>
+            <commodity-code>9SAASSD8724</commodity-code>
+            <url>https://example.com/products/23434</url>
+          </item>
+        </line-items>
+      </transaction>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <api-error-response>
+        <errors>
+          <errors type="array"/>
+          <transaction>
+            <errors type="array"/>
+            <billing>
+              <errors type="array"/>
+            </billing>
+            <credit-card>
+              <errors type="array"/>
+              <billing-address>
+                <errors type="array"/>
+              </billing-address>
+            </credit-card>
+            <line-items>
+              <errors type="array"/>
+              <index-1>
+                <errors type="array">
+                  <error>
+                    <code>95815</code>
+                    <attribute type="symbol">total_amount</attribute>
+                    <message>Total amount is too large.</message>
+                  </error>
+                </errors>
+              </index-1>
+            </line-items>
+          </transaction>
+        </errors>
+        <params>
+          <transaction>
+            <type>sale</type>
+            <amount>14.23</amount>
+            <payment-method-nonce>fake-valid-nonce</payment-method-nonce>
+            <line-items type="array">
+              <line-item>
+                <name>Name #1</name>
+                <description>Description #1</description>
+                <kind>debit</kind>
+                <quantity>1.0232</quantity>
+                <unit-amount>45.1232</unit-amount>
+                <unit-tax-amount>1.23</unit-tax-amount>
+                <total-amount>45.15</total-amount>
+                <tax-amount>4.55</tax-amount>
+                <discount-amount>1.02</discount-amount>
+                <unit-of-measure>gallon</unit-of-measure>
+                <product-code>23434</product-code>
+                <commodity-code>9SAASSD8724</commodity-code>
+                <url>https://example.com/products/23434</url>
+              </line-item>
+              <line-item>
+                <name>Name #2</name>
+                <description>Description #2</description>
+                <kind>debit</kind>
+                <quantity>1.0232</quantity>
+                <unit-amount>45.1232</unit-amount>
+                <unit-tax-amount>1.23</unit-tax-amount>
+                <total-amount>2147483648.00</total-amount>
+                <tax-amount>4.55</tax-amount>
+                <discount-amount>1.02</discount-amount>
+                <unit-of-measure>gallon</unit-of-measure>
+                <product-code>23434</product-code>
+                <commodity-code>9SAASSD8724</commodity-code>
+                <url>https://example.com/products/23434</url>
+              </line-item>
+            </line-items>
+          </transaction>
+        </params>
+        <message>Total amount is too large.</message>
+      </api-error-response>
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:06 GMT
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002506.585-107.3.151.90-2897929
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002506.585-107.3.151.90-2897929
+      X-Runtime:
+      - "0.283990"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 422 Unprocessable Entity
+    code: 422
+    duration: ""

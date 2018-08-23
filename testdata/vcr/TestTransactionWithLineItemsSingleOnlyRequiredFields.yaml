@@ -1,0 +1,73 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions/fr1bmdwy/line_items
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <line-items type="array">
+      <line-item>
+        <quantity>1.0232</quantity>
+        <name>Name #1</name>
+        <description nil="true"/>
+        <kind>debit</kind>
+        <unit-amount>45.1232</unit-amount>
+        <unit-tax-amount nil="true"/>
+        <discount-amount nil="true"/>
+        <total-amount>45.15</total-amount>
+        <unit-of-measure nil="true"/>
+        <product-code nil="true"/>
+        <commodity-code nil="true"/>
+        <url nil="true"/>
+        <tax-amount nil="true"/>
+      </line-item>
+      </line-items>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:08 GMT
+      Etag:
+      - W/"090da4ed2e13ac65f1b20357620fd2f7"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002508.332-107.3.151.90-6934701
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002508.332-107.3.151.90-6934701
+      X-Runtime:
+      - "0.031157"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

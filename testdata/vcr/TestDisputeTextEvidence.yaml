@@ -1,0 +1,133 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <customer>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194996483547568318865</company>
+      </customer>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customer>
+        <id>806942173</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194996483547568318865</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:58Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:58Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:58 GMT
+      Etag:
+      - W/"14f94e6550a28d552e34d7087c83401d"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002498.429-107.3.151.90-2897484
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002498.429-107.3.151.90-2897484
+      X-Runtime:
+      - "0.142824"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "4"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/disputes/x8bryr9ms9nptvm7/finalize
+    method: PUT
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <hash>
+        <status type="integer">200</status>
+      </hash>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:59 GMT
+      Etag:
+      - W/"d616180a036b8903426bad6cc72bf82b"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002498.619-107.3.151.90-6933561
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002498.619-107.3.151.90-6933561
+      X-Runtime:
+      - "0.571970"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

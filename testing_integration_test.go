@@ -12,7 +12,7 @@ func TestSettleTransaction(t *testing.T) {
 
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -24,7 +24,7 @@ func TestSettleTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
+	txn, err = testGateway(t).Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -33,11 +33,11 @@ func TestSettleTransaction(t *testing.T) {
 
 	_, err = prodGateway.Testing().Settle(ctx, txn.Id)
 	if err.Error() != "Operation not allowed in production environment" {
-		t.Log(testGateway.Environment())
+		t.Log(testGateway(t).Environment())
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
+	txn, err = testGateway(t).Testing().Settle(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -50,7 +50,7 @@ func TestSettleTransaction(t *testing.T) {
 func TestSettlementConfirmTransaction(t *testing.T) {
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -62,7 +62,7 @@ func TestSettlementConfirmTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
+	txn, err = testGateway(t).Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +75,7 @@ func TestSettlementConfirmTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().SettlementConfirm(ctx, txn.Id)
+	txn, err = testGateway(t).Testing().SettlementConfirm(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -88,7 +88,7 @@ func TestSettlementConfirmTransaction(t *testing.T) {
 func TestSettlementDeclinedTransaction(t *testing.T) {
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -100,7 +100,7 @@ func TestSettlementDeclinedTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
+	txn, err = testGateway(t).Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -113,7 +113,7 @@ func TestSettlementDeclinedTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().SettlementDecline(ctx, txn.Id)
+	txn, err = testGateway(t).Testing().SettlementDecline(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -126,7 +126,7 @@ func TestSettlementDeclinedTransaction(t *testing.T) {
 func TestSettlementPendingTransaction(t *testing.T) {
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: randomAmount(),
 		CreditCard: &CreditCard{
@@ -138,7 +138,7 @@ func TestSettlementPendingTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
+	txn, err = testGateway(t).Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -151,7 +151,7 @@ func TestSettlementPendingTransaction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().SettlementPending(ctx, txn.Id)
+	txn, err = testGateway(t).Testing().SettlementPending(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -167,7 +167,7 @@ func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 	ctx := context.Background()
 
 	amount := NewDecimal(10000, 2)
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: amount,
 		CreditCard: &CreditCard{
@@ -188,12 +188,12 @@ func TestTransactionCreateSettleCheckCreditCardDetails(t *testing.T) {
 			"Visa", txn.CreditCard.CardType)
 	}
 
-	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
+	txn, err = testGateway(t).Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
+	txn, err = testGateway(t).Testing().Settle(ctx, txn.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

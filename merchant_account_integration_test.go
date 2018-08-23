@@ -42,7 +42,7 @@ func TestMerchantAccountCreate(t *testing.T) {
 	x, _ := xml.Marshal(&acct)
 	t.Log(string(x))
 
-	merchantAccount, err := testGateway.MerchantAccount().Create(ctx, &acct)
+	merchantAccount, err := testGateway(t).MerchantAccount().Create(ctx, &acct)
 
 	t.Log(merchantAccount)
 
@@ -54,7 +54,7 @@ func TestMerchantAccountCreate(t *testing.T) {
 		t.Fatal("invalid merchant account id")
 	}
 
-	ma2, err := testGateway.MerchantAccount().Find(ctx, merchantAccount.Id)
+	ma2, err := testGateway(t).MerchantAccount().Find(ctx, merchantAccount.Id)
 
 	t.Log(ma2)
 

@@ -10,7 +10,7 @@ import (
 func TestTransactionApplePayDetails(t *testing.T) {
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceApplePayVisa,
@@ -60,7 +60,7 @@ func TestTransactionApplePayDetails(t *testing.T) {
 func TestTransactionWithoutApplePayDetails(t *testing.T) {
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceTransactable,

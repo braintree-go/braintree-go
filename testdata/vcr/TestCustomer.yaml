@@ -1,0 +1,232 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers/164061314
+    method: GET
+  response:
+    body: ""
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:02 GMT
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002502.793-107.3.151.90-6934010
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002502.793-107.3.151.90-6934010
+      X-Runtime:
+      - "0.027660"
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 404 Not Found
+    code: 404
+    duration: ""
+- request:
+    body: |-
+      <customer>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389191460616096002602459</company>
+      </customer>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customer>
+        <id>560006216</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389191460616096002602459</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:02Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:02Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:02 GMT
+      Etag:
+      - W/"7f109064a60da84079d78062cfdcdcdc"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002502.786-107.3.151.90-2897698
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002502.786-107.3.151.90-2897698
+      X-Runtime:
+      - "0.128051"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <subscription>
+        <first-billing-date>2018-12-31</first-billing-date>
+        <number-of-billing-cycles>2</number-of-billing-cycles>
+        <paymentMethodToken>gqsnwc</paymentMethodToken>
+        <planId>test_plan_2</planId>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array"/>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">31</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:06Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:06Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array"/>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-12-31</first-billing-date>
+        <id>gmhjxg</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">false</never-expires>
+        <next-bill-amount>20.00</next-bill-amount>
+        <next-billing-period-amount>20.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-12-31</next-billing-date>
+        <number-of-billing-cycles type="integer">2</number-of-billing-cycles>
+        <paid-through-date nil="true"/>
+        <payment-method-token>gqsnwc</payment-method-token>
+        <plan-id>test_plan_2</plan-id>
+        <price>20.00</price>
+        <status>Pending</status>
+        <trial-duration nil="true"/>
+        <trial-duration-unit nil="true"/>
+        <trial-period type="boolean">false</trial-period>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:35:07Z</timestamp>
+            <status>Pending</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>20.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan_2</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:07 GMT
+      Etag:
+      - W/"a031a744e3819d8f6ad4730d98694d7e"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002502.809-107.3.151.90-2897701
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002502.809-107.3.151.90-2897701
+      X-Runtime:
+      - "4.216033"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""

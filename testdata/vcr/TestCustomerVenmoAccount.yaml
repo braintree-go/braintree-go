@@ -1,0 +1,86 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers/294398166
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customer>
+        <id>294398166</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name nil="true"/>
+        <last-name nil="true"/>
+        <company nil="true"/>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:56Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:56Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+        <venmo-accounts type="array">
+          <venmo-account>
+            <created-at type="datetime">2018-08-23T05:34:56Z</created-at>
+            <updated-at type="datetime">2018-08-23T05:34:56Z</updated-at>
+            <default type="boolean">true</default>
+            <image-url>https://assets.braintreegateway.com/payment_method_logo/venmo.png?environment=sandbox</image-url>
+            <token>fhpbhh</token>
+            <source-description>Venmo Account: venmojoe</source-description>
+            <username>venmojoe</username>
+            <venmo-user-id>Venmo-Joe-1</venmo-user-id>
+            <subscriptions type="array"/>
+            <customer-id>294398166</customer-id>
+          </venmo-account>
+        </venmo-accounts>
+      </customer>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:57 GMT
+      Etag:
+      - W/"d69d4cffdaa4632ec830f62e434665e7"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002496.845-107.3.151.90-2897426
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002496.845-107.3.151.90-2897426
+      X-Runtime:
+      - "0.075136"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

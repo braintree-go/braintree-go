@@ -12,7 +12,7 @@ func TestDiscounts(t *testing.T) {
 
 	ctx := context.Background()
 
-	discounts, err := testGateway.Discount().All(ctx)
+	discounts, err := testGateway(t).Discount().All(ctx)
 
 	if err != nil {
 		t.Error(err)

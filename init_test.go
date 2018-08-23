@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"testing"
 	"time"
@@ -21,12 +22,55 @@ const (
 	testCardDiscover   = "6011111111111117"
 )
 
-var testGateway = New(
-	Sandbox,
-	os.Getenv("BRAINTREE_MERCH_ID"),
-	os.Getenv("BRAINTREE_PUB_KEY"),
-	os.Getenv("BRAINTREE_PRIV_KEY"),
-)
+var testLogEnabled bool
+
+var testRecorders = []*recorder.Recorder{}
+
+func TestMain(m *testing.M) {
+	logEnabled := flag.Bool("log", false, "enables logging")
+
+	flag.Parse()
+
+	testLogEnabled = *logEnabled
+
+	rand.Seed(0)
+
+	exitCode := m.Run()
+
+	if exitCode == 0 {
+		for _, r := range testRecorders {
+			r.Stop()
+		}
+	}
+
+	os.Exit(exitCode)
+}
+
+func testGateway(t *testing.T) *Braintree {
+	g := New(
+		Sandbox,
+		os.Getenv("BRAINTREE_MERCH_ID"),
+		os.Getenv("BRAINTREE_PUB_KEY"),
+		os.Getenv("BRAINTREE_PRIV_KEY"),
+	)
+
+	g.doNotAcceptEncodingGzip = true
+	g.indentXML = true
+
+	if testLogEnabled {
+		g.Logger = log.New(os.Stderr, "", 0)
+	}
+
+	r, err := recorder.New("testdata/vcr/" + t.Name())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	testRecorders = append(testRecorders, r)
+
+	g.HttpClient.Transport = r
+	return g
+}
 
 var testTimeZone = func() *time.Location {
 	tzName := os.Getenv("BRAINTREE_TIMEZONE")
@@ -45,7 +89,7 @@ var testMerchantAccountId = os.Getenv("BRAINTREE_MERCH_ACCT_ID")
 // Merchant Account which has AVS and CVV checking turned on.
 var avsAndCVVTestMerchantAccountId = os.Getenv("BRAINTREE_MERCH_ACCT_ID_FOR_AVS_CVV")
 
-func testSubMerchantAccount() string {
+func testSubMerchantAccount(t *testing.T) string {
 	acct := MerchantAccount{
 		MasterMerchantAccountId: testMerchantAccountId,
 		TOSAccepted:             true,
@@ -70,31 +114,10 @@ func testSubMerchantAccount() string {
 		},
 	}
 
-	merchantAccount, err := testGateway.MerchantAccount().Create(context.Background(), &acct)
+	merchantAccount, err := testGateway(t).MerchantAccount().Create(context.Background(), &acct)
 	if err != nil {
 		panic(fmt.Errorf("Error creating test sub merchant account: %s", err))
 	}
 
 	return merchantAccount.Id
-}
-
-func TestMain(m *testing.M) {
-	logEnabled := flag.Bool("log", false, "enables logging")
-	flag.Parse()
-
-	if *logEnabled {
-		testGateway.Logger = log.New(os.Stderr, "", 0)
-	}
-
-	r, err := recorder.New("testdata/vcr")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	testGateway.HttpClient.Transport = r
-
-	exitCode := m.Run()
-	r.Stop()
-
-	os.Exit(exitCode)
 }

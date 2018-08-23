@@ -13,7 +13,7 @@ func TestPlan(t *testing.T) {
 
 	ctx := context.Background()
 
-	g := testGateway.Plan()
+	g := testGateway(t).Plan()
 	plans, err := g.All(ctx)
 	if err != nil {
 		t.Fatal(err)

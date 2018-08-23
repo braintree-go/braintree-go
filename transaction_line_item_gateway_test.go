@@ -12,7 +12,7 @@ func TestTransactionWithLineItemsZero(t *testing.T) {
 
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -24,7 +24,7 @@ func TestTransactionWithLineItemsZero(t *testing.T) {
 
 	t.Log(txn.Id)
 
-	lineItems, err := testGateway.TransactionLineItem().Find(ctx, txn.Id)
+	lineItems, err := testGateway(t).TransactionLineItem().Find(ctx, txn.Id)
 
 	if err != nil {
 		t.Fatal(err)
@@ -40,7 +40,7 @@ func TestTransactionWithLineItemsSingleOnlyRequiredFields(t *testing.T) {
 
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -61,7 +61,7 @@ func TestTransactionWithLineItemsSingleOnlyRequiredFields(t *testing.T) {
 
 	t.Log(txn.Id)
 
-	lineItems, err := testGateway.TransactionLineItem().Find(ctx, txn.Id)
+	lineItems, err := testGateway(t).TransactionLineItem().Find(ctx, txn.Id)
 
 	if err != nil {
 		t.Fatal(err)
@@ -94,7 +94,7 @@ func TestTransactionWithLineItemsSingleZeroAmountFields(t *testing.T) {
 
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -118,7 +118,7 @@ func TestTransactionWithLineItemsSingleZeroAmountFields(t *testing.T) {
 
 	t.Log(txn.Id)
 
-	lineItems, err := testGateway.TransactionLineItem().Find(ctx, txn.Id)
+	lineItems, err := testGateway(t).TransactionLineItem().Find(ctx, txn.Id)
 
 	if err != nil {
 		t.Fatal(err)
@@ -160,7 +160,7 @@ func TestTransactionWithLineItemsSingle(t *testing.T) {
 
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -189,7 +189,7 @@ func TestTransactionWithLineItemsSingle(t *testing.T) {
 
 	t.Log(txn.Id)
 
-	lineItems, err := testGateway.TransactionLineItem().Find(ctx, txn.Id)
+	lineItems, err := testGateway(t).TransactionLineItem().Find(ctx, txn.Id)
 
 	if err != nil {
 		t.Fatal(err)
@@ -246,7 +246,7 @@ func TestTransactionWithLineItemsMultiple(t *testing.T) {
 
 	ctx := context.Background()
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -285,7 +285,7 @@ func TestTransactionWithLineItemsMultiple(t *testing.T) {
 
 	t.Log(txn.Id)
 
-	lineItems, err := testGateway.TransactionLineItem().Find(ctx, txn.Id)
+	lineItems, err := testGateway(t).TransactionLineItem().Find(ctx, txn.Id)
 
 	if err != nil {
 		t.Fatal(err)
@@ -403,7 +403,7 @@ func TestTransactionWithLineItemsMaxMultiple(t *testing.T) {
 		})
 	}
 
-	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	txn, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -416,7 +416,7 @@ func TestTransactionWithLineItemsMaxMultiple(t *testing.T) {
 
 	t.Log(txn.Id)
 
-	foundLineItems, err := testGateway.TransactionLineItem().Find(ctx, txn.Id)
+	foundLineItems, err := testGateway(t).TransactionLineItem().Find(ctx, txn.Id)
 
 	if err != nil {
 		t.Fatal(err)
@@ -432,7 +432,7 @@ func TestTransactionWithLineItemsValidationErrorCommodityCodeIsTooLong(t *testin
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -499,7 +499,7 @@ func TestTransactionWithLineItemsValidationErrorDescriptionIsTooLong(t *testing.
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -566,7 +566,7 @@ func TestTransactionWithLineItemsValidationErrorDiscountAmountIsTooLarge(t *test
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -633,7 +633,7 @@ func TestTransactionWithLineItemsValidationErrorDiscountAmountCannotBeNegative(t
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -700,7 +700,7 @@ func TestTransactionWithLineItemsValidationErrorTaxAmountIsTooLarge(t *testing.T
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -767,7 +767,7 @@ func TestTransactionWithLineItemsValidationErrorTaxAmountCannotBeNegative(t *tes
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -834,7 +834,7 @@ func TestTransactionWithLineItemsValidationErrorKindIsRequired(t *testing.T) {
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -900,7 +900,7 @@ func TestTransactionWithLineItemsValidationErrorNameIsRequired(t *testing.T) {
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -966,7 +966,7 @@ func TestTransactionWithLineItemsValidationErrorNameIsTooLong(t *testing.T) {
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1033,7 +1033,7 @@ func TestTransactionWithLineItemsValidationErrorProductCodeIsTooLong(t *testing.
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1100,7 +1100,7 @@ func TestTransactionWithLineItemsValidationErrorQuantityIsRequired(t *testing.T)
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1166,7 +1166,7 @@ func TestTransactionWithLineItemsValidationErrorQuantityIsTooLarge(t *testing.T)
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1233,7 +1233,7 @@ func TestTransactionWithLineItemsValidationErrorTotalAmountIsRequired(t *testing
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1299,7 +1299,7 @@ func TestTransactionWithLineItemsValidationErrorTotalAmountIsTooLarge(t *testing
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1366,7 +1366,7 @@ func TestTransactionWithLineItemsValidationErrorTotalAmountMustBeGreaterThanZero
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1433,7 +1433,7 @@ func TestTransactionWithLineItemsValidationErrorUnitAmountIsRequired(t *testing.
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1499,7 +1499,7 @@ func TestTransactionWithLineItemsValidationErrorUnitAmountIsTooLarge(t *testing.
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1566,7 +1566,7 @@ func TestTransactionWithLineItemsValidationErrorUnitAmountMustBeGreaterThanZero(
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1633,7 +1633,7 @@ func TestTransactionWithLineItemsValidationErrorUnitOfMeasureIsTooLong(t *testin
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1700,7 +1700,7 @@ func TestTransactionWithLineItemsValidationErrorUnitTaxAmountIsInvalid(t *testin
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1767,7 +1767,7 @@ func TestTransactionWithLineItemsValidationErrorUnitTaxAmountIsTooLarge(t *testi
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1834,7 +1834,7 @@ func TestTransactionWithLineItemsValidationErrorUnitTaxAmountCannotBeNegative(t 
 
 	ctx := context.Background()
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,
@@ -1920,7 +1920,7 @@ func TestTransactionWithLineItemsValidationErrorTooManyLineItems(t *testing.T) {
 		})
 	}
 
-	_, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1423, 2),
 		PaymentMethodNonce: FakeNonceTransactable,

@@ -1,0 +1,92 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <merchant-account>
+        <id>2627038740284806767</id>
+        <master-merchant-account-id>bvps8ckgst59crzs</master-merchant-account-id>
+        <tos_accepted>true</tos_accepted>
+        <individual>
+          <first-name>First</first-name>
+          <last-name>Last</last-name>
+          <email>firstlast@example.com</email>
+          <phone>0000000000</phone>
+          <date-of-birth>1-1-1900</date-of-birth>
+          <address>
+            <street-address>222 W Merchandise Mart Plaza Suite 800</street-address>
+            <locality>Chicago</locality>
+            <region>IL</region>
+            <postal-code>00000</postal-code>
+          </address>
+        </individual>
+        <funding>
+          <destination>mobile_phone</destination>
+          <mobile-phone>0000000000</mobile-phone>
+        </funding>
+      </merchant-account>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/merchant_accounts/create_via_api
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <merchant-account>
+        <status>pending</status>
+        <id>2627038740284806767</id>
+        <master-merchant-account>
+          <status>active</status>
+          <id>bvps8ckgst59crzs</id>
+          <currency-iso-code>USD</currency-iso-code>
+          <default type="boolean">true</default>
+          <sub-merchant-account type="boolean">false</sub-merchant-account>
+        </master-merchant-account>
+        <currency-iso-code>USD</currency-iso-code>
+        <default type="boolean">false</default>
+        <sub-merchant-account type="boolean">true</sub-merchant-account>
+      </merchant-account>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:46 GMT
+      Etag:
+      - W/"2c65e9b7a4b538426d52d50ce75f95e2"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002486.443-107.3.151.90-6932396
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002486.443-107.3.151.90-6932396
+      X-Runtime:
+      - "0.297527"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""

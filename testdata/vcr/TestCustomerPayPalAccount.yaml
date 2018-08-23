@@ -1,0 +1,89 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers/406868094
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customer>
+        <id>406868094</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name nil="true"/>
+        <last-name nil="true"/>
+        <company nil="true"/>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:57Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:57Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <paypal-accounts type="array">
+          <paypal-account>
+            <billing-agreement-id nil="true"/>
+            <created-at type="datetime">2018-08-23T05:34:57Z</created-at>
+            <customer-id>406868094</customer-id>
+            <default type="boolean">true</default>
+            <email>jane.doe@example.com</email>
+            <image-url>https://assets.braintreegateway.com/payment_method_logo/paypal.png?environment=sandbox</image-url>
+            <subscriptions type="array"/>
+            <token>393hnh</token>
+            <updated-at type="datetime">2018-08-23T05:34:57Z</updated-at>
+            <is-channel-initiated type="boolean">false</is-channel-initiated>
+            <payer-id nil="true"/>
+            <payer-info nil="true"/>
+            <limited-use-order-id nil="true"/>
+          </paypal-account>
+        </paypal-accounts>
+        <addresses type="array"/>
+      </customer>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:57 GMT
+      Etag:
+      - W/"a3e7c825f273e3ec6dbc191687985579"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002497.444-107.3.151.90-6933441
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002497.444-107.3.151.90-6933441
+      X-Runtime:
+      - "0.058653"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

@@ -1,0 +1,70 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/discounts
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <discounts type="array">
+      <discount>
+        <amount>10.00</amount>
+        <created-at type="datetime">2013-11-20T17:50:29Z</created-at>
+        <description>A test discount</description>
+        <id>test_discount</id>
+        <kind>discount</kind>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <name>test_discount_name</name>
+        <never-expires type="boolean">true</never-expires>
+        <number-of-billing-cycles nil="true"/>
+        <updated-at type="datetime">2013-11-22T21:31:02Z</updated-at>
+      </discount>
+      </discounts>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:56 GMT
+      Etag:
+      - W/"b76b0a527a6759cfcf6a6be0af082b9d"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002496.310-107.3.151.90-2897403
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002496.310-107.3.151.90-2897403
+      X-Runtime:
+      - "0.023199"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

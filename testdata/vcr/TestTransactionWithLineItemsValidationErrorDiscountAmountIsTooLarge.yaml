@@ -1,0 +1,160 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <transaction>
+        <type>sale</type>
+        <amount>14.23</amount>
+        <payment-method-nonce>fake-valid-nonce</payment-method-nonce>
+        <line-items type="array">
+          <item>
+            <name>Name #1</name>
+            <description>Description #1</description>
+            <kind>debit</kind>
+            <quantity>1.0232</quantity>
+            <unit-amount>45.1232</unit-amount>
+            <unit-tax-amount>1.23</unit-tax-amount>
+            <total-amount>45.15</total-amount>
+            <tax-amount>4.55</tax-amount>
+            <discount-amount>1.02</discount-amount>
+            <unit-of-measure>gallon</unit-of-measure>
+            <product-code>23434</product-code>
+            <commodity-code>9SAASSD8724</commodity-code>
+            <url>https://example.com/products/23434</url>
+          </item>
+          <item>
+            <name>Name #2</name>
+            <description>Description #2</description>
+            <kind>debit</kind>
+            <quantity>1.0232</quantity>
+            <unit-amount>45.1232</unit-amount>
+            <unit-tax-amount>1.23</unit-tax-amount>
+            <total-amount>45.15</total-amount>
+            <tax-amount>4.55</tax-amount>
+            <discount-amount>2147483648.00</discount-amount>
+            <unit-of-measure>gallon</unit-of-measure>
+            <product-code>23434</product-code>
+            <commodity-code>9SAASSD8724</commodity-code>
+            <url>https://example.com/products/23434</url>
+          </item>
+        </line-items>
+      </transaction>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <api-error-response>
+        <errors>
+          <errors type="array"/>
+          <transaction>
+            <errors type="array"/>
+            <billing>
+              <errors type="array"/>
+            </billing>
+            <credit-card>
+              <errors type="array"/>
+              <billing-address>
+                <errors type="array"/>
+              </billing-address>
+            </credit-card>
+            <line-items>
+              <errors type="array"/>
+              <index-1>
+                <errors type="array">
+                  <error>
+                    <code>95805</code>
+                    <attribute type="symbol">discount_amount</attribute>
+                    <message>Discount amount is too large.</message>
+                  </error>
+                </errors>
+              </index-1>
+            </line-items>
+          </transaction>
+        </errors>
+        <params>
+          <transaction>
+            <type>sale</type>
+            <amount>14.23</amount>
+            <payment-method-nonce>fake-valid-nonce</payment-method-nonce>
+            <line-items type="array">
+              <line-item>
+                <name>Name #1</name>
+                <description>Description #1</description>
+                <kind>debit</kind>
+                <quantity>1.0232</quantity>
+                <unit-amount>45.1232</unit-amount>
+                <unit-tax-amount>1.23</unit-tax-amount>
+                <total-amount>45.15</total-amount>
+                <tax-amount>4.55</tax-amount>
+                <discount-amount>1.02</discount-amount>
+                <unit-of-measure>gallon</unit-of-measure>
+                <product-code>23434</product-code>
+                <commodity-code>9SAASSD8724</commodity-code>
+                <url>https://example.com/products/23434</url>
+              </line-item>
+              <line-item>
+                <name>Name #2</name>
+                <description>Description #2</description>
+                <kind>debit</kind>
+                <quantity>1.0232</quantity>
+                <unit-amount>45.1232</unit-amount>
+                <unit-tax-amount>1.23</unit-tax-amount>
+                <total-amount>45.15</total-amount>
+                <tax-amount>4.55</tax-amount>
+                <discount-amount>2147483648.00</discount-amount>
+                <unit-of-measure>gallon</unit-of-measure>
+                <product-code>23434</product-code>
+                <commodity-code>9SAASSD8724</commodity-code>
+                <url>https://example.com/products/23434</url>
+              </line-item>
+            </line-items>
+          </transaction>
+        </params>
+        <message>Discount amount is too large.</message>
+      </api-error-response>
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:07 GMT
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002507.227-107.3.151.90-2897991
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002507.227-107.3.151.90-2897991
+      X-Runtime:
+      - "0.187556"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 422 Unprocessable Entity
+    code: 422
+    duration: ""

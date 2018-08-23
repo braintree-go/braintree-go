@@ -13,14 +13,14 @@ func TestCustomerApplePayCard(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	nonce := FakeNonceApplePayVisa
 
-	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+	paymentMethod, err := testGateway(t).PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: nonce,
 	})
@@ -29,7 +29,7 @@ func TestCustomerApplePayCard(t *testing.T) {
 	}
 	applePayCard := paymentMethod.(*ApplePayCard)
 
-	customerFound, err := testGateway.Customer().Find(ctx, customer.Id)
+	customerFound, err := testGateway(t).Customer().Find(ctx, customer.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,0 +1,365 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions/0h6g7rrh
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <transaction>
+        <id>0h6g7rrh</id>
+        <status>authorized</status>
+        <type>sale</type>
+        <currency-iso-code>USD</currency-iso-code>
+        <amount>100.00</amount>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <sub-merchant-account-id nil="true"/>
+        <master-merchant-account-id nil="true"/>
+        <order-id nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:01Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:02Z</updated-at>
+        <customer>
+          <id nil="true"/>
+          <first-name nil="true"/>
+          <last-name nil="true"/>
+          <company nil="true"/>
+          <email nil="true"/>
+          <website nil="true"/>
+          <phone nil="true"/>
+          <fax nil="true"/>
+        </customer>
+        <billing>
+          <id nil="true"/>
+          <first-name nil="true"/>
+          <last-name nil="true"/>
+          <company nil="true"/>
+          <street-address nil="true"/>
+          <extended-address nil="true"/>
+          <locality nil="true"/>
+          <region nil="true"/>
+          <postal-code>94107</postal-code>
+          <country-name nil="true"/>
+          <country-code-alpha2 nil="true"/>
+          <country-code-alpha3 nil="true"/>
+          <country-code-numeric nil="true"/>
+        </billing>
+        <refund-id nil="true"/>
+        <refund-ids type="array"/>
+        <refunded-transaction-id nil="true"/>
+        <partial-settlement-transaction-ids type="array"/>
+        <authorized-transaction-id nil="true"/>
+        <settlement-batch-id nil="true"/>
+        <shipping>
+          <id nil="true"/>
+          <first-name nil="true"/>
+          <last-name nil="true"/>
+          <company nil="true"/>
+          <street-address nil="true"/>
+          <extended-address nil="true"/>
+          <locality nil="true"/>
+          <region nil="true"/>
+          <postal-code nil="true"/>
+          <country-name nil="true"/>
+          <country-code-alpha2 nil="true"/>
+          <country-code-alpha3 nil="true"/>
+          <country-code-numeric nil="true"/>
+        </shipping>
+        <custom-fields/>
+        <avs-error-response-code nil="true"/>
+        <avs-postal-code-response-code>M</avs-postal-code-response-code>
+        <avs-street-address-response-code>I</avs-street-address-response-code>
+        <cvv-response-code>M</cvv-response-code>
+        <gateway-rejection-reason nil="true"/>
+        <processor-authorization-code>9ZKPVG</processor-authorization-code>
+        <processor-response-code>1000</processor-response-code>
+        <processor-response-text>Approved</processor-response-text>
+        <additional-processor-response nil="true"/>
+        <voice-referral-number nil="true"/>
+        <purchase-order-number nil="true"/>
+        <tax-amount nil="true"/>
+        <tax-exempt type="boolean">true</tax-exempt>
+        <credit-card>
+          <token nil="true"/>
+          <bin>401288</bin>
+          <last-4>1881</last-4>
+          <card-type>Visa</card-type>
+          <expiration-month>12</expiration-month>
+          <expiration-year>2019</expiration-year>
+          <customer-location>US</customer-location>
+          <cardholder-name nil="true"/>
+          <image-url>https://assets.braintreegateway.com/payment_method_logo/visa.png?environment=sandbox</image-url>
+          <prepaid>No</prepaid>
+          <healthcare>Unknown</healthcare>
+          <debit>Unknown</debit>
+          <durbin-regulated>Unknown</durbin-regulated>
+          <commercial>Unknown</commercial>
+          <payroll>Unknown</payroll>
+          <issuing-bank>Unknown</issuing-bank>
+          <country-of-issuance>Unknown</country-of-issuance>
+          <product-id>Unknown</product-id>
+          <unique-number-identifier nil="true"/>
+          <venmo-sdk type="boolean">false</venmo-sdk>
+        </credit-card>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:35:02Z</timestamp>
+            <status>authorized</status>
+            <amount>100.00</amount>
+            <user>Braintree-Go</user>
+            <transaction-source>api</transaction-source>
+          </status-event>
+        </status-history>
+        <plan-id nil="true"/>
+        <subscription-id nil="true"/>
+        <subscription>
+          <billing-period-end-date nil="true"/>
+          <billing-period-start-date nil="true"/>
+        </subscription>
+        <add-ons type="array"/>
+        <discounts type="array"/>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <recurring type="boolean">false</recurring>
+        <channel nil="true"/>
+        <service-fee-amount nil="true"/>
+        <escrow-status nil="true"/>
+        <disbursement-details>
+          <disbursement-date nil="true"/>
+          <settlement-amount nil="true"/>
+          <settlement-currency-iso-code nil="true"/>
+          <settlement-currency-exchange-rate nil="true"/>
+          <funds-held nil="true"/>
+          <success nil="true"/>
+        </disbursement-details>
+        <disputes type="array"/>
+        <authorization-adjustments type="array"/>
+        <payment-instrument-type>credit_card</payment-instrument-type>
+        <processor-settlement-response-code></processor-settlement-response-code>
+        <processor-settlement-response-text></processor-settlement-response-text>
+        <risk-data>
+          <id>7X8H0NTHZ1NC</id>
+          <decision>Approve</decision>
+          <device-data-captured type="boolean">false</device-data-captured>
+        </risk-data>
+        <three-d-secure-info nil="true"/>
+        <ships-from-postal-code nil="true"/>
+        <shipping-amount nil="true"/>
+        <discount-amount nil="true"/>
+        <network-transaction-id>020180823053502</network-transaction-id>
+      </transaction>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:02 GMT
+      Etag:
+      - W/"8d1a2079bd46ebd5c50a7796307f6116"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002502.240-107.3.151.90-6933950
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002502.240-107.3.151.90-6933950
+      X-Runtime:
+      - "0.163999"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: |-
+      <search>
+        <first-name>
+          <is>John894765392549110372</is>
+        </first-name>
+        <ids type="array">
+          <item>164061314</item>
+        </ids>
+      </search>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers/advanced_search
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customers type="collection">
+        <current-page-number type="integer">1</current-page-number>
+        <page-size type="integer">50</page-size>
+        <total-items type="integer">1</total-items>
+      <customer>
+        <id>164061314</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John894765392549110372</first-name>
+        <last-name>Barrow</last-name>
+        <company>Braintree</company>
+        <email>lionel.barrow@example.com</email>
+        <phone>312.555.1234</phone>
+        <fax>614.555.5678</fax>
+        <website>http://www.example.com</website>
+        <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:00Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array">
+          <credit-card>
+            <bin>411111</bin>
+            <card-type>Visa</card-type>
+            <cardholder-name nil="true"/>
+            <commercial>Unknown</commercial>
+            <country-of-issuance>Unknown</country-of-issuance>
+            <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+            <customer-id>164061314</customer-id>
+            <customer-location>US</customer-location>
+            <debit>Unknown</debit>
+            <default type="boolean">true</default>
+            <durbin-regulated>Unknown</durbin-regulated>
+            <expiration-month>05</expiration-month>
+            <expiration-year>2014</expiration-year>
+            <expired type="boolean">true</expired>
+            <healthcare>Unknown</healthcare>
+            <image-url>https://assets.braintreegateway.com/payment_method_logo/visa.png?environment=sandbox</image-url>
+            <issuing-bank>Unknown</issuing-bank>
+            <last-4>1111</last-4>
+            <payroll>Unknown</payroll>
+            <prepaid>Unknown</prepaid>
+            <product-id>Unknown</product-id>
+            <subscriptions type="array"/>
+            <token>85jv6x</token>
+            <unique-number-identifier>7a2b679d0aa6837a7f29f864b846c981</unique-number-identifier>
+            <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+            <venmo-sdk type="boolean">false</venmo-sdk>
+            <verifications type="array">
+              <verification>
+                <status>verified</status>
+                <cvv-response-code>I</cvv-response-code>
+                <avs-error-response-code nil="true"/>
+                <avs-postal-code-response-code>I</avs-postal-code-response-code>
+                <avs-street-address-response-code>I</avs-street-address-response-code>
+                <gateway-rejection-reason nil="true"/>
+                <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+                <processor-response-code>1000</processor-response-code>
+                <processor-response-text>Approved</processor-response-text>
+                <amount>0.00</amount>
+                <currency-iso-code>USD</currency-iso-code>
+                <id>8hdwz8y7</id>
+                <billing>
+                  <first-name nil="true"/>
+                  <last-name nil="true"/>
+                  <company nil="true"/>
+                  <street-address nil="true"/>
+                  <extended-address nil="true"/>
+                  <locality nil="true"/>
+                  <region nil="true"/>
+                  <postal-code nil="true"/>
+                  <country-name nil="true"/>
+                </billing>
+                <credit-card>
+                  <token>85jv6x</token>
+                  <bin>411111</bin>
+                  <last-4>1111</last-4>
+                  <card-type>Visa</card-type>
+                  <expiration-month>05</expiration-month>
+                  <expiration-year>2014</expiration-year>
+                  <customer-location>US</customer-location>
+                  <cardholder-name nil="true"/>
+                  <unique-number-identifier>7a2b679d0aa6837a7f29f864b846c981</unique-number-identifier>
+                  <prepaid>Unknown</prepaid>
+                  <healthcare>Unknown</healthcare>
+                  <debit>Unknown</debit>
+                  <durbin-regulated>Unknown</durbin-regulated>
+                  <commercial>Unknown</commercial>
+                  <payroll>Unknown</payroll>
+                  <issuing-bank>Unknown</issuing-bank>
+                  <country-of-issuance>Unknown</country-of-issuance>
+                  <product-id>Unknown</product-id>
+                </credit-card>
+                <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+                <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+                <risk-data>
+                  <id>7X8H0Z82VTVG</id>
+                  <decision>Approve</decision>
+                  <device-data-captured type="boolean">false</device-data-captured>
+                </risk-data>
+              </verification>
+            </verifications>
+          </credit-card>
+        </credit-cards>
+        <addresses type="array"/>
+      </customer>
+      </customers>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:02 GMT
+      Etag:
+      - W/"b80ef7bfc0439fdcf438f7bc5ea434ee"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002502.303-107.3.151.90-6933957
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002502.303-107.3.151.90-6933957
+      X-Runtime:
+      - "0.287998"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

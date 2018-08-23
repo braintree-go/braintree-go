@@ -1,0 +1,875 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <subscription>
+        <paymentMethodToken>btmkv7</paymentMethodToken>
+        <planId>test_plan</planId>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array">
+          <add-on>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_add_on</id>
+            <name>test_add_on_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </add-on>
+        </add-ons>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">6</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:52Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:52Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array">
+          <discount>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_discount</id>
+            <name>test_discount_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </discount>
+        </discounts>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-09-06</first-billing-date>
+        <id>j3fy6w</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">false</never-expires>
+        <next-bill-amount>10.00</next-bill-amount>
+        <next-billing-period-amount>10.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-09-06</next-billing-date>
+        <number-of-billing-cycles type="integer">2</number-of-billing-cycles>
+        <paid-through-date nil="true"/>
+        <payment-method-token>btmkv7</payment-method-token>
+        <plan-id>test_plan</plan-id>
+        <price>10.00</price>
+        <status>Active</status>
+        <trial-duration type="integer">14</trial-duration>
+        <trial-duration-unit>day</trial-duration-unit>
+        <trial-period type="boolean">true</trial-period>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:34:52Z</timestamp>
+            <status>Active</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>10.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:52 GMT
+      Etag:
+      - W/"ec051a99cb5a621c39ca606e5937f57c"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002489.432-107.3.151.90-6932719
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002489.432-107.3.151.90-6932719
+      X-Runtime:
+      - "3.477171"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <subscription>
+        <paymentMethodToken>328frx</paymentMethodToken>
+        <planId>test_plan_2</planId>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array"/>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">31</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:53Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:53Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array"/>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-08-31</first-billing-date>
+        <id>3dmgk6</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">true</never-expires>
+        <next-bill-amount>20.00</next-bill-amount>
+        <next-billing-period-amount>20.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-08-31</next-billing-date>
+        <number-of-billing-cycles nil="true"/>
+        <paid-through-date nil="true"/>
+        <payment-method-token>328frx</payment-method-token>
+        <plan-id>test_plan_2</plan-id>
+        <price>20.00</price>
+        <status>Pending</status>
+        <trial-duration nil="true"/>
+        <trial-duration-unit nil="true"/>
+        <trial-period type="boolean">false</trial-period>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:34:53Z</timestamp>
+            <status>Pending</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>20.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan_2</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:53 GMT
+      Etag:
+      - W/"ed9f29e7532e3c625fd5c19328ffbe56"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002490.000-107.3.151.90-2897178
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002490.000-107.3.151.90-2897178
+      X-Runtime:
+      - "3.394545"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <subscription>
+        <paymentMethodToken>6xfht3</paymentMethodToken>
+        <planId>test_plan</planId>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array">
+          <add-on>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_add_on</id>
+            <name>test_add_on_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </add-on>
+        </add-ons>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">6</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:53Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:53Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array">
+          <discount>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_discount</id>
+            <name>test_discount_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </discount>
+        </discounts>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-09-06</first-billing-date>
+        <id>c6ymng</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">false</never-expires>
+        <next-bill-amount>10.00</next-bill-amount>
+        <next-billing-period-amount>10.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-09-06</next-billing-date>
+        <number-of-billing-cycles type="integer">2</number-of-billing-cycles>
+        <paid-through-date nil="true"/>
+        <payment-method-token>6xfht3</payment-method-token>
+        <plan-id>test_plan</plan-id>
+        <price>10.00</price>
+        <status>Active</status>
+        <trial-duration type="integer">14</trial-duration>
+        <trial-duration-unit>day</trial-duration-unit>
+        <trial-period type="boolean">true</trial-period>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:34:53Z</timestamp>
+            <status>Active</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>10.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:53 GMT
+      Etag:
+      - W/"163fb389691cbc0a6780b283c24c5b12"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002489.499-107.3.151.90-6932723
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002489.499-107.3.151.90-6932723
+      X-Runtime:
+      - "4.104677"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <subscription>
+        <id>fdd7jm</id>
+        <add-ons>
+          <add type="array">
+            <modification>
+              <amount>3.00</amount>
+              <quantity>1</quantity>
+              <never-expires>true</never-expires>
+              <inherited-from-id>test_add_on</inherited-from-id>
+            </modification>
+          </add>
+        </add-ons>
+        <discounts>
+          <add type="array">
+            <modification>
+              <amount>1.00</amount>
+              <number-of-billing-cycles>2</number-of-billing-cycles>
+              <quantity>1</quantity>
+              <inherited-from-id>test_discount</inherited-from-id>
+            </modification>
+          </add>
+        </discounts>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions/fdd7jm
+    method: PUT
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array">
+          <add-on>
+            <amount>3.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_add_on</id>
+            <name>test_add_on_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </add-on>
+        </add-ons>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">31</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:50Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:50Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array">
+          <discount>
+            <amount>1.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_discount</id>
+            <name>test_discount_name</name>
+            <never-expires type="boolean">false</never-expires>
+            <number-of-billing-cycles type="integer">2</number-of-billing-cycles>
+            <quantity type="integer">1</quantity>
+          </discount>
+        </discounts>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-08-31</first-billing-date>
+        <id>fdd7jm</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">true</never-expires>
+        <next-bill-amount>22.00</next-bill-amount>
+        <next-billing-period-amount>22.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-08-31</next-billing-date>
+        <number-of-billing-cycles nil="true"/>
+        <paid-through-date nil="true"/>
+        <payment-method-token>8w22tn</payment-method-token>
+        <plan-id>test_plan_2</plan-id>
+        <price>20.00</price>
+        <status>Pending</status>
+        <trial-duration nil="true"/>
+        <trial-duration-unit nil="true"/>
+        <trial-period type="boolean">false</trial-period>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:34:53Z</timestamp>
+            <status>Pending</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>20.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan_2</plan-id>
+          </status-event>
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:34:50Z</timestamp>
+            <status>Pending</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>20.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan_2</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:54 GMT
+      Etag:
+      - W/"af4c8f853ac1fa5b9838f79099c3270f"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002490.474-107.3.151.90-6932807
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002490.474-107.3.151.90-6932807
+      X-Runtime:
+      - "3.553167"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: |-
+      <subscription>
+        <first-billing-date>2018-12-31</first-billing-date>
+        <number-of-billing-cycles>2</number-of-billing-cycles>
+        <paymentMethodToken>gqsnwc</paymentMethodToken>
+        <planId>test_plan_2</planId>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array"/>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">31</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:55Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:55Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array"/>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-12-31</first-billing-date>
+        <id>79sjmb</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">false</never-expires>
+        <next-bill-amount>20.00</next-bill-amount>
+        <next-billing-period-amount>20.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-12-31</next-billing-date>
+        <number-of-billing-cycles type="integer">2</number-of-billing-cycles>
+        <paid-through-date nil="true"/>
+        <payment-method-token>gqsnwc</payment-method-token>
+        <plan-id>test_plan_2</plan-id>
+        <price>20.00</price>
+        <status>Pending</status>
+        <trial-duration nil="true"/>
+        <trial-duration-unit nil="true"/>
+        <trial-period type="boolean">false</trial-period>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:34:55Z</timestamp>
+            <status>Pending</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>20.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan_2</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:55 GMT
+      Etag:
+      - W/"7deae31f69af08d9c12abd8105dc5dfa"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002490.329-107.3.151.90-2897192
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002490.329-107.3.151.90-2897192
+      X-Runtime:
+      - "5.129164"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <settlement_batch_summary>
+        <settlement_date>2018-08-23</settlement_date>
+      </settlement_batch_summary>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/settlement_batch_summary
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <settlement-batch-summary>
+        <records type="array">
+          <record>
+            <kind>credit</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>1000.00</amount-settled>
+            <count type="integer">8</count>
+            <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Discover</card-type>
+            <amount-settled>500.00</amount-settled>
+            <count type="integer">5</count>
+            <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>JCB</card-type>
+            <amount-settled>50.00</amount-settled>
+            <count type="integer">5</count>
+            <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>3579.65</amount-settled>
+            <count type="integer">75</count>
+            <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>paypal_account</card-type>
+            <amount-settled>210.49</amount-settled>
+            <count type="integer">3</count>
+            <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>64.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-3019044922101412979</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-552771348139979722</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-325501817327374409</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-3329257270711322740</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>64.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-3877876972458595092</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>2620662735611865289</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>64.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>2518412263346885298</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Apple Pay - MasterCard</card-type>
+            <amount-settled>177.90</amount-settled>
+            <count type="integer">4</count>
+            <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-3060283512363011054</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-8036253350598569424</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>64.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>9089566554128751939</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-1641342110942279115</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>5429817953257912536</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-2099571190126231731</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>5837725727639226353</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>7620598989280611310</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>2661732831099943416</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>4534092565239501451</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-7050931056095703980</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>832465539546860635</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa Checkout - Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-5039271760329034340</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>65.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>-1215086676507522770</merchant-account-id>
+          </record>
+          <record>
+            <kind>sale</kind>
+            <card-type>Visa</card-type>
+            <amount-settled>64.00</amount-settled>
+            <count>1</count>
+            <merchant-account-id>2382174395983730613</merchant-account-id>
+          </record>
+        </records>
+      </settlement-batch-summary>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:04 GMT
+      Etag:
+      - W/"8371ff5daaafde19bed119ef916679f6"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002489.108-107.3.151.90-2897144
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002489.108-107.3.151.90-2897144
+      X-Runtime:
+      - "15.304407"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

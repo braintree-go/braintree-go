@@ -10,7 +10,7 @@ import (
 func TestTransactionAndroidPayDetails_AndroidPayProxyCardNonce(t *testing.T) {
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceAndroidPayDiscover,
@@ -72,7 +72,7 @@ func TestTransactionAndroidPayDetails_AndroidPayProxyCardNonce(t *testing.T) {
 func TestTransactionAndroidPayDetails_AndroidPayNetworkTokenNonce(t *testing.T) {
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceAndroidPayMasterCard,
@@ -134,7 +134,7 @@ func TestTransactionAndroidPayDetails_AndroidPayNetworkTokenNonce(t *testing.T) 
 func TestTransactionWithoutAndroidPayDetails(t *testing.T) {
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceTransactable,

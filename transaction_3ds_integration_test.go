@@ -14,12 +14,12 @@ func TestTransaction3DSRequiredGatewayRejected(t *testing.T) {
 
 	amount := NewDecimal(1007, 2)
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	cc, err := testGateway.PaymentMethod().CreditCard().Create(ctx, &CreditCard{
+	cc, err := testGateway(t).PaymentMethod().CreditCard().Create(ctx, &CreditCard{
 		CustomerId:      customer.Id,
 		Number:          testCardVisa,
 		ExpirationYear:  "2020",
@@ -29,7 +29,7 @@ func TestTransaction3DSRequiredGatewayRejected(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	nonce, err := testGateway.PaymentMethodNonce().Create(ctx, cc.Token)
+	nonce, err := testGateway(t).PaymentMethodNonce().Create(ctx, cc.Token)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func TestTransaction3DSRequiredGatewayRejected(t *testing.T) {
 		t.Fatalf("Nonce 3DS Info present when card was non-3DS")
 	}
 
-	_, err = testGateway.Transaction().Create(ctx, &TransactionRequest{
+	_, err = testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             amount,
 		PaymentMethodNonce: nonce.Nonce,

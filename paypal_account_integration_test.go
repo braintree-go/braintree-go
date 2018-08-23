@@ -12,15 +12,15 @@ func TestPayPalAccount(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	cust, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	nonce := FakeNoncePayPalBillingAgreement
 
-	g := testGateway.PayPalAccount()
-	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+	g := testGateway(t).PayPalAccount()
+	paymentMethod, err := testGateway(t).PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: nonce,
 	})
@@ -70,7 +70,7 @@ func TestFindPayPalAccountBadData(t *testing.T) {
 
 	ctx := context.Background()
 
-	paypalAccount, err := testGateway.PayPalAccount().Find(ctx, "invalid_token")
+	paypalAccount, err := testGateway(t).PayPalAccount().Find(ctx, "invalid_token")
 
 	t.Log(paypalAccount)
 

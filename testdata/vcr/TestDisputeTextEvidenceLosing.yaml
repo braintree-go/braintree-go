@@ -1,0 +1,136 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "4"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/disputes/d5c3mn6zf8njjw5t
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <dispute>
+        <id>d5c3mn6zf8njjw5t</id>
+        <amount>1.00</amount>
+        <amount-disputed>1.00</amount-disputed>
+        <amount-won>0.00</amount-won>
+        <case-number>CB716257395229</case-number>
+        <created-at type="datetime">2018-08-23T05:34:56Z</created-at>
+        <currency-iso-code>USD</currency-iso-code>
+        <date-opened type="date">2018-08-23</date-opened>
+        <date-won nil="true"/>
+        <processor-comments nil="true"/>
+        <kind>chargeback</kind>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <reason>fraud</reason>
+        <reason-code>62</reason-code>
+        <reason-description nil="true"/>
+        <received-date type="date">2018-08-23</received-date>
+        <reference-number nil="true"/>
+        <reply-by-date type="date">2018-08-29</reply-by-date>
+        <status>lost</status>
+        <updated-at type="datetime">2018-08-23T05:35:05Z</updated-at>
+        <original-dispute-id nil="true"/>
+        <evidence type="array">
+          <evidence>
+            <id>qkys8frpv97bs6qr</id>
+            <comment nil="true"/>
+            <category nil="true"/>
+            <sequence-number nil="true"/>
+            <created-at type="datetime">2018-08-23T05:35:05Z</created-at>
+            <sent-to-processor-at nil="true"/>
+            <url>https://bt-sandbox-arbiter-evidence-files.s3.amazonaws.com/4ngqq224rnk6gvxh/dispute_attachments/d5c3mn6zf8njjw5t/frontmatter.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=ASIAUNQLLX72ZPASBIIS%2F20180823%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20180823T053558Z&amp;X-Amz-Expires=600&amp;X-Amz-Security-Token=FQoGZXIvYXdzECcaDMlJNPSyl8FdJ8weOiK3AwqsFYZmGbGZvbkKIZ0LEWX6xdk45j9%2FZg0HNUdWBNbQpKf%2BHCemqrUdoFKENfwJn0MCL57WpxTzIHVNnluxKumyz4GqV5vkUfJcviM3BZi1Wldhj5G3yUhxxeVuWGBreefe2E8sddwLIC4a00sNmNEfifToTjSn826smhbKY%2FT6aehL846Npr0aynPAgO%2F3HGFJ1gIlgzon0cvf4rYA3F5EcodIwkk9uy5xcIT3ml0hMKeE%2FGSoaRCiPclZ9a4qQtgz1l6DYcbmA87FJXQ14LdOwIZNS8z%2FkL71Tk6VS2sVXyoQ4uBAe4MzVUEfv2Y5hL16X%2FjWI%2BjD7yLF%2BUo4XFOpOfkWwMIiwYvioOcJNFqaSMUBegZ5qcXhvMReLjChv3o%2FoNqnHBXehkHag8sEaywZjNg9p%2F2N%2Fmfl9ur8y7DZ96vk1FB2%2FdZgtq8laZOCriZknXqJlfEj75meIJevarBRU%2FPRUtFW8x3haqqM8OiRdzR%2B1P%2Bhzdx%2BS2f9u%2BtAkasN89WQMUvwPdH4n5MM1V%2F%2BaX06tBVA4Nw8RzlACvl74SX4A%2Bd4RrlGRaI6He3W%2BphLQV1CDiUoloH52wU%3D&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=0227401a11151cfdb2164b3f211e45445454ddba63ed07e8235d15382e1aa028</url>
+          </evidence>
+          <evidence>
+            <id>6rbbwbcx395b933b</id>
+            <comment>losing_evidence</comment>
+            <category nil="true"/>
+            <sequence-number nil="true"/>
+            <created-at type="datetime">2018-08-23T05:34:57Z</created-at>
+            <sent-to-processor-at nil="true"/>
+            <url nil="true"/>
+          </evidence>
+          <evidence>
+            <id>66rgpq8jxnsgmbgd</id>
+            <comment>Street Address not provided (I). Postal Code not provided (I).</comment>
+            <category>AVS_RESPONSE</category>
+            <sequence-number nil="true"/>
+            <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+            <sent-to-processor-at nil="true"/>
+            <url nil="true"/>
+          </evidence>
+        </evidence>
+        <status-history type="array">
+          <status-history>
+            <disbursement-date nil="true"/>
+            <effective-date type="date">2018-08-23</effective-date>
+            <status>lost</status>
+            <timestamp type="datetime">2018-08-23T05:35:05Z</timestamp>
+          </status-history>
+          <status-history>
+            <disbursement-date nil="true"/>
+            <effective-date type="date">2018-08-23</effective-date>
+            <status>disputed</status>
+            <timestamp type="datetime">2018-08-23T05:34:58Z</timestamp>
+          </status-history>
+          <status-history>
+            <disbursement-date type="date">2018-08-23</disbursement-date>
+            <effective-date type="date">2018-08-23</effective-date>
+            <status>open</status>
+            <timestamp type="datetime">2018-08-23T05:34:56Z</timestamp>
+          </status-history>
+        </status-history>
+        <transaction>
+          <id>d1vrvmnq</id>
+          <amount>1.00</amount>
+          <created-at>2018-08-23T05:34:54Z</created-at>
+          <order-id nil="true"/>
+          <purchase-order-number nil="true"/>
+          <payment-instrument-subtype>Visa</payment-instrument-subtype>
+        </transaction>
+      </dispute>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:58 GMT
+      Etag:
+      - W/"4136d42ac9bb6b8a811c36a0850ec3f1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002558.432-107.3.151.90-2899573
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002558.432-107.3.151.90-2899573
+      X-Runtime:
+      - "0.267373"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

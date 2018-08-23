@@ -1,0 +1,79 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <credit-card>
+        <number>4111111111111111</number>
+        <expiration-date>05/14</expiration-date>
+      </credit-card>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/payment_methods
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <api-error-response>
+        <errors>
+          <errors type="array"/>
+          <credit-card>
+            <errors type="array">
+              <error>
+                <code>91704</code>
+                <attribute type="symbol">customer_id</attribute>
+                <message>Customer ID is required.</message>
+              </error>
+            </errors>
+          </credit-card>
+        </errors>
+        <params>
+          <credit-card>
+            <expiration-date>05/14</expiration-date>
+          </credit-card>
+          <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        </params>
+        <message>Customer ID is required.</message>
+      </api-error-response>
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:59 GMT
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002499.367-107.3.151.90-6933630
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002499.367-107.3.151.90-6933630
+      X-Runtime:
+      - "0.096913"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 422 Unprocessable Entity
+    code: 422
+    duration: ""

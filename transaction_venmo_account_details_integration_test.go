@@ -10,7 +10,7 @@ import (
 func TestTransactionVenmoAccountDetails(t *testing.T) {
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceVenmoAccount,
@@ -54,7 +54,7 @@ func TestTransactionVenmoAccountDetails(t *testing.T) {
 func TestTransactionWithoutVenmoAccountDetails(t *testing.T) {
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
 		PaymentMethodNonce: FakeNonceTransactable,

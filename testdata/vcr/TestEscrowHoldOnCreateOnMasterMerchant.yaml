@@ -1,0 +1,95 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <transaction>
+        <type>sale</type>
+        <amount>63.01</amount>
+        <credit-card>
+          <number>4111111111111111</number>
+          <expiration-date>05/14</expiration-date>
+        </credit-card>
+        <options>
+          <hold-in-escrow>true</hold-in-escrow>
+        </options>
+      </transaction>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <api-error-response>
+        <errors>
+          <errors type="array"/>
+          <transaction>
+            <errors type="array">
+              <error>
+                <code>91560</code>
+                <attribute type="symbol">base</attribute>
+                <message>Transaction could not be held in escrow.</message>
+              </error>
+            </errors>
+            <credit-card>
+              <errors type="array"/>
+            </credit-card>
+          </transaction>
+        </errors>
+        <params>
+          <transaction>
+            <type>sale</type>
+            <amount>63.01</amount>
+            <credit-card>
+              <expiration-date>05/14</expiration-date>
+            </credit-card>
+            <options>
+              <hold-in-escrow>true</hold-in-escrow>
+            </options>
+          </transaction>
+        </params>
+        <message>Transaction could not be held in escrow.</message>
+      </api-error-response>
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:01 GMT
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002500.857-107.3.151.90-6933786
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002500.857-107.3.151.90-6933786
+      X-Runtime:
+      - "0.138809"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 422 Unprocessable Entity
+    code: 422
+    duration: ""

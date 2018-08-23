@@ -1,0 +1,623 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <transaction service-fee-amount="10.00">
+        <type>sale</type>
+        <amount>65.00</amount>
+        <payment-method-nonce>fake-visa-checkout-visa-nonce</payment-method-nonce>
+        <merchant-account-id>7620598989280611310</merchant-account-id>
+        <options>
+          <submit-for-settlement>true</submit-for-settlement>
+          <store-in-vault-on-success>true</store-in-vault-on-success>
+        </options>
+      </transaction>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <transaction>
+        <id>p5t2zqpb</id>
+        <status>submitted_for_settlement</status>
+        <type>sale</type>
+        <currency-iso-code>USD</currency-iso-code>
+        <amount>65.00</amount>
+        <merchant-account-id>7620598989280611310</merchant-account-id>
+        <sub-merchant-account-id>7620598989280611310</sub-merchant-account-id>
+        <master-merchant-account-id>bvps8ckgst59crzs</master-merchant-account-id>
+        <order-id nil="true"/>
+        <created-at type="datetime">2018-08-23T05:25:08Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:25:09Z</updated-at>
+        <customer>
+          <id>810130173</id>
+          <first-name nil="true"/>
+          <last-name nil="true"/>
+          <company nil="true"/>
+          <email nil="true"/>
+          <website nil="true"/>
+          <phone nil="true"/>
+          <fax nil="true"/>
+        </customer>
+        <billing>
+          <id nil="true"/>
+          <first-name>Joan</first-name>
+          <last-name>Smith</last-name>
+          <company nil="true"/>
+          <street-address>123 Main St.</street-address>
+          <extended-address>Apt 303</extended-address>
+          <locality>Anytown</locality>
+          <region>CA</region>
+          <postal-code>94101</postal-code>
+          <country-name>United States of America</country-name>
+          <country-code-alpha2>US</country-code-alpha2>
+          <country-code-alpha3>USA</country-code-alpha3>
+          <country-code-numeric>840</country-code-numeric>
+        </billing>
+        <refund-id nil="true"/>
+        <refund-ids type="array"/>
+        <refunded-transaction-id nil="true"/>
+        <partial-settlement-transaction-ids type="array"/>
+        <authorized-transaction-id nil="true"/>
+        <settlement-batch-id nil="true"/>
+        <shipping>
+          <id nil="true"/>
+          <first-name nil="true"/>
+          <last-name nil="true"/>
+          <company nil="true"/>
+          <street-address nil="true"/>
+          <extended-address nil="true"/>
+          <locality nil="true"/>
+          <region nil="true"/>
+          <postal-code nil="true"/>
+          <country-name nil="true"/>
+          <country-code-alpha2 nil="true"/>
+          <country-code-alpha3 nil="true"/>
+          <country-code-numeric nil="true"/>
+        </shipping>
+        <custom-fields/>
+        <avs-error-response-code nil="true"/>
+        <avs-postal-code-response-code>M</avs-postal-code-response-code>
+        <avs-street-address-response-code>M</avs-street-address-response-code>
+        <cvv-response-code>I</cvv-response-code>
+        <gateway-rejection-reason nil="true"/>
+        <processor-authorization-code>Z9BQPS</processor-authorization-code>
+        <processor-response-code>1000</processor-response-code>
+        <processor-response-text>Approved</processor-response-text>
+        <additional-processor-response nil="true"/>
+        <voice-referral-number nil="true"/>
+        <purchase-order-number nil="true"/>
+        <tax-amount nil="true"/>
+        <tax-exempt type="boolean">false</tax-exempt>
+        <credit-card>
+          <token>b4tsk7</token>
+          <bin nil="true"/>
+          <last-4 nil="true"/>
+          <card-type nil="true"/>
+          <expiration-month></expiration-month>
+          <expiration-year></expiration-year>
+          <customer-location nil="true"/>
+          <cardholder-name nil="true"/>
+          <image-url>https://assets.braintreegateway.com/payment_method_logo/unknown.png?environment=sandbox</image-url>
+          <prepaid>Unknown</prepaid>
+          <healthcare>Unknown</healthcare>
+          <debit>Unknown</debit>
+          <durbin-regulated>Unknown</durbin-regulated>
+          <commercial>Unknown</commercial>
+          <payroll>Unknown</payroll>
+          <issuing-bank>Unknown</issuing-bank>
+          <country-of-issuance>Unknown</country-of-issuance>
+          <product-id>Unknown</product-id>
+          <unique-number-identifier>7548503e80b587eb6a3be7487aed7c94</unique-number-identifier>
+          <venmo-sdk type="boolean">false</venmo-sdk>
+        </credit-card>
+        <visa-checkout-card>
+          <token>b4tsk7</token>
+          <bin>401288</bin>
+          <last-4>1881</last-4>
+          <card-type>Visa</card-type>
+          <expiration-month>12</expiration-month>
+          <expiration-year>2020</expiration-year>
+          <customer-location>US</customer-location>
+          <cardholder-name>Visa Checkout Visa Cardholder</cardholder-name>
+          <image-url>https://assets.braintreegateway.com/payment_method_logo/visa.png?environment=sandbox</image-url>
+          <prepaid>No</prepaid>
+          <healthcare>Unknown</healthcare>
+          <debit>Unknown</debit>
+          <durbin-regulated>Unknown</durbin-regulated>
+          <commercial>Unknown</commercial>
+          <payroll>Unknown</payroll>
+          <issuing-bank>Unknown</issuing-bank>
+          <country-of-issuance>Unknown</country-of-issuance>
+          <product-id>Unknown</product-id>
+          <call-id>abc123</call-id>
+        </visa-checkout-card>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:25:09Z</timestamp>
+            <status>authorized</status>
+            <amount>65.00</amount>
+            <user>Braintree-Go</user>
+            <transaction-source>api</transaction-source>
+          </status-event>
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:25:09Z</timestamp>
+            <status>submitted_for_settlement</status>
+            <amount>65.00</amount>
+            <user>Braintree-Go</user>
+            <transaction-source>api</transaction-source>
+          </status-event>
+        </status-history>
+        <plan-id nil="true"/>
+        <subscription-id nil="true"/>
+        <subscription>
+          <billing-period-end-date nil="true"/>
+          <billing-period-start-date nil="true"/>
+        </subscription>
+        <add-ons type="array"/>
+        <discounts type="array"/>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <recurring type="boolean">false</recurring>
+        <channel nil="true"/>
+        <service-fee-amount>10.00</service-fee-amount>
+        <escrow-status nil="true"/>
+        <disbursement-details>
+          <disbursement-date nil="true"/>
+          <settlement-amount nil="true"/>
+          <settlement-currency-iso-code nil="true"/>
+          <settlement-currency-exchange-rate nil="true"/>
+          <funds-held nil="true"/>
+          <success nil="true"/>
+        </disbursement-details>
+        <disputes type="array"/>
+        <authorization-adjustments type="array"/>
+        <payment-instrument-type>visa_checkout_card</payment-instrument-type>
+        <processor-settlement-response-code></processor-settlement-response-code>
+        <processor-settlement-response-text></processor-settlement-response-text>
+        <risk-data>
+          <id>7X8H0XLJS21D</id>
+          <decision>Approve</decision>
+          <device-data-captured type="boolean">false</device-data-captured>
+        </risk-data>
+        <three-d-secure-info nil="true"/>
+        <ships-from-postal-code nil="true"/>
+        <shipping-amount nil="true"/>
+        <discount-amount nil="true"/>
+        <network-transaction-id>020180823052509</network-transaction-id>
+      </transaction>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:25:09 GMT
+      Etag:
+      - W/"99419d69d88025a939a1e00747f08b02"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535001908.275-107.3.151.90-2874431
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535001908.275-107.3.151.90-2874431
+      X-Runtime:
+      - "1.187271"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <subscription>
+        <paymentMethodToken>hgy8vs</paymentMethodToken>
+        <planId>test_plan_2</planId>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array"/>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">31</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:25:12Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:25:12Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array"/>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-08-31</first-billing-date>
+        <id>5mvy6w</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">true</never-expires>
+        <next-bill-amount>20.00</next-bill-amount>
+        <next-billing-period-amount>20.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-08-31</next-billing-date>
+        <number-of-billing-cycles nil="true"/>
+        <paid-through-date nil="true"/>
+        <payment-method-token>hgy8vs</payment-method-token>
+        <plan-id>test_plan_2</plan-id>
+        <price>20.00</price>
+        <status>Pending</status>
+        <trial-duration nil="true"/>
+        <trial-duration-unit nil="true"/>
+        <trial-period type="boolean">false</trial-period>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:25:12Z</timestamp>
+            <status>Pending</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>20.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan_2</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:25:12 GMT
+      Etag:
+      - W/"bfc8b686ed695acdd2feedef1ce763f9"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535001908.546-107.3.151.90-2874447
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535001908.546-107.3.151.90-2874447
+      X-Runtime:
+      - "3.893499"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <subscription>
+        <id>bhc9rb</id>
+        <options>
+          <prorate-charges>true</prorate-charges>
+          <revert-subscription-on-proration-failure>true</revert-subscription-on-proration-failure>
+          <start-immediately>true</start-immediately>
+        </options>
+        <planId>test_plan_2</planId>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions/bhc9rb
+    method: PUT
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array">
+          <add-on>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_add_on</id>
+            <name>test_add_on_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </add-on>
+        </add-ons>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">30</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:25:09Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:25:13Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array">
+          <discount>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_discount</id>
+            <name>test_discount_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </discount>
+        </discounts>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-08-30</first-billing-date>
+        <id>bhc9rb</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">false</never-expires>
+        <next-bill-amount>1.00</next-bill-amount>
+        <next-billing-period-amount>1.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-08-30</next-billing-date>
+        <number-of-billing-cycles type="integer">2</number-of-billing-cycles>
+        <paid-through-date nil="true"/>
+        <payment-method-token>58cfzs</payment-method-token>
+        <plan-id>test_plan_2</plan-id>
+        <price>1.00</price>
+        <status>Active</status>
+        <trial-duration type="integer">7</trial-duration>
+        <trial-duration-unit>day</trial-duration-unit>
+        <trial-period type="boolean">true</trial-period>
+        <descriptor>
+          <name>Company Name*Product 1</name>
+          <phone>0000000000</phone>
+          <url>example.com</url>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:25:13Z</timestamp>
+            <status>Active</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>1.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan_2</plan-id>
+          </status-event>
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:25:09Z</timestamp>
+            <status>Active</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>1.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:25:13 GMT
+      Etag:
+      - W/"7cd380386fc9dbc99b04743b08edc401"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535001909.198-107.3.151.90-2874486
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535001909.198-107.3.151.90-2874486
+      X-Runtime:
+      - "4.466958"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: |-
+      <subscription>
+        <id>2pz5p2</id>
+        <options>
+          <prorate-charges>true</prorate-charges>
+          <revert-subscription-on-proration-failure>true</revert-subscription-on-proration-failure>
+          <start-immediately>true</start-immediately>
+        </options>
+        <planId>test_plan_2</planId>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions/2pz5p2
+    method: PUT
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array">
+          <add-on>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_add_on</id>
+            <name>test_add_on_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </add-on>
+        </add-ons>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">31</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:25:08Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:25:13Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array">
+          <discount>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_discount</id>
+            <name>test_discount_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </discount>
+        </discounts>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-12-31</first-billing-date>
+        <id>2pz5p2</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">true</never-expires>
+        <next-bill-amount>1.00</next-bill-amount>
+        <next-billing-period-amount>1.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-12-31</next-billing-date>
+        <number-of-billing-cycles nil="true"/>
+        <paid-through-date nil="true"/>
+        <payment-method-token>f2qm43</payment-method-token>
+        <plan-id>test_plan_2</plan-id>
+        <price>1.00</price>
+        <status>Pending</status>
+        <trial-duration nil="true"/>
+        <trial-duration-unit nil="true"/>
+        <trial-period type="boolean">false</trial-period>
+        <descriptor>
+          <name>Company Name*Product 1</name>
+          <phone>0000000000</phone>
+          <url>example.com</url>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:25:13Z</timestamp>
+            <status>Pending</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>1.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan_2</plan-id>
+          </status-event>
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:25:08Z</timestamp>
+            <status>Pending</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>1.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:25:13 GMT
+      Etag:
+      - W/"a17937e07772867808e0ea00ff1860cc"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535001909.014-107.3.151.90-2874469
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535001909.014-107.3.151.90-2874469
+      X-Runtime:
+      - "4.781996"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

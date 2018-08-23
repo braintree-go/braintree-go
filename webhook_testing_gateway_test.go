@@ -7,8 +7,8 @@ import "testing"
 func TestWebhookTestingGatewayRequest(t *testing.T) {
 	t.Parallel()
 
-	testingWebhookGateway := testGateway.WebhookTesting()
-	webhookGateway := testGateway.WebhookNotification()
+	testingWebhookGateway := testGateway(t).WebhookTesting()
+	webhookGateway := testGateway(t).WebhookNotification()
 
 	kind := SubscriptionChargedSuccessfullyWebhook
 	id := "123"

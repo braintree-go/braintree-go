@@ -13,7 +13,7 @@ func TestSettlementBatch(t *testing.T) {
 	ctx := context.Background()
 
 	// Create a new transaction
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(1000, 2),
 		PaymentMethodNonce: FakeNonceTransactableJCB,
@@ -27,7 +27,7 @@ func TestSettlementBatch(t *testing.T) {
 	}
 
 	// Submit for settlement
-	tx, err = testGateway.Transaction().SubmitForSettlement(ctx, tx.Id, tx.Amount)
+	tx, err = testGateway(t).Transaction().SubmitForSettlement(ctx, tx.Id, tx.Amount)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func TestSettlementBatch(t *testing.T) {
 	}
 
 	// Settle
-	tx, err = testGateway.Testing().Settle(ctx, tx.Id)
+	tx, err = testGateway(t).Testing().Settle(ctx, tx.Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,7 +49,7 @@ func TestSettlementBatch(t *testing.T) {
 	// Generate Settlement Batch Summary which will include new transaction
 	date := tx.SettlementBatchId[:10]
 	t.Logf("summary     : %s\n", date)
-	summary, err := testGateway.Settlement().Generate(ctx, &Settlement{Date: date})
+	summary, err := testGateway(t).Settlement().Generate(ctx, &Settlement{Date: date})
 	if err != nil {
 		t.Fatalf("unable to get settlement batch: %s", err)
 	}

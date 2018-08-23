@@ -12,12 +12,12 @@ func TestPaymentMethodNonce(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
+	paymentMethod, err := testGateway(t).PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceTransactableVisa,
 	})
@@ -27,7 +27,7 @@ func TestPaymentMethodNonce(t *testing.T) {
 
 	t.Logf("%#v", paymentMethod)
 
-	paymentMethodNonce, err := testGateway.PaymentMethodNonce().Create(ctx, paymentMethod.GetToken())
+	paymentMethodNonce, err := testGateway(t).PaymentMethodNonce().Create(ctx, paymentMethod.GetToken())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -39,7 +39,7 @@ func TestPaymentMethodNonce(t *testing.T) {
 		t.Errorf("nonce type got %q, want %q", paymentMethodNonce.Type, "CreditCard")
 	}
 
-	paymentMethodNonceFound, err := testGateway.PaymentMethodNonce().Find(ctx, paymentMethodNonce.Nonce)
+	paymentMethodNonceFound, err := testGateway(t).PaymentMethodNonce().Find(ctx, paymentMethodNonce.Nonce)
 	if err != nil {
 		t.Fatal(err)
 	}

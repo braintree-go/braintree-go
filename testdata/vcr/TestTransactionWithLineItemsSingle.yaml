@@ -1,0 +1,73 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions/e4sffqf0/line_items
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <line-items type="array">
+      <line-item>
+        <quantity>1.0232</quantity>
+        <name>Name #1</name>
+        <description>Description #1</description>
+        <kind>debit</kind>
+        <unit-amount>45.1232</unit-amount>
+        <unit-tax-amount>1.23</unit-tax-amount>
+        <discount-amount>1.02</discount-amount>
+        <total-amount>45.15</total-amount>
+        <unit-of-measure>gallon</unit-of-measure>
+        <product-code>23434</product-code>
+        <commodity-code>9SAASSD8724</commodity-code>
+        <url>https://example.com/products/23434</url>
+        <tax-amount>4.55</tax-amount>
+      </line-item>
+      </line-items>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:08 GMT
+      Etag:
+      - W/"3e9deeb36504ffa9cca7c37cd1472312"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002508.405-107.3.151.90-2898044
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002508.405-107.3.151.90-2898044
+      X-Runtime:
+      - "0.032565"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

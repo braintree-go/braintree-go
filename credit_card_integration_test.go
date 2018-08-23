@@ -18,12 +18,12 @@ func TestCreditCard(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	cust, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g := testGateway.CreditCard()
+	g := testGateway(t).CreditCard()
 	card, err := g.Create(ctx, &CreditCard{
 		CustomerId:     cust.Id,
 		Number:         testCardVisa,
@@ -78,12 +78,12 @@ func TestCreditCardFailedAutoVerification(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	cust, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g := testGateway.CreditCard()
+	g := testGateway(t).CreditCard()
 	card, err := g.Create(ctx, &CreditCard{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
@@ -104,12 +104,12 @@ func TestCreditCardForceNotVerified(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	cust, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g := testGateway.CreditCard()
+	g := testGateway(t).CreditCard()
 	card, err := g.Create(ctx, &CreditCard{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
@@ -129,11 +129,11 @@ func TestCreateCreditCardWithExpirationMonthAndYear(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+	card, err := testGateway(t).CreditCard().Create(ctx, &CreditCard{
 		CustomerId:      customer.Id,
 		Number:          testCardVisa,
 		ExpirationMonth: "05",
@@ -154,7 +154,7 @@ func TestCreateCreditCardInvalidInput(t *testing.T) {
 
 	ctx := context.Background()
 
-	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+	card, err := testGateway(t).CreditCard().Create(ctx, &CreditCard{
 		Number:         testCardVisa,
 		ExpirationDate: "05/14",
 	})
@@ -174,11 +174,11 @@ func TestFindCreditCard(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+	card, err := testGateway(t).CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCardVisa,
 		ExpirationDate: "05/14",
@@ -197,7 +197,7 @@ func TestFindCreditCard(t *testing.T) {
 		t.Fatal("invalid token")
 	}
 
-	card2, err := testGateway.CreditCard().Find(ctx, card.Token)
+	card2, err := testGateway(t).CreditCard().Find(ctx, card.Token)
 
 	t.Log(card2)
 
@@ -214,7 +214,7 @@ func TestFindCreditCardBadData(t *testing.T) {
 
 	ctx := context.Background()
 
-	card, err := testGateway.CreditCard().Find(ctx, "invalid_token")
+	card, err := testGateway(t).CreditCard().Find(ctx, "invalid_token")
 
 	t.Log(card)
 
@@ -228,11 +228,11 @@ func TestSaveCreditCardWithVenmoSDKPaymentMethodCode(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+	card, err := testGateway(t).CreditCard().Create(ctx, &CreditCard{
 		CustomerId:                customer.Id,
 		VenmoSDKPaymentMethodCode: "stub-" + testCardVisa,
 	})
@@ -249,11 +249,11 @@ func TestSaveCreditCardWithVenmoSDKSession(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+	card, err := testGateway(t).CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCardVisa,
 		ExpirationDate: "05/14",
@@ -276,11 +276,11 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	card1, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+	card1, err := testGateway(t).CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCardVisa,
 		ExpirationDate: now.AddDate(0, -2, 0).Format("01/2006"),
@@ -290,7 +290,7 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	}
 	t.Log("card1", card1.Token)
 
-	card2, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+	card2, err := testGateway(t).CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCardVisa,
 		ExpirationDate: now.Format("01/2006"),
@@ -300,7 +300,7 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	}
 	t.Log("card2", card2.Token)
 
-	card3, err := testGateway.CreditCard().Create(ctx, &CreditCard{
+	card3, err := testGateway(t).CreditCard().Create(ctx, &CreditCard{
 		CustomerId:     customer.Id,
 		Number:         testCardVisa,
 		ExpirationDate: now.AddDate(0, 2, 0).Format("01/2006"),
@@ -314,12 +314,12 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 	toDate := now.AddDate(0, 1, 0)
 
 	expiringCards := map[string]bool{}
-	results, err := testGateway.CreditCard().ExpiringBetweenIDs(ctx, fromDate, toDate)
+	results, err := testGateway(t).CreditCard().ExpiringBetweenIDs(ctx, fromDate, toDate)
 	if err != nil {
 		t.Fatal(err)
 	}
 	for page := 1; page <= results.PageCount; page++ {
-		results, err := testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, page)
+		results, err := testGateway(t).CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, page)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -338,13 +338,13 @@ func TestGetExpiringBetweenCards(t *testing.T) {
 		t.Fatalf("expiringCards contains card3 (%s), it shouldn't be returned in expiring cards results", card3.Token)
 	}
 
-	_, err = testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, 0)
+	_, err = testGateway(t).CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, 0)
 	t.Logf("%#v", err)
 	if err == nil || !strings.Contains(err.Error(), "page 0 out of bounds") {
 		t.Errorf("requesting page 0 should result in out of bounds error, but got %#v", err)
 	}
 
-	_, err = testGateway.CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, results.PageCount+1)
+	_, err = testGateway(t).CreditCard().ExpiringBetweenPage(ctx, fromDate, toDate, results, results.PageCount+1)
 	t.Logf("%#v", err)
 	if err == nil || !strings.Contains(err.Error(), fmt.Sprintf("page %d out of bounds", results.PageCount+1)) {
 		t.Errorf("requesting page %d should result in out of bounds error, but got %v", results.PageCount+1, err)

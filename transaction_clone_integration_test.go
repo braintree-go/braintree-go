@@ -12,7 +12,7 @@ func TestTransactionClone(t *testing.T) {
 
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
@@ -26,7 +26,7 @@ func TestTransactionClone(t *testing.T) {
 	}
 
 	// Clone
-	tx2, err := testGateway.Transaction().Clone(ctx, tx.Id, &TransactionCloneRequest{
+	tx2, err := testGateway(t).Transaction().Clone(ctx, tx.Id, &TransactionCloneRequest{
 		Amount:  NewDecimal(1000, 2),
 		Channel: "ChannelA",
 		Options: &TransactionCloneOptions{
@@ -62,7 +62,7 @@ func TestTransactionCloneSubmittedForSettlement(t *testing.T) {
 
 	ctx := context.Background()
 
-	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+	tx, err := testGateway(t).Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),
 		CreditCard: &CreditCard{
@@ -76,7 +76,7 @@ func TestTransactionCloneSubmittedForSettlement(t *testing.T) {
 	}
 
 	// Clone
-	tx2, err := testGateway.Transaction().Clone(ctx, tx.Id, &TransactionCloneRequest{
+	tx2, err := testGateway(t).Transaction().Clone(ctx, tx.Id, &TransactionCloneRequest{
 		Amount:  NewDecimal(1000, 2),
 		Channel: "ChannelA",
 		Options: &TransactionCloneOptions{

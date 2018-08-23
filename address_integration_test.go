@@ -12,7 +12,7 @@ func TestAddress(t *testing.T) {
 
 	ctx := context.Background()
 
-	customer, err := testGateway.Customer().Create(ctx, &CustomerRequest{
+	customer, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{
 		FirstName: "Jenna",
 		LastName:  "Smith",
 	})
@@ -38,7 +38,7 @@ func TestAddress(t *testing.T) {
 		CountryName:        "United States of America",
 	}
 
-	addr2, err := testGateway.Address().Create(ctx, customer.Id, addr)
+	addr2, err := testGateway(t).Address().Create(ctx, customer.Id, addr)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func TestAddress(t *testing.T) {
 		CountryCodeNumeric: "124",
 		CountryName:        "Canada",
 	}
-	addr4, err := testGateway.Address().Update(ctx, customer.Id, addr2.Id, addr3)
+	addr4, err := testGateway(t).Address().Update(ctx, customer.Id, addr2.Id, addr3)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -70,7 +70,7 @@ func TestAddress(t *testing.T) {
 	t.Logf("%+v\n", addr4)
 	validateAddr(t, addr4, addr3, customer)
 
-	err = testGateway.Address().Delete(ctx, customer.Id, addr2.Id)
+	err = testGateway(t).Address().Delete(ctx, customer.Id, addr2.Id)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,0 +1,139 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <subscription>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <number-of-billing-cycles>2</number-of-billing-cycles>
+        <paymentMethodToken>cswvch</paymentMethodToken>
+        <planId>test_plan</planId>
+        <price>1.00</price>
+        <trial-duration>7</trial-duration>
+        <trial-duration-unit>day</trial-duration-unit>
+        <trial-period>true</trial-period>
+        <descriptor>
+          <name>Company Name*Product 1</name>
+          <phone>0000000000</phone>
+          <url>example.com</url>
+        </descriptor>
+      </subscription>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/subscriptions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <subscription>
+        <add-ons type="array">
+          <add-on>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_add_on</id>
+            <name>test_add_on_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </add-on>
+        </add-ons>
+        <balance>0.00</balance>
+        <billing-day-of-month type="integer">30</billing-day-of-month>
+        <billing-period-end-date nil="true"/>
+        <billing-period-start-date nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:50Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:50Z</updated-at>
+        <current-billing-cycle type="integer">0</current-billing-cycle>
+        <days-past-due nil="true"/>
+        <discounts type="array">
+          <discount>
+            <amount>10.00</amount>
+            <current-billing-cycle type="integer">0</current-billing-cycle>
+            <id>test_discount</id>
+            <name>test_discount_name</name>
+            <never-expires type="boolean">true</never-expires>
+            <number-of-billing-cycles nil="true"/>
+            <quantity type="integer">1</quantity>
+          </discount>
+        </discounts>
+        <failure-count type="integer">0</failure-count>
+        <first-billing-date type="date">2018-08-30</first-billing-date>
+        <id>2fb72w</id>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <never-expires type="boolean">false</never-expires>
+        <next-bill-amount>1.00</next-bill-amount>
+        <next-billing-period-amount>1.00</next-billing-period-amount>
+        <next-billing-date type="date">2018-08-30</next-billing-date>
+        <number-of-billing-cycles type="integer">2</number-of-billing-cycles>
+        <paid-through-date nil="true"/>
+        <payment-method-token>cswvch</payment-method-token>
+        <plan-id>test_plan</plan-id>
+        <price>1.00</price>
+        <status>Active</status>
+        <trial-duration type="integer">7</trial-duration>
+        <trial-duration-unit>day</trial-duration-unit>
+        <trial-period type="boolean">true</trial-period>
+        <descriptor>
+          <name>Company Name*Product 1</name>
+          <phone>0000000000</phone>
+          <url>example.com</url>
+        </descriptor>
+        <description nil="true"/>
+        <transactions type="array"/>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:34:51Z</timestamp>
+            <status>Active</status>
+            <user>Braintree-Go</user>
+            <subscription-source>api</subscription-source>
+            <balance>0.00</balance>
+            <price>1.00</price>
+            <currency-iso-code>USD</currency-iso-code>
+            <plan-id>test_plan</plan-id>
+          </status-event>
+        </status-history>
+      </subscription>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:51 GMT
+      Etag:
+      - W/"838b3d12b54dac2b233bef91934a34b8"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002487.655-107.3.151.90-2897094
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002487.655-107.3.151.90-2897094
+      X-Runtime:
+      - "3.398863"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""

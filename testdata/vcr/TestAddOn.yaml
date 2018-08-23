@@ -1,0 +1,70 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/add_ons
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <add-ons type="array">
+      <add-on>
+        <amount>10.00</amount>
+        <created-at type="datetime">2013-11-20T16:20:05Z</created-at>
+        <description>A test add-on</description>
+        <id>test_add_on</id>
+        <kind>add_on</kind>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <name>test_add_on_name</name>
+        <never-expires type="boolean">true</never-expires>
+        <number-of-billing-cycles nil="true"/>
+        <updated-at type="datetime">2013-11-22T21:30:16Z</updated-at>
+      </add-on>
+      </add-ons>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:44 GMT
+      Etag:
+      - W/"f9a3e59cf74c45bdb6e39f6b9e8b2592"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002484.261-107.3.151.90-6932150
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002484.261-107.3.151.90-6932150
+      X-Runtime:
+      - "0.076098"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

@@ -17,7 +17,7 @@ func TestDisbursementTransactions(t *testing.T) {
 		TransactionIds: []string{"dskdmb"},
 	}
 
-	result, err := d.Transactions(ctx, testGateway.Transaction())
+	result, err := d.Transactions(ctx, testGateway(t).Transaction())
 
 	if err != nil {
 		t.Fatal(err)

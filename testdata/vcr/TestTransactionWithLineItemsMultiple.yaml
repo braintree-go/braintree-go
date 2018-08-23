@@ -1,0 +1,1003 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions/5e6pkrj3/line_items
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <line-items type="array">
+      <line-item>
+        <quantity>1.0232</quantity>
+        <name>Name #1</name>
+        <description>Description #1</description>
+        <kind>debit</kind>
+        <unit-amount>45.1232</unit-amount>
+        <unit-tax-amount>1.23</unit-tax-amount>
+        <discount-amount>1.02</discount-amount>
+        <total-amount>45.15</total-amount>
+        <unit-of-measure>gallon</unit-of-measure>
+        <product-code>23434</product-code>
+        <commodity-code>9SAASSD8724</commodity-code>
+        <url>https://example.com/products/23434</url>
+        <tax-amount>4.55</tax-amount>
+      </line-item>
+      <line-item>
+        <quantity>2.02</quantity>
+        <name>Name #2</name>
+        <description>Description #2</description>
+        <kind>credit</kind>
+        <unit-amount>5</unit-amount>
+        <unit-tax-amount nil="true"/>
+        <discount-amount nil="true"/>
+        <total-amount>45.15</total-amount>
+        <unit-of-measure>gallon</unit-of-measure>
+        <product-code nil="true"/>
+        <commodity-code nil="true"/>
+        <url nil="true"/>
+        <tax-amount>4.55</tax-amount>
+      </line-item>
+      </line-items>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:08 GMT
+      Etag:
+      - W/"030750c3b58ccb987fddd5b8860f4a53"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002508.240-107.3.151.90-6934698
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002508.240-107.3.151.90-6934698
+      X-Runtime:
+      - "0.063850"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: |-
+      <search>
+        <company>
+          <starts-with>PaginationTest-4618386593492938919</starts-with>
+        </company>
+        <ids type="array">
+          <item>100331973</item>
+          <item>116832646</item>
+          <item>127780953</item>
+          <item>133849666</item>
+          <item>138086864</item>
+          <item>151226481</item>
+          <item>160558119</item>
+          <item>182773703</item>
+          <item>191992334</item>
+          <item>205136823</item>
+          <item>207629634</item>
+          <item>220740716</item>
+          <item>239409551</item>
+          <item>240579473</item>
+          <item>244090639</item>
+          <item>256265044</item>
+          <item>261051249</item>
+          <item>287733396</item>
+          <item>296972269</item>
+          <item>409553196</item>
+          <item>490067373</item>
+          <item>498220439</item>
+          <item>503858939</item>
+          <item>508057236</item>
+          <item>510415446</item>
+          <item>516919744</item>
+          <item>533778764</item>
+          <item>560006216</item>
+          <item>572834569</item>
+          <item>583664401</item>
+          <item>595269023</item>
+          <item>612608003</item>
+          <item>620463619</item>
+          <item>624327914</item>
+          <item>635164751</item>
+          <item>644513871</item>
+          <item>655994346</item>
+          <item>661130181</item>
+          <item>687845599</item>
+          <item>804384071</item>
+          <item>806942173</item>
+          <item>809000294</item>
+          <item>815241849</item>
+          <item>817303681</item>
+          <item>827423264</item>
+          <item>832662869</item>
+          <item>858904783</item>
+          <item>864170516</item>
+          <item>875955723</item>
+          <item>882885244</item>
+        </ids>
+      </search>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers/advanced_search
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customers type="collection">
+        <current-page-number type="integer">1</current-page-number>
+        <page-size type="integer">50</page-size>
+        <total-items type="integer">50</total-items>
+      <customer>
+        <id>809000294</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389197580820935806568185</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:07Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:07Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>256265044</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192719220396369775194</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:07Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:07Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>133849666</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389193349513236903844001</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:06Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:06Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>644513871</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389198888902953740731582</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:06Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:06Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>858904783</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-4618386593492938919557129814118453469</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:06Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:06Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>239409551</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389196507053272768789379</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:06Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:06Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>100331973</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389196662788811635180414</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:06Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:06Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>655994346</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192106472383103483537</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:06Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:06Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>832662869</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389197750385898768003607</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:05Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:05Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>244090639</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192837405197303354014</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:05Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:05Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>151226481</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389191260662401918145123</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:05Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:05Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>533778764</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389193576943071953232799</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:05Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:05Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>409553196</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192807212242478477279</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:05Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:05Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>296972269</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192801330806993139573</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:04Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:04Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>583664401</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-4618386593492938919504063071468833661</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:04Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:04Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>624327914</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192023769450949092432</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:04Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:04Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>287733396</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389195752304164559615652</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:04Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:04Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>160558119</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194111846102416584662</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:03Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>595269023</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389197943468610171564537</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:03Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>882885244</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192156660951182434402</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:03Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>191992334</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194161892632606154476</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:03Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>687845599</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389191258035037808383228</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:03Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>182773703</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389193360987838419045592</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:03Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>560006216</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389191460616096002602459</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:02Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:02Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>498220439</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194052774946172865954</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:02Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:02Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>205136823</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389196784625850281797994</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:02Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:02Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>516919744</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192978501024828840819</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:02Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:02Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>620463619</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389196386936780963760388</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:02Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:02Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>804384071</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192762761019636836033</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:02Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:02Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>127780953</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389196256192822655718103</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:01Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:01Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>508057236</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389197427535507674821116</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:01Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:01Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>815241849</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194957040132012451374</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:01Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:01Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>220740716</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389197980178178779945099</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:01Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:01Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>612608003</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389198654870368472408130</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:01Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:01Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>827423264</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389193856771878261161986</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:00Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:00Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>116832646</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389195196982771833095202</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:00Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:00Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>490067373</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192121044348165422189</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:00Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:00Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>661130181</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-4618386593492938919862521568053013425</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:00Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:00Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>875955723</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389198998506292259122948</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:00Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:00Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>240579473</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389195416873989634380176</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>572834569</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389197103480482549835304</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>261051249</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194633737010477647484</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>864170516</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389193042228015840809662</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>207629634</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-461838659349293891915293197573107023</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>510415446</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389195338830052171844684</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:59Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:59Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>635164751</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389192778041603873977724</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:58Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:58Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>806942173</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194996483547568318865</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:58Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:58Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>138086864</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-4618386593492938919807028468685738035</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:58Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:58Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>503858939</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194646330068807049512</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:58Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:58Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      <customer>
+        <id>817303681</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389193065832738684251170</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:58Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:58Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+      </customers>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:09 GMT
+      Etag:
+      - W/"f40f33b450eb03ba33c153ac52bcbf0c"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002508.268-107.3.151.90-6934700
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002508.268-107.3.151.90-6934700
+      X-Runtime:
+      - "0.868234"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

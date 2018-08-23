@@ -1,0 +1,75 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <payment-method>
+        <customer-id>884080803</customer-id>
+        <payment-method-nonce>fake-paypal-billing-agreement-nonce</payment-method-nonce>
+      </payment-method>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "4"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/payment_methods
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <paypal-account>
+        <billing-agreement-id>paypal_billing_agreement_id</billing-agreement-id>
+        <created-at type="datetime">2018-08-23T05:34:52Z</created-at>
+        <customer-id>884080803</customer-id>
+        <default type="boolean">true</default>
+        <email>jane.doe@paypal.com</email>
+        <image-url>https://assets.braintreegateway.com/payment_method_logo/paypal.png?environment=sandbox</image-url>
+        <subscriptions type="array"/>
+        <token>8n6yy3</token>
+        <updated-at type="datetime">2018-08-23T05:34:52Z</updated-at>
+        <is-channel-initiated type="boolean">false</is-channel-initiated>
+        <payer-id nil="true"/>
+        <payer-info nil="true"/>
+        <limited-use-order-id nil="true"/>
+      </paypal-account>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:52 GMT
+      Etag:
+      - W/"f5c99465fde307f8190ad246e054b269"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002492.275-107.3.151.90-6932980
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002492.275-107.3.151.90-6932980
+      X-Runtime:
+      - "0.281485"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""

@@ -17,12 +17,12 @@ func TestPaymentMethod(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	cust, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g := testGateway.PaymentMethod()
+	g := testGateway(t).PaymentMethod()
 
 	// Create using credit card
 	paymentMethod, err := g.Create(ctx, &PaymentMethodRequest{
@@ -104,7 +104,7 @@ func TestPaymentMethod(t *testing.T) {
 	}
 
 	// Cleanup
-	if err := testGateway.Customer().Delete(ctx, cust.Id); err != nil {
+	if err := testGateway(t).Customer().Delete(ctx, cust.Id); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -114,12 +114,12 @@ func TestPaymentMethodFailedAutoVerification(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	cust, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g := testGateway.PaymentMethod()
+	g := testGateway(t).PaymentMethod()
 	pm, err := g.Create(ctx, &PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,
@@ -140,12 +140,12 @@ func TestPaymentMethodForceNotVerified(t *testing.T) {
 
 	ctx := context.Background()
 
-	cust, err := testGateway.Customer().Create(ctx, &CustomerRequest{})
+	cust, err := testGateway(t).Customer().Create(ctx, &CustomerRequest{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g := testGateway.PaymentMethod()
+	g := testGateway(t).PaymentMethod()
 	pm, err := g.Create(ctx, &PaymentMethodRequest{
 		CustomerId:         cust.Id,
 		PaymentMethodNonce: FakeNonceProcessorDeclinedVisa,

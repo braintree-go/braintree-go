@@ -1,0 +1,321 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <customer>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389197943468610171564537</company>
+      </customer>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customer>
+        <id>595269023</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389197943468610171564537</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:03Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:03 GMT
+      Etag:
+      - W/"cce56d6dc39520b73008c2e69ee7b9c9"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002503.739-107.3.151.90-6934150
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002503.739-107.3.151.90-6934150
+      X-Runtime:
+      - "0.142320"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: |-
+      <transaction>
+        <type>sale</type>
+        <amount>24.65</amount>
+        <order-id>123456ABC</order-id>
+        <payment-method-token>7jh6hh</payment-method-token>
+        <options>
+          <submit-for-settlement>true</submit-for-settlement>
+          <paypal>
+            <custom-field>foo</custom-field>
+            <payee-email>payee@payal.com</payee-email>
+            <description>One tasty sandwich</description>
+            <supplementary-data>
+              <faz>bar</faz>
+            </supplementary-data>
+          </paypal>
+        </options>
+      </transaction>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/transactions
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <transaction>
+        <id>jn7bc36g</id>
+        <status>settling</status>
+        <type>sale</type>
+        <currency-iso-code>USD</currency-iso-code>
+        <amount>24.65</amount>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <sub-merchant-account-id nil="true"/>
+        <master-merchant-account-id nil="true"/>
+        <order-id>123456ABC</order-id>
+        <created-at type="datetime">2018-08-23T05:35:03Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:35:04Z</updated-at>
+        <customer>
+          <id>696181121</id>
+          <first-name nil="true"/>
+          <last-name nil="true"/>
+          <company nil="true"/>
+          <email nil="true"/>
+          <website nil="true"/>
+          <phone nil="true"/>
+          <fax nil="true"/>
+        </customer>
+        <billing>
+          <id nil="true"/>
+          <first-name nil="true"/>
+          <last-name nil="true"/>
+          <company nil="true"/>
+          <street-address nil="true"/>
+          <extended-address nil="true"/>
+          <locality nil="true"/>
+          <region nil="true"/>
+          <postal-code nil="true"/>
+          <country-name nil="true"/>
+          <country-code-alpha2 nil="true"/>
+          <country-code-alpha3 nil="true"/>
+          <country-code-numeric nil="true"/>
+        </billing>
+        <refund-id nil="true"/>
+        <refund-ids type="array"/>
+        <refunded-transaction-id nil="true"/>
+        <partial-settlement-transaction-ids type="array"/>
+        <authorized-transaction-id nil="true"/>
+        <settlement-batch-id>2018-08-23_bvps8ckgst59crzs_7ndw6my0</settlement-batch-id>
+        <shipping>
+          <id nil="true"/>
+          <first-name nil="true"/>
+          <last-name nil="true"/>
+          <company nil="true"/>
+          <street-address nil="true"/>
+          <extended-address nil="true"/>
+          <locality nil="true"/>
+          <region nil="true"/>
+          <postal-code nil="true"/>
+          <country-name nil="true"/>
+          <country-code-alpha2 nil="true"/>
+          <country-code-alpha3 nil="true"/>
+          <country-code-numeric nil="true"/>
+        </shipping>
+        <custom-fields/>
+        <avs-error-response-code nil="true"/>
+        <avs-postal-code-response-code>I</avs-postal-code-response-code>
+        <avs-street-address-response-code>I</avs-street-address-response-code>
+        <cvv-response-code>I</cvv-response-code>
+        <gateway-rejection-reason nil="true"/>
+        <processor-authorization-code nil="true"/>
+        <processor-response-code>1000</processor-response-code>
+        <processor-response-text>Approved</processor-response-text>
+        <additional-processor-response nil="true"/>
+        <voice-referral-number nil="true"/>
+        <purchase-order-number nil="true"/>
+        <tax-amount nil="true"/>
+        <tax-exempt type="boolean">false</tax-exempt>
+        <credit-card>
+          <token>7jh6hh</token>
+          <bin nil="true"/>
+          <last-4 nil="true"/>
+          <card-type nil="true"/>
+          <expiration-month></expiration-month>
+          <expiration-year></expiration-year>
+          <customer-location nil="true"/>
+          <cardholder-name nil="true"/>
+          <image-url>https://assets.braintreegateway.com/payment_method_logo/unknown.png?environment=sandbox</image-url>
+          <prepaid>Unknown</prepaid>
+          <healthcare>Unknown</healthcare>
+          <debit>Unknown</debit>
+          <durbin-regulated>Unknown</durbin-regulated>
+          <commercial>Unknown</commercial>
+          <payroll>Unknown</payroll>
+          <issuing-bank>Unknown</issuing-bank>
+          <country-of-issuance>Unknown</country-of-issuance>
+          <product-id>Unknown</product-id>
+          <unique-number-identifier nil="true"/>
+          <venmo-sdk type="boolean">false</venmo-sdk>
+        </credit-card>
+        <paypal>
+          <token>7jh6hh</token>
+          <payer-email>payer@example.com</payer-email>
+          <payment-id>PAY-b0de165cfa46f8a0537bd420</payment-id>
+          <authorization-id>AUTH-cfc29a64cdbbed6d</authorization-id>
+          <image-url>https://assets.braintreegateway.com/payment_method_logo/paypal.png?environment=sandbox</image-url>
+          <debug-id>DEBUG-63677870ae40</debug-id>
+          <payee-id nil="true"/>
+          <payee-email>payee@payal.com</payee-email>
+          <custom-field>foo</custom-field>
+          <payer-id>PAYER_ID-99d8cabf6e5650ce</payer-id>
+          <payer-first-name>John</payer-first-name>
+          <payer-last-name>Doe</payer-last-name>
+          <payer-status>VERIFIED</payer-status>
+          <seller-protection-status>ELIGIBLE</seller-protection-status>
+          <capture-id>CAPTURE-f5c1e9909901</capture-id>
+          <refund-id nil="true"/>
+          <transaction-fee-amount>0.01</transaction-fee-amount>
+          <transaction-fee-currency-iso-code>USD</transaction-fee-currency-iso-code>
+          <description>One tasty sandwich</description>
+        </paypal>
+        <status-history type="array">
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:35:04Z</timestamp>
+            <status>authorized</status>
+            <amount>24.65</amount>
+            <user>Braintree-Go</user>
+            <transaction-source>api</transaction-source>
+          </status-event>
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:35:04Z</timestamp>
+            <status>submitted_for_settlement</status>
+            <amount>24.65</amount>
+            <user>Braintree-Go</user>
+            <transaction-source>api</transaction-source>
+          </status-event>
+          <status-event>
+            <timestamp type="datetime">2018-08-23T05:35:04Z</timestamp>
+            <status>settling</status>
+            <amount>24.65</amount>
+            <user>Braintree-Go</user>
+            <transaction-source>api</transaction-source>
+          </status-event>
+        </status-history>
+        <plan-id nil="true"/>
+        <subscription-id nil="true"/>
+        <subscription>
+          <billing-period-end-date nil="true"/>
+          <billing-period-start-date nil="true"/>
+        </subscription>
+        <add-ons type="array"/>
+        <discounts type="array"/>
+        <descriptor>
+          <name nil="true"/>
+          <phone nil="true"/>
+          <url nil="true"/>
+        </descriptor>
+        <recurring type="boolean">false</recurring>
+        <channel nil="true"/>
+        <service-fee-amount nil="true"/>
+        <escrow-status nil="true"/>
+        <disbursement-details>
+          <disbursement-date nil="true"/>
+          <settlement-amount nil="true"/>
+          <settlement-currency-iso-code nil="true"/>
+          <settlement-currency-exchange-rate nil="true"/>
+          <funds-held nil="true"/>
+          <success nil="true"/>
+        </disbursement-details>
+        <disputes type="array"/>
+        <authorization-adjustments type="array"/>
+        <payment-instrument-type>paypal_account</payment-instrument-type>
+        <processor-settlement-response-code>4000</processor-settlement-response-code>
+        <processor-settlement-response-text>Confirmed</processor-settlement-response-text>
+        <three-d-secure-info nil="true"/>
+        <ships-from-postal-code nil="true"/>
+        <shipping-amount nil="true"/>
+        <discount-amount nil="true"/>
+        <network-transaction-id nil="true"/>
+      </transaction>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:35:04 GMT
+      Etag:
+      - W/"b68b1da1bede2256278070d72f78e764"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002503.715-107.3.151.90-6934147
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002503.715-107.3.151.90-6934147
+      X-Runtime:
+      - "0.471676"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""

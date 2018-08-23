@@ -1,0 +1,176 @@
+---
+version: 1
+interactions:
+- request:
+    body: |-
+      <customer>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194646330068807049512</company>
+      </customer>
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "3"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/customers
+    method: POST
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <customer>
+        <id>503858939</id>
+        <merchant-id>4ngqq224rnk6gvxh</merchant-id>
+        <first-name>John</first-name>
+        <last-name>Smith</last-name>
+        <company>PaginationTest-46183865934929389194646330068807049512</company>
+        <email nil="true"/>
+        <phone nil="true"/>
+        <fax nil="true"/>
+        <website nil="true"/>
+        <created-at type="datetime">2018-08-23T05:34:58Z</created-at>
+        <updated-at type="datetime">2018-08-23T05:34:58Z</updated-at>
+        <custom-fields/>
+        <credit-cards type="array"/>
+        <addresses type="array"/>
+      </customer>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:58 GMT
+      Etag:
+      - W/"e7e4d7d22a471526dec656cd5880e0c3"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002498.307-107.3.151.90-6933533
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002498.307-107.3.151.90-6933533
+      X-Runtime:
+      - "0.126108"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 201 Created
+    code: 201
+    duration: ""
+- request:
+    body: ""
+    form: {}
+    headers:
+      Accept:
+      - application/xml
+      Authorization:
+      - Basic amtxMjhwY3hqNHI4NWR3cjo2NjA2MmEzODc2ZTJkYzI5OGYyMTk1ZjBiZjE3M2Y1YQ==
+      Content-Type:
+      - application/xml
+      User-Agent:
+      - Braintree Go 0.20.0
+      X-Apiversion:
+      - "4"
+    url: https://api.sandbox.braintreegateway.com:443/merchants/4ngqq224rnk6gvxh/disputes/n9vcsygx5vsx8jx6
+    method: GET
+  response:
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <dispute>
+        <id>n9vcsygx5vsx8jx6</id>
+        <amount>1.00</amount>
+        <amount-disputed>1.00</amount-disputed>
+        <amount-won>0.00</amount-won>
+        <case-number>CB462304430857</case-number>
+        <created-at type="datetime">2018-08-23T05:34:56Z</created-at>
+        <currency-iso-code>USD</currency-iso-code>
+        <date-opened type="date">2018-08-23</date-opened>
+        <date-won nil="true"/>
+        <processor-comments nil="true"/>
+        <kind>chargeback</kind>
+        <merchant-account-id>bvps8ckgst59crzs</merchant-account-id>
+        <reason>fraud</reason>
+        <reason-code>62</reason-code>
+        <reason-description nil="true"/>
+        <received-date type="date">2018-08-23</received-date>
+        <reference-number nil="true"/>
+        <reply-by-date type="date">2018-08-29</reply-by-date>
+        <status>accepted</status>
+        <updated-at type="datetime">2018-08-23T05:34:58Z</updated-at>
+        <original-dispute-id nil="true"/>
+        <evidence type="array"/>
+        <status-history type="array">
+          <status-history>
+            <disbursement-date nil="true"/>
+            <effective-date type="date">2018-08-23</effective-date>
+            <status>accepted</status>
+            <timestamp type="datetime">2018-08-23T05:34:58Z</timestamp>
+          </status-history>
+          <status-history>
+            <disbursement-date type="date">2018-08-23</disbursement-date>
+            <effective-date type="date">2018-08-23</effective-date>
+            <status>open</status>
+            <timestamp type="datetime">2018-08-23T05:34:56Z</timestamp>
+          </status-history>
+        </status-history>
+        <transaction>
+          <id>67tmp3s2</id>
+          <amount>1.00</amount>
+          <created-at>2018-08-23T05:34:55Z</created-at>
+          <order-id nil="true"/>
+          <purchase-order-number nil="true"/>
+          <payment-instrument-subtype>Visa</payment-instrument-subtype>
+        </transaction>
+      </dispute>
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - frame-ancestors 'self'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 23 Aug 2018 05:34:58 GMT
+      Etag:
+      - W/"d0dc4e5e9d4dd662787f58dd8383a8e3"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      X-Authentication:
+      - basic_auth
+      X-Broxyid:
+      - 02-1535002498.300-107.3.151.90-2897478
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 02-1535002498.300-107.3.151.90-2897478
+      X-Runtime:
+      - "0.204810"
+      X-User:
+      - kkf6b66dz8xy83p6
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
