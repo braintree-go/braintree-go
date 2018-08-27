@@ -155,7 +155,7 @@ func TestSubscriptionAllFieldsWithBillingDayOfMonth(t *testing.T) {
 		MerchantAccountId:     testMerchantAccountId,
 		BillingDayOfMonth:     testhelpers.IntPtr(15),
 		NumberOfBillingCycles: testhelpers.IntPtr(2),
-		Price: NewDecimal(100, 2),
+		Price:                 NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
 			Phone: "0000000000",
@@ -389,7 +389,7 @@ func TestSubscriptionAllFieldsWithFirstBillingDate(t *testing.T) {
 		MerchantAccountId:     testMerchantAccountId,
 		FirstBillingDate:      firstBillingDate,
 		NumberOfBillingCycles: testhelpers.IntPtr(2),
-		Price: NewDecimal(100, 2),
+		Price:                 NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
 			Phone: "0000000000",
@@ -629,7 +629,7 @@ func TestSubscriptionAllFieldsWithTrialPeriod(t *testing.T) {
 		TrialDuration:         "7",
 		TrialDurationUnit:     SubscriptionTrialDurationUnitDay,
 		NumberOfBillingCycles: testhelpers.IntPtr(2),
-		Price: NewDecimal(100, 2),
+		Price:                 NewDecimal(100, 2),
 		Descriptor: &Descriptor{
 			Name:  "Company Name*Product 1",
 			Phone: "0000000000",
