@@ -5,8 +5,14 @@ package braintree
 import (
 	"context"
 	"reflect"
+	"regexp"
 	"testing"
 )
+
+var isValidBIN = regexp.MustCompile(`^\d{6}$`).MatchString
+var isValidLast4 = regexp.MustCompile(`^\d{4}$`).MatchString
+var isValidExpiryMonth = regexp.MustCompile(`^\d{2}$`).MatchString
+var isValidExpiryYear = regexp.MustCompile(`^\d{4}$`).MatchString
 
 func TestCustomerApplePayCard(t *testing.T) {
 	t.Parallel()
@@ -18,12 +24,13 @@ func TestCustomerApplePayCard(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	nonce := FakeNonceApplePayVisa
+	nonceCardType := "Apple Pay - Visa"
 
 	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
-		PaymentMethodNonce: nonce,
+		PaymentMethodNonce: FakeNonceApplePayVisa,
 	})
+
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -39,5 +46,25 @@ func TestCustomerApplePayCard(t *testing.T) {
 	}
 	if !reflect.DeepEqual(customerFound.ApplePayCards.ApplePayCard[0], applePayCard) {
 		t.Fatalf("Got Customer %#v ApplePayCard %#v, want %#v", customerFound, customerFound.ApplePayCards.ApplePayCard[0], applePayCard)
+	}
+
+	if applePayCard.CardType != nonceCardType {
+		t.Errorf("Got ApplePayCard.CardType %v, want %v", applePayCard.CardType, nonceCardType)
+	}
+
+	if !isValidExpiryMonth(applePayCard.ExpirationMonth) {
+		t.Errorf("ApplePayCard.ExpirationMonth (%s) does not conform expected value", applePayCard.ExpirationMonth)
+	}
+
+	if !isValidExpiryYear(applePayCard.ExpirationYear) {
+		t.Errorf("ApplePayCard.ExpirationYear (%s) does not conform expected value", applePayCard.ExpirationYear)
+	}
+
+	if !isValidBIN(applePayCard.BIN) {
+		t.Errorf("ApplePayCard.BIN (%s) does not conform expected value", applePayCard.BIN)
+	}
+
+	if !isValidLast4(applePayCard.Last4) {
+		t.Errorf("ApplePayCard.Last4 (%s) does not conform expected value", applePayCard.Last4)
 	}
 }
