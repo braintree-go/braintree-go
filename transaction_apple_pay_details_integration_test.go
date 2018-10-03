@@ -10,8 +10,6 @@ import (
 func TestTransactionApplePayDetails(t *testing.T) {
 	ctx := context.Background()
 
-	nonceCardType := "Apple Pay - Visa"
-
 	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:               "sale",
 		Amount:             NewDecimal(2000, 2),
@@ -36,8 +34,9 @@ func TestTransactionApplePayDetails(t *testing.T) {
 
 	t.Log(tx.ApplePayDetails)
 
-	if tx.ApplePayDetails.CardType != nonceCardType {
-		t.Errorf("Got ApplePayDetails.CardType %v, want %v", tx.ApplePayDetails.CardType, nonceCardType)
+	wantNonceCardType := "Apple Pay - Visa"
+	if tx.ApplePayDetails.CardType != wantNonceCardType {
+		t.Errorf("Got ApplePayDetails.CardType %v, want %v", tx.ApplePayDetails.CardType, wantNonceCardType)
 	}
 
 	if tx.ApplePayDetails.PaymentInstrumentName == "" {

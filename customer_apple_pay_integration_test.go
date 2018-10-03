@@ -24,8 +24,6 @@ func TestCustomerApplePayCard(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	nonceCardType := "Apple Pay - Visa"
-
 	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceApplePayVisa,
@@ -48,8 +46,9 @@ func TestCustomerApplePayCard(t *testing.T) {
 		t.Fatalf("Got Customer %#v ApplePayCard %#v, want %#v", customerFound, customerFound.ApplePayCards.ApplePayCard[0], applePayCard)
 	}
 
-	if applePayCard.CardType != nonceCardType {
-		t.Errorf("Got ApplePayCard.CardType %v, want %v", applePayCard.CardType, nonceCardType)
+	wantNonceCardType := "Apple Pay - Visa"
+	if applePayCard.CardType != wantNonceCardType {
+		t.Errorf("Got ApplePayCard.CardType %v, want %v", applePayCard.CardType, wantNonceCardType)
 	}
 
 	if !isValidExpiryMonth(applePayCard.ExpirationMonth) {
