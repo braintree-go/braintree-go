@@ -28,7 +28,6 @@ func TestCustomerApplePayCard(t *testing.T) {
 		CustomerId:         customer.Id,
 		PaymentMethodNonce: FakeNonceApplePayVisa,
 	})
-
 	if err != nil {
 		t.Fatal(err)
 	}
