@@ -38,31 +38,24 @@ func TestTransactionApplePayDetails(t *testing.T) {
 	if tx.ApplePayDetails.CardType != wantNonceCardType {
 		t.Errorf("Got ApplePayDetails.CardType %v, want %v", tx.ApplePayDetails.CardType, wantNonceCardType)
 	}
-
 	if tx.ApplePayDetails.PaymentInstrumentName == "" {
 		t.Fatal("Expected ApplePayDetails to have PaymentInstrumentName set")
 	}
-
 	if tx.ApplePayDetails.SourceDescription == "" {
 		t.Fatal("Expected ApplePayDetails to have SourceDescription set")
 	}
-
 	if tx.ApplePayDetails.CardholderName == "" {
 		t.Fatal("Expected ApplePayDetails to have CardholderName set")
 	}
-
 	if !isValidExpiryMonth(tx.ApplePayDetails.ExpirationMonth) {
 		t.Errorf("ApplePayDetails.ExpirationMonth (%s) does not match expected value", tx.ApplePayDetails.ExpirationMonth)
 	}
-
 	if !isValidExpiryYear(tx.ApplePayDetails.ExpirationYear) {
 		t.Errorf("ApplePayDetails.ExpirationYear (%s) does not match expected value", tx.ApplePayDetails.ExpirationYear)
 	}
-
 	if !isValidBIN(tx.ApplePayDetails.BIN) {
 		t.Errorf("ApplePayDetails.BIN (%s) does not conform expected value", tx.ApplePayDetails.BIN)
 	}
-
 	if !isValidLast4(tx.ApplePayDetails.Last4) {
 		t.Errorf("ApplePayDetails.Last4 (%s) does not conform match value", tx.ApplePayDetails.Last4)
 	}

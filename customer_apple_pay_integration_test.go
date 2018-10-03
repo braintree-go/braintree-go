@@ -49,19 +49,15 @@ func TestCustomerApplePayCard(t *testing.T) {
 	if applePayCard.CardType != wantNonceCardType {
 		t.Errorf("Got ApplePayCard.CardType %v, want %v", applePayCard.CardType, wantNonceCardType)
 	}
-
 	if !isValidExpiryMonth(applePayCard.ExpirationMonth) {
 		t.Errorf("ApplePayCard.ExpirationMonth (%s) does not conform expected value", applePayCard.ExpirationMonth)
 	}
-
 	if !isValidExpiryYear(applePayCard.ExpirationYear) {
 		t.Errorf("ApplePayCard.ExpirationYear (%s) does not conform expected value", applePayCard.ExpirationYear)
 	}
-
 	if !isValidBIN(applePayCard.BIN) {
 		t.Errorf("ApplePayCard.BIN (%s) does not conform expected value", applePayCard.BIN)
 	}
-
 	if !isValidLast4(applePayCard.Last4) {
 		t.Errorf("ApplePayCard.Last4 (%s) does not conform expected value", applePayCard.Last4)
 	}
