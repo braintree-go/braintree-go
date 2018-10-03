@@ -6,6 +6,8 @@ import (
 	"context"
 	"reflect"
 	"testing"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 func TestCustomerApplePayCard(t *testing.T) {
@@ -18,11 +20,9 @@ func TestCustomerApplePayCard(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	nonce := FakeNonceApplePayVisa
-
 	paymentMethod, err := testGateway.PaymentMethod().Create(ctx, &PaymentMethodRequest{
 		CustomerId:         customer.Id,
-		PaymentMethodNonce: nonce,
+		PaymentMethodNonce: FakeNonceApplePayVisa,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -39,5 +39,22 @@ func TestCustomerApplePayCard(t *testing.T) {
 	}
 	if !reflect.DeepEqual(customerFound.ApplePayCards.ApplePayCard[0], applePayCard) {
 		t.Fatalf("Got Customer %#v ApplePayCard %#v, want %#v", customerFound, customerFound.ApplePayCards.ApplePayCard[0], applePayCard)
+	}
+
+	wantNonceCardType := "Apple Pay - Visa"
+	if applePayCard.CardType != wantNonceCardType {
+		t.Errorf("Got ApplePayCard.CardType %v, want %v", applePayCard.CardType, wantNonceCardType)
+	}
+	if !testhelpers.ValidExpiryMonth(applePayCard.ExpirationMonth) {
+		t.Errorf("ApplePayCard.ExpirationMonth (%s) does not conform expected value", applePayCard.ExpirationMonth)
+	}
+	if !testhelpers.ValidExpiryYear(applePayCard.ExpirationYear) {
+		t.Errorf("ApplePayCard.ExpirationYear (%s) does not conform expected value", applePayCard.ExpirationYear)
+	}
+	if !testhelpers.ValidBIN(applePayCard.BIN) {
+		t.Errorf("ApplePayCard.BIN (%s) does not conform expected value", applePayCard.BIN)
+	}
+	if !testhelpers.ValidLast4(applePayCard.Last4) {
+		t.Errorf("ApplePayCard.Last4 (%s) does not conform expected value", applePayCard.Last4)
 	}
 }

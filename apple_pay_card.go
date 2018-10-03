@@ -12,6 +12,7 @@ type ApplePayCard struct {
 	CardType              string         `xml:"card-type"`
 	PaymentInstrumentName string         `xml:"payment-instrument-name"`
 	SourceDescription     string         `xml:"source-description"`
+	BIN                   string         `xml:"bin"`
 	Last4                 string         `xml:"last-4"`
 	ExpirationMonth       string         `xml:"expiration-month"`
 	ExpirationYear        string         `xml:"expiration-year"`

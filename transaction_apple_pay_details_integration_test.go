@@ -5,6 +5,8 @@ package braintree
 import (
 	"context"
 	"testing"
+
+	"github.com/lionelbarrow/braintree-go/testhelpers"
 )
 
 func TestTransactionApplePayDetails(t *testing.T) {
@@ -34,8 +36,9 @@ func TestTransactionApplePayDetails(t *testing.T) {
 
 	t.Log(tx.ApplePayDetails)
 
-	if tx.ApplePayDetails.CardType == "" {
-		t.Fatal("Expected ApplePayDetails to have CardType set")
+	wantNonceCardType := "Apple Pay - Visa"
+	if tx.ApplePayDetails.CardType != wantNonceCardType {
+		t.Errorf("Got ApplePayDetails.CardType %v, want %v", tx.ApplePayDetails.CardType, wantNonceCardType)
 	}
 	if tx.ApplePayDetails.PaymentInstrumentName == "" {
 		t.Fatal("Expected ApplePayDetails to have PaymentInstrumentName set")
@@ -46,14 +49,17 @@ func TestTransactionApplePayDetails(t *testing.T) {
 	if tx.ApplePayDetails.CardholderName == "" {
 		t.Fatal("Expected ApplePayDetails to have CardholderName set")
 	}
-	if tx.ApplePayDetails.ExpirationMonth == "" {
-		t.Fatal("Expected ApplePayDetails to have ExpirationMonth set")
+	if !testhelpers.ValidExpiryMonth(tx.ApplePayDetails.ExpirationMonth) {
+		t.Errorf("ApplePayDetails.ExpirationMonth (%s) does not match expected value", tx.ApplePayDetails.ExpirationMonth)
 	}
-	if tx.ApplePayDetails.ExpirationYear == "" {
-		t.Fatal("Expected ApplePayDetails to have ExpirationYear set")
+	if !testhelpers.ValidExpiryYear(tx.ApplePayDetails.ExpirationYear) {
+		t.Errorf("ApplePayDetails.ExpirationYear (%s) does not match expected value", tx.ApplePayDetails.ExpirationYear)
 	}
-	if tx.ApplePayDetails.Last4 == "" {
-		t.Fatal("Expected ApplePayDetails to have Last3 set")
+	if !testhelpers.ValidBIN(tx.ApplePayDetails.BIN) {
+		t.Errorf("ApplePayDetails.BIN (%s) does not conform expected value", tx.ApplePayDetails.BIN)
+	}
+	if !testhelpers.ValidLast4(tx.ApplePayDetails.Last4) {
+		t.Errorf("ApplePayDetails.Last4 (%s) does not conform match value", tx.ApplePayDetails.Last4)
 	}
 }
 
