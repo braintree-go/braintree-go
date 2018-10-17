@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lionelbarrow/braintree-go/testhelpers"
+	"github.com/braintree-go/braintree-go/testhelpers"
 )
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.

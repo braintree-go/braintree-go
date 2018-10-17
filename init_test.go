@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/lionelbarrow/braintree-go/testhelpers"
+	"github.com/braintree-go/braintree-go/testhelpers"
 )
 
 const (
