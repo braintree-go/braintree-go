@@ -1,5 +1,5 @@
 language: go
-go_import_path: github.com/lionelbarrow/braintree-go
+go_import_path: github.com/braintree-go/braintree-go
 
 install:
   - source .default.env
