@@ -1,3 +1,16 @@
+## 0.21.0 (November 2nd, 2018)
+
+BACKWARDS INCOMPATIBILITES:
+
+* Move package from github.com/lionelbarrow/braintree-go to github.com/braintree-go/braintree-go.
+
+IMPROVEMENTS:
+
+* Add go.mod and go.sum for support of Go1.11 modules.
+* Add BIN to ApplePayCard.
+* Add BIN to ApplePayDetails.
+* Add AccountUpdaterDailyReport webhook subject.
+
 ## 0.20.0 (August 8th, 2018)
 
 BACKWARDS INCOMPATIBILITES:
