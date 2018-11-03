@@ -21,6 +21,26 @@ jobs:
       script: make test
 
     - stage: test
+      go: "1.11.2"
+      env:
+        - GO111MODULE=on
+      script: make test
+
+    - stage: test
+      go: "1.11.2"
+      script: make test
+
+    - stage: test
+      go: "1.11.1"
+      env:
+        - GO111MODULE=on
+      script: make test
+
+    - stage: test
+      go: "1.11.1"
+      script: make test
+
+    - stage: test
       go: "1.11"
       env:
         - GO111MODULE=on
@@ -28,6 +48,10 @@ jobs:
 
     - stage: test
       go: "1.11"
+      script: make test
+
+    - stage: test
+      go: "1.10.5"
       script: make test
 
     - stage: test
