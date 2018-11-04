@@ -4,3 +4,4 @@ braintree.sublime-project
 .ruby-version
 .env
 .idea
+.vscode
