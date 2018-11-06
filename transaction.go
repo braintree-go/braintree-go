@@ -231,7 +231,7 @@ type TransactionOptions struct {
 	StoreShippingAddressInVault      bool                                   `xml:"store-shipping-address-in-vault,omitempty"`
 	HoldInEscrow                     bool                                   `xml:"hold-in-escrow,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest       `xml:"paypal,omitempty"`
-	SkipAdvancedFraudChecking        bool                                   `xml:"skip-advanced-fraud-checking,omitempty"`
+	SkipAdvancedFraudChecking        bool                                   `xml:"skip_advanced_fraud_checking,omitempty"`
 	ThreeDSecure                     *TransactionOptionsThreeDSecureRequest `xml:"three-d-secure,omitempty"`
 }
 
