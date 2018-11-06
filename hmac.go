@@ -29,6 +29,14 @@ type hmacer struct {
 	privateKey string
 }
 
+func (h hmacer) verifyTransparentSignature(signature, payload string) (bool, error) {
+	expectedSignature, err := h.hmac(payload)
+	if err != nil {
+		return false, err
+	}
+	return hmac.Equal([]byte(expectedSignature), []byte(signature)), nil
+}
+
 func (h hmacer) verifySignature(signature, payload string) (bool, error) {
 	signature, err := h.parseSignature(signature)
 	if err != nil {
