@@ -168,6 +168,10 @@ func (g *Braintree) Transaction() *TransactionGateway {
 	return &TransactionGateway{g}
 }
 
+func (g *Braintree) TransparentRedirect() *TransparentRedirectGateway {
+	return &TransparentRedirectGateway{g}
+}
+
 func (g *Braintree) TransactionLineItem() *TransactionLineItemGateway {
 	return &TransactionLineItemGateway{g}
 }

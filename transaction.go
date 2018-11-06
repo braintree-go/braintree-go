@@ -100,6 +100,33 @@ type Transaction struct {
 	Disputes                     []*Dispute                `xml:"disputes>dispute"`
 }
 
+type TransactionURLRequest struct {
+	CustomerID          string                      `url:"customer_id,omitempty"`
+	Type                string                      `url:"type,omitempty"`
+	Amount              string                      `url:"amount,omitempty"`
+	OrderId             string                      `url:"order_id,omitempty"`
+	PaymentMethodToken  string                      `url:"payment_method_token,omitempty"`
+	PaymentMethodNonce  string                      `url:"payment_method_nonce,omitempty"`
+	MerchantAccountId   string                      `url:"merchant_account_id,omitempty"`
+	PlanId              string                      `url:"plan_id,omitempty"`
+	CreditCard          *CreditCard                 `url:"credit_card,omitempty"`
+	Customer            *CustomerRequest            `url:"customer,omitempty"`
+	BillingAddress      *Address                    `url:"billing,omitempty"`
+	ShippingAddress     *Address                    `url:"shipping,omitempty"`
+	TaxAmount           *Decimal                    `url:"tax_amount,omitempty"`
+	TaxExempt           bool                        `url:"tax_exempt,omitempty"`
+	DeviceData          string                      `url:"device_data,omitempty"`
+	Options             *TransactionURLOptions      `url:"options,omitempty"`
+	ServiceFeeAmount    *Decimal                    `url:"service_fee_amount,omitempty"`
+	RiskData            *RiskDataRequest            `url:"risk_data,omitempty"`
+	Descriptor          *Descriptor                 `url:"descriptor,omitempty"`
+	Channel             string                      `url:"channel,omitempty"`
+	CustomFields        customfields.CustomFields   `url:"custom_fields,omitempty"`
+	PurchaseOrderNumber string                      `url:"purchase_order_number,omitempty"`
+	TransactionSource   TransactionSource           `url:"transaction_source,omitempty"`
+	LineItems           TransactionLineItemRequests `url:"line_items,omitempty"`
+}
+
 type TransactionRequest struct {
 	XMLName             string                      `xml:"transaction"`
 	CustomerID          string                      `xml:"customer-id,omitempty"`
@@ -185,6 +212,15 @@ func (t *Transaction) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error
 
 type Transactions struct {
 	Transaction []*Transaction `xml:"transaction"`
+}
+
+type TransactionURLOptions struct {
+	SubmitForSettlement              int `url:"submit_for_settlement,omitempty"`
+	StoreInVault                     int `url:"store_in_vault,omitempty"`
+	StoreInVaultOnSuccess            int `url:"store_in_vault_on_success,omitempty"`
+	AddBillingAddressToPaymentMethod int `url:"add_billing_address_to_payment_method,omitempty"`
+	StoreShippingAddressInVault      int `url:"store_shipping_address_in_vault,omitempty"`
+	HoldInEscrow                     int `url:"hold_in_escrow,omitempty"`
 }
 
 type TransactionOptions struct {
