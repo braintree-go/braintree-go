@@ -30,7 +30,7 @@ func (g *ClientTokenGateway) GenerateWithCustomer(ctx context.Context, customerI
 // GenerateWithRequest generates a new client token using custom request options.
 func (g *ClientTokenGateway) GenerateWithRequest(ctx context.Context, req *ClientTokenRequest) (string, error) {
 	if req == nil {
-		req = &ClientTokenRequest{Version: clientTokenVersion}
+		req = &ClientTokenRequest{}
 	}
 	if req.Version == 0 {
 		req.Version = clientTokenVersion
