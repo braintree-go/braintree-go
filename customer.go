@@ -60,18 +60,18 @@ func (c *Customer) DefaultPaymentMethod() PaymentMethod {
 }
 
 type CustomerRequest struct {
-	XMLName            string                    `xml:"customer"`
-	ID                 string                    `xml:"id,omitempty"`
-	FirstName          string                    `xml:"first-name,omitempty"`
-	LastName           string                    `xml:"last-name,omitempty"`
-	Company            string                    `xml:"company,omitempty"`
-	Email              string                    `xml:"email,omitempty"`
-	Phone              string                    `xml:"phone,omitempty"`
-	Fax                string                    `xml:"fax,omitempty"`
-	Website            string                    `xml:"website,omitempty"`
-	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty"`
-	CreditCard         *CreditCard               `xml:"credit-card,omitempty"`
-	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty"`
+	XMLName            string                    `xml:"customer" url:"-"`
+	ID                 string                    `xml:"id,omitempty" url:"id,omitempty"`
+	FirstName          string                    `xml:"first-name,omitempty" url:"first_name,omitempty"`
+	LastName           string                    `xml:"last-name,omitempty" url:"last_name,omitempty"`
+	Company            string                    `xml:"company,omitempty" url:"company,omitempty"`
+	Email              string                    `xml:"email,omitempty" url:"email,omitempty"`
+	Phone              string                    `xml:"phone,omitempty" url:"phone,omitempty"`
+	Fax                string                    `xml:"fax,omitempty" url:"fax,omitempty"`
+	Website            string                    `xml:"website,omitempty" url:"website,omitempty"`
+	CustomFields       customfields.CustomFields `xml:"custom-fields,omitempty" url:"custom_fields,omitempty"`
+	CreditCard         *CreditCard               `xml:"credit-card,omitempty" url:"credit_card,omitempty"`
+	PaymentMethodNonce string                    `xml:"payment-method-nonce,omitempty" url:"payment_method_nonce,omitempty"`
 }
 
 type CustomerSearchResult struct {
