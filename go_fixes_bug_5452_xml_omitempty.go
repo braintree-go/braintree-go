@@ -14,6 +14,7 @@ import "encoding/xml"
 // To serialize the bool false value when it is set on `VerifyCard`, we must manually control
 // if it is serialized or not.
 
+// MarshalXML custom serialization for CreditCardOptions.
 func (cco *CreditCardOptions) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	if cco.VerifyCard == nil {
 		type excludeVerifyCard struct {
@@ -58,6 +59,7 @@ func (cco *CreditCardOptions) MarshalXML(e *xml.Encoder, start xml.StartElement)
 	}
 }
 
+// MarshalXML custom serialization for PaymentMethodRequestOptions.
 func (pmo *PaymentMethodRequestOptions) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	if pmo.VerifyCard == nil {
 		type excludeVerifyCard struct {
@@ -92,4 +94,39 @@ func (pmo *PaymentMethodRequestOptions) MarshalXML(e *xml.Encoder, start xml.Sta
 			start,
 		)
 	}
+}
+
+// MarshalXML custom serialization for ClientTokenRequestOptions.
+func (ctro *ClientTokenRequestOptions) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	if ctro == nil {
+		return e.EncodeElement(ctro, start)
+	}
+	if ctro.VerifyCard == nil {
+		type excludeVerifyCard struct {
+			FailOnDuplicatePaymentMethod bool  `xml:"fail-on-duplicate-payment-method,omitempty"`
+			MakeDefault                  bool  `xml:"make-default,omitempty"`
+			VerifyCard                   *bool `xml:"-"`
+		}
+		return e.EncodeElement(
+			excludeVerifyCard{
+				FailOnDuplicatePaymentMethod: ctro.FailOnDuplicatePaymentMethod,
+				MakeDefault:                  ctro.MakeDefault,
+				VerifyCard:                   ctro.VerifyCard,
+			},
+			start,
+		)
+	}
+	type includeVerifyCard struct {
+		FailOnDuplicatePaymentMethod bool  `xml:"fail-on-duplicate-payment-method,omitempty"`
+		MakeDefault                  bool  `xml:"make-default,omitempty"`
+		VerifyCard                   *bool `xml:"verify-card"`
+	}
+	return e.EncodeElement(
+		includeVerifyCard{
+			FailOnDuplicatePaymentMethod: ctro.FailOnDuplicatePaymentMethod,
+			MakeDefault:                  ctro.MakeDefault,
+			VerifyCard:                   ctro.VerifyCard,
+		},
+		start,
+	)
 }
