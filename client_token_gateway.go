@@ -7,6 +7,7 @@ import (
 
 const clientTokenVersion = 2
 
+// ClientTokenGateway represents the provider client token generation.
 type ClientTokenGateway struct {
 	*Braintree
 }
@@ -19,11 +20,22 @@ func (g *ClientTokenGateway) Generate(ctx context.Context) (string, error) {
 }
 
 // GenerateWithCustomer generates a new client token for the customer id.
-func (g *ClientTokenGateway) GenerateWithCustomer(ctx context.Context, customerId string) (string, error) {
+func (g *ClientTokenGateway) GenerateWithCustomer(ctx context.Context, customerID string) (string, error) {
 	return g.generate(ctx, &ClientTokenRequest{
 		Version:    clientTokenVersion,
-		CustomerID: customerId,
+		CustomerID: customerID,
 	})
+}
+
+// GenerateWithRequest generates a new client token using custom request options.
+func (g *ClientTokenGateway) GenerateWithRequest(ctx context.Context, req *ClientTokenRequest) (string, error) {
+	if req == nil {
+		req = &ClientTokenRequest{}
+	}
+	if req.Version == 0 {
+		req.Version = clientTokenVersion
+	}
+	return g.generate(ctx, req)
 }
 
 func (g *ClientTokenGateway) generate(ctx context.Context, req *ClientTokenRequest) (string, error) {
