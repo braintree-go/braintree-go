@@ -3,18 +3,21 @@ package braintree
 import (
 	"context"
 	"errors"
-	"github.com/google/go-querystring/query"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 const apiVersion5 = "5"
 
+// TransparentRedirectGateway is the gateway for TR.
 type TransparentRedirectGateway struct {
 	*Braintree
 }
 
+// TransactionData creates the signed transaction data to embded in the html form.
 func (tr *TransparentRedirectGateway) TransactionData(data *TransparentRedirectData) (string, error) {
 	data.Kind = TransparentRedirectKindCreateTransaction
 	return tr.generateTrData(data)
@@ -40,6 +43,7 @@ func (tr *TransparentRedirectGateway) generateTrData(inputData *TransparentRedir
 	return
 }
 
+// ValidateQueryString validates the signature on the query string passed to the callback by braintree.
 func (tr *TransparentRedirectGateway) ValidateQueryString(query string) (bool, error) {
 	apiKey, ok := tr.credentials.(apiKey)
 	if !ok {
@@ -60,10 +64,12 @@ func (tr *TransparentRedirectGateway) ValidateQueryString(query string) (bool, e
 	return signature == splitQuery[1], nil
 }
 
+// FormURL returns the URL the html form has to POST to.
 func (tr *TransparentRedirectGateway) FormURL() string {
 	return tr.Environment().baseURL + "/transparent_redirect_requests"
 }
 
+// Confirm confirms the transaction.
 func (tr *TransparentRedirectGateway) Confirm(ctx context.Context, query string) (t *Transaction, err error) {
 	v, err := url.ParseQuery(query)
 	if err != nil {
