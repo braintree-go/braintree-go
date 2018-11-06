@@ -16,7 +16,7 @@ import (
 )
 
 func randomAmount() *Decimal {
-	return NewDecimal(rand.Int63n(10000), 2)
+	return NewDecimal(1+rand.Int63n(9999), 2)
 }
 
 func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {

@@ -1,6 +1,8 @@
 # Braintree Go
 
-[![GoDoc](https://godoc.org/github.com/braintree-go/braintree-go?status.svg)](http://godoc.org/github.com/braintree-go/braintree-go) [![Build Status](https://travis-ci.org/braintree-go/braintree-go.png?branch=master)](https://travis-ci.org/braintree-go/braintree-go) [![Go Report Card](https://goreportcard.com/badge/github.com/braintree-go/braintree-go)](https://goreportcard.com/report/github.com/braintree-go/braintree-go)
+[![GoDoc](https://godoc.org/github.com/braintree-go/braintree-go?status.svg)](http://godoc.org/github.com/braintree-go/braintree-go)
+[![Build Status](https://travis-ci.com/braintree-go/braintree-go.png?branch=master)](https://travis-ci.com/braintree-go/braintree-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/braintree-go/braintree-go)](https://goreportcard.com/report/github.com/braintree-go/braintree-go)
 
 A Go client library for [Braintree](https://www.braintreepayments.com), the payments company behind awesome companies like GitHub, Heroku, and 37signals.
 
