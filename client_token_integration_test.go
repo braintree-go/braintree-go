@@ -53,6 +53,8 @@ func TestClientTokenGateway_GenerateWithRequest(t *testing.T) {
 		t.Error(err)
 	}
 
+	trueValue := true
+
 	tests := []struct {
 		name    string
 		req     *ClientTokenRequest
@@ -91,7 +93,7 @@ func TestClientTokenGateway_GenerateWithRequest(t *testing.T) {
 				Options: &ClientTokenRequestOptions{
 					FailOnDuplicatePaymentMethod: true,
 					MakeDefault:                  true,
-					VerifyCard:                   true,
+					VerifyCard:                   &trueValue,
 				},
 			},
 		},

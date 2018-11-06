@@ -15,7 +15,7 @@ type clientToken struct {
 
 // ClientTokenRequestOptions represents options map for the client token request.
 type ClientTokenRequestOptions struct {
-	FailOnDuplicatePaymentMethod bool `xml:"fail-on-duplicate-payment-method,omitempty"`
-	MakeDefault                  bool `xml:"make-default,omitempty"`
-	VerifyCard                   bool `xml:"verify-card,omitempty"`
+	FailOnDuplicatePaymentMethod bool  `xml:"fail-on-duplicate-payment-method,omitempty"`
+	MakeDefault                  bool  `xml:"make-default,omitempty"`
+	VerifyCard                   *bool `xml:"verify-card,omitempty"`
 }
