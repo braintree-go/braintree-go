@@ -18,6 +18,11 @@ func TestClientToken_MarshalXML(t *testing.T) {
 		wantXML string
 	}{
 		{
+			name:    "request nil",
+			req:     nil,
+			wantXML: ``,
+		},
+		{
 			name: "request empty",
 			req:  &ClientTokenRequest{},
 			wantXML: `<client-token>
