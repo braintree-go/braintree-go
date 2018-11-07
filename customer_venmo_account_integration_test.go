@@ -10,7 +10,7 @@ import (
 )
 
 func TestCustomerVenmoAccount(t *testing.T) {
-	if time.Until(time.Date(2018, 11, 14, 0, 0, 0, 0, time.UTC)) > 0 {
+	if time.Date(2018, 11, 14, 0, 0, 0, 0, time.UTC).Sub(time.Now()) > 0 {
 		t.Skip("This test started failing with a 404 when creating the payment method. It seems like an environmental issue.")
 	}
 	t.Parallel()
