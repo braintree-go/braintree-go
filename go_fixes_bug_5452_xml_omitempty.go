@@ -136,38 +136,3 @@ func (ctro *ClientTokenRequestOptions) MarshalXML(e *xml.Encoder, start xml.Star
 		start,
 	)
 }
-
-// MarshalXML custom serialization for ClientTokenRequestOptions.
-func (ctro *ClientTokenRequestOptions) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	if ctro == nil {
-		return e.EncodeElement(ctro, start)
-	}
-	if ctro.VerifyCard == nil {
-		type excludeVerifyCard struct {
-			FailOnDuplicatePaymentMethod bool  `xml:"fail-on-duplicate-payment-method,omitempty"`
-			MakeDefault                  bool  `xml:"make-default,omitempty"`
-			VerifyCard                   *bool `xml:"-"`
-		}
-		return e.EncodeElement(
-			excludeVerifyCard{
-				FailOnDuplicatePaymentMethod: ctro.FailOnDuplicatePaymentMethod,
-				MakeDefault:                  ctro.MakeDefault,
-				VerifyCard:                   ctro.VerifyCard,
-			},
-			start,
-		)
-	}
-	type includeVerifyCard struct {
-		FailOnDuplicatePaymentMethod bool  `xml:"fail-on-duplicate-payment-method,omitempty"`
-		MakeDefault                  bool  `xml:"make-default,omitempty"`
-		VerifyCard                   *bool `xml:"verify-card"`
-	}
-	return e.EncodeElement(
-		includeVerifyCard{
-			FailOnDuplicatePaymentMethod: ctro.FailOnDuplicatePaymentMethod,
-			MakeDefault:                  ctro.MakeDefault,
-			VerifyCard:                   ctro.VerifyCard,
-		},
-		start,
-	)
-}
