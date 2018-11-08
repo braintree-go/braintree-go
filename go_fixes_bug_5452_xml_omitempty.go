@@ -39,27 +39,27 @@ func (cco *CreditCardOptions) MarshalXML(e *xml.Encoder, start xml.StartElement)
 			},
 			start,
 		)
+	} else {
+		type includeVerifyCard struct {
+			VerifyCard                    *bool  `xml:"verify-card"`
+			VenmoSDKSession               string `xml:"venmo-sdk-session,omitempty"`
+			MakeDefault                   bool   `xml:"make-default,omitempty"`
+			FailOnDuplicatePaymentMethod  bool   `xml:"fail-on-duplicate-payment-method,omitempty"`
+			VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
+			UpdateExistingToken           string `xml:"update-existing-token,omitempty"`
+		}
+		return e.EncodeElement(
+			includeVerifyCard{
+				VerifyCard:                    cco.VerifyCard,
+				VenmoSDKSession:               cco.VenmoSDKSession,
+				MakeDefault:                   cco.MakeDefault,
+				FailOnDuplicatePaymentMethod:  cco.FailOnDuplicatePaymentMethod,
+				VerificationMerchantAccountId: cco.VerificationMerchantAccountId,
+				UpdateExistingToken:           cco.UpdateExistingToken,
+			},
+			start,
+		)
 	}
-	type includeVerifyCard struct {
-		VerifyCard                    *bool  `xml:"verify-card"`
-		VenmoSDKSession               string `xml:"venmo-sdk-session,omitempty"`
-		MakeDefault                   bool   `xml:"make-default,omitempty"`
-		FailOnDuplicatePaymentMethod  bool   `xml:"fail-on-duplicate-payment-method,omitempty"`
-		VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
-		UpdateExistingToken           string `xml:"update-existing-token,omitempty"`
-	}
-	return e.EncodeElement(
-		includeVerifyCard{
-			VerifyCard:                    cco.VerifyCard,
-			VenmoSDKSession:               cco.VenmoSDKSession,
-			MakeDefault:                   cco.MakeDefault,
-			FailOnDuplicatePaymentMethod:  cco.FailOnDuplicatePaymentMethod,
-			VerificationMerchantAccountId: cco.VerificationMerchantAccountId,
-			UpdateExistingToken:           cco.UpdateExistingToken,
-		},
-		start,
-	)
-
 }
 
 // MarshalXML custom serialization for PaymentMethodRequestOptions.
@@ -83,22 +83,23 @@ func (pmo *PaymentMethodRequestOptions) MarshalXML(e *xml.Encoder, start xml.Sta
 			},
 			start,
 		)
+	} else {
+		type includeVerifyCard struct {
+			MakeDefault                   bool   `xml:"make-default,omitempty"`
+			FailOnDuplicatePaymentMethod  bool   `xml:"fail-on-duplicate-payment-method,omitempty"`
+			VerifyCard                    *bool  `xml:"verify-card"`
+			VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
+		}
+		return e.EncodeElement(
+			includeVerifyCard{
+				MakeDefault:                   pmo.MakeDefault,
+				FailOnDuplicatePaymentMethod:  pmo.FailOnDuplicatePaymentMethod,
+				VerifyCard:                    pmo.VerifyCard,
+				VerificationMerchantAccountId: pmo.VerificationMerchantAccountId,
+			},
+			start,
+		)
 	}
-	type includeVerifyCard struct {
-		MakeDefault                   bool   `xml:"make-default,omitempty"`
-		FailOnDuplicatePaymentMethod  bool   `xml:"fail-on-duplicate-payment-method,omitempty"`
-		VerifyCard                    *bool  `xml:"verify-card"`
-		VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
-	}
-	return e.EncodeElement(
-		includeVerifyCard{
-			MakeDefault:                   pmo.MakeDefault,
-			FailOnDuplicatePaymentMethod:  pmo.FailOnDuplicatePaymentMethod,
-			VerifyCard:                    pmo.VerifyCard,
-			VerificationMerchantAccountId: pmo.VerificationMerchantAccountId,
-		},
-		start,
-	)
 }
 
 // MarshalXML custom serialization for ClientTokenRequestOptions.
