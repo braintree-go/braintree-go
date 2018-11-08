@@ -57,7 +57,7 @@ func TestTransactionData(t *testing.T) {
 	data, err := tr.TransactionData(&TransparentRedirectData{
 		RedirectURL: "http://call.me",
 		Transaction: TransactionURLRequest{
-			Amount: "20",
+			Amount: NewDecimal(2000, 2),
 		},
 	})
 	if err != nil {

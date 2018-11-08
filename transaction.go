@@ -103,7 +103,7 @@ type Transaction struct {
 type TransactionURLRequest struct {
 	CustomerID          string                      `url:"customer_id,omitempty"`
 	Type                string                      `url:"type,omitempty"`
-	Amount              string                      `url:"amount,omitempty"`
+	Amount              *Decimal                    `url:"amount,omitempty"`
 	OrderId             string                      `url:"order_id,omitempty"`
 	PaymentMethodToken  string                      `url:"payment_method_token,omitempty"`
 	PaymentMethodNonce  string                      `url:"payment_method_nonce,omitempty"`
