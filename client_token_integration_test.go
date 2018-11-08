@@ -5,6 +5,8 @@ package braintree
 import (
 	"context"
 	"testing"
+
+	"github.com/braintree-go/braintree-go/testhelpers"
 )
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
@@ -53,8 +55,6 @@ func TestClientTokenGateway_GenerateWithRequest(t *testing.T) {
 		t.Error(err)
 	}
 
-	trueValue := true
-
 	tests := []struct {
 		name    string
 		req     *ClientTokenRequest
@@ -86,14 +86,37 @@ func TestClientTokenGateway_GenerateWithRequest(t *testing.T) {
 			req:  &ClientTokenRequest{CustomerID: customer.Id, MerchantAccountID: testMerchantAccountId},
 		},
 		{
-			name: "request with customer id and merchant id and options",
+			name: "request with customer id and merchant id and options verify card not set",
 			req: &ClientTokenRequest{
 				CustomerID:        customer.Id,
 				MerchantAccountID: testMerchantAccountId,
 				Options: &ClientTokenRequestOptions{
 					FailOnDuplicatePaymentMethod: true,
 					MakeDefault:                  true,
-					VerifyCard:                   &trueValue,
+				},
+			},
+		},
+		{
+			name: "request with customer id and merchant id and options verify card true",
+			req: &ClientTokenRequest{
+				CustomerID:        customer.Id,
+				MerchantAccountID: testMerchantAccountId,
+				Options: &ClientTokenRequestOptions{
+					FailOnDuplicatePaymentMethod: true,
+					MakeDefault:                  true,
+					VerifyCard:                   testhelpers.BoolPtr(true),
+				},
+			},
+		},
+		{
+			name: "request with customer id and merchant id and options verify card false",
+			req: &ClientTokenRequest{
+				CustomerID:        customer.Id,
+				MerchantAccountID: testMerchantAccountId,
+				Options: &ClientTokenRequestOptions{
+					FailOnDuplicatePaymentMethod: true,
+					MakeDefault:                  true,
+					VerifyCard:                   testhelpers.BoolPtr(false),
 				},
 			},
 		},
