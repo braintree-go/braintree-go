@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"bytes"
+	"net/url"
 	"strconv"
 	"strings"
 )
@@ -103,4 +104,10 @@ func (d *Decimal) String() string {
 	}
 
 	return string(b)
+}
+
+// EncodeValues encodes URL query string parameters for the go-querystring library.
+func (d *Decimal) EncodeValues(key string, v *url.Values) error {
+	v.Add(key, d.String())
+	return nil
 }
