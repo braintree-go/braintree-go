@@ -992,6 +992,8 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 	if tx2.AuthorizationExpiresAt == nil {
 		t.Fatalf("expected AuthorizationExpiresAt to be not nil, but got %#v", tx2.AuthorizationExpiresAt)
+	} else if tx2.AuthorizationExpiresAt.Before(time.Now()) || tx2.AuthorizationExpiresAt.After(time.Now().AddDate(0, 0, 60)) {
+		t.Fatalf("expected AuthorizationExpiresAt to be between the current time and 60 days from now, but got %s", tx2.AuthorizationExpiresAt.Format(time.RFC3339))
 	}
 }
 
