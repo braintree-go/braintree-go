@@ -990,6 +990,9 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.SubscriptionDetails != nil {
 		t.Fatalf("expected Subscription to be not nil, but got %#v", tx2.SubscriptionDetails)
 	}
+	if tx2.AuthorizationExpiresAt == nil {
+		t.Fatalf("expected AuthorizationExpiresAt to be not nil, but got %#v", tx2.AuthorizationExpiresAt)
+	}
 }
 
 // This test will only pass on Travis. See TESTING.md for more details.
