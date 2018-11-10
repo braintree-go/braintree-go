@@ -99,6 +99,7 @@ type Transaction struct {
 	GatewayRejectionReason       GatewayRejectionReason    `xml:"gateway-rejection-reason"`
 	PurchaseOrderNumber          string                    `xml:"purchase-order-number"`
 	Disputes                     []*Dispute                `xml:"disputes>dispute"`
+	AuthorizationExpiresAt       *time.Time                `xml:"authorization-expires-at"`
 }
 
 type TransactionRequest struct {
