@@ -428,6 +428,9 @@ func TestTransactionCreateWhenGatewayRejected(t *testing.T) {
 	if err.(*BraintreeError).Transaction.ProcessorResponseCode != 2010 {
 		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be 2010, but got %d", err.(*BraintreeError).Transaction.ProcessorResponseCode)
 	}
+	if err.(*BraintreeError).Transaction.ProcessorResponseType != ProcessorResponseTypeHardDeclined {
+		t.Fatalf("expected err.Transaction.ProcessorResponseType to be %s, but got %s", ProcessorResponseTypeHardDeclined, err.(*BraintreeError).Transaction.ProcessorResponseType)
+	}
 
 	if err.(*BraintreeError).Transaction.AdditionalProcessorResponse != "2010 : Card Issuer Declined CVV" {
 		t.Fatalf("expected err.Transaction.ProcessorResponseCode to be `2010 : Card Issuer Declined CVV`, but got %s", err.(*BraintreeError).Transaction.AdditionalProcessorResponse)
@@ -965,6 +968,10 @@ func TestAllTransactionFields(t *testing.T) {
 	if tx2.AdditionalProcessorResponse != "" {
 		t.Fatalf("expected tx2.AdditionalProcessorResponse to be empty, but got %s", tx2.AdditionalProcessorResponse)
 	}
+	if tx2.ProcessorResponseType != ProcessorResponseTypeApproved {
+		t.Fatalf("expected tx2.ProcessorResponseType to be %s, but got %s", ProcessorResponseTypeApproved, tx2.ProcessorResponseType)
+	}
+
 	if tx2.RiskData == nil {
 		t.Fatal("expected tx2.RiskData not to be empty")
 	}
@@ -989,6 +996,11 @@ func TestAllTransactionFields(t *testing.T) {
 	}
 	if tx2.SubscriptionDetails != nil {
 		t.Fatalf("expected Subscription to be not nil, but got %#v", tx2.SubscriptionDetails)
+	}
+	if tx2.AuthorizationExpiresAt == nil {
+		t.Fatalf("expected AuthorizationExpiresAt to be not nil, but got %#v", tx2.AuthorizationExpiresAt)
+	} else if tx2.AuthorizationExpiresAt.Before(time.Now()) || tx2.AuthorizationExpiresAt.After(time.Now().AddDate(0, 0, 60)) {
+		t.Fatalf("expected AuthorizationExpiresAt to be between the current time and 60 days from now, but got %s", tx2.AuthorizationExpiresAt.Format(time.RFC3339))
 	}
 }
 
