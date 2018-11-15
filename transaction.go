@@ -77,6 +77,7 @@ type Transaction struct {
 	RefundedTransactionId        *string                   `xml:"refunded-transaction-id"`
 	ProcessorResponseCode        ProcessorResponseCode     `xml:"processor-response-code"`
 	ProcessorResponseText        string                    `xml:"processor-response-text"`
+	ProcessorResponseType        ProcessorResponseType     `xml:"processor-response-type"`
 	ProcessorAuthorizationCode   string                    `xml:"processor-authorization-code"`
 	SettlementBatchId            string                    `xml:"settlement-batch-id"`
 	EscrowStatus                 EscrowStatus              `xml:"escrow-status"`
@@ -98,6 +99,7 @@ type Transaction struct {
 	GatewayRejectionReason       GatewayRejectionReason    `xml:"gateway-rejection-reason"`
 	PurchaseOrderNumber          string                    `xml:"purchase-order-number"`
 	Disputes                     []*Dispute                `xml:"disputes>dispute"`
+	AuthorizationExpiresAt       *time.Time                `xml:"authorization-expires-at"`
 }
 
 type TransactionRequest struct {
