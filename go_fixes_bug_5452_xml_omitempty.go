@@ -98,9 +98,6 @@ func (pmo *PaymentMethodRequestOptions) MarshalXML(e *xml.Encoder, start xml.Sta
 
 // MarshalXML custom serialization for ClientTokenRequestOptions.
 func (ctro *ClientTokenRequestOptions) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	if ctro == nil {
-		return e.EncodeElement(ctro, start)
-	}
 	if ctro.VerifyCard == nil {
 		type excludeVerifyCard struct {
 			FailOnDuplicatePaymentMethod bool  `xml:"fail-on-duplicate-payment-method,omitempty"`
