@@ -42,6 +42,9 @@ func TestCreditCard(t *testing.T) {
 	if card.Token == "" {
 		t.Fatal("invalid token")
 	}
+	if card.ProductID != "Unknown" { // Unknown appears to be reported from the Braintree Sandbox environment for all cards.
+		t.Errorf("got product id %q, want %q", card.ProductID, "Unknown")
+	}
 
 	// Update
 	card2, err := g.Update(ctx, &CreditCard{
