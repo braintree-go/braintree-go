@@ -16,9 +16,6 @@ import "encoding/xml"
 
 // MarshalXML custom serialization for CreditCardOptions.
 func (cco *CreditCardOptions) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	if cco == nil {
-		return e.EncodeElement(cco, start)
-	}
 	if cco.VerifyCard == nil {
 		type excludeVerifyCard struct {
 			VerifyCard                    *bool  `xml:"-"`
@@ -64,9 +61,6 @@ func (cco *CreditCardOptions) MarshalXML(e *xml.Encoder, start xml.StartElement)
 
 // MarshalXML custom serialization for PaymentMethodRequestOptions.
 func (pmo *PaymentMethodRequestOptions) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	if pmo == nil {
-		return e.EncodeElement(pmo, start)
-	}
 	if pmo.VerifyCard == nil {
 		type excludeVerifyCard struct {
 			MakeDefault                   bool   `xml:"make-default,omitempty"`
@@ -104,9 +98,6 @@ func (pmo *PaymentMethodRequestOptions) MarshalXML(e *xml.Encoder, start xml.Sta
 
 // MarshalXML custom serialization for ClientTokenRequestOptions.
 func (ctro *ClientTokenRequestOptions) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	if ctro == nil {
-		return e.EncodeElement(ctro, start)
-	}
 	if ctro.VerifyCard == nil {
 		type excludeVerifyCard struct {
 			FailOnDuplicatePaymentMethod bool  `xml:"fail-on-duplicate-payment-method,omitempty"`
