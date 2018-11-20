@@ -130,6 +130,12 @@ type TransactionRequest struct {
 	LineItems           TransactionLineItemRequests `xml:"line-items,omitempty"`
 }
 
+type TransactionRefundRequest struct {
+	XMLName string   `xml:"transaction"`
+	Amount  *Decimal `xml:"amount"`
+	OrderID string   `xml:"order-id,omitempty"`
+}
+
 func (t *Transaction) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	type typeWithNoFunctions Transaction
 	if err := d.DecodeElement((*typeWithNoFunctions)(t), &start); err != nil {

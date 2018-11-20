@@ -1164,6 +1164,90 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	}
 }
 
+func TestTransactionCreateSettleAndFullRefundWithRequest(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	amount := NewDecimal(20000, 2)
+	txn, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: amount,
+		CreditCard: &CreditCard{
+			Number:         testCardVisa,
+			ExpirationDate: "05/14",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Transaction().SubmitForSettlement(ctx, txn.Id, txn.Amount)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txn, err = testGateway.Testing().Settle(ctx, txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.Status != TransactionStatusSettled {
+		t.Fatal(txn.Status)
+	}
+
+	// Refund
+	refundTxn, err := testGateway.Transaction().RefundWithRequest(ctx, txn.Id, &TransactionRefundRequest{
+		OrderID: "fully-refunded-tx",
+	})
+
+	t.Log(refundTxn)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := refundTxn.Status; x != TransactionStatusSubmittedForSettlement {
+		t.Fatal(x)
+	}
+
+	refundTxn, err = testGateway.Testing().Settle(ctx, refundTxn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if refundTxn.Status != TransactionStatusSettled {
+		t.Fatal(txn.Status)
+	}
+
+	if *refundTxn.RefundedTransactionId != txn.Id {
+		t.Fatal(*refundTxn.RefundedTransactionId)
+	}
+
+	if refundTxn.OrderId != "fully-refunded-tx" {
+		t.Fatal(refundTxn.OrderId)
+	}
+
+	// Check that the refund shows up in the original transaction
+	txn, err = testGateway.Transaction().Find(ctx, txn.Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if txn.RefundIds != nil && (*txn.RefundIds)[0] != refundTxn.Id {
+		t.Fatal(*txn.RefundIds)
+	}
+
+	// Second refund should fail
+	refundTxn, err = testGateway.Transaction().RefundWithRequest(ctx, txn.Id, &TransactionRefundRequest{
+		OrderID: "fully-refunded-tx",
+	})
+	t.Log(refundTxn)
+
+	if err.Error() != "Transaction has already been completely refunded." {
+		t.Fatal(err)
+	}
+}
+
 func TestTransactionCreateSettleAndPartialRefund(t *testing.T) {
 	t.Parallel()
 
