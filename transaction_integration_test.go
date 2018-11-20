@@ -24,6 +24,8 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 
 	ctx := context.Background()
 
+	testGateway := createTestGateway(t)
+
 	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
 		Type:   "sale",
 		Amount: NewDecimal(2000, 2),

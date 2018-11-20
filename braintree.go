@@ -72,6 +72,9 @@ type Braintree struct {
 	credentials credentials
 	Logger      *log.Logger
 	HttpClient  *http.Client
+
+	doNotAcceptEncodingGzip bool
+	indentXML               bool
 }
 
 // Environment returns the current environment.
@@ -96,7 +99,13 @@ func (g *Braintree) execute(ctx context.Context, method, path string, xmlObj int
 func (g *Braintree) executeVersion(ctx context.Context, method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
 	var buf bytes.Buffer
 	if xmlObj != nil {
-		xmlBody, err := xml.Marshal(xmlObj)
+		var xmlBody []byte
+		var err error
+		if g.indentXML {
+			xmlBody, err = xml.MarshalIndent(xmlObj, "", "  ")
+		} else {
+			xmlBody, err = xml.Marshal(xmlObj)
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -121,7 +130,9 @@ func (g *Braintree) executeVersion(ctx context.Context, method, path string, xml
 
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("Accept", "application/xml")
-	req.Header.Set("Accept-Encoding", "gzip")
+	if !g.doNotAcceptEncodingGzip {
+		req.Header.Set("Accept-Encoding", "gzip")
+	}
 	req.Header.Set("User-Agent", fmt.Sprintf("Braintree Go %s", LibraryVersion))
 	req.Header.Set("X-ApiVersion", fmt.Sprintf("%d", v))
 	req.Header.Set("Authorization", g.credentials.AuthorizationHeader())
