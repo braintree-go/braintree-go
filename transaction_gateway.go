@@ -140,6 +140,22 @@ func (g *TransactionGateway) Refund(ctx context.Context, id string, amount ...*D
 	return nil, &invalidResponseError{resp}
 }
 
+// RefundWithRequest is similar to Refund, but allows more parameters such as
+// OrderID to be included as part of the refund request.
+func (g *TransactionGateway) RefundWithRequest(ctx context.Context, id string, refundRequest *TransactionRefundRequest) (*Transaction, error) {
+	resp, err := g.execute(ctx, "POST", "transactions/"+id+"/refund", refundRequest)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 200:
+		return resp.transaction()
+	case 201:
+		return resp.transaction()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
 // Find finds the transaction with the specified id.
 func (g *TransactionGateway) Find(ctx context.Context, id string) (*Transaction, error) {
 	resp, err := g.execute(ctx, "GET", "transactions/"+id, nil)
