@@ -1,3 +1,18 @@
+## 0.22.0 (November 19th, 2018)
+
+IMPROVEMENTS:
+
+* Add TransactionRefundRequest.
+* Add RefundWithRequest, with OrderID, to TransactionGateway.
+* Add ProductID to CreditCard.
+* Add AuthorizationExpiresAt to Transaction.
+* Add ProcessorResponseType to Transaction.
+* Add GenerateWithRequest to ClientTokenGateway.
+
+INTERNAL:
+
+* Minor test improvements.
+
 ## 0.21.0 (November 2nd, 2018)
 
 BACKWARDS INCOMPATIBILITES:
