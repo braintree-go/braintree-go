@@ -1159,7 +1159,7 @@ func TestTransactionCreateSettleAndFullRefund(t *testing.T) {
 	refundTxn, err = testGateway.Transaction().Refund(ctx, txn.Id)
 	t.Log(refundTxn)
 
-	if err.Error() != "Transaction has already been completely refunded." {
+	if err.Error() != "Transaction has already been fully refunded." {
 		t.Fatal(err)
 	}
 }
@@ -1243,7 +1243,7 @@ func TestTransactionCreateSettleAndFullRefundWithRequest(t *testing.T) {
 	})
 	t.Log(refundTxn)
 
-	if err.Error() != "Transaction has already been completely refunded." {
+	if err.Error() != "Transaction has already been fully refunded." {
 		t.Fatal(err)
 	}
 }
