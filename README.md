@@ -54,6 +54,7 @@ The usual. `go get github.com/braintree-go/braintree-go`
 * 1.9
 * 1.10
 * 1.11
+* 1.12
 
 ### Documentation
 
