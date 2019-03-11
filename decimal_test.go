@@ -54,11 +54,24 @@ func TestDecimalMarshalText(t *testing.T) {
 	}{
 		{NewDecimal(250, -2), []byte("25000")},
 		{NewDecimal(2, 0), []byte("2")},
+		{NewDecimal(23, 0), []byte("23")},
+		{NewDecimal(234, 0), []byte("234")},
+		{NewDecimal(0, 1), []byte("0.0")},
+		{NewDecimal(1, 1), []byte("0.1")},
+		{NewDecimal(12, 1), []byte("1.2")},
 		{NewDecimal(0, 2), []byte("0.00")},
 		{NewDecimal(5, 2), []byte("0.05")},
+		{NewDecimal(55, 2), []byte("0.55")},
 		{NewDecimal(250, 2), []byte("2.50")},
 		{NewDecimal(4586, 2), []byte("45.86")},
 		{NewDecimal(-5504, 2), []byte("-55.04")},
+		{NewDecimal(0, 3), []byte("0.000")},
+		{NewDecimal(5, 3), []byte("0.005")},
+		{NewDecimal(55, 3), []byte("0.055")},
+		{NewDecimal(250, 3), []byte("0.250")},
+		{NewDecimal(4586, 3), []byte("4.586")},
+		{NewDecimal(45867, 3), []byte("45.867")},
+		{NewDecimal(-55043, 3), []byte("-55.043")},
 	}
 
 	for _, tt := range tests {
