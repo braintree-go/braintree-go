@@ -517,7 +517,7 @@ func TestTransactionCreatedWhenAVSBankDoesNotSupport(t *testing.T) {
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
-		BillingAddress: &Address{
+		BillingAddress: &AddressRequest{
 			StreetAddress: "1 E Main St",
 			Locality:      "Chicago",
 			Region:        "IL",
@@ -562,7 +562,7 @@ func TestTransactionCreatedWhenAVSPostalDoesNotMatch(t *testing.T) {
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
-		BillingAddress: &Address{
+		BillingAddress: &AddressRequest{
 			StreetAddress: "1 E Main St",
 			Locality:      "Chicago",
 			Region:        "IL",
@@ -607,7 +607,7 @@ func TestTransactionCreatedWhenAVStreetAddressDoesNotMatch(t *testing.T) {
 			ExpirationDate: "05/14",
 			CVV:            "100",
 		},
-		BillingAddress: &Address{
+		BillingAddress: &AddressRequest{
 			StreetAddress: "201 E Main St", // Should cause AVS street address not verified response.
 			Locality:      "Chicago",
 			Region:        "IL",
@@ -875,13 +875,13 @@ func TestAllTransactionFields(t *testing.T) {
 		Customer: &CustomerRequest{
 			FirstName: "Lionel",
 		},
-		BillingAddress: &Address{
+		BillingAddress: &AddressRequest{
 			StreetAddress: "1 E Main St",
 			Locality:      "Chicago",
 			Region:        "IL",
 			PostalCode:    "60637",
 		},
-		ShippingAddress: &Address{
+		ShippingAddress: &AddressRequest{
 			StreetAddress: "1 E Main St",
 			Locality:      "Chicago",
 			Region:        "IL",
