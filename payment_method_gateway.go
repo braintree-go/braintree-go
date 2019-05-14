@@ -15,6 +15,7 @@ type PaymentMethodRequest struct {
 	Token              string                       `xml:"token,omitempty"`
 	PaymentMethodNonce string                       `xml:"payment-method-nonce,omitempty"`
 	Options            *PaymentMethodRequestOptions `xml:"options,omitempty"`
+	BillingAddress     *AddressRequest              `xml:"billing-address,omitempty"`
 }
 
 type PaymentMethodRequestOptions struct {
