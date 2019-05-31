@@ -73,8 +73,11 @@ func TestCustomer(t *testing.T) {
 	// Update
 	unique := testhelpers.RandomString()
 	newFirstName := "John" + unique
-	c2, err := testGateway.Customer().Update(ctx, &CustomerRequest{
-		ID:        customer.Id,
+
+	newID := testhelpers.RandomString()
+
+	c2, err := testGateway.Customer().Update(ctx, customer.Id, &CustomerRequest{
+		ID:        newID,
 		FirstName: newFirstName,
 	})
 
@@ -88,14 +91,14 @@ func TestCustomer(t *testing.T) {
 	}
 
 	// Find
-	c3, err := testGateway.Customer().Find(ctx, customer.Id)
+	c3, err := testGateway.Customer().Find(ctx, newID)
 
 	t.Log(c3)
 
 	if err != nil {
 		t.Fatal(err)
 	}
-	if c3.Id != customer.Id {
+	if c3.Id != newID {
 		t.Fatal("ids do not match")
 	}
 
@@ -110,18 +113,18 @@ func TestCustomer(t *testing.T) {
 	if len(searchResult.Customers) == 0 {
 		t.Fatal("could not search for a customer")
 	}
-	if id := searchResult.Customers[0].Id; id != customer.Id {
+	if id := searchResult.Customers[0].Id; id != newID {
 		t.Fatalf("id from search does not match: got %s, wanted %s", id, customer.Id)
 	}
 
 	// Delete
-	err = testGateway.Customer().Delete(ctx, customer.Id)
+	err = testGateway.Customer().Delete(ctx, newID)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Test customer 404
-	c4, err := testGateway.Customer().Find(ctx, customer.Id)
+	c4, err := testGateway.Customer().Find(ctx, newID)
 	if err == nil {
 		t.Fatal("should return 404")
 	}
