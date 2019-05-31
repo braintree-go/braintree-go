@@ -26,8 +26,8 @@ func (g *CustomerGateway) Create(ctx context.Context, c *CustomerRequest) (*Cust
 
 // Update updates any field that is set in the passed customer object.
 // The ID field is mandatory.
-func (g *CustomerGateway) Update(ctx context.Context, c *CustomerRequest) (*Customer, error) {
-	resp, err := g.execute(ctx, "PUT", "customers/"+c.ID, c)
+func (g *CustomerGateway) Update(ctx context.Context, customerID string, c *CustomerRequest) (*Customer, error) {
+	resp, err := g.execute(ctx, "PUT", "customers/"+customerID, c)
 	if err != nil {
 		return nil, err
 	}
