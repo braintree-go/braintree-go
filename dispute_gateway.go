@@ -2,10 +2,55 @@ package braintree
 
 import (
 	"context"
+	"encoding/xml"
+	"fmt"
+	"math"
 )
 
 type DisputeGateway struct {
 	*Braintree
+}
+
+func (g *DisputeGateway) fetchDisputes(ctx context.Context, query *SearchQuery, pageNumber int) (*DisputeSearchResult, error) {
+	resp, err := g.executeVersion(ctx, "POST", fmt.Sprintf("disputes/advanced_search?page=%d", pageNumber), query, apiVersion4)
+	if err != nil {
+		return nil, err
+	}
+	var v struct {
+		CurrentPageNumber int        `xml:"current-page-number"`
+		PageSize          int        `xml:"page-size"`
+		TotalItems        int        `xml:"total-items"`
+		XMLName           string     `xml:"disputes"`
+		Disputes          []*Dispute `xml:"dispute"`
+	}
+	err = xml.Unmarshal(resp.Body, &v)
+	if err != nil {
+		return nil, err
+	}
+	pageCount := float64(v.TotalItems) / float64(v.PageSize)
+	if math.Mod(pageCount, 1) != 0 {
+		pageCount += float64(1)
+	}
+	result := &DisputeSearchResult{
+		TotalPages:        int(math.Trunc(pageCount)),
+		PageSize:          v.PageSize,
+		TotalItems:        v.TotalItems,
+		CurrentPageNumber: v.CurrentPageNumber,
+		Disputes:          v.Disputes,
+	}
+	return result, nil
+}
+
+func (g *DisputeGateway) Search(ctx context.Context, query *SearchQuery) (*DisputeSearchResult, error) {
+	return g.fetchDisputes(ctx, query, 1)
+}
+
+func (g *DisputeGateway) SearchNext(ctx context.Context, query *SearchQuery, prevResult *DisputeSearchResult) (*DisputeSearchResult, error) {
+	nextPage := prevResult.CurrentPageNumber + 1
+	if nextPage > prevResult.TotalPages {
+		return nil, nil
+	}
+	return g.fetchDisputes(ctx, query, nextPage)
 }
 
 func (g *DisputeGateway) Find(ctx context.Context, disputeID string) (*Dispute, error) {
