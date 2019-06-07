@@ -110,8 +110,8 @@ func TestDisputeSearchPage(t *testing.T) {
 			t.Fatalf("failed to search dispute: %v; page %d", err, page)
 		}
 
-		if result.TotalPages != 2 {
-			t.Fatalf("expected 2 pages of disputes, but got %d", result.TotalPages)
+		if result.PageCount != 2 {
+			t.Fatalf("expected 2 pages of disputes, but got %d", result.PageCount)
 		}
 
 		if result.TotalItems != transactionCount {
@@ -123,7 +123,7 @@ func TestDisputeSearchPage(t *testing.T) {
 		}
 
 		page++
-		if (page > result.TotalPages) {
+		if (page > result.PageCount) {
 			break
 		}
 	}
@@ -192,8 +192,8 @@ func TestDisputeSearchNext(t *testing.T) {
 			break;
 		}
 
-		if result.TotalPages != 2 {
-			t.Fatalf("expected 2 pages of disputes, but got %d", result.TotalPages)
+		if result.PageCount != 2 {
+			t.Fatalf("expected 2 pages of disputes, but got %d", result.PageCount)
 		}
 
 		if result.TotalItems != transactionCount {

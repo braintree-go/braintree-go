@@ -32,7 +32,7 @@ func (g *DisputeGateway) fetchDisputes(ctx context.Context, query *SearchQuery, 
 		pageCount++
 	}
 	result := &DisputeSearchResult{
-		TotalPages:        int(math.Trunc(pageCount)),
+		PageCount:        int(math.Trunc(pageCount)),
 		PageSize:          v.PageSize,
 		TotalItems:        v.TotalItems,
 		CurrentPageNumber: v.CurrentPageNumber,
@@ -48,7 +48,7 @@ func (g *DisputeGateway) Search(ctx context.Context, query *SearchQuery) (*Dispu
 func (g *DisputeGateway) SearchPage(ctx context.Context, query *SearchQuery, searchResult *DisputeSearchResult, page int) (*DisputeSearchResult, error) {
 	if searchResult == nil {
 		page = 1
-	} else if page > searchResult.TotalPages {
+	} else if page > searchResult.PageCount {
 		return nil, nil
 	}
 	return g.fetchDisputes(ctx, query, page)
@@ -59,7 +59,7 @@ func (g *DisputeGateway) SearchNext(ctx context.Context, query *SearchQuery, sea
 		return nil, nil
 	}
 	nextPage := searchResult.CurrentPageNumber + 1
-	if nextPage > searchResult.TotalPages {
+	if nextPage > searchResult.PageCount {
 		return nil, nil
 	}
 	return g.fetchDisputes(ctx, query, nextPage)

@@ -79,8 +79,8 @@ type DisputeTransaction struct {
 }
 type DisputeSearchResult struct {
 	TotalItems        int
-	TotalPages        int
 	CurrentPageNumber int
+	PageCount         int
 	PageSize          int
 	Disputes          []*Dispute
 }
