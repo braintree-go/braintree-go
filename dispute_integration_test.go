@@ -8,6 +8,146 @@ import (
 	"time"
 )
 
+func TestDisputeSearch(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(100, 2),
+		CreditCard: &CreditCard{
+			Number:         "4023898493988028",
+			ExpirationDate: "12/" + time.Now().Format("2006"),
+		},
+		Options: &TransactionOptions{
+			SubmitForSettlement: true,
+		},
+	})
+	if err != nil {
+		t.Fatalf("failed to create disputed transaction: %v", err)
+	}
+
+	tx, err = testGateway.Transaction().Find(ctx, tx.Id)
+	if err != nil {
+		t.Fatalf("failed to find disputed transaction: %v", err)
+	}
+
+	if len(tx.Disputes) != 1 {
+		t.Fatalf("got Transaction with %d disputes, want 1", len(tx.Disputes))
+	}
+
+	dg := testGateway.Dispute()
+	dispute := tx.Disputes[0]
+
+	if dispute.AmountDisputed.Cmp(NewDecimal(100, 2)) != 0 {
+		t.Errorf("got Dispute AmountDisputed %s, want %s", dispute.AmountDisputed, "1.00")
+	}
+
+	query := new(SearchQuery)
+	f := query.AddTextField("id")
+	f.Is = dispute.ID
+
+	result, err := dg.Search(ctx, query)
+	if err != nil {
+		t.Fatalf("failed to search dispute: %v", err)
+	}
+
+	if len(result.Disputes) != 1 {
+		t.Fatalf("expected 1 dispute, but got %d", len(result.Disputes))
+	}
+
+	if result.Disputes[0].ID != dispute.ID {
+		t.Fatalf("expected transaction with id %s, but got %s", result.Disputes[0].ID, dispute.ID)
+	}
+
+	err = testGateway.Dispute().Finalize(ctx, dispute.ID)
+
+	if err != nil {
+		t.Fatalf("failed to finalize dispute: %v", err)
+	}
+}
+
+func TestDisputeSearchNext(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	txg := testGateway.Transaction()
+	dg := testGateway.Dispute()
+
+	const transactionCount = 51
+	createdDisputeIDs := map[string]bool{}
+	for i := 0; i < transactionCount; i++ {
+		tx, err := txg.Create(ctx, &TransactionRequest{
+			Type: 			"sale",
+			Amount: 		NewDecimal(100, 2),
+			CreditCard: &CreditCard{
+				Number:         "4023898493988028",
+				ExpirationDate: "12/" + time.Now().Format("2006"),
+			},
+			Options: &TransactionOptions{
+				SubmitForSettlement: true,
+			},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		createdDisputeIDs[tx.Disputes[0].ID] = true
+	}
+
+	query := new(SearchQuery)
+	f := query.AddMultiField("kind")
+	f.Items = []string{string(DisputeKindChargeback)}
+	f = query.AddMultiField("status")
+	f.Items = []string{string(DisputeStatusOpen)}
+
+	var index int = 0
+	var matchedDisputeIDs []string
+	var result *DisputeSearchResult
+	var err error
+
+	for {
+		if (index == 0) {
+			result, err = dg.Search(ctx, query)
+		} else {
+			result, err = dg.SearchNext(ctx, query, result)
+		}
+
+		if err != nil {
+			t.Fatalf("failed to search dispute: %v", err)
+		}
+
+		if result == nil && err == nil {
+			break;
+		}
+
+		if result.TotalPages != 2 {
+			t.Fatalf("expected 2 pages of disputes, but got %d", result.TotalPages)
+		}
+
+		if result.TotalItems != transactionCount {
+			t.Fatalf("expected %d disputes, but got %d", transactionCount, result.TotalItems)
+		}
+
+		for _, dispute := range result.Disputes {
+			matchedDisputeIDs = append(matchedDisputeIDs, dispute.ID)
+		}
+		index++
+	}
+
+	for _, disputeID := range matchedDisputeIDs {
+		err = dg.Finalize(ctx, disputeID)
+		if err != nil {
+			t.Fatalf("failed to finalize dispute: %v", err)
+		}
+		delete(createdDisputeIDs, disputeID)
+	}
+
+	if len(createdDisputeIDs) > 0 {
+		t.Fatalf("disputes not returned = %v", createdDisputeIDs)
+	}
+}
+
 func TestDisputeFinalize(t *testing.T) {
 	t.Parallel()
 

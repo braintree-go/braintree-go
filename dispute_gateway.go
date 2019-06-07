@@ -29,7 +29,7 @@ func (g *DisputeGateway) fetchDisputes(ctx context.Context, query *SearchQuery, 
 	}
 	pageCount := float64(v.TotalItems) / float64(v.PageSize)
 	if math.Mod(pageCount, 1) != 0 {
-		pageCount += float64(1)
+		pageCount++
 	}
 	result := &DisputeSearchResult{
 		TotalPages:        int(math.Trunc(pageCount)),
