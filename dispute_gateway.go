@@ -11,8 +11,8 @@ type DisputeGateway struct {
 	*Braintree
 }
 
-func (g *DisputeGateway) fetchDisputes(ctx context.Context, query *SearchQuery, pageNumber int) (*DisputeSearchResult, error) {
-	resp, err := g.executeVersion(ctx, "POST", fmt.Sprintf("disputes/advanced_search?page=%d", pageNumber), query, apiVersion4)
+func (g *DisputeGateway) fetchDisputes(ctx context.Context, query *SearchQuery, page int) (*DisputeSearchResult, error) {
+	resp, err := g.executeVersion(ctx, "POST", fmt.Sprintf("disputes/advanced_search?page=%d", page), query, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
@@ -45,9 +45,21 @@ func (g *DisputeGateway) Search(ctx context.Context, query *SearchQuery) (*Dispu
 	return g.fetchDisputes(ctx, query, 1)
 }
 
-func (g *DisputeGateway) SearchNext(ctx context.Context, query *SearchQuery, prevResult *DisputeSearchResult) (*DisputeSearchResult, error) {
-	nextPage := prevResult.CurrentPageNumber + 1
-	if nextPage > prevResult.TotalPages {
+func (g *DisputeGateway) SearchPage(ctx context.Context, query *SearchQuery, searchResult *DisputeSearchResult, page int) (*DisputeSearchResult, error) {
+	if searchResult == nil {
+		page = 1
+	} else if page > searchResult.TotalPages {
+		return nil, nil
+	}
+	return g.fetchDisputes(ctx, query, page)
+}
+
+func (g *DisputeGateway) SearchNext(ctx context.Context, query *SearchQuery, searchResult *DisputeSearchResult) (*DisputeSearchResult, error) {
+	if searchResult == nil {
+		return nil, nil
+	}
+	nextPage := searchResult.CurrentPageNumber + 1
+	if nextPage > searchResult.TotalPages {
 		return nil, nil
 	}
 	return g.fetchDisputes(ctx, query, nextPage)

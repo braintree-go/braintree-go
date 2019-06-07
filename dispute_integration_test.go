@@ -61,16 +61,87 @@ func TestDisputeSearch(t *testing.T) {
 		t.Fatalf("expected transaction with id %s, but got %s", result.Disputes[0].ID, dispute.ID)
 	}
 
-	err = testGateway.Dispute().Finalize(ctx, dispute.ID)
+	err = dg.Finalize(ctx, dispute.ID)
 
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)
 	}
 }
 
-func TestDisputeSearchNext(t *testing.T) {
-	t.Parallel()
+func TestDisputeSearchPage(t *testing.T) {
+	ctx := context.Background()
+	txg := testGateway.Transaction()
+	dg := testGateway.Dispute()
 
+	const transactionCount = 51
+	createdDisputeIDs := map[string]bool{}
+	for i := 0; i < transactionCount; i++ {
+		tx, err := txg.Create(ctx, &TransactionRequest{
+			Type: 			"sale",
+			Amount: 		NewDecimal(100, 2),
+			CreditCard: &CreditCard{
+				Number:         "4023898493988028",
+				ExpirationDate: "12/" + time.Now().Format("2006"),
+			},
+			Options: &TransactionOptions{
+				SubmitForSettlement: true,
+			},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		createdDisputeIDs[tx.Disputes[0].ID] = true
+	}
+
+	query := new(SearchQuery)
+	f := query.AddMultiField("kind")
+	f.Items = []string{string(DisputeKindChargeback)}
+	f = query.AddMultiField("status")
+	f.Items = []string{string(DisputeStatusOpen)}
+
+	var result *DisputeSearchResult
+	var matchedDisputeIDs []string
+	var err error
+	var page int = 1
+
+	for {
+		result, err = dg.SearchPage(ctx, query, result, page)
+		if err != nil {
+			t.Fatalf("failed to search dispute: %v; page %d", err, page)
+		}
+
+		if result.TotalPages != 2 {
+			t.Fatalf("expected 2 pages of disputes, but got %d", result.TotalPages)
+		}
+
+		if result.TotalItems != transactionCount {
+			t.Fatalf("expected %d disputes, but got %d", transactionCount, result.TotalItems)
+		}
+
+		for _, dispute := range result.Disputes {
+			matchedDisputeIDs = append(matchedDisputeIDs, dispute.ID)
+		}
+
+		page++
+		if (page > result.TotalPages) {
+			break
+		}
+	}
+
+	for _, disputeID := range matchedDisputeIDs {
+		err = dg.Finalize(ctx, disputeID)
+		if err != nil {
+			t.Fatalf("failed to finalize dispute: %v", err)
+		}
+		delete(createdDisputeIDs, disputeID)
+	}
+
+	if len(createdDisputeIDs) > 0 {
+		t.Fatalf("disputes not returned = %v", createdDisputeIDs)
+	}
+}
+
+func TestDisputeSearchNext(t *testing.T) {
 	ctx := context.Background()
 	txg := testGateway.Transaction()
 	dg := testGateway.Dispute()
