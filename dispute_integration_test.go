@@ -63,6 +63,7 @@ func TestDisputeSearch(t *testing.T) {
 
 	err = dg.Finalize(ctx, dispute.ID)
 
+	// test
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)
 	}
@@ -72,6 +73,16 @@ func TestDisputeSearchPage(t *testing.T) {
 	ctx := context.Background()
 	txg := testGateway.Transaction()
 	dg := testGateway.Dispute()
+	cg := testGateway.Customer()
+
+	customer, err := cg.Create(ctx, &CustomerRequest{
+		FirstName: "John",
+		LastName: "Smith",
+	})
+
+	if err != nil {
+		t.Fatalf("failed to created a customer: %v", err)
+	}
 
 	const transactionCount = 51
 	createdDisputeIDs := map[string]bool{}
@@ -79,6 +90,7 @@ func TestDisputeSearchPage(t *testing.T) {
 		tx, err := txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
 			Amount: NewDecimal(100, 2),
+			CustomerID: customer.Id,
 			CreditCard: &CreditCard{
 				Number:         "4023898493988028",
 				ExpirationDate: "12/" + time.Now().Format("2006"),
@@ -94,14 +106,15 @@ func TestDisputeSearchPage(t *testing.T) {
 	}
 
 	query := new(SearchQuery)
-	f := query.AddMultiField("kind")
-	f.Items = []string{string(DisputeKindChargeback)}
-	f = query.AddMultiField("status")
-	f.Items = []string{string(DisputeStatusOpen)}
+	mf := query.AddMultiField("kind")
+	mf.Items = []string{string(DisputeKindChargeback)}
+	mf = query.AddMultiField("status")
+	mf.Items = []string{string(DisputeStatusOpen)}
+	tf := query.AddTextField("customer-id")
+	tf.Is = customer.Id
 
 	var result *DisputeSearchResult
 	var matchedDisputeIDs []string
-	var err error
 	var page int = 1
 
 	for {
@@ -145,6 +158,16 @@ func TestDisputeSearchNext(t *testing.T) {
 	ctx := context.Background()
 	txg := testGateway.Transaction()
 	dg := testGateway.Dispute()
+	cg := testGateway.Customer()
+
+	customer, err := cg.Create(ctx, &CustomerRequest{
+		FirstName: "John",
+		LastName: "Smith",
+	})
+
+	if err != nil {
+		t.Fatalf("failed to created a customer: %v", err)
+	}
 
 	const transactionCount = 51
 	createdDisputeIDs := map[string]bool{}
@@ -152,6 +175,7 @@ func TestDisputeSearchNext(t *testing.T) {
 		tx, err := txg.Create(ctx, &TransactionRequest{
 			Type:   "sale",
 			Amount: NewDecimal(100, 2),
+			CustomerID: customer.Id,
 			CreditCard: &CreditCard{
 				Number:         "4023898493988028",
 				ExpirationDate: "12/" + time.Now().Format("2006"),
@@ -167,15 +191,16 @@ func TestDisputeSearchNext(t *testing.T) {
 	}
 
 	query := new(SearchQuery)
-	f := query.AddMultiField("kind")
-	f.Items = []string{string(DisputeKindChargeback)}
-	f = query.AddMultiField("status")
-	f.Items = []string{string(DisputeStatusOpen)}
+	mf := query.AddMultiField("kind")
+	mf.Items = []string{string(DisputeKindChargeback)}
+	mf = query.AddMultiField("status")
+	mf.Items = []string{string(DisputeStatusOpen)}
+	tf := query.AddTextField("customer-id")
+	tf.Is = customer.Id
 
 	var index int = 0
 	var matchedDisputeIDs []string
 	var result *DisputeSearchResult
-	var err error
 
 	for {
 		if index == 0 {
