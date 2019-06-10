@@ -77,3 +77,10 @@ type DisputeTransaction struct {
 	PaymentInstrumentSubtype string     `xml:"payment-instrument-subtype"`
 	PurchaseOrderNumber      string     `xml:"purchase-order-number"`
 }
+type DisputeSearchResult struct {
+	TotalItems        int
+	CurrentPageNumber int
+	PageCount         int
+	PageSize          int
+	Disputes          []*Dispute
+}
