@@ -77,8 +77,8 @@ func TestDisputeSearchPage(t *testing.T) {
 	createdDisputeIDs := map[string]bool{}
 	for i := 0; i < transactionCount; i++ {
 		tx, err := txg.Create(ctx, &TransactionRequest{
-			Type: 			"sale",
-			Amount: 		NewDecimal(100, 2),
+			Type:   "sale",
+			Amount: NewDecimal(100, 2),
 			CreditCard: &CreditCard{
 				Number:         "4023898493988028",
 				ExpirationDate: "12/" + time.Now().Format("2006"),
@@ -123,7 +123,7 @@ func TestDisputeSearchPage(t *testing.T) {
 		}
 
 		page++
-		if (page > result.PageCount) {
+		if page > result.PageCount {
 			break
 		}
 	}
@@ -150,8 +150,8 @@ func TestDisputeSearchNext(t *testing.T) {
 	createdDisputeIDs := map[string]bool{}
 	for i := 0; i < transactionCount; i++ {
 		tx, err := txg.Create(ctx, &TransactionRequest{
-			Type: 			"sale",
-			Amount: 		NewDecimal(100, 2),
+			Type:   "sale",
+			Amount: NewDecimal(100, 2),
 			CreditCard: &CreditCard{
 				Number:         "4023898493988028",
 				ExpirationDate: "12/" + time.Now().Format("2006"),
@@ -178,7 +178,7 @@ func TestDisputeSearchNext(t *testing.T) {
 	var err error
 
 	for {
-		if (index == 0) {
+		if index == 0 {
 			result, err = dg.Search(ctx, query)
 		} else {
 			result, err = dg.SearchNext(ctx, query, result)
@@ -189,7 +189,7 @@ func TestDisputeSearchNext(t *testing.T) {
 		}
 
 		if result == nil && err == nil {
-			break;
+			break
 		}
 
 		if result.PageCount != 2 {
