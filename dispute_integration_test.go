@@ -63,7 +63,6 @@ func TestDisputeSearch(t *testing.T) {
 
 	err = dg.Finalize(ctx, dispute.ID)
 
-	// test
 	if err != nil {
 		t.Fatalf("failed to finalize dispute: %v", err)
 	}
@@ -77,7 +76,7 @@ func TestDisputeSearchPage(t *testing.T) {
 
 	customer, err := cg.Create(ctx, &CustomerRequest{
 		FirstName: "John",
-		LastName: "Smith",
+		LastName:  "Smith",
 	})
 
 	if err != nil {
@@ -88,8 +87,8 @@ func TestDisputeSearchPage(t *testing.T) {
 	createdDisputeIDs := map[string]bool{}
 	for i := 0; i < transactionCount; i++ {
 		tx, err := txg.Create(ctx, &TransactionRequest{
-			Type:   "sale",
-			Amount: NewDecimal(100, 2),
+			Type:       "sale",
+			Amount:     NewDecimal(100, 2),
 			CustomerID: customer.Id,
 			CreditCard: &CreditCard{
 				Number:         "4023898493988028",
@@ -162,7 +161,7 @@ func TestDisputeSearchNext(t *testing.T) {
 
 	customer, err := cg.Create(ctx, &CustomerRequest{
 		FirstName: "John",
-		LastName: "Smith",
+		LastName:  "Smith",
 	})
 
 	if err != nil {
@@ -173,8 +172,8 @@ func TestDisputeSearchNext(t *testing.T) {
 	createdDisputeIDs := map[string]bool{}
 	for i := 0; i < transactionCount; i++ {
 		tx, err := txg.Create(ctx, &TransactionRequest{
-			Type:   "sale",
-			Amount: NewDecimal(100, 2),
+			Type:       "sale",
+			Amount:     NewDecimal(100, 2),
 			CustomerID: customer.Id,
 			CreditCard: &CreditCard{
 				Number:         "4023898493988028",
