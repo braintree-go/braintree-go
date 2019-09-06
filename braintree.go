@@ -10,6 +10,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"reflect"
 	"time"
 )
 
@@ -96,6 +97,8 @@ func (g *Braintree) execute(ctx context.Context, method, path string, xmlObj int
 func (g *Braintree) executeVersion(ctx context.Context, method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
 	var buf bytes.Buffer
 	if xmlObj != nil {
+		fmt.Println("xmxlObj", xmlObj)
+		fmt.Println("type ", reflect.TypeOf(xmlObj))
 		xmlBody, err := xml.Marshal(xmlObj)
 		if err != nil {
 			return nil, err
