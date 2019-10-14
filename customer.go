@@ -1,8 +1,9 @@
 package braintree
 
 import (
-	"github.com/braintree-go/braintree-go/customfields"
 	"time"
+
+	"github.com/braintree-go/braintree-go/customfields"
 )
 
 type Customer struct {
@@ -23,6 +24,7 @@ type Customer struct {
 	AndroidPayCards    *AndroidPayCards          `xml:"android-pay-cards"`
 	ApplePayCards      *ApplePayCards            `xml:"apple-pay-cards"`
 	PaymentMethodNonce string                    `xml:"payment-method-nonce"`
+	DeviceData         string                    `xml:"device-data"`
 	Addresses          *Addresses                `xml:"addresses"`
 	CreatedAt          *time.Time                `xml:"created-at"`
 	UpdatedAt          *time.Time                `xml:"updated-at"`

@@ -14,6 +14,7 @@ type PaymentMethodRequest struct {
 	CustomerId         string                       `xml:"customer-id,omitempty"`
 	Token              string                       `xml:"token,omitempty"`
 	PaymentMethodNonce string                       `xml:"payment-method-nonce,omitempty"`
+	DeviceData         string                       `xml:"device-data"`
 	Options            *PaymentMethodRequestOptions `xml:"options,omitempty"`
 }
 
