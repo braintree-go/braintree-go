@@ -79,8 +79,8 @@ func testSubMerchantAccount() string {
 
 func init() {
 	logEnabled := flag.Bool("log", false, "enables logging")
-    testing.Init()
-    flag.Parse()
+	testing.Init()
+	flag.Parse()
 
 	if *logEnabled {
 		testGateway.Logger = log.New(os.Stderr, "", 0)
