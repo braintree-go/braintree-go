@@ -41,6 +41,7 @@ func (r *Response) transaction() (*Transaction, error) {
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
 		return nil, err
 	}
+	b.RawResponse = string(r.Body)
 	return &b, nil
 }
 

@@ -90,7 +90,7 @@ func (g *Braintree) MerchantURL() string {
 }
 
 func (g *Braintree) execute(ctx context.Context, method, path string, xmlObj interface{}) (*Response, error) {
-	return g.executeVersion(ctx, method, path, xmlObj, apiVersion3)
+	return g.executeVersion(ctx, method, path, xmlObj, apiVersion4)
 }
 
 func (g *Braintree) executeVersion(ctx context.Context, method, path string, xmlObj interface{}, v apiVersion) (*Response, error) {
