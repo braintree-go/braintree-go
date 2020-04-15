@@ -102,6 +102,7 @@ type Transaction struct {
 	AuthorizationExpiresAt          *time.Time                      `xml:"authorization-expires-at"`
 	ProcessorSettlementResponseCode ProcessorSettlementResponseCode `xml:"processor-settlement-response-code"`
 	ProcessorSettlementResponseText string                          `xml:"processor-settlement-response-text"`
+	RawResponse                     string
 }
 
 type TransactionRequest struct {
