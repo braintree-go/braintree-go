@@ -114,8 +114,8 @@ type TransactionRequest struct {
 	PlanId              string                      `xml:"plan-id,omitempty"`
 	CreditCard          *CreditCard                 `xml:"credit-card,omitempty"`
 	Customer            *CustomerRequest            `xml:"customer,omitempty"`
-	BillingAddress      *Address                    `xml:"billing,omitempty"`
-	ShippingAddress     *Address                    `xml:"shipping,omitempty"`
+	BillingAddress      *AddressRequest             `xml:"billing,omitempty"`
+	ShippingAddress     *AddressRequest             `xml:"shipping,omitempty"`
 	TaxAmount           *Decimal                    `xml:"tax-amount,omitempty"`
 	TaxExempt           bool                        `xml:"tax-exempt,omitempty"`
 	DeviceData          string                      `xml:"device-data,omitempty"`

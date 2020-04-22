@@ -2,6 +2,7 @@ package braintree
 
 import (
 	"bytes"
+	"errors"
 	"strconv"
 	"strings"
 )
@@ -22,6 +23,10 @@ func NewDecimal(unscaled int64, scale int) *Decimal {
 
 // MarshalText outputs a decimal representation of the scaled number
 func (d *Decimal) MarshalText() (text []byte, err error) {
+	if d == nil {
+		return nil, errors.New("decimal is nil")
+	}
+
 	b := new(bytes.Buffer)
 	if d.Scale <= 0 {
 		b.WriteString(strconv.FormatInt(d.Unscaled, 10))
