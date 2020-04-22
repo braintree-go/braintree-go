@@ -12,5 +12,3 @@
 * [ ] I've ensured any personally identifying information is handled with the necessary care.
 * [ ] I've checked if my implementation doesn't break other features.
 
-### References
-<!-- Does this ticket relate, fix or affects any other? -->
