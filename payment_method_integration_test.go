@@ -101,7 +101,6 @@ func TestPaymentMethod(t *testing.T) {
 	// Update using different credit card
 	rand.Seed(time.Now().UTC().UnixNano())
 	token := fmt.Sprintf("btgo_test_token_%d", rand.Int()+1)
-	t.Fatal(token)
 	paymentMethod, err = g.Update(ctx, paymentMethod.GetToken(), &PaymentMethodRequest{
 		PaymentMethodNonce: FakeNonceTransactableMasterCard,
 		Token:              token,

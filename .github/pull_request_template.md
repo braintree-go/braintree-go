@@ -1,6 +1,3 @@
-### Ticket
-<!-- Ticket, issue or anything else that 1. describes the feature and 2. proves its need. -->
-
 ### Description
 <!-- You can 1. describe what this pull request implements, 2. give an overview of the proposed solution, 3. add any further comments you might find important, such as why something is missing; whether there are dependencies for this to be merged. Feel free also to add demos (screenshots, videos) if you find that useful. -->
 
