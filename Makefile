@@ -1,4 +1,12 @@
+.PHONY: hooks unit
+
 SHELL:=/bin/bash
+
+hooks: .git/hooks/prepare-commit-msg
+
+.git/hooks/prepare-commit-msg: .githooks/prepare-commit-msg
+	mkdir -p .git/hooks
+	cp $< $@
 
 test:
 	go test -parallel 15 -tags='unit integration' ./...

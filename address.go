@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Address represents the address used on transaction requests/responses
 type Address struct {
 	XMLName            xml.Name
 	Id                 string     `xml:"id,omitempty"`
@@ -25,20 +26,21 @@ type Address struct {
 	UpdatedAt          *time.Time `xml:"updated-at,omitempty"`
 }
 
+// AddressRequest represents the address used for creating payment methods.
 type AddressRequest struct {
-	XMLName            xml.Name `xml:"address"`
-	FirstName          string   `xml:"first-name,omitempty"`
-	LastName           string   `xml:"last-name,omitempty"`
-	Company            string   `xml:"company,omitempty"`
-	StreetAddress      string   `xml:"street-address,omitempty"`
-	ExtendedAddress    string   `xml:"extended-address,omitempty"`
-	Locality           string   `xml:"locality,omitempty"`
-	Region             string   `xml:"region,omitempty"`
-	PostalCode         string   `xml:"postal-code,omitempty"`
-	CountryCodeAlpha2  string   `xml:"country-code-alpha2,omitempty"`
-	CountryCodeAlpha3  string   `xml:"country-code-alpha3,omitempty"`
-	CountryCodeNumeric string   `xml:"country-code-numeric,omitempty"`
-	CountryName        string   `xml:"country-name,omitempty"`
+	XMLName            xml.Name
+	FirstName          string `xml:"first-name,omitempty"`
+	LastName           string `xml:"last-name,omitempty"`
+	Company            string `xml:"company,omitempty"`
+	StreetAddress      string `xml:"street-address,omitempty"`
+	ExtendedAddress    string `xml:"extended-address,omitempty"`
+	Locality           string `xml:"locality,omitempty"`
+	Region             string `xml:"region,omitempty"`
+	PostalCode         string `xml:"postal-code,omitempty"`
+	CountryCodeAlpha2  string `xml:"country-code-alpha2,omitempty"`
+	CountryCodeAlpha3  string `xml:"country-code-alpha3,omitempty"`
+	CountryCodeNumeric string `xml:"country-code-numeric,omitempty"`
+	CountryName        string `xml:"country-name,omitempty"`
 }
 
 type Addresses struct {

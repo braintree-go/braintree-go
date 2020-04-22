@@ -49,36 +49,46 @@ func TestDecimalMarshalText(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		in  *Decimal
-		out []byte
+		in          *Decimal
+		out         []byte
+		shouldError bool
 	}{
-		{NewDecimal(250, -2), []byte("25000")},
-		{NewDecimal(2, 0), []byte("2")},
-		{NewDecimal(23, 0), []byte("23")},
-		{NewDecimal(234, 0), []byte("234")},
-		{NewDecimal(0, 1), []byte("0.0")},
-		{NewDecimal(1, 1), []byte("0.1")},
-		{NewDecimal(12, 1), []byte("1.2")},
-		{NewDecimal(0, 2), []byte("0.00")},
-		{NewDecimal(5, 2), []byte("0.05")},
-		{NewDecimal(55, 2), []byte("0.55")},
-		{NewDecimal(250, 2), []byte("2.50")},
-		{NewDecimal(4586, 2), []byte("45.86")},
-		{NewDecimal(-5504, 2), []byte("-55.04")},
-		{NewDecimal(0, 3), []byte("0.000")},
-		{NewDecimal(5, 3), []byte("0.005")},
-		{NewDecimal(55, 3), []byte("0.055")},
-		{NewDecimal(250, 3), []byte("0.250")},
-		{NewDecimal(4586, 3), []byte("4.586")},
-		{NewDecimal(45867, 3), []byte("45.867")},
-		{NewDecimal(-55043, 3), []byte("-55.043")},
+		{NewDecimal(250, -2), []byte("25000"), false},
+		{NewDecimal(2, 0), []byte("2"), false},
+		{NewDecimal(23, 0), []byte("23"), false},
+		{NewDecimal(234, 0), []byte("234"), false},
+		{NewDecimal(0, 1), []byte("0.0"), false},
+		{NewDecimal(1, 1), []byte("0.1"), false},
+		{NewDecimal(12, 1), []byte("1.2"), false},
+		{NewDecimal(0, 2), []byte("0.00"), false},
+		{NewDecimal(5, 2), []byte("0.05"), false},
+		{NewDecimal(55, 2), []byte("0.55"), false},
+		{NewDecimal(250, 2), []byte("2.50"), false},
+		{NewDecimal(4586, 2), []byte("45.86"), false},
+		{NewDecimal(-5504, 2), []byte("-55.04"), false},
+		{NewDecimal(0, 3), []byte("0.000"), false},
+		{NewDecimal(5, 3), []byte("0.005"), false},
+		{NewDecimal(55, 3), []byte("0.055"), false},
+		{NewDecimal(250, 3), []byte("0.250"), false},
+		{NewDecimal(4586, 3), []byte("4.586"), false},
+		{NewDecimal(45867, 3), []byte("45.867"), false},
+		{NewDecimal(-55043, 3), []byte("-55.043"), false},
+		{nil, nil, true},
 	}
 
 	for _, tt := range tests {
 		b, err := tt.in.MarshalText()
-		if err != nil {
-			t.Errorf("expected %+v.MarshalText() => to not error, but it did with %s", tt.in, err)
+
+		if tt.shouldError {
+			if err == nil {
+				t.Errorf("expected %+v.MarshalText() => to error, but it did not", tt.in)
+			}
+		} else {
+			if err != nil {
+				t.Errorf("expected %+v.MarshalText() => to not error, but it did with %s", tt.in, err)
+			}
 		}
+
 		if string(tt.out) != string(b) {
 			t.Errorf("%+v.MarshalText() => %s, want %s", tt.in, b, tt.out)
 		}
