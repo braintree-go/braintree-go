@@ -1,4 +1,4 @@
-.PHONY: hooks test-unit
+.PHONY: hooks unit
 
 SHELL:=/bin/bash
 
@@ -11,10 +11,10 @@ hooks: .git/hooks/prepare-commit-msg
 test:
 	go test -parallel 15 -tags='unit integration' ./...
 
-test-unit:
+unit:
 	go test -tags=unit ./...
 
-test-integration:
+integration:
 	go test -parallel 15 -tags=integration ./...
 
 analysis:
