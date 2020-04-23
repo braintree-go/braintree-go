@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"testing"
 	"time"
 
 	"github.com/braintree-go/braintree-go/testhelpers"
@@ -76,10 +77,14 @@ func testSubMerchantAccount() string {
 	return merchantAccount.Id
 }
 
-func init() {
-	logEnabled := flag.Bool("log", false, "enables logging")
+var logEnabled = flag.Bool("log", false, "enables logging")
+
+func TestMain(m *testing.M) {
+	flag.Parse()
 
 	if *logEnabled {
 		testGateway.Logger = log.New(os.Stderr, "", 0)
 	}
+
+	os.Exit(m.Run())
 }
