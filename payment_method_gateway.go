@@ -11,6 +11,8 @@ type PaymentMethodGateway struct {
 
 type PaymentMethodRequest struct {
 	XMLName            xml.Name                     `xml:"payment-method"`
+	BillingAddress     *Address                     `xml:"billing-address,omitempty"`
+	CardholderName     string                       `xml:"cardholder-name,omitempty"`
 	CustomerId         string                       `xml:"customer-id,omitempty"`
 	DeviceData         string                       `xml:"device-data,omitempty"`
 	Token              string                       `xml:"token,omitempty"`
