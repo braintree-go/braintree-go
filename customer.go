@@ -11,6 +11,7 @@ type Customer struct {
 	FirstName          string                    `xml:"first-name"`
 	LastName           string                    `xml:"last-name"`
 	Company            string                    `xml:"company"`
+	DeviceData         string                    `xml:"device-data"`
 	Email              string                    `xml:"email"`
 	Phone              string                    `xml:"phone"`
 	Fax                string                    `xml:"fax"`
@@ -65,6 +66,7 @@ type CustomerRequest struct {
 	FirstName          string                    `xml:"first-name,omitempty"`
 	LastName           string                    `xml:"last-name,omitempty"`
 	Company            string                    `xml:"company,omitempty"`
+	DeviceData         string                    `xml:"device-data,omitempty"`
 	Email              string                    `xml:"email,omitempty"`
 	Phone              string                    `xml:"phone,omitempty"`
 	Fax                string                    `xml:"fax,omitempty"`
