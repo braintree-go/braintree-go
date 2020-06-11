@@ -204,6 +204,8 @@ type TransactionOptions struct {
 	HoldInEscrow                     bool                                   `xml:"hold-in-escrow,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest       `xml:"paypal,omitempty"`
 	SkipAdvancedFraudChecking        bool                                   `xml:"skip_advanced_fraud_checking,omitempty"`
+	SkipAVS                          bool                                   `xml:"skip_avs,omitempty"`
+	SkipCVV                          bool                                   `xml:"skip_cvv,omitempty"`
 	ThreeDSecure                     *TransactionOptionsThreeDSecureRequest `xml:"three-d-secure,omitempty"`
 }
 
