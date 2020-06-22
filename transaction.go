@@ -100,6 +100,7 @@ type Transaction struct {
 	PurchaseOrderNumber          string                    `xml:"purchase-order-number"`
 	Disputes                     []*Dispute                `xml:"disputes>dispute"`
 	AuthorizationExpiresAt       *time.Time                `xml:"authorization-expires-at"`
+	NetworkTransactionId         string                    `xml:"network-transation-id"`
 }
 
 type TransactionRequest struct {
@@ -128,6 +129,7 @@ type TransactionRequest struct {
 	PurchaseOrderNumber string                      `xml:"purchase-order-number,omitempty"`
 	TransactionSource   TransactionSource           `xml:"transaction-source,omitempty"`
 	LineItems           TransactionLineItemRequests `xml:"line-items,omitempty"`
+	ExternalVault       ExternalVault               `xml:"external-vault,omitempty"`
 }
 
 type TransactionRefundRequest struct {
@@ -290,4 +292,16 @@ type RiskDataRequest struct {
 type SubscriptionDetails struct {
 	BillingPeriodStartDate string `xml:"billing-period-start-date"`
 	BillingPeriodEndDate   string `xml:"billing-period-end-date"`
+}
+
+type ExternalVaultStatus string
+
+const (
+	ExternalVaultStatusVaulted   ExternalVaultStatus = "vaulted"
+	ExternalVaultStatusWillVault ExternalVaultStatus = "will_vault"
+)
+
+type ExternalVault struct {
+	PreviousNetworkTransactionId string              `xml:"previous-network-transaction-id,omitempty"`
+	Status                       ExternalVaultStatus `xml:"status,omitempty"`
 }
