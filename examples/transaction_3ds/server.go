@@ -19,7 +19,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/braintree-go/braintree-go"
+	"github.com/BoltApp/braintree-go"
 )
 
 func getBT() *braintree.Braintree {

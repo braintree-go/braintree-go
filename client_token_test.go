@@ -6,7 +6,7 @@ import (
 	"encoding/xml"
 	"testing"
 
-	"github.com/braintree-go/braintree-go/testhelpers"
+	"github.com/BoltApp/braintree-go/testhelpers"
 )
 
 func TestClientToken_MarshalXML(t *testing.T) {
