@@ -28,6 +28,9 @@ const (
 	DisputeLostWebhook                       = "dispute_lost"
 	DisputeWonWebhook                        = "dispute_won"
 	AccountUpdaterDailyReportWebhook         = "account_updater_daily_report"
+	DisputeExpiredWebhook                    = "dispute_expired"
+	DisputeAcceptedWebhook                   = "dispute_accepted"
+	DisputeDisputedWebhook                   = "dispute_disputed"
 )
 
 type WebhookNotification struct {
