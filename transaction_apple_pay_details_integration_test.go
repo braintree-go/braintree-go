@@ -49,6 +49,9 @@ func TestTransactionApplePayDetails(t *testing.T) {
 	if tx.ApplePayDetails.CardholderName == "" {
 		t.Fatal("Expected ApplePayDetails to have CardholderName set")
 	}
+	if tx.ApplePayDetails.ProductID == "" {
+		t.Fatal("Expected ApplePayDetails to have ProductID set")
+	}
 	if !testhelpers.ValidExpiryMonth(tx.ApplePayDetails.ExpirationMonth) {
 		t.Errorf("ApplePayDetails.ExpirationMonth (%s) does not match expected value", tx.ApplePayDetails.ExpirationMonth)
 	}
