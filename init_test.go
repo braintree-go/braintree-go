@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/braintree-go/braintree-go/testhelpers"
+	"github.com/hellofresh/braintree-go/testhelpers"
 )
 
 const (
