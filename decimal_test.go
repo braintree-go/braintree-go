@@ -78,7 +78,6 @@ func TestDecimalMarshalText(t *testing.T) {
 
 	for _, tt := range tests {
 		b, err := tt.in.MarshalText()
-
 		if tt.shouldError {
 			if err == nil {
 				t.Errorf("expected %+v.MarshalText() => to error, but it did not", tt.in)
