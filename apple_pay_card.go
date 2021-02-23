@@ -16,6 +16,10 @@ type ApplePayCard struct {
 	Last4                 string         `xml:"last-4"`
 	ExpirationMonth       string         `xml:"expiration-month"`
 	ExpirationYear        string         `xml:"expiration-year"`
+	ECI                   string         `xml:"eci-indicator"`
+	Cryptogram            string         `xml:"cryptogram"`
+	Number                string         `xml:"number"`
+	CardholderName        string         `xml:"cardholder-name"`
 	Expired               bool           `xml:"expired"`
 	Default               bool           `xml:"default"`
 	CustomerId            string         `xml:"customer-id"`
