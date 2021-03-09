@@ -140,7 +140,7 @@ func (g *Braintree) executeVersion(ctx context.Context, method, path string, xml
 	btr := &Response{
 		Response: resp,
 	}
-	err = btr.unpackBody()
+	err = btr.UnpackBody()
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package braintree
 
 import (
+	"bytes"
 	"compress/gzip"
 	"encoding/xml"
 	"fmt"
@@ -186,7 +187,7 @@ func (r *Response) disputeEvidence() (*DisputeEvidence, error) {
 	return &b, nil
 }
 
-func (r *Response) unpackBody() error {
+func (r *Response) UnpackBody() error {
 	if len(r.Body) == 0 {
 		reader := r.Response.Body
 
@@ -199,12 +200,15 @@ func (r *Response) unpackBody() error {
 			reader = gzipReader
 		}
 
-		defer func() { _ = r.Response.Body.Close() }()
-
 		buf, err := ioutil.ReadAll(reader)
 		if err != nil {
 			return err
 		}
+
+		// Ensure UnpackBody can be called again
+		r.Response.Header.Del("Content-Encoding")
+		r.Response.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
+
 		strippedBuf, err := xmlnil.StripNilElements(buf)
 		if err == nil {
 			r.Body = strippedBuf
