@@ -129,7 +129,7 @@ type TransactionRequest struct {
 	PurchaseOrderNumber string                      `xml:"purchase-order-number,omitempty"`
 	TransactionSource   TransactionSource           `xml:"transaction-source,omitempty"`
 	LineItems           TransactionLineItemRequests `xml:"line-items,omitempty"`
-	ExternalVault       ExternalVault               `xml:"external-vault,omitempty"`
+	ExternalVault       *ExternalVault               `xml:"external-vault,omitempty"`
 }
 
 type TransactionRefundRequest struct {
