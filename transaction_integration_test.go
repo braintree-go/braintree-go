@@ -1785,3 +1785,63 @@ func TestTransactionStoreInVault(t *testing.T) {
 		})
 	}
 }
+
+func TestTransactionExternalVault(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(2000, 2),
+		CreditCard: &CreditCard{
+			Number:         testCardVisa,
+			ExpirationDate: "05/14",
+		},
+		ExternalVault: &ExternalVault{
+			Status: ExternalVaultStatusWillVault,
+		},
+	})
+
+	t.Log(tx)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx.Status != TransactionStatusAuthorized {
+		t.Fatal(tx.Status)
+	}
+
+	if tx.NetworkTransactionId == nil || *tx.NetworkTransactionId == "" {
+		t.Fatal("empty network transaction ID")
+	}
+
+	tx2, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(3000, 2),
+		CreditCard: &CreditCard{
+			Number:         testCardVisa,
+			ExpirationDate: "05/14",
+		},
+		ExternalVault: &ExternalVault{
+			Status: ExternalVaultStatusVaulted,
+			PreviousNetworkTransactionId: *tx.NetworkTransactionId,
+		},
+	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx2.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx2.Status != TransactionStatusAuthorized {
+		t.Fatal(tx.Status)
+	}
+
+	t.Log(tx2)
+}
+
