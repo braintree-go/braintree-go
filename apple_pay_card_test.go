@@ -24,7 +24,8 @@ func TestApplePayCard_MarshalXML(t *testing.T) {
 
 	expected := `<apple-pay-card><expiration-month>10</expiration-month><expiration-year>22</expiration-year><eci-indicator>07</eci-indicator><cryptogram>testCardCryptogram</cryptogram><number>4111111111111111</number><cardholder-name>Test User</cardholder-name></apple-pay-card>`
 
-	if string(cardBytes) != expected {
+	cardString := string(cardBytes)
+	if cardString != expected {
 		t.Errorf("Marshalled xml got [%s], want [%s]", cardString, expected)
 	}
 }

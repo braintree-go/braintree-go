@@ -74,6 +74,65 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	}
 }
 
+func TestTransactionSubmitForPartialSettlement(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(2000, 2),
+		CreditCard: &CreditCard{
+			Number:         testCardVisa,
+			ExpirationDate: "05/25",
+		},
+	})
+
+	t.Log(tx)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx.Status != TransactionStatusAuthorized {
+		t.Fatal(tx.Status)
+	}
+
+	ten := NewDecimal(1000, 2)
+
+	// First partial settlement submission
+	tx2, err := testGateway.Transaction().SubmitForPartialSettlement(ctx, tx.Id, ten)
+
+	t.Log(tx2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx2.Status; x != TransactionStatusSubmittedForSettlement {
+		t.Fatal(x)
+	}
+	if amount := tx2.Amount; amount.Cmp(ten) != 0 {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
+	}
+
+	// Second partial settlement submission
+	tx3, err := testGateway.Transaction().SubmitForPartialSettlement(ctx, tx.Id, ten)
+
+	t.Log(tx3)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx3.Status; x != TransactionStatusSubmittedForSettlement {
+		t.Fatal(x)
+	}
+	if amount := tx3.Amount; amount.Cmp(ten) != 0 {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
+	}
+}
+
 func TestTransactionSearchIDs(t *testing.T) {
 	t.Parallel()
 
@@ -1827,7 +1886,7 @@ func TestTransactionExternalVault(t *testing.T) {
 			ExpirationDate: "05/14",
 		},
 		ExternalVault: &ExternalVault{
-			Status: ExternalVaultStatusVaulted,
+			Status:                       ExternalVaultStatusVaulted,
 			PreviousNetworkTransactionId: *tx.NetworkTransactionId,
 		},
 	})
@@ -1844,4 +1903,3 @@ func TestTransactionExternalVault(t *testing.T) {
 
 	t.Log(tx2)
 }
-
