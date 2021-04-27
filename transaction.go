@@ -129,8 +129,11 @@ type TransactionRequest struct {
 	CustomFields        customfields.CustomFields   `xml:"custom-fields,omitempty"`
 	PurchaseOrderNumber string                      `xml:"purchase-order-number,omitempty"`
 	TransactionSource   TransactionSource           `xml:"transaction-source,omitempty"`
+	ShippingAmount      *Decimal                    `xml:"shipping-amount,omitempty"`
+	DiscountAmount      *Decimal                    `xml:"discount-amount,omitempty"`
+	ShipsFromPostalCode string                      `xml:"ships-from-postal-code,omitempty"`
 	LineItems           TransactionLineItemRequests `xml:"line-items,omitempty"`
-	ExternalVault       *ExternalVault               `xml:"external-vault,omitempty"`
+	ExternalVault       *ExternalVault              `xml:"external-vault,omitempty"`
 }
 
 type TransactionRefundRequest struct {
