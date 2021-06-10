@@ -13,6 +13,7 @@ type PayPalAccount struct {
 	ImageURL      string                `xml:"image-url,omitempty"`
 	CreatedAt     *time.Time            `xml:"created-at,omitempty"`
 	UpdatedAt     *time.Time            `xml:"updated-at,omitempty"`
+	RevokedAt     *time.Time            `xml:"revoked-at,omitempty"`
 	Subscriptions *Subscriptions        `xml:"subscriptions,omitempty"`
 	Default       bool                  `xml:"default,omitempty"`
 	Options       *PayPalAccountOptions `xml:"options,omitempty"`
