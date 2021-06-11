@@ -100,6 +100,9 @@ type Transaction struct {
 	PurchaseOrderNumber          string                    `xml:"purchase-order-number"`
 	Disputes                     []*Dispute                `xml:"disputes>dispute"`
 	AuthorizationExpiresAt       *time.Time                `xml:"authorization-expires-at"`
+	NetworkResponseCode          string                    `xml:"network-response-code"`
+	NetworkResponseText          string                    `xml:"network-response-text"`
+	ProcessedWithNetworkToken    bool                      `xml:"processed-with-network-token"`
 }
 
 type TransactionRequest struct {
