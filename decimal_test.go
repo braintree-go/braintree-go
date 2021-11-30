@@ -1,3 +1,4 @@
+//go:build unit
 // +build unit
 
 package braintree
@@ -113,5 +114,61 @@ func TestDecimalCmp(t *testing.T) {
 		if out := tt.x.Cmp(tt.y); out != tt.out {
 			t.Errorf("%d: %+v.Cmp(%+v) => %d, want %d", i, tt.x, tt.y, out, tt.out)
 		}
+	}
+}
+
+func TestNewDecimalByCurrency(t *testing.T) {
+	tests := []struct {
+		name     string
+		currency string
+		amount   float64
+		expected *Decimal
+	}{
+		{
+			name:     "Test EUR currency",
+			currency: "EUR",
+			amount:   10.50,
+			expected: NewDecimal(1050, 2),
+		},
+		{
+			name:     "Test EUR currency, zero case",
+			currency: "EUR",
+			amount:   0,
+			expected: NewDecimal(0, 2),
+		},
+		{
+			name:     "Test unknown (UKN) currency, default should be used",
+			currency: "UKN",
+			amount:   10.60,
+			expected: NewDecimal(1060, 2),
+		},
+		{
+			name:     "Test CVE currency with zero decimal adjustment",
+			currency: "CVE",
+			amount:   150,
+			expected: NewDecimal(150, 0),
+		},
+		{
+			name:     "Test BHD currency with 3 decimal adjustment points",
+			currency: "BHD",
+			amount:   150.050,
+			expected: NewDecimal(150050, 3),
+		},
+		{
+			name:     "Test JPY currency with 0 decimal adjustment points",
+			currency: "JPY",
+			amount:   150.020,
+			expected: NewDecimal(150, 0),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := NewDecimalByCurrency(tt.currency, tt.amount)
+
+			if !reflect.DeepEqual(d, tt.expected) {
+				t.Errorf("%s: got %d, want %d", tt.name, d, tt.expected)
+			}
+		})
 	}
 }

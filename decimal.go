@@ -3,6 +3,7 @@ package braintree
 import (
 	"bytes"
 	"errors"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -19,6 +20,20 @@ type Decimal struct {
 // unscaled ** 10 ^ (-scale)
 func NewDecimal(unscaled int64, scale int) *Decimal {
 	return &Decimal{Unscaled: unscaled, Scale: scale}
+}
+
+// NewDecimalByCurrency - creates a new Decimal by using the decimal scales of the provided currency.
+func NewDecimalByCurrency(currency string, amount float64) *Decimal {
+	currency = strings.ToUpper(currency)
+
+	decimals, ok := CurrencyScales[currency]
+	if !ok {
+		decimals = DefaultCurrencyScales
+	}
+
+	coef := math.Pow(10, float64(decimals))
+
+	return NewDecimal(int64(amount*coef), int(decimals))
 }
 
 // MarshalText outputs a decimal representation of the scaled number
@@ -102,9 +117,8 @@ func (x *Decimal) Cmp(y *Decimal) int {
 // String returns string representation of Decimal
 func (d *Decimal) String() string {
 	b, err := d.MarshalText()
-
 	if err != nil {
-		panic(err) //should never happen (see: MarshalText)
+		panic(err) // should never happen (see: MarshalText)
 	}
 
 	return string(b)
