@@ -3,6 +3,7 @@ package braintree
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -24,16 +25,11 @@ func NewDecimal(unscaled int64, scale int) *Decimal {
 
 // NewDecimalByCurrency - creates a new Decimal by using the decimal scales of the provided currency.
 func NewDecimalByCurrency(currency string, amount float64) *Decimal {
-	currency = strings.ToUpper(currency)
+	scale := CurrencyScale(currency)
 
-	decimals, ok := CurrencyScales[currency]
-	if !ok {
-		decimals = DefaultCurrencyScales
-	}
+	coef := math.Pow(10, float64(scale))
 
-	coef := math.Pow(10, float64(decimals))
-
-	return NewDecimal(int64(amount*coef), int(decimals))
+	return NewDecimal(int64(math.Round(amount*coef)), int(scale))
 }
 
 // MarshalText outputs a decimal representation of the scaled number
@@ -122,4 +118,22 @@ func (d *Decimal) String() string {
 	}
 
 	return string(b)
+}
+
+// Add adds two decimals of the same scale
+func (d *Decimal) Add(d2 *Decimal) (*Decimal, error) {
+	if d.Scale != d2.Scale {
+		return nil, fmt.Errorf("cannot add decimals with different scales, %d != %d", d.Scale, d2.Scale)
+	}
+
+	return NewDecimal(d.Unscaled+d2.Unscaled, d.Scale), nil
+}
+
+// Subtract subtracts two decimals of the same scale
+func (d *Decimal) Subtract(d2 *Decimal) (*Decimal, error) {
+	if d.Scale != d2.Scale {
+		return nil, fmt.Errorf("cannot sutract decimals with different scales, %d != %d", d.Scale, d2.Scale)
+	}
+
+	return NewDecimal(d.Unscaled-d2.Unscaled, d.Scale), nil
 }

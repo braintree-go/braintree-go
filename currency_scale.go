@@ -1,5 +1,7 @@
 package braintree
 
+import "strings"
+
 var (
 	// DefaultCurrencyScales - default currency decimal scales
 	DefaultCurrencyScales uint = 2
@@ -30,3 +32,14 @@ var (
 		"XPF": 0,
 	}
 )
+
+func CurrencyScale(currency string) uint {
+	currency = strings.ToUpper(currency)
+
+	decimals, ok := CurrencyScales[currency]
+	if !ok {
+		return DefaultCurrencyScales
+	}
+
+	return decimals
+}
