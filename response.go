@@ -83,6 +83,14 @@ func (r *Response) paymentMethodNonce() (*PaymentMethodNonce, error) {
 	return &n, nil
 }
 
+func (r *Response) oauth() (*OAuthCredentials, error) {
+	var n OAuthCredentials
+	if err := xml.Unmarshal(r.Body, &n); err != nil {
+		return nil, err
+	}
+	return &n, nil
+}
+
 func (r *Response) creditCard() (*CreditCard, error) {
 	var b CreditCard
 	if err := xml.Unmarshal(r.Body, &b); err != nil {
