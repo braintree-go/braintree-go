@@ -11,7 +11,7 @@ type OauthGateway struct {
 
 type OAuthCredentialRequest struct {
 	XMLName      xml.Name `xml:"credentials"`
-	Code         string   `xml:"payment-method"`
+	Code         string   `xml:"code"`
 	Scope        string   `xml:"scope"`
 	GrantType    string   `xml:"grantType"`
 	RefreshToken string   `xml:"refreshToken"`
