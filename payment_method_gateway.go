@@ -24,6 +24,26 @@ type PaymentMethodRequestOptions struct {
 	VerificationMerchantAccountId string `xml:"verification-merchant-account-id,omitempty"`
 }
 
+type PaymentMethodGrantRequest struct {
+	XMLName                  xml.Name `xml:"payment-method"`
+	SharedPaymentMethodToken string   `xml:"shared-payment-method-token,omitempty"`
+	AllowVaulting            bool     `xml:"allow-vaulting,omitempty"`
+	IncludeBillingPostalCode bool     `xml:"including-billing-postal-code,omitempty"`
+	RevokeAfter              string   `xml:"revoke-after,omitempty"`
+}
+
+func (g *PaymentMethodGateway) Grant(ctx context.Context, paymentMethodGrantRequest *PaymentMethodGrantRequest) (*PaymentMethodNonce, error) {
+	resp, err := g.executeVersion(ctx, "POST", "/payment_methods/grant", paymentMethodGrantRequest, apiVersion4)
+	if err != nil {
+		return nil, err
+	}
+	switch resp.StatusCode {
+	case 201:
+		return resp.paymentMethodNonce()
+	}
+	return nil, &invalidResponseError{resp}
+}
+
 func (g *PaymentMethodGateway) Create(ctx context.Context, paymentMethodRequest *PaymentMethodRequest) (PaymentMethod, error) {
 	resp, err := g.executeVersion(ctx, "POST", "payment_methods", paymentMethodRequest, apiVersion4)
 	if err != nil {
