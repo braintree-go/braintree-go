@@ -32,8 +32,7 @@ type PaymentMethodGrantRequest struct {
 	RevokeAfter              string   `xml:"revoke-after,omitempty"`
 }
 
-func (g *PaymentMethodGateway) Grant(ctx context.Context, token string, paymentMethodGrantRequest *PaymentMethodGrantRequest) (*PaymentMethodNonce, error) {
-	paymentMethodGrantRequest.SharedPaymentMethodToken = token
+func (g *PaymentMethodGateway) Grant(ctx context.Context, paymentMethodGrantRequest *PaymentMethodGrantRequest) (*PaymentMethodNonce, error) {
 	resp, err := g.executeVersion(ctx, "POST", "/payment_methods/grant", paymentMethodGrantRequest, apiVersion4)
 	if err != nil {
 		return nil, err
