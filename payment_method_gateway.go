@@ -33,7 +33,7 @@ type PaymentMethodGrantRequest struct {
 }
 
 func (g *PaymentMethodGateway) Grant(ctx context.Context, paymentMethodGrantRequest *PaymentMethodGrantRequest) (*PaymentMethodNonce, error) {
-	resp, err := g.executeVersion(ctx, "POST", "/payment_methods/grant", paymentMethodGrantRequest, apiVersion4)
+	resp, err := g.executeVersion(ctx, "POST", "payment_methods/grant", paymentMethodGrantRequest, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
