@@ -184,6 +184,10 @@ func (g *Braintree) WebhookTesting() *WebhookTestingGateway {
 	}
 }
 
+func (g * Braintree) Oauth() *OauthGateway  {
+	return &OauthGateway{g}
+}
+
 func (g *Braintree) PaymentMethod() *PaymentMethodGateway {
 	return &PaymentMethodGateway{g}
 }
