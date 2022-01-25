@@ -56,6 +56,15 @@ func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string
 	return &Braintree{credentials: newAPIKey(env, merchantId, publicKey, privateKey), HttpClient: client}
 }
 
+// NewWithAccessToken creates a Braintree client with an Access Token and customized http client.
+func NewWithAccessTokenAndCustomizedHttpClient(accessToken string, client *http.Client) (*Braintree, error) {
+	c, err := newAccessToken(accessToken)
+	if err != nil {
+		return nil, err
+	}
+	return &Braintree{credentials: c, HttpClient: client}, nil
+}
+
 // NewWithAccessToken creates a Braintree client with an Access Token.
 // Note: When using an access token, webhooks are unsupported and the
 // WebhookNotification() function will panic.
