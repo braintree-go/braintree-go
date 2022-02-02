@@ -1,8 +1,8 @@
 # Braintree Go
 
-[![GoDoc](https://godoc.org/github.com/braintree-go/braintree-go?status.svg)](http://godoc.org/github.com/braintree-go/braintree-go)
+[![GoDoc](https://godoc.org/github.com/BoltApp/braintree-go?status.svg)](http://godoc.org/github.com/BoltApp/braintree-go)
 [![Build Status](https://travis-ci.com/braintree-go/braintree-go.png?branch=master)](https://travis-ci.com/braintree-go/braintree-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/braintree-go/braintree-go)](https://goreportcard.com/report/github.com/braintree-go/braintree-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/BoltApp/braintree-go)](https://goreportcard.com/report/github.com/BoltApp/braintree-go)
 
 A Go client library for [Braintree](https://www.braintreepayments.com), the payments company behind awesome companies like GitHub, Heroku, and 37signals.
 
@@ -15,7 +15,7 @@ With that said, this package contains more than enough to get you started accept
 Setting up your credentials is easy.
 
 ```go
-import "github.com/braintree-go/braintree-go"
+import "github.com/BoltApp/braintree-go"
 
 bt := braintree.New(
   braintree.Sandbox,
@@ -45,7 +45,7 @@ In addition to creating transactions, you can also tokenize credit card informat
 
 ### Installation
 
-The usual. `go get github.com/braintree-go/braintree-go`
+The usual. `go get github.com/BoltApp/braintree-go`
 
 ### Supported Go Versions
 
@@ -60,7 +60,7 @@ The usual. `go get github.com/braintree-go/braintree-go`
 
 Braintree provides a [ton of documentation](https://www.braintreepayments.com/docs/ruby/guide/overview) on how to use their API. I recommend you use the Ruby documentation when following along, as the Ruby client library is broadly similar to this one.
 
-For details on this package, see [GoDoc](http://godoc.org/github.com/braintree-go/braintree-go).
+For details on this package, see [GoDoc](http://godoc.org/github.com/BoltApp/braintree-go).
 
 ### Testing
 
@@ -87,7 +87,7 @@ import (
   "testing"
   "net/http/httptest"
 
-  "github.com/braintree-go/braintree-go"
+  "github.com/BoltApp/braintree-go"
 )
 
 func TestMyWebhook(t *testing.T) {

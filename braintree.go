@@ -56,6 +56,24 @@ func NewWithHttpClient(env Environment, merchantId, publicKey, privateKey string
 	return &Braintree{credentials: newAPIKey(env, merchantId, publicKey, privateKey), HttpClient: client}
 }
 
+func NewWithClientCredentialsAndHttpClient(
+	env Environment,
+	clientId string,
+	clientSecret string,
+	client *http.Client,
+) *Braintree {
+	return &Braintree{credentials: newClientAPIKey(env, clientId, clientSecret), HttpClient: client}
+}
+
+// NewWithAccessToken creates a Braintree client with an Access Token and customized http client.
+func NewWithAccessTokenAndCustomizedHttpClient(accessToken string, client *http.Client) (*Braintree, error) {
+	c, err := newAccessToken(accessToken)
+	if err != nil {
+		return nil, err
+	}
+	return &Braintree{credentials: c, HttpClient: client}, nil
+}
+
 // NewWithAccessToken creates a Braintree client with an Access Token.
 // Note: When using an access token, webhooks are unsupported and the
 // WebhookNotification() function will panic.
@@ -106,7 +124,12 @@ func (g *Braintree) executeVersion(ctx context.Context, method, path string, xml
 		}
 	}
 
-	url := g.MerchantURL() + "/" + path
+	baseUrl := g.Environment().BaseURL()
+	if g.MerchantID() != "" {
+		baseUrl = g.MerchantURL()
+	}
+
+	url := baseUrl + "/" + path
 
 	if g.Logger != nil {
 		g.Logger.Printf("> %s %s\n%s", method, url, buf.String())
@@ -140,7 +163,7 @@ func (g *Braintree) executeVersion(ctx context.Context, method, path string, xml
 	btr := &Response{
 		Response: resp,
 	}
-	err = btr.unpackBody()
+	err = btr.UnpackBody()
 	if err != nil {
 		return nil, err
 	}
@@ -182,6 +205,10 @@ func (g *Braintree) WebhookTesting() *WebhookTestingGateway {
 	} else {
 		return &WebhookTestingGateway{Braintree: g, apiKey: apiKey}
 	}
+}
+
+func (g * Braintree) Oauth() *OauthGateway  {
+	return &OauthGateway{g}
 }
 
 func (g *Braintree) PaymentMethod() *PaymentMethodGateway {

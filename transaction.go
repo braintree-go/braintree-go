@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/braintree-go/braintree-go/customfields"
+	"github.com/BoltApp/braintree-go/customfields"
 )
 
 type TransactionStatus string
@@ -100,6 +100,7 @@ type Transaction struct {
 	PurchaseOrderNumber          string                    `xml:"purchase-order-number"`
 	Disputes                     []*Dispute                `xml:"disputes>dispute"`
 	AuthorizationExpiresAt       *time.Time                `xml:"authorization-expires-at"`
+	NetworkTransactionId         *string                   `xml:"network-transaction-id"`
 }
 
 type TransactionRequest struct {
@@ -113,6 +114,7 @@ type TransactionRequest struct {
 	MerchantAccountId   string                      `xml:"merchant-account-id,omitempty"`
 	PlanId              string                      `xml:"plan-id,omitempty"`
 	CreditCard          *CreditCard                 `xml:"credit-card,omitempty"`
+	ApplePayCard        *ApplePayCard               `xml:"apple-pay-card,omitempty"`
 	Customer            *CustomerRequest            `xml:"customer,omitempty"`
 	BillingAddress      *Address                    `xml:"billing,omitempty"`
 	ShippingAddress     *Address                    `xml:"shipping,omitempty"`
@@ -127,7 +129,11 @@ type TransactionRequest struct {
 	CustomFields        customfields.CustomFields   `xml:"custom-fields,omitempty"`
 	PurchaseOrderNumber string                      `xml:"purchase-order-number,omitempty"`
 	TransactionSource   TransactionSource           `xml:"transaction-source,omitempty"`
+	ShippingAmount      *Decimal                    `xml:"shipping-amount,omitempty"`
+	DiscountAmount      *Decimal                    `xml:"discount-amount,omitempty"`
+	ShipsFromPostalCode string                      `xml:"ships-from-postal-code,omitempty"`
 	LineItems           TransactionLineItemRequests `xml:"line-items,omitempty"`
+	ExternalVault       *ExternalVault              `xml:"external-vault,omitempty"`
 }
 
 type TransactionRefundRequest struct {
@@ -204,6 +210,8 @@ type TransactionOptions struct {
 	HoldInEscrow                     bool                                   `xml:"hold-in-escrow,omitempty"`
 	TransactionOptionsPaypalRequest  *TransactionOptionsPaypalRequest       `xml:"paypal,omitempty"`
 	SkipAdvancedFraudChecking        bool                                   `xml:"skip_advanced_fraud_checking,omitempty"`
+	SkipAVS                          bool                                   `xml:"skip_avs,omitempty"`
+	SkipCVV                          bool                                   `xml:"skip_cvv,omitempty"`
 	ThreeDSecure                     *TransactionOptionsThreeDSecureRequest `xml:"three-d-secure,omitempty"`
 }
 
@@ -288,4 +296,16 @@ type RiskDataRequest struct {
 type SubscriptionDetails struct {
 	BillingPeriodStartDate string `xml:"billing-period-start-date"`
 	BillingPeriodEndDate   string `xml:"billing-period-end-date"`
+}
+
+type ExternalVaultStatus string
+
+const (
+	ExternalVaultStatusVaulted   ExternalVaultStatus = "vaulted"
+	ExternalVaultStatusWillVault ExternalVaultStatus = "will_vault"
+)
+
+type ExternalVault struct {
+	PreviousNetworkTransactionId string              `xml:"previous-network-transaction-id,omitempty"`
+	Status                       ExternalVaultStatus `xml:"status,omitempty"`
 }

@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/braintree-go/braintree-go/testhelpers"
+	"github.com/BoltApp/braintree-go/testhelpers"
 )
 
 func randomAmount() *Decimal {
@@ -71,6 +71,65 @@ func TestTransactionCreateSubmitForSettlementAndVoid(t *testing.T) {
 	}
 	if x := tx3.Status; x != TransactionStatusVoided {
 		t.Fatal(x)
+	}
+}
+
+func TestTransactionSubmitForPartialSettlement(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(2000, 2),
+		CreditCard: &CreditCard{
+			Number:         testCardVisa,
+			ExpirationDate: "05/25",
+		},
+	})
+
+	t.Log(tx)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx.Status != TransactionStatusAuthorized {
+		t.Fatal(tx.Status)
+	}
+
+	ten := NewDecimal(1000, 2)
+
+	// First partial settlement submission
+	tx2, err := testGateway.Transaction().SubmitForPartialSettlement(ctx, tx.Id, ten)
+
+	t.Log(tx2)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx2.Status; x != TransactionStatusSubmittedForSettlement {
+		t.Fatal(x)
+	}
+	if amount := tx2.Amount; amount.Cmp(ten) != 0 {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
+	}
+
+	// Second partial settlement submission
+	tx3, err := testGateway.Transaction().SubmitForPartialSettlement(ctx, tx.Id, ten)
+
+	t.Log(tx3)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x := tx3.Status; x != TransactionStatusSubmittedForSettlement {
+		t.Fatal(x)
+	}
+	if amount := tx3.Amount; amount.Cmp(ten) != 0 {
+		t.Fatalf("transaction settlement amount (%s) did not equal amount requested (%s)", amount, ten)
 	}
 }
 
@@ -1784,4 +1843,63 @@ func TestTransactionStoreInVault(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestTransactionExternalVault(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	tx, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(2000, 2),
+		CreditCard: &CreditCard{
+			Number:         testCardVisa,
+			ExpirationDate: "05/14",
+		},
+		ExternalVault: &ExternalVault{
+			Status: ExternalVaultStatusWillVault,
+		},
+	})
+
+	t.Log(tx)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx.Status != TransactionStatusAuthorized {
+		t.Fatal(tx.Status)
+	}
+
+	if tx.NetworkTransactionId == nil || *tx.NetworkTransactionId == "" {
+		t.Fatal("empty network transaction ID")
+	}
+
+	tx2, err := testGateway.Transaction().Create(ctx, &TransactionRequest{
+		Type:   "sale",
+		Amount: NewDecimal(3000, 2),
+		CreditCard: &CreditCard{
+			Number:         testCardVisa,
+			ExpirationDate: "05/14",
+		},
+		ExternalVault: &ExternalVault{
+			Status:                       ExternalVaultStatusVaulted,
+			PreviousNetworkTransactionId: *tx.NetworkTransactionId,
+		},
+	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tx2.Id == "" {
+		t.Fatal("Received invalid ID on new transaction")
+	}
+	if tx2.Status != TransactionStatusAuthorized {
+		t.Fatal(tx.Status)
+	}
+
+	t.Log(tx2)
 }
