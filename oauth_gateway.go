@@ -27,7 +27,7 @@ type OAuthCredentials struct {
 
 func (g *OauthGateway) CreateTokenFromCode(ctx context.Context, oAuthCredentialRequest *OAuthCredentialRequest) (*OAuthCredentials, error) {
 	oAuthCredentialRequest.GrantType = "authorization_code"
-	resp, err := g.executeVersion(ctx, "POST", "/oauth/access_tokens", oAuthCredentialRequest, apiVersion4)
+	resp, err := g.executeVersion(ctx, "POST", "oauth/access_tokens", oAuthCredentialRequest, apiVersion4)
 	if err != nil {
 		return nil, err
 	}
