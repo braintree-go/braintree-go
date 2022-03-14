@@ -6,16 +6,17 @@ import (
 )
 
 type PayPalAccount struct {
-	XMLName       xml.Name              `xml:"paypal-account"`
-	CustomerId    string                `xml:"customer-id,omitempty"`
-	Token         string                `xml:"token,omitempty"`
-	Email         string                `xml:"email,omitempty"`
-	ImageURL      string                `xml:"image-url,omitempty"`
-	CreatedAt     *time.Time            `xml:"created-at,omitempty"`
-	UpdatedAt     *time.Time            `xml:"updated-at,omitempty"`
-	Subscriptions *Subscriptions        `xml:"subscriptions,omitempty"`
-	Default       bool                  `xml:"default,omitempty"`
-	Options       *PayPalAccountOptions `xml:"options,omitempty"`
+	XMLName            xml.Name              `xml:"paypal-account"`
+	CustomerId         string                `xml:"customer-id,omitempty"`
+	Token              string                `xml:"token,omitempty"`
+	Email              string                `xml:"email,omitempty"`
+	ImageURL           string                `xml:"image-url,omitempty"`
+	BillingAgreementId string                `xml:"billing-agreement-id,omitempty"`
+	CreatedAt          *time.Time            `xml:"created-at,omitempty"`
+	UpdatedAt          *time.Time            `xml:"updated-at,omitempty"`
+	Subscriptions      *Subscriptions        `xml:"subscriptions,omitempty"`
+	Default            bool                  `xml:"default,omitempty"`
+	Options            *PayPalAccountOptions `xml:"options,omitempty"`
 }
 
 type PayPalAccounts struct {
