@@ -223,7 +223,7 @@ func (r *Response) apiError() error {
 		return &b
 	}
 	if r.StatusCode > 299 {
-		return HttpError(r.StatusCode)
+		return HTTPError(r.StatusCode)
 	}
 	return nil
 }
@@ -233,14 +233,14 @@ type APIError interface {
 	StatusCode() int
 }
 
-// HttpError is returned by an API when the status code is 3xx, 4xx, or 5xx and can be used to discern the status code.
-type HttpError int
+// HTTPError is returned by an API when the status code is 3xx, 4xx, or 5xx and can be used to discern the status code.
+type HTTPError int
 
-func (e HttpError) StatusCode() int {
+func (e HTTPError) StatusCode() int {
 	return int(e)
 }
 
-func (e HttpError) Error() string {
+func (e HTTPError) Error() string {
 	return fmt.Sprintf("%s (%d)", http.StatusText(e.StatusCode()), e.StatusCode())
 }
 
