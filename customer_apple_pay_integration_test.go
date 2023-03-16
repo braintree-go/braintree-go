@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package braintree
@@ -7,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/braintree-go/braintree-go/testhelpers"
+	"github.com/gametimesf/braintree-go/testhelpers"
 )
 
 func TestCustomerApplePayCard(t *testing.T) {
