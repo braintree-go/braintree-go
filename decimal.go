@@ -68,10 +68,9 @@ func (d *Decimal) UnmarshalText(text []byte) (err error) {
 
 // Cmp compares x and y and returns:
 //
-//   -1 if x <  y
-//    0 if x == y
-//   +1 if x >  y
-//
+//	-1 if x <  y
+//	 0 if x == y
+//	+1 if x >  y
 func (x *Decimal) Cmp(y *Decimal) int {
 	xUnscaled, yUnscaled := x.Unscaled, y.Unscaled
 	xScale, yScale := x.Scale, y.Scale

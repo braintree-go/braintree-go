@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package braintree
@@ -7,7 +8,6 @@ import (
 	"fmt"
 	"strings"
 	"testing"
-
 	"time"
 
 	"github.com/gametimesf/braintree-go/testhelpers"

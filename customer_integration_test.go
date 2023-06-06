@@ -5,12 +5,11 @@ package braintree
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"reflect"
-	"testing"
-
-	"fmt"
 	"strings"
+	"testing"
 
 	"github.com/gametimesf/braintree-go/testhelpers"
 )

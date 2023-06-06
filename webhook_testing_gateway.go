@@ -8,9 +8,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
-
 	"text/template"
+	"time"
 )
 
 const payloadTemplate = `

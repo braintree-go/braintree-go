@@ -25,5 +25,8 @@ lint:
 .PHONY: fmt
 fmt:
 	go fmt ./...
-	find . -name '*.go' -exec gci write -s 'standard' -s 'default' -s 'prefix(github.com/gametimesf/template_library)' {} \; > /dev/null
+	find . -name '*.go' -exec gci write -s 'standard' -s 'default' -s 'prefix(github.com/gametimesf/braintree-go)' {} \; > /dev/null
 
+.PHONY: docs
+docs:
+	go generate ./...
