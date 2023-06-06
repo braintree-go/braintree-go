@@ -1,51 +1,22 @@
+sudo: false
 language: go
-go_import_path: github.com/gametimesf/braintree-go
-
-install:
-  - source .default.env
-
-jobs:
-  include:
-    - stage: analysis
-      go: "1.12.x"
-      script: make analysis
-
-    - stage: test
-      go: "tip"
-      env:
-        - GO111MODULE=on
-      script: make test
-
-    - stage: test
-      go: "tip"
-      script: make test
-
-    - stage: test
-      go: "1.12.x"
-      env:
-        - GO111MODULE=on
-      script: make test
-
-    - stage: test
-      go: "1.12.x"
-      script: make test
-
-    - stage: test
-      go: "1.11.2"
-      script: make test
-
-    - stage: test
-      go: "1.10.5"
-      script: make test
-
-    - stage: test
-      go: "1.9"
-      script: make test
-
-    - stage: test
-      go: "1.8"
-      script: make test
-
-    - stage: test
-      go: "1.7"
-      script: make test
+go:
+  - 1.18.x
+cache:
+  directories:
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod
+env:
+  global:
+    - REPO=$(basename $TRAVIS_REPO_SLUG)
+    - TAG=$(git rev-parse --short HEAD)
+    - AUTHOR=$(git --no-pager show -s --format='%an')
+    - GOPRIVATE=github.com/gametimesf
+before_install:
+  # GITHUB_ACCESS_TOKEN for 'gametime-travis-ci' user (defined as env variable on Travis)
+  - git config --global url."https://${GITHUB_ACCESS_TOKEN}@github.com/gametimesf".insteadOf "https://github.com/gametimesf"
+  - go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
+  - go install github.com/daixiang0/gci@v0.3.4
+  - docker login --username gametimesf --password ${DOCKERHUB_TOKEN}
+script:
+  - make test

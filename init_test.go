@@ -5,9 +5,7 @@ package braintree
 
 import (
 	"context"
-	"flag"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -20,12 +18,7 @@ const (
 	testCardDiscover   = "6011111111111117"
 )
 
-var testGateway = New(
-	Sandbox,
-	os.Getenv("BRAINTREE_MERCH_ID"),
-	os.Getenv("BRAINTREE_PUB_KEY"),
-	os.Getenv("BRAINTREE_PRIV_KEY"),
-)
+var testGateway *Braintree
 
 var testTimeZone = func() *time.Location {
 	tzName := os.Getenv("BRAINTREE_TIMEZONE")
@@ -78,10 +71,12 @@ func testSubMerchantAccount() string {
 }
 
 func init() {
-	logEnabled := flag.Bool("log", false, "enables logging")
-	flag.Parse()
 
-	if *logEnabled {
-		testGateway.Logger = log.New(os.Stderr, "", 0)
-	}
+	testGateway = New(
+		Sandbox,
+		os.Getenv("BRAINTREE_MERCH_ID"),
+		os.Getenv("BRAINTREE_PUB_KEY"),
+		os.Getenv("BRAINTREE_PRIV_KEY"),
+	)
+
 }

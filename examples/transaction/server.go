@@ -22,6 +22,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gametimesf/braintree-go"
 )
 
 type BraintreeJS struct {

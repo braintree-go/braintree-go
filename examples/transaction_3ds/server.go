@@ -18,6 +18,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gametimesf/braintree-go"
 )
 
 func getBT() *braintree.Braintree {

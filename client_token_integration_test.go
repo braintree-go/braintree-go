@@ -53,7 +53,7 @@ func TestClientTokenGateway_GenerateWithRequest(t *testing.T) {
 	// Getting customer from the API
 	customer, err := testGateway.Customer().Create(context.Background(), &CustomerRequest{FirstName: "Lionel"})
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	tests := []struct {
