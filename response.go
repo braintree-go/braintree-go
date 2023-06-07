@@ -4,7 +4,7 @@ import (
 	"compress/gzip"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -201,7 +201,7 @@ func (r *Response) unpackBody() error {
 
 		defer func() { _ = r.Response.Body.Close() }()
 
-		buf, err := ioutil.ReadAll(reader)
+		buf, err := io.ReadAll(reader)
 		if err != nil {
 			return err
 		}

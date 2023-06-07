@@ -306,9 +306,9 @@ func (g *TransactionGateway) fetchTransactions(ctx context.Context, query *Searc
 }
 
 type testOperationPerformedInProductionError struct {
-	error
+	error // nolint:unused // it is used for interface
 }
 
 func (e *testOperationPerformedInProductionError) Error() string {
-	return fmt.Sprint("Operation not allowed in production environment")
+	return "Operation not allowed in production environment"
 }

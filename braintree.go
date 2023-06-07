@@ -17,7 +17,7 @@ type apiVersion int
 
 const (
 	apiVersion3 apiVersion = 3
-	apiVersion4            = 4
+	apiVersion4 apiVersion = 4
 )
 
 const defaultTimeout = time.Second * 60

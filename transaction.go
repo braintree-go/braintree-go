@@ -215,8 +215,6 @@ type TransactionOptionsPaypalRequest struct {
 }
 
 func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	type transactionOptionsPaypalRequest TransactionOptionsPaypalRequest
-
 	if err := e.EncodeToken(start); err != nil {
 		return err
 	}

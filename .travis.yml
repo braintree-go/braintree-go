@@ -17,6 +17,5 @@ before_install:
   - git config --global url."https://${GITHUB_ACCESS_TOKEN}@github.com/gametimesf".insteadOf "https://github.com/gametimesf"
   - go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
   - go install github.com/daixiang0/gci@v0.3.4
-  - docker login --username gametimesf --password ${DOCKERHUB_TOKEN}
 script:
   - make test

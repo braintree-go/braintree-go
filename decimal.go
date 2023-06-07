@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-const precision = 16
-
 // Decimal represents fixed precision numbers
 type Decimal struct {
 	Unscaled int64
@@ -42,9 +40,9 @@ func (d *Decimal) MarshalText() (text []byte, err error) {
 // Currently only supports decimal strings
 func (d *Decimal) UnmarshalText(text []byte) (err error) {
 	var (
-		str            = string(text)
-		unscaled int64 = 0
-		scale    int   = 0
+		str      = string(text)
+		unscaled int64
+		scale    int
 	)
 
 	if str == "" {
