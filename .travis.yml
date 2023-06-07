@@ -1,7 +1,7 @@
 sudo: false
 language: go
 go:
-  - 1.18.x
+  - 1.20.x
 cache:
   directories:
     - $HOME/.cache/go-build
