@@ -13,9 +13,6 @@ jobs:
         with:
           go-version: '1.20'
       - uses: actions/checkout@v2
-      - name: git-access-hack
-        # it needs access to everything
-        run: git config --global url."https://${{ secrets.ORG_GITHUB_TOKEN }}:x-oauth-basic@github.com/gametimesf".insteadOf "https://github.com/gametimesf"
       - name: go-mod-download
         # force go to download the modules first, golangci-lint just does not do it correctly
         run: go mod download
