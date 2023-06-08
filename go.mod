@@ -1,1 +1,3 @@
-module github.com/braintree-go/braintree-go
+module github.com/gametimesf/braintree-go
+
+go 1.20

@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/braintree-go/braintree-go/customfields"
+	"github.com/gametimesf/braintree-go/customfields"
 )
 
 type TransactionStatus string
@@ -215,8 +215,6 @@ type TransactionOptionsPaypalRequest struct {
 }
 
 func (r TransactionOptionsPaypalRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	type transactionOptionsPaypalRequest TransactionOptionsPaypalRequest
-
 	if err := e.EncodeToken(start); err != nil {
 		return err
 	}

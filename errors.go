@@ -8,6 +8,7 @@ import (
 	"unicode"
 )
 
+// BraintreeError is returned when Braintree API specifies an error
 type BraintreeError struct {
 	statusCode int
 	errors     ValidationErrors

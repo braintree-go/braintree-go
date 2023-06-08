@@ -1,0 +1,18 @@
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+name: PR checks
+jobs:
+  go-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.20
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: gofmt
+        uses: gametimesf/github-actions/go/fmt@v0.6.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

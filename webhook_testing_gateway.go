@@ -4,13 +4,12 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
-
 	"text/template"
+	"time"
 )
 
 const payloadTemplate = `
@@ -44,7 +43,7 @@ func (g *WebhookTestingGateway) Request(kind, id string) (*http.Request, error) 
 		Method:        "POST",
 		Header:        http.Header{"Content-Type": {"application/x-www-form-urlencoded"}},
 		ContentLength: int64(len(body)),
-		Body:          ioutil.NopCloser(strings.NewReader(body)),
+		Body:          io.NopCloser(strings.NewReader(body)),
 	}, nil
 }
 
@@ -81,6 +80,9 @@ func (g *WebhookTestingGateway) subjectXML(kind, id string) string {
 	xmlTmpl := g.subjectXMLTemplate(kind)
 	var b bytes.Buffer
 	tmpl, err := template.New("").Parse(xmlTmpl)
+	if err != nil {
+		panic(err)
+	}
 	err = tmpl.Execute(&b, subjectXMLData{ID: id})
 	if err != nil {
 		panic(fmt.Errorf("creating xml template: " + err.Error()))

@@ -4,11 +4,11 @@ import (
 	"compress/gzip"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
-	"github.com/braintree-go/braintree-go/xmlnil"
+	"github.com/gametimesf/braintree-go/xmlnil"
 )
 
 type Response struct {
@@ -201,7 +201,7 @@ func (r *Response) unpackBody() error {
 
 		defer func() { _ = r.Response.Body.Close() }()
 
-		buf, err := ioutil.ReadAll(reader)
+		buf, err := io.ReadAll(reader)
 		if err != nil {
 			return err
 		}
@@ -223,7 +223,7 @@ func (r *Response) apiError() error {
 		return &b
 	}
 	if r.StatusCode > 299 {
-		return httpError(r.StatusCode)
+		return HTTPError(r.StatusCode)
 	}
 	return nil
 }
@@ -233,13 +233,14 @@ type APIError interface {
 	StatusCode() int
 }
 
-type httpError int
+// HTTPError is returned by an API when the status code is 3xx, 4xx, or 5xx and can be used to discern the status code.
+type HTTPError int
 
-func (e httpError) StatusCode() int {
+func (e HTTPError) StatusCode() int {
 	return int(e)
 }
 
-func (e httpError) Error() string {
+func (e HTTPError) Error() string {
 	return fmt.Sprintf("%s (%d)", http.StatusText(e.StatusCode()), e.StatusCode())
 }
 

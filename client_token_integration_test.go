@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package braintree
@@ -6,7 +7,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/braintree-go/braintree-go/testhelpers"
+	"github.com/gametimesf/braintree-go/testhelpers"
 )
 
 // This test will fail unless you set up your Braintree sandbox account correctly. See TESTING.md for details.
@@ -52,7 +53,7 @@ func TestClientTokenGateway_GenerateWithRequest(t *testing.T) {
 	// Getting customer from the API
 	customer, err := testGateway.Customer().Create(context.Background(), &CustomerRequest{FirstName: "Lionel"})
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	tests := []struct {

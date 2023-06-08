@@ -1,0 +1,36 @@
+name: golangci-lint
+env:
+  GOPRIVATE: github.com/gametimesf
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.20'
+      - uses: actions/checkout@v2
+      - name: git-access-hack
+        # it needs access to everything
+        run: git config --global url."https://${{ secrets.ORG_GITHUB_TOKEN }}:x-oauth-basic@github.com/gametimesf".insteadOf "https://github.com/gametimesf"
+      - name: go-mod-download
+        # force go to download the modules first, golangci-lint just does not do it correctly
+        run: go mod download
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3.4.0
+        with:
+          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
+          version: v1.52
+
+          # Optional: show only new issues if it's a pull request. The default value is `false`.
+          # only-new-issues: true
+
+          # Optional: golangci-lint command line arguments.
+          args: --timeout=8m
+
+          # Optional: if set to true then the all caching functionality will be complete disabled,
+          #           takes precedence over all other caching options.
+          skip-cache: true

@@ -59,9 +59,7 @@ func (paypalAccount *PayPalAccount) AllSubscriptions() []*Subscription {
 		subs := paypalAccount.Subscriptions.Subscription
 		if len(subs) > 0 {
 			a := make([]*Subscription, 0, len(subs))
-			for _, s := range subs {
-				a = append(a, s)
-			}
+			a = append(a, subs...)
 			return a
 		}
 	}
