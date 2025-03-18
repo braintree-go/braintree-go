@@ -10,6 +10,7 @@ type ApplePayCard struct {
 	Token                 string         `xml:"token"`
 	ImageURL              string         `xml:"image-url"`
 	CardType              string         `xml:"card-type"`
+	Prepaid               string         `xml:"prepaid"`
 	PaymentInstrumentName string         `xml:"payment-instrument-name"`
 	SourceDescription     string         `xml:"source-description"`
 	BIN                   string         `xml:"bin"`
