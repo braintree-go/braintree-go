@@ -56,6 +56,8 @@ type Transaction struct {
 	ProcessorAuthorizationCode string  `xml:"processor-authorization-code,omitempty"`
 	SettlementBatchId          string  `xml:"settlement-batch-id,omitempty"`
 	NetworkTransactionID       string  `xml:"network-transaction-id,omitempty"`
+	// MastercardTransactionLinkID is the Mastercard Transaction Link ID (TLID), only returned for Mastercard
+	MastercardTransactionLinkID string `xml:"mastercard-transaction-link-id,omitempty"`
 
 	SubscriptionID        string        `xml:"subscription-id,omitempty"`
 	Descriptor            *Descriptor   `xml:"descriptor,omitempty"`
@@ -74,9 +76,18 @@ type StatusHistory struct {
 	Events []StatusEvent `xml:"status-event"`
 }
 
+// External vault statuses
+const (
+	// ExternalVaultStatusWillVault indicates the payment method will be stored if the transaction succeeds
+	ExternalVaultStatusWillVault = "will_vault"
+	// ExternalVaultStatusVaulted indicates the payment method is already stored
+	ExternalVaultStatusVaulted = "vaulted"
+)
+
 type ExternalVault struct {
-	PreviousNetworkTransactionID string `xml:"previous-network-transaction-id,omitempty"`
-	Status                       string `xml:"status,omitempty"`
+	PreviousNetworkTransactionID        string `xml:"previous-network-transaction-id,omitempty"`
+	PreviousMastercardTransactionLinkID string `xml:"previous-mastercard-transaction-link-id,omitempty"`
+	Status                              string `xml:"status,omitempty"`
 }
 
 type StatusEvent struct {
